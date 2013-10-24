@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_platform_kaltura</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_PLATFORM_KALTURA_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="platform_kaltura">platform_kaltura.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_platform_kaltura.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_platform_kaltura.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="kPartnerId" type="text"
+					description=""
+					label="Kaltura Partner Id"
+					size="20"
+					default=""
+				/>
+				<field name="kUserSecret" type="text"
+					description=""
+					label="Kaltura User Secret"
+					size="20"
+					default=""
+				/>
+				<field name="kAdminSecret" type="text"
+					description=""
+					label="Kaltura Admin Secret"
+					size="20"
+					default=""
+				/>
+				<field name="kUserId" type="text"
+					description=""
+					label="Kaltura User Id"
+					size="20"
+					default=""
+				/>
+				<field name="uiConfId" type="text"
+					description=""
+					label="The player (uiConf) id"
+					size="20"
+					default="7752572"
+				/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

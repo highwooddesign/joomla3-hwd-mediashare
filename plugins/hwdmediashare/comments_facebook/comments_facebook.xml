@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_comments_facebook</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="comments_facebook">comments_facebook.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_comments_facebook.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_comments_facebook.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field 
+                                        name="width" 
+                                        type="text"
+					default="470"
+                                        required="true"
+					label="PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_FIELD_WIDTH_LABEL"
+					description="PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_FIELD_WIDTH_DESC"
+				/>
+                                <field 
+                                        name="color" 
+                                        type="list"
+					label="PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_FIELD_COLOR_LABEL"
+					description="PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_FIELD_COLOR_DESC"
+                                        default="light" 
+				>
+                                        <option value="light">PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_OPTION_LIGHT</option>
+                                        <option value="dark">PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_OPTION_DARK</option>
+				</field> 
+			</fieldset>
+		</fields>
+	</config>
+</extension>

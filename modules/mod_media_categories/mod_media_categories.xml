@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="module" client="site" method="upgrade">
+	<name>mod_media_categories</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>MOD_MEDIA_CATEGORIES_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_media_categories">mod_media_categories.php</filename>
+		<filename module="mod_media_categories">helper.php</filename>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename>index.html</filename>		
+		<filename>mod_media_categories.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_categories.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_categories.sys.ini</language>
+	</languages>
+	<config>
+                <fields name="params">
+                        <fieldset name="basic">
+                                <field
+                                        name="parent"
+                                        type="category"
+                                        extension="com_hwdmediashare"
+                                        published=""
+                                        label="MOD_MEDIA_FIELD_PARENT_LABEL"
+                                        description="MOD_MEDIA_FIELD_PARENT_DESC" 
+                                >
+                                        <option value="">MOD_MEDIA_OPTION_ROOT_VALUE</option>
+
+                                </field>
+                                <field 
+                                        name="list_item_heading" 
+                                        type="list" 
+                                        default=""
+                                        label="COM_HWDMS_HEADING_LEVEL_LABEL"
+                                        description="COM_HWDMS_HEADING_LEVEL_DESC"
+                                >
+                                        <option value="">COM_HWDMS_GLOBAL</option>
+                                        <option value="1">JH1</option>
+                                        <option value="2">JH2</option>
+                                        <option value="3">JH3</option>
+                                        <option value="4">JH4</option>
+                                        <option value="5">JH5</option>
+                                        <option value="6">JH6</option>
+                                </field>                                
+                                <field
+                                        name="show_description"
+                                        type="radio"
+                                        default="0"
+                                        label="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_LABEL"
+                                        description="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_DESC"
+                                >
+                                        <option value="0">JNO</option>
+                                        <option value="1">JYES</option>
+                                </field>
+                                <field
+                                        name="show_children"
+                                        type="radio"
+                                        default="0"
+                                        label="MOD_MEDIA_FIELD_SHOW_CHILDREN_LABEL"
+                                        description="MOD_MEDIA_FIELD_SHOW_CHILDREN_DESC"
+                                >
+                                        <option value="0">JNO</option>
+                                        <option value="1">JYES</option>
+                                </field>
+                                <field 
+                                        name="count" 
+                                        type="list"
+                                        label="MOD_MEDIA_FIELD_COUNT_LABEL"
+                                        description="MOD_MEDIA_FIELD_COUNT_DESC"
+                                        default="0"
+                                >
+                                        <option value="0">JALL</option>
+                                        <option value="1">J1</option>
+                                        <option value="2">J2</option>
+                                        <option value="3">J3</option>
+                                        <option value="4">J4</option>
+                                        <option value="5">J5</option>
+                                        <option value="6">J6</option>
+                                        <option value="7">J7</option>
+                                        <option value="8">J8</option>
+                                        <option value="9">J9</option>
+                                        <option value="10">J10</option>
+                                </field>
+                                <field 
+                                        name="maxlevel" 
+                                        type="list"
+                                        label="MOD_MEDIA_FIELD_MAXLEVEL_LABEL"
+                                        description="MOD_MEDIA_FIELD_MAXLEVEL_DESC"
+                                        default="0"
+                                >
+                                        <option value="0">JALL</option>
+                                        <option value="1">J1</option>
+                                        <option value="2">J2</option>
+                                        <option value="3">J3</option>
+                                        <option value="4">J4</option>
+                                        <option value="5">J5</option>
+                                        <option value="6">J6</option>
+                                        <option value="7">J7</option>
+                                        <option value="8">J8</option>
+                                        <option value="9">J9</option>
+                                        <option value="10">J10</option>
+                                </field>
+                        </fieldset>
+                        <fieldset name="advanced">
+				<field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
+                                />
+				<field
+					name="moduleclass_sfx"
+					type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" 
+                                />
+				<field
+					name="cache"
+					type="list"
+					default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					description="COM_MODULES_FIELD_CACHING_DESC"
+                                >
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field
+					name="cache_time"
+					type="text"
+					default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                />
+				<field
+					name="cachemode"
+					type="hidden"
+					default="static"
+                                >
+					<option value="static"></option>
+				</field>
+                        </fieldset>
+                </fields>
+	</config>
+</extension>

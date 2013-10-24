@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+        <name>plg_hwdmediashare_event_twitter</name>
+        <creationDate>2013-10-24</creationDate>
+        <author>Highwood Design</author>
+        <authorEmail>info@hwdmediashare.co.uk</authorEmail>
+        <authorUrl>http://hwdmediashare.co.uk</authorUrl>
+        <copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+        <license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+        <version>1.1.12</version>
+        <description>PLG_HWDMEDIASHARE_EVENT_TWITTER_XML_DESCRIPTION</description>
+        <files>
+                <filename plugin="event_twitter">event_twitter.php</filename>
+                <folder>assets</folder>
+        </files>
+        <languages>
+                <language tag="en-GB">language/en-GB.plg_hwdmediashare_event_twitter.ini</language>
+                <language tag="en-GB">language/en-GB.plg_hwdmediashare_event_twitter.sys.ini</language>
+        </languages>    
+        <config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field 
+                                        name="oauth_token" 
+                                        type="password" 
+                                        default="" 
+                                        label="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_ACCESS_TOKEN_LABEL" 
+                                        description="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_ACCESS_TOKEN_DESC" 
+                                />    
+                                <field 
+                                        name="oauth_token_secret" 
+                                        type="password" 
+                                        default="" 
+                                        label="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_ACCESS_TOKEN_SECRET_LABEL" 
+                                        description="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_ACCESS_TOKEN_SECRET_DESC" 
+                                />
+                                <field 
+                                        name="bitly_username" 
+                                        type="text" 
+                                        default="" 
+                                        label="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_BITLY_USERNAME_LABEL" 
+                                        description="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_BITLY_USERNAME_DESC" 
+                                />    
+                                <field 
+                                        name="bitly_api_key" 
+                                        type="password" 
+                                        default="" 
+                                        label="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_BITLY_KEY_SECRET_LABEL" 
+                                        description="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_BITLY_KEY_SECRET_DESC" 
+                                />
+                                <field 
+                                        name="post_new_media" 
+                                        type="list" 
+                                        default="1" 
+                                        label="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_POST_NEW_MEDIA_LABEL" 
+                                        description="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_POST_NEW_MEDIA_DESC"
+                                >
+                                        <option value="1">JYes</option>
+                                        <option value="0">JNo</option>
+                                </field>
+                                <field 
+                                        name="format_new_media" 
+                                        type="text" 
+                                        default="New media on [[SITENAME]], [[MEDIANAME]] [[URL]]" 
+                                        label="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_FORMAT_NEW_MEDIA_LABEL" 
+                                        description="PLG_HWDMEDIASHARE_EVENT_TWITTER_FIELD_FORMAT_NEW_MEDIA_DESC" 
+                                />
+                        </fieldset>  
+                </fields>
+        </config>   
+</extension>

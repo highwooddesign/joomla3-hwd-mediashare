@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="module" client="site" method="upgrade">
+	<name>mod_media_activities</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>MOD_MEDIA_ACTIVITIES_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_media_activities">mod_media_activities.php</filename>
+		<filename module="mod_media_activities">helper.php</filename>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename>index.html</filename>		
+		<filename>mod_media_activities.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_activities.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_activities.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset 
+                                name="filtering"
+				label="MOD_MEDIA_FIELD_GROUP_FILTERING_LABEL"
+			>
+				<field 
+                                        name="show_featured" 
+                                        type="radio" 
+                                        default="show"
+					label="MOD_MEDIA_FIELD_SHOWFEATURED_LABEL"
+					description="MOD_MEDIA_FIELD_SHOWFEATURED_DESC"
+				>
+					<option value="show">JSHOW</option>
+					<option value="hide">JHIDE</option>
+					<option value="only">MOD_MEDIA_OPTION_ONLYFEATURED_VALUE</option>
+				</field>
+				<field 
+                                        name="count" 
+                                        type="text" 
+                                        default="5"
+					label="MOD_MEDIA_FIELD_COUNT_LABEL"
+					description="MOD_MEDIA_FIELD_COUNT_DESC" 
+                                />
+				<field name="filteringspacer1" type="spacer" hr="true" />
+				<field 
+                                        name="author_filtering_type" 
+                                        type="radio"
+					default="1"
+					label="MOD_MEDIA_FIELD_AUTHORFILTERING_LABEL"
+					description="MOD_MEDIA_FIELD_AUTHORFILTERING_DESC"
+				>
+					<option value="1">MOD_MEDIA_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_OPTION_EXCLUSIVE_VALUE</option>
+				</field>
+				<field 
+                                        name="created_by" 
+                                        type="sql"
+					multiple="true" 
+                                        size="5"
+					label="MOD_MEDIA_FIELD_AUTHOR_LABEL"
+					description="MOD_MEDIA_FIELD_AUTHOR_DESC"
+					query="select id, name, username from #__users where id IN (select distinct(created_user_id) from #__hwdms_albums) order by name ASC"
+					key_field="id" 
+                                        value_field="name"
+				>
+					<option value="">JOPTION_SELECT_AUTHORS</option>
+				</field>
+				<field name="filteringspacer2" type="spacer" hr="true" />
+				<field 
+                                        name="author_alias_filtering_type" 
+                                        type="radio"
+					default="1"
+					label="MOD_MEDIA_FIELD_AUTHORALIASFILTERING_LABEL"
+					description="MOD_MEDIA_FIELD_AUTHORALIASFILTERING_DESC"
+				>
+					<option value="1">MOD_MEDIA_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_OPTION_EXCLUSIVE_VALUE</option>
+				</field>
+
+				<field 
+                                        name="created_by_alias" 
+                                        type="sql"
+					multiple="true" 
+                                        size="5"
+					label="MOD_MEDIA_FIELD_AUTHORALIAS_LABEL"
+					description="MOD_MEDIA_FIELD_AUTHORALIAS_DESC"
+					query="select distinct(created_user_id_alias) from #__hwdms_albums where created_user_id_alias != '' order by created_user_id_alias ASC"
+					key_field="created_user_id_alias" 
+                                        value_field="created_user_id_alias"
+				>
+					<option value="">JOPTION_SELECT_AUTHOR_ALIASES</option>
+				</field>
+				<field name="filteringspacer3" type="spacer" hr="true" />
+				<field 
+                                        name="excluded_items" 
+                                        type="textarea"
+					cols="10" 
+                                        rows="3"
+					label="MOD_MEDIA_FIELD_EXCLUDEDITEMS_LABEL"
+					description="MOD_MEDIA_FIELD_EXCLUDEDITEMS_DESC" 
+                                />
+				<field name="filteringspacer4" type="spacer" hr="true" />
+				<field 
+                                        name="date_filtering" 
+                                        type="radio" 
+                                        default="off"
+					label="MOD_MEDIA_FIELD_DATEFILTERING_LABEL"
+					description="MOD_MEDIA_FIELD_DATEFILTERING_DESC"
+				>
+					<option value="off">MOD_MEDIA_OPTION_OFF_VALUE</option>
+					<option value="range">MOD_MEDIA_OPTION_DATERANGE_VALUE</option>
+					<option value="relative">MOD_MEDIA_OPTION_RELATIVEDAY_VALUE</option>
+				</field>
+				<field 
+                                        name="date_field" 
+                                        type="list" 
+                                        default="a.created"
+					label="MOD_MEDIA_FIELD_DATERANGEFIELD_LABEL"
+					description="MOD_MEDIA_FIELD_DATERANGEFIELD_DESC"
+				>
+					<option value="a.created">MOD_MEDIA_OPTION_CREATED_VALUE</option>
+					<option value="a.modified">MOD_MEDIA_OPTION_MODIFIED_VALUE</option>
+					<option value="a.publish_up">MOD_MEDIA_OPTION_STARTPUBLISHING_VALUE</option>
+				</field>
+				<field 
+                                        name="start_date_range" 
+                                        type="calendar"
+					format="%Y-%m-%d %H:%M:%S"
+					label="MOD_MEDIA_FIELD_STARTDATE_LABEL"
+					description="MOD_MEDIA_FIELD_STARTDATE_DESC"
+					size="22"
+					filter="user_utc" 
+                                />
+				<field 
+                                        name="end_date_range" 
+                                        type="calendar"
+					format="%Y-%m-%d %H:%M:%S"
+					label="MOD_MEDIA_FIELD_ENDDATE_LABEL"
+					description="MOD_MEDIA_FIELD_ENDDATE_DESC"
+					size="22"
+					filter="user_utc" 
+                                />
+				<field 
+                                        name="relative_date" 
+                                        type="text" 
+                                        default="30"
+					label="MOD_MEDIA_FIELD_RELATIVEDATE_LABEL"
+					description="MOD_MEDIA_FIELD_RELATIVEDATE_DESC" 
+                                />
+			</fieldset>
+			<fieldset 
+                                name="ordering"
+				label="MOD_MEDIA_FIELD_GROUP_ORDERING_LABEL"
+			>
+				<field 
+                                        name="ordering" 
+                                        type="list"
+					default="a.title"
+					label="MOD_MEDIA_FIELD_ITEMORDERING_LABEL"
+					description="MOD_MEDIA_FIELD_ITEMORDERING_DESC"
+				>
+					<option value="a.ordering">MOD_MEDIA_OPTION_ORDERING_VALUE</option>
+					<option value="a.hits">MOD_MEDIA_OPTION_HITS_VALUE</option>
+					<option value="a.title">JGLOBAL_TITLE</option>
+					<option value="a.id">MOD_MEDIA_OPTION_ID_VALUE</option>
+					<option value="a.alias">JFIELD_ALIAS_LABEL</option>
+					<option value="a.created">MOD_MEDIA_OPTION_CREATED_VALUE</option>
+					<option value="a.modified">MOD_MEDIA_OPTION_MODIFIED_VALUE</option>
+					<option value="a.publish_up">MOD_MEDIA_OPTION_STARTPUBLISHING_VALUE</option>
+					<option value="a.publish_down">MOD_MEDIA_OPTION_FINISHPUBLISHING_VALUE</option>
+				</field>
+				<field 
+                                        name="ordering_direction" 
+                                        type="list"
+					default="ASC"
+					label="MOD_MEDIA_FIELD_ITEMORDERINGDIR_LABEL"
+					description="MOD_MEDIA_FIELD_ITEMORDERINGDIR_DESC"
+				>
+					<option value="DESC">MOD_MEDIA_OPTION_DESCENDING_VALUE</option>
+					<option value="ASC">MOD_MEDIA_OPTION_ASCENDING_VALUE</option>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field 
+                                        name="layout" 
+                                        type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL" 
+                                        description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
+                                />
+				<field 
+                                        name="moduleclass_sfx" 
+                                        type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" 
+                                />
+				<field 
+                                        name="owncache" 
+                                        type="list" 
+                                        default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL" 
+                                        description="COM_MODULES_FIELD_CACHING_DESC" 
+                                >
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field 
+                                        name="cache_time" 
+                                        type="text" 
+                                        default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
+                                        description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

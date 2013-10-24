@@ -1,0 +1,74 @@
+.hidden {
+	display:none;
+}
+.slide {
+	width: 100%;
+	margin: 10px auto;
+	position: relative;
+	text-align: center;
+}
+.slide a:hover {
+
+}
+div.slider-tabs {
+	text-align: center;
+}
+div.slider-tabs a {
+	margin: 0 3px 0 0;
+	display:inline-block;
+	width:28px;
+	height:28px;
+	text-indent:-9999px;
+	background:url(../images/item.png) no-repeat 50% 50%;
+}
+#main div.slider-tabs a:hover,
+div.slider-tabs a:hover,
+div.slider-tabs a.selected {
+	text-decoration: underline;
+	background:url(../images/itemActive.png) no-repeat 50% 50%;
+}
+div.slider-tabs a.slide-prev {
+	text-decoration: underline;
+	background:url(../images/prev.png) no-repeat 50% 50%;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+}
+div.slider-tabs a.slide-next {
+	text-decoration: underline;
+	background:url(../images/next.png) no-repeat 50% 50%;
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+#main div.slider-tabs a.slide-prev:hover,
+div.slider-tabs a.slide-prev:hover {
+	background:url(../images/prevActive.png) no-repeat 50% 50%;
+}
+#main div.slider-tabs a.slide-next:hover,
+div.slider-tabs a.slide-next:hover {
+	background:url(../images/nextActive.png) no-repeat 50% 50%;
+}
+#slide {
+	position: relative;
+	width: 100%;
+	padding: 5px 0;
+	margin:0 0 10px 0;
+	overflow: hidden;
+	background:#333;
+}
+#slide div.slide-container {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	/* margin-left: 5px; */
+}
+#slide span {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding: 10px;
+	width: auto;
+	color: #fff;
+	background: rgba(0, 0, 0, .7)
+}

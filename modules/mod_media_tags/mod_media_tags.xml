@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="module" client="site" method="upgrade">
+	<name>mod_media_tags</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>MOD_MEDIA_TAGS_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_media_tags">mod_media_tags.php</filename>
+		<filename module="mod_media_tags">helper.php</filename>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename>index.html</filename>		
+		<filename>mod_media_tags.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_tags.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_tags.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset 
+                                name="filtering"
+				label="MOD_MEDIA_FIELD_GROUP_FILTERING_LABEL"
+			>
+				<field 
+                                        name="count" 
+                                        type="text" 
+                                        default="5"
+					label="MOD_MEDIA_FIELD_COUNT_LABEL"
+					description="MOD_MEDIA_FIELD_COUNT_DESC" />
+			</fieldset>
+			<fieldset 
+                                name="ordering"
+				label="MOD_MEDIA_FIELD_GROUP_ORDERING_LABEL"
+			>
+				<field 
+                                        name="ordering" 
+                                        type="list"
+					default="a.tag"
+					label="MOD_MEDIA_FIELD_ITEMORDERING_LABEL"
+					description="MOD_MEDIA_FIELD_ITEMORDERING_DESC"
+				>
+					<option value="a.tag">MOD_MEDIA_OPTION_TAGNAME_VALUE</option>
+					<option value="a.popularity">MOD_MEDIA_OPTION_POPULARITY_VALUE</option>
+
+				</field>
+				<field 
+                                        name="ordering_direction" 
+                                        type="list"
+					default="ASC"
+					label="MOD_MEDIA_FIELD_ITEMORDERINGDIR_LABEL"
+					description="MOD_MEDIA_FIELD_ITEMORDERINGDIR_DESC"
+				>
+					<option value="DESC">MOD_MEDIA_OPTION_DESCENDING_VALUE</option>
+					<option value="ASC">MOD_MEDIA_OPTION_ASCENDING_VALUE</option>
+				</field>
+			</fieldset>
+			<fieldset name="advanced">
+				<field 
+                                        name="layout" 
+                                        type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL" 
+                                        description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
+                                />
+				<field 
+                                        name="moduleclass_sfx" 
+                                        type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" 
+                                />
+				<field 
+                                        name="owncache" 
+                                        type="list" 
+                                        default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL" 
+                                        description="COM_MODULES_FIELD_CACHING_DESC" 
+                                >
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field 
+                                        name="cache_time" 
+                                        type="text" 
+                                        default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
+                                        description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

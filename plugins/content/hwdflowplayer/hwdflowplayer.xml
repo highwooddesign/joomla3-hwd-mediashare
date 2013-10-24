@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="content" method="upgrade">
+	<name>plg_content_hwdflowplayer</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_CONTENT_HWDFLOWPLAYER_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="hwdflowplayer">hwdflowplayer.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_content_hwdflowplayer.ini</language>
+		<language tag="en-GB">language/en-GB.plg_content_hwdflowplayer.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic"
+				  label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_GROUP_BASIC_LABEL"
+			>                    
+				<field
+					name="width"
+					type="text"
+					default="640"
+					label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_WIDTH_LABEL"
+					description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_WIDTH_DESC"
+                                />
+				<field
+					name="height"
+					type="text"
+					default="480"
+					label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_HEIGHT_LABEL"
+					description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_HEIGHT_DESC"
+                                />
+                                <field
+					name="align"
+					type="list"
+					default="left"
+					label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_ALIGN_LABEL"
+					description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_ALIGN_DESC"
+                                >
+					<option value="left">PLG_CONTENT_HWDFLOWPLAYER_OPTION_LEFT</option>
+					<option value="center">PLG_CONTENT_HWDFLOWPLAYER_OPTION_CENTER</option>
+					<option value="right">PLG_CONTENT_HWDFLOWPLAYER_OPTION_RIGHT</option>
+				</field> 
+                                <field
+					name="wrap"
+					type="list"
+					default="0"
+					label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_WRAP_LABEL"
+					description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_WRAP_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+				</field> 
+			</fieldset>
+			<fieldset name="version"
+				  label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_GROUP_LICENSE_LABEL"
+			>                    
+				<field
+					name="licensekey"
+					type="text"
+					default=""
+					label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_LICENSE_KEY_LABEL"
+					description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_LICENSE_KEY_DESC"
+                                />
+			</fieldset>
+			<fieldset name="skin"
+				  label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_GROUP_SKIN_LABEL"
+			>                                
+                                <field
+                                        name="skin"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_SKIN_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_SKIN_DESC"
+                                        class="inputbox"
+                                        default=""
+                                >
+                                        <option value="minimalist">PLG_CONTENT_HWDFLOWPLAYER_OPTION_MINIMALISTSKIN</option>
+                                        <option value="functional">PLG_CONTENT_HWDFLOWPLAYER_OPTION_FUNCTIONALSKIN</option>
+                                        <option value="playful">PLG_CONTENT_HWDFLOWPLAYER_OPTION_PLAYFULSKIN</option>
+                                        <option value="custom">PLG_CONTENT_HWDFLOWPLAYER_OPTION_CUSTOMSKIN</option>
+                                </field>
+                                <field
+                                        name="customskin"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_CUSTOMSKIN_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_CUSTOMSKIN_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+			</fieldset>
+			<fieldset name="behavior"
+				  label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_GROUP_BEHAVIOUR_LABEL"
+			>
+                                <field 
+                                        name="autostart" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_AUTOSTART_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_AUTOSTART_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field 
+                                        name="muted" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_MUTE_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_MUTE_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field 
+                                        name="loop" 
+                                        type="list" 
+                                        default="none"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_REPEAT_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_REPEAT_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field 
+                                        name="volume" 
+                                        type="list" 
+                                        default="0.9"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_VOLUME_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_VOLUME_DESC"
+                                >
+                                        <option value="0">PLG_CONTENT_HWDFLOWPLAYER_OPTION_0P</option>
+                                        <option value="0.1">PLG_CONTENT_HWDFLOWPLAYER_OPTION_10P</option>
+                                        <option value="0.2">PLG_CONTENT_HWDFLOWPLAYER_OPTION_20P</option>
+                                        <option value="0.3">PLG_CONTENT_HWDFLOWPLAYER_OPTION_30P</option>
+                                        <option value="0.4">PLG_CONTENT_HWDFLOWPLAYER_OPTION_40P</option>
+                                        <option value="0.5">PLG_CONTENT_HWDFLOWPLAYER_OPTION_50P</option>
+                                        <option value="0.6">PLG_CONTENT_HWDFLOWPLAYER_OPTION_60P</option>
+                                        <option value="0.7">PLG_CONTENT_HWDFLOWPLAYER_OPTION_70P</option>
+                                        <option value="0.8">PLG_CONTENT_HWDFLOWPLAYER_OPTION_80P</option>
+                                        <option value="0.9">PLG_CONTENT_HWDFLOWPLAYER_OPTION_90P</option>
+                                        <option value="1">PLG_CONTENT_HWDFLOWPLAYER_OPTION_100P</option>
+                                </field>
+			</fieldset>
+			<fieldset name="logo"
+				  label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_GROUP_LOGO_LABEL"
+			>
+                                <field
+                                        name="logofile"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDFLOWPLAYER_FIELD_LOGO_FILE_LABEL"
+                                        description="PLG_CONTENT_HWDFLOWPLAYER_FIELD_LOGO_FILE_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />                            
+			</fieldset>
+		</fields>
+	</config>
+</extension>
+
+
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_remote_videogooglecom</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_REMOTE_VIDEOGOOGLECOM_XML_DESCRIPTION</description>
+	<url>http://video.google.com</url>
+	<files>
+		<filename plugin="remote_videogooglecom">remote_videogooglecom.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_videogooglecom.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_videogooglecom.sys.ini</language>
+	</languages>
+</extension>

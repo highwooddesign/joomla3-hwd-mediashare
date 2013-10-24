@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="search" method="upgrade">
+	<name>plg_search_media</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_SEARCH_MEDIA_XML_DESCRIPTION</description>
+        <files>
+		<filename plugin="media">media.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_search_media.ini</language>
+		<language tag="en-GB">language/en-GB.plg_search_media.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="areas"
+				  label="PLG_SEARCH_MEDIA_FIELD_GROUP_AREAS_LABEL"
+			>    
+                                <field 
+                                        name="search_media" 
+                                        type="list"
+					default="1"
+					description="PLG_SEARCH_MEDIA_SEARCH_MEDIA_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_MEDIA_LABEL"
+				>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field> 
+                                <field 
+                                        name="search_albums" 
+                                        type="list"
+					default=""
+					description="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_LABEL"
+				>
+					<option value="">PLG_SEARCH_MEDIA_GLOBAL</option>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field> 
+                                <field 
+                                        name="search_groups" 
+                                        type="list"
+					default=""
+					description="PLG_SEARCH_MEDIA_SEARCH_GROUPS_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_GROUPS_LABEL"
+				>
+					<option value="">PLG_SEARCH_MEDIA_GLOBAL</option>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field> 
+                                <field 
+                                        name="search_playlists" 
+                                        type="list"
+					default=""
+					description="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_LABEL"
+				>
+					<option value="">PLG_SEARCH_MEDIA_GLOBAL</option>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field> 
+			</fieldset>   
+			<fieldset name="include"
+				  label="PLG_SEARCH_MEDIA_FIELD_GROUP_DATA_LABEL"
+			>    
+                                <field 
+                                        name="search_title" 
+                                        type="radio"
+					default="1"
+					description="PLG_SEARCH_MEDIA_SEARCH_TITLE_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_TITLE_LABEL"
+				>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field>                                
+                                <field 
+                                        name="search_description" 
+                                        type="radio"
+					default="1"
+					description="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_LABEL"
+				>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field>
+                                <field 
+                                        name="search_alias" 
+                                        type="radio"
+					default="0"
+					description="PLG_SEARCH_MEDIA_SEARCH_ALIAS_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_ALIAS_LABEL"
+				>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field>
+                                <field 
+                                        name="search_metadata" 
+                                        type="radio"
+					default="0"
+					description="PLG_SEARCH_MEDIA_SEARCH_METADATA_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_METADATA_LABEL"
+				>
+                                        <option value="1">JON</option>
+					<option value="0">JOFF</option>					
+				</field>	                          
+			</fieldset>                             
+			<fieldset name="basic">
+                                <field 
+                                        name="use_caching" 
+                                        type="radio"
+					default="1"
+					description="PLG_SEARCH_MEDIA_USE_CACHING_DESC"
+					label="PLG_SEARCH_MEDIA_USE_CACHING_LABEL"
+				>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>  
+                                <field 
+                                        name="include_thumbnail" 
+                                        type="radio"
+					default="1"
+					description="PLG_SEARCH_MEDIA_INCLUDE_THUMBNAIL_DESC"
+					label="PLG_SEARCH_MEDIA_INCLUDE_THUMBNAIL_LABEL"
+				>
+					<option value="1">JON</option>
+					<option value="0">JOFF</option>
+				</field>  
+				<field 
+                                        name="search_limit" 
+                                        type="text"
+					default="50"
+					description="PLG_SEARCH_MEDIA_SEARCHLIMIT_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCHLIMIT_LABEL"
+					size="5"
+				/>
+			</fieldset>                             
+                        <fieldset name="method">
+                                <field 
+                                        name="search_method" 
+                                        type="list"
+					default="1"
+					description="PLG_SEARCH_MEDIA_SEARCH_METHOD_DESC"
+					label="PLG_SEARCH_MEDIA_SEARCH_METHOD_LABEL"
+				>
+					<option value="0">PLG_SEARCH_MEDIA_OPTION_MATCH</option>
+					<option value="1">PLG_SEARCH_MEDIA_OPTION_LIKE</option>
+				</field>
+ 				<field 
+                                        name="relation_method" 
+                                        type="list"
+					default="0"
+					description="PLG_SEARCH_MEDIA_RELATION_METHOD_DESC"
+					label="PLG_SEARCH_MEDIA_RELATION_METHOD_LABEL"
+				>
+					<option value="0">PLG_SEARCH_MEDIA_OPTION_MATCH</option>
+					<option value="1">PLG_SEARCH_MEDIA_OPTION_LIKE</option>
+				</field>
+			</fieldset>                       
+		</fields>
+	</config>
+</extension>

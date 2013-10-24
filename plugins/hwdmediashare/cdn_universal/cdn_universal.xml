@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_cdn_universal</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_CDN_UNIVERSAL_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="cdn_universal">cdn_universal.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_cdn_universal.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_cdn_universal.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="connection"
+				  label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_GROUP_FTP_CONNECTION_LABEL"
+			>                       
+                                <field 
+                                        name="scheme" 
+                                        type="list"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_SCHEME_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_SCHEME_LABEL"
+                                        default="ftp" 
+                                        required="true"                                        
+				>
+                                        <option value="ftp">PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FTP_OPTION</option>
+				</field>                             
+				<field 
+                                        name="host" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_HOST_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_HOST_LABEL"
+					size="20"
+					default=""
+                                        required="true"                                        
+				/>
+				<field 
+                                        name="port" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_PORT_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_PORT_LABEL"
+					size="20"
+					default="21"
+				/>
+				<field 
+                                        name="user" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_USER_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_USER_LABEL"
+					size="20"
+					default=""
+				/>
+				<field 
+                                        name="pass" 
+                                        type="password"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_PASSWORD_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_PASSWORD_LABEL"
+					size="20"
+					default=""
+				/>
+				<field 
+                                        name="path" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_PATH_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_PATH_LABEL"
+					size="20"
+					default=""
+				/>
+			</fieldset>
+			<fieldset name="delivery"
+				  label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_GROUP_DELIVERY_LABEL"
+			>      
+				<field 
+                                        name="location" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_LOCATION_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_UNIVERSAL_FIELD_LOCATION_LABEL"
+					size="20"
+					default=""
+                                        required="true"                                        
+				/>                                
+			</fieldset>
+		</fields>
+	</config>
+</extension>

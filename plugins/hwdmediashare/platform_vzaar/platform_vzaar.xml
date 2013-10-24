@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_platform_vzaar</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_PLATFORM_VZAAR_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="platform_vzaar">platform_vzaar.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_platform_vzaar.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_platform_vzaar.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="username" type="text"
+					description=""
+					label="Vzaar Username"
+					size="20"
+					default=""
+				/>
+				<field name="token" type="text"
+					description=""
+					label="Vzaar API Token"
+					size="20"
+					default=""
+				/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

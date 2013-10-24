@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="content" method="upgrade">
+	<name>plg_content_hwdjwplayer</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_CONTENT_HWDJWPLAYER_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="hwdjwplayer">hwdjwplayer.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_content_hwdjwplayer.ini</language>
+		<language tag="en-GB">language/en-GB.plg_content_hwdjwplayer.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_BASIC_LABEL"
+			>                    
+				<field
+					name="width"
+					type="text"
+					default="640"
+					label="PLG_CONTENT_HWDJWPLAYER_FIELD_WIDTH_LABEL"
+					description="PLG_CONTENT_HWDJWPLAYER_FIELD_WIDTH_DESC"
+                                />
+				<field
+					name="height"
+					type="text"
+					default="480"
+					label="PLG_CONTENT_HWDJWPLAYER_FIELD_HEIGHT_LABEL"
+					description="PLG_CONTENT_HWDJWPLAYER_FIELD_HEIGHT_DESC"
+                                />
+                                <field
+					name="align"
+					type="list"
+					default="left"
+					label="PLG_CONTENT_HWDJWPLAYER_FIELD_ALIGN_LABEL"
+					description="PLG_CONTENT_HWDJWPLAYER_FIELD_ALIGN_DESC"
+                                >
+					<option value="left">PLG_CONTENT_HWDJWPLAYER_OPTION_LEFT</option>
+					<option value="center">PLG_CONTENT_HWDJWPLAYER_OPTION_CENTER</option>
+					<option value="right">PLG_CONTENT_HWDJWPLAYER_OPTION_RIGHT</option>
+				</field> 
+                                <field
+					name="wrap"
+					type="list"
+					default="0"
+					label="PLG_CONTENT_HWDJWPLAYER_FIELD_WRAP_LABEL"
+					description="PLG_CONTENT_HWDJWPLAYER_FIELD_WRAP_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+				</field> 
+			</fieldset>
+			<fieldset name="version"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_VERSION_LABEL"
+			>                    
+                                <field
+					name="version"
+					type="list"
+					default="version5"
+					label="PLG_CONTENT_HWDJWPLAYER_FIELD_VERSION_LABEL"
+					description="PLG_CONTENT_HWDJWPLAYER_FIELD_VERSION_DESC"
+                                >
+					<option value="version5">PLG_CONTENT_HWDJWPLAYER_OPTION_VERSION5</option>
+					<option value="version6">PLG_CONTENT_HWDJWPLAYER_OPTION_VERSION6</option>
+				</field> 
+				<field
+					name="licensekey"
+					type="text"
+					default=""
+					label="PLG_CONTENT_HWDJWPLAYER_FIELD_LICENSE_KEY_LABEL"
+					description="PLG_CONTENT_HWDJWPLAYER_FIELD_LICENSE_KEY_DESC"
+                                />
+			</fieldset>
+			<fieldset name="layout"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_LAYOUT_LABEL"
+			>
+                                <field 
+                                        name="controlbarposition" 
+                                        type="list" 
+                                        default="over"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_CONTROLBAR_POSITION_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_CONTROLBAR_POSITION_DESC"
+                                >
+                                        <option value="bottom">PLG_CONTENT_HWDJWPLAYER_OPTION_BOTTOM</option>
+                                        <option value="top">PLG_CONTENT_HWDJWPLAYER_OPTION_TOP</option>
+                                        <option value="over">PLG_CONTENT_HWDJWPLAYER_OPTION_OVER</option>
+                                        <option value="none">PLG_CONTENT_HWDJWPLAYER_OPTION_NONE</option>
+                                </field>
+                                <field 
+                                        name="controlbaridlehide" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_CONTROLBAR_IDLEHIDE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_CONTROLBAR_IDLEHIDE_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                                
+                                <field 
+                                        name="displayshowmute" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_DISPLAY_SHOWMUTE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_DISPLAY_SHOWMUTE_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                                 
+                                <field 
+                                        name="dock" 
+                                        type="list" 
+                                        default="1"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_DOCK_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_DOCK_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                                  
+                                <field 
+                                        name="icons" 
+                                        type="list" 
+                                        default="1"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_ICONS_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_ICONS_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field 
+                                        name="playlistposition" 
+                                        type="list" 
+                                        default="none"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLAYLIST_POSITION_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLAYLIST_POSITION_DESC"
+                                >
+                                        <option value="bottom">PLG_CONTENT_HWDJWPLAYER_OPTION_BOTTOM</option>
+                                        <option value="top">PLG_CONTENT_HWDJWPLAYER_OPTION_TOP</option>
+                                        <option value="left">PLG_CONTENT_HWDJWPLAYER_OPTION_LEFT</option>
+                                        <option value="right">PLG_CONTENT_HWDJWPLAYER_OPTION_RIGHT</option>
+                                        <option value="over">PLG_CONTENT_HWDJWPLAYER_OPTION_OVER</option>
+                                        <option value="none">PLG_CONTENT_HWDJWPLAYER_OPTION_NONE</option>
+                                </field>
+                                <field
+                                        name="playlistsize"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLAYLIST_SIZE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLAYLIST_SIZE_DESC"
+                                        class="inputbox"
+                                        default="180"
+                                />
+			</fieldset>
+			<fieldset name="skin"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_SKIN_LABEL"
+			>                                
+                                <field
+                                        name="skin"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_SKIN_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_SKIN_DESC"
+                                        class="inputbox"
+                                        default=""
+                                >
+                                        <option value="">PLG_CONTENT_HWDJWPLAYER_OPTION_DEFAULTSKIN</option>
+                                        <option value="minima">PLG_CONTENT_HWDJWPLAYER_OPTION_MINIMA</option>
+                                        <option value="lulu">PLG_CONTENT_HWDJWPLAYER_OPTION_LULU</option>
+                                        <option value="facebook">PLG_CONTENT_HWDJWPLAYER_OPTION_FACEBOOK</option>
+                                        <option value="custom">PLG_CONTENT_HWDJWPLAYER_OPTION_CUSTOMSKIN</option>
+                                </field>
+                                <field
+                                        name="skin6"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_SKIN6_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_SKIN6_DESC"
+                                        class="inputbox"
+                                        default=""
+                                >
+                                        <option value="">PLG_CONTENT_HWDJWPLAYER_OPTION_DEFAULTSKIN</option>
+                                        <option value="six">Six</option>
+                                        <option value="bekle">Bekle</option>
+                                        <option value="modieus">Modieus</option>
+                                        <option value="glow">Glow</option>
+                                        <option value="five">Five</option>
+                                        <option value="beelden">Beelden</option>
+                                        <option value="stormtrooper">Stormtrooper</option>
+                                        <option value="vapor">Vapor</option>
+                                        <option value="roundster">Roundster</option>
+                                </field>
+                                <field
+                                        name="customskin"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_CUSTOMSKIN_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_CUSTOMSKIN_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+			</fieldset>
+			<fieldset name="behavior"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_BEHAVIOUR_LABEL"
+			>
+                                <field 
+                                        name="autostart" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_AUTOSTART_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_AUTOSTART_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field
+                                        name="bufferlength"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_BUFFERLENGTH_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_BUFFERLENGTH_DESC"
+                                        class="inputbox"
+                                        default="1"
+                                />
+                                <field 
+                                        name="mute" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_MUTE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_MUTE_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field
+                                        name="playerready"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLAYERREADY_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLAYERREADY_DESC"
+                                        class="inputbox"
+                                        default="1"
+                                />
+                                <field 
+                                        name="repeat" 
+                                        type="list" 
+                                        default="none"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_REPEAT_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_REPEAT_DESC"
+                                >
+                                        <option value="none">PLG_CONTENT_HWDJWPLAYER_OPTION_NONE</option>
+                                        <option value="list">PLG_CONTENT_HWDJWPLAYER_OPTION_LIST</option>
+                                        <option value="always">PLG_CONTENT_HWDJWPLAYER_OPTION_ALWAYS</option>
+                                        <option value="single">PLG_CONTENT_HWDJWPLAYER_OPTION_SINGLE</option>
+                                </field>
+                                <field 
+                                        name="shuffle" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_SHUFFLE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_SHUFFLE_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field 
+                                        name="smoothing" 
+                                        type="list" 
+                                        default="1"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_SMOOTHING_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_SMOOTHING_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field 
+                                        name="stretching" 
+                                        type="list" 
+                                        default="uniform"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_STRETCHING_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_STRETCHING_DESC"
+                                >
+                                        <option value="none">PLG_CONTENT_HWDJWPLAYER_OPTION_NONE</option>
+                                        <option value="exactfit">PLG_CONTENT_HWDJWPLAYER_OPTION_EXACTFIT</option>
+                                        <option value="uniform">PLG_CONTENT_HWDJWPLAYER_OPTION_UNIFORM</option>
+                                        <option value="fill">PLG_CONTENT_HWDJWPLAYER_OPTION_FILL</option>
+                                </field>
+                                <field 
+                                        name="volume" 
+                                        type="list" 
+                                        default="90"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_VOLUME_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_VOLUME_DESC"
+                                >
+                                        <option value="0">PLG_CONTENT_HWDJWPLAYER_OPTION_0P</option>
+                                        <option value="10">PLG_CONTENT_HWDJWPLAYER_OPTION_10P</option>
+                                        <option value="20">PLG_CONTENT_HWDJWPLAYER_OPTION_20P</option>
+                                        <option value="30">PLG_CONTENT_HWDJWPLAYER_OPTION_30P</option>
+                                        <option value="40">PLG_CONTENT_HWDJWPLAYER_OPTION_40P</option>
+                                        <option value="50">PLG_CONTENT_HWDJWPLAYER_OPTION_50P</option>
+                                        <option value="60">PLG_CONTENT_HWDJWPLAYER_OPTION_60P</option>
+                                        <option value="70">PLG_CONTENT_HWDJWPLAYER_OPTION_70P</option>
+                                        <option value="80">PLG_CONTENT_HWDJWPLAYER_OPTION_80P</option>
+                                        <option value="90">PLG_CONTENT_HWDJWPLAYER_OPTION_90P</option>
+                                        <option value="100">PLG_CONTENT_HWDJWPLAYER_OPTION_100P</option>
+                                </field>
+			</fieldset>
+			<fieldset name="logo"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_LOGO_LABEL"
+			>
+                                <field
+                                        name="logofile"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_FILE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_FILE_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+                                <field
+                                        name="logolink"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_LINK_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_LINK_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+                                <field 
+                                        name="logolinktarget" 
+                                        type="list" 
+                                        default="_blank"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_LINKTARGET_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_LINKTARGET_DESC"
+                                >
+                                        <option value="_self">PLG_CONTENT_HWDJWPLAYER_OPTION__SELF</option>
+                                        <option value="_blank">PLG_CONTENT_HWDJWPLAYER_OPTION__BLANK</option>
+                                        <option value="_parent">PLG_CONTENT_HWDJWPLAYER_OPTION__PARENT</option>
+                                        <option value="_top">PLG_CONTENT_HWDJWPLAYER_OPTION__TOP</option>
+                                </field>
+                                <field 
+                                        name="logohide" 
+                                        type="list" 
+                                        default="1"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_HIDE_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_HIDE_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field
+                                        name="logomargin"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_MARGIN_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_MARGIN_DESC"
+                                        class="inputbox"
+                                        default="8"
+                                        fitler="integer"
+                                />
+                                <field 
+                                        name="logoposition" 
+                                        type="list" 
+                                        default="bottom-left"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_POSITION_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_POSITION_DESC"
+                                >
+                                        <option value="bottom-left">PLG_CONTENT_HWDJWPLAYER_OPTION_BOTTOMLEFT</option>
+                                        <option value="bottom-right">PLG_CONTENT_HWDJWPLAYER_OPTION_BOTTOMRIGHT</option>
+                                        <option value="top-left">PLG_CONTENT_HWDJWPLAYER_OPTION_TOPLEFT</option>
+                                        <option value="top-right">PLG_CONTENT_HWDJWPLAYER_OPTION_TOPRIGHT</option>
+                                </field>
+                                <field
+                                        name="logotimeout"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_TIMEOUT_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_TIMEOUT_DESC"
+                                        class="inputbox"
+                                        default="3"
+                                        fitler="integer"
+                                />
+                                <field
+                                        name="logoover"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_OVER_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_OVER_DESC"
+                                        class="inputbox"
+                                        default="1"
+                                        fitler="integer"
+                                />
+                                <field
+                                        name="logoout"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_OUT_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_LOGO_OUT_DESC"
+                                        class="inputbox"
+                                        default="1"
+                                        fitler="integer"
+                                />
+                                <field
+                                        name="abouttext"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_ABOUTTEXT_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_ABOUTTEXT_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+                                <field
+                                        name="aboutlink"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_ABOUTLINK_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_ABOUTLINK_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+			</fieldset>
+			<fieldset name="plugins"
+				  label="PLG_CONTENT_HWDJWPLAYER_FIELD_GROUP_PLUGINS_LABEL"
+			>
+                                <field 
+                                        name="plugviral" 
+                                        type="list" 
+                                        default="0"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_VIRAL_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_VIRAL_DESC"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                            
+                                <field
+                                        name="plugfacebook"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_FACEBOOK_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_FACEBOOK_DESC"
+                                        class="inputbox"
+                                        default="1"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field
+                                        name="plugtwitter"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_TWITTER_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_TWITTER_DESC"
+                                        class="inputbox"
+                                        default="1"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field> 
+                                <field
+                                        name="plughd"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_HD_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_HD_DESC"
+                                        class="inputbox"
+                                        default="0"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field> 
+                                <field
+                                        name="plugltas"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_LTAS_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_LTAS_DESC"
+                                        class="inputbox"
+                                        default="0"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                                 
+                                <field
+                                        name="ltas_channel"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_LTAS_CHANNEL_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_LTAS_CHANNEL_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+                                <field
+                                        name="pluginvideous"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_INVIDEOUS_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_INVIDEOUS_DESC"
+                                        class="inputbox"
+                                        default="0"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                                 
+                                <field
+                                        name="invideouspid"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_INVIDEOUS_PID_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_INVIDEOUS_PID_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+                                <field
+                                        name="videoadsclient"
+                                        type="list"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_VIDEOADS_CLIENT_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_VIDEOADS_CLIENT_DESC"
+                                        class="inputbox"
+                                        default="0"
+                                >
+                                        <option value="">JNO</option>
+                                        <option value="vast">PLG_CONTENT_HWDJWPLAYER_OPTION_VAST</option>
+                                        <option value="vast">PLG_CONTENT_HWDJWPLAYER_OPTION_VPAID</option>
+                                        <option value="googima">PLG_CONTENT_HWDJWPLAYER_OPTION_GOOGLEIMA</option>
+                                </field> 
+                                <field
+                                        name="videoadstag"
+                                        type="text"
+                                        label="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_VIDEOADS_TAG_LABEL"
+                                        description="PLG_CONTENT_HWDJWPLAYER_FIELD_PLUG_VIDEOADS_TAG_DESC"
+                                        class="inputbox"
+                                        default=""
+                                />
+			</fieldset>                        
+		</fields>
+	</config>
+</extension>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_remote_veohcom</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_REMOTE_VVEOHCOM_XML_DESCRIPTION</description>
+	<url>http://veoh.com</url>
+	<files>
+		<filename plugin="remote_veohcom">remote_veohcom.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_veohcom.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_veohcom.sys.ini</language>
+	</languages>
+	<config>
+	</config>
+</extension>

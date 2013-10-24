@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+	<name>plg_hwdmediashare_cdn_amazons3</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<description>PLG_HWDMEDIASHARE_CDN_AMAZONS3_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="cdn_amazons3">cdn_amazons3.php</filename>
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_cdn_amazons3.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_cdn_amazons3.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field 
+                                        name="awsAccessKey" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_ACCESS_KEY_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_ACCESS_KEY_LABEL"
+					size="20"
+					default=""
+				/>
+				<field 
+                                        name="awsSecretKey" 
+                                        type="password"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_SECRET_KEY_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_SECRET_KEY_LABEL"
+					size="20"
+					default=""
+				/>
+				<field 
+                                        name="awsBucket" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_BUCKET_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_BUCKET_LABEL"
+					size="20"
+					default=""
+				/>
+				<field 
+                                        name="awsAlias" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_CNAME_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_CNAME_LABEL"
+					size="20"
+					default=""
+				/>
+                                <field 
+                                        name="awsRegion" 
+                                        type="list"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_REGION_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_REGION_LABEL"
+                                        default="us-east-1" 
+				>
+                                        <option value="EU">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_EU</option>
+                                        <option value="eu-west-1">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_EUWEST1</option>
+                                        <option value="us-west-1">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_USWEST1</option>
+                                        <option value="us-west-2">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_USWEST2</option>
+                                        <option value="us-east-1">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_USEAST</option>
+                                        <option value="ap-southeast-1">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_APSE</option>
+                                        <option value="ap-northeast-1">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_APNE</option>
+                                        <option value="sa-east-1">PLG_HWDMEDIASHARE_CDN_AMAZONS3_OPTION_SAE1</option>  
+				</field>   
+                                <field 
+                                        name="awsRrs" 
+                                        type="list"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_RRS_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_RRS_LABEL"
+                                        default="0" 
+				>
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+				</field>           
+                                <field 
+                                        name="http_cloud" 
+                                        type="list"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_HTMLCLOUDFRONT_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_HTMLCLOUDFRONT_LABEL"
+                                        default="0" 
+				>
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+				</field>           
+				<field 
+                                        name="http_url" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_HTMLURL_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_HTMLURL_LABEL"
+					size="20"
+					default="http://xxxxx.cloudfront.net"
+				/>
+                                <field 
+                                        name="rtmp_cloud" 
+                                        type="list"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_RTMPCLOUDFRONT_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_RTMPCLOUDFRONT_LABEL"
+                                        default="0" 
+				>
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+				</field> 
+				<field 
+                                        name="rtmp_url" 
+                                        type="text"
+					description="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_RTMPURL_DESC"
+					label="PLG_HWDMEDIASHARE_CDN_AMAZONS3_FIELD_RTMPURL_LABEL"
+					size="20"
+					default="rtmp://xxxxx.cloudfront.net"
+				/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

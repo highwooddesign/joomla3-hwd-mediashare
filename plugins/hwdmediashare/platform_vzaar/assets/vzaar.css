@@ -1,0 +1,120 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2011, All rights reserved */
+/**********************************************************************************************/
+/* Vzaar Items */
+#vzaar {
+	padding: 20px 0;
+}
+#vzaar #divStatus, #vzaar #status {
+	padding: 10px 0;
+}
+#vzaar div.fieldset {
+	border:  1px solid #ccc;
+	margin: 10px 0;
+	padding: 20px 10px;
+}
+#vzaar div.fieldset span.legend {
+	position: relative;
+	background-color: #fff;
+	padding: 3px;
+	top: -30px;
+	font-weight:bold;
+}
+#vzaar div.flash {
+	margin: 10px 0;
+	-moz-border-radius-topleft : 5px;
+	-webkit-border-top-left-radius : 5px;
+        -moz-border-radius-topright : 5px;
+        -webkit-border-top-right-radius : 5px;
+        -moz-border-radius-bottomleft : 5px;
+        -webkit-border-bottom-left-radius : 5px;
+        -moz-border-radius-bottomright : 5px;
+        -webkit-border-bottom-right-radius : 5px;
+}
+#vzaar .progressWrapper {
+	overflow: hidden;
+}
+#vzaar .progressContainer {
+	margin: 5px;
+	padding: 4px;
+	border: solid 1px #E8E8E8;
+	background-color: #F7F7F7;
+	overflow: hidden;
+}
+/* Message */
+#vzaar .message {
+	margin: 1em 0;
+	padding: 10px 20px;
+	border: solid 1px #FFDD99;
+	background-color: #FFFFCC;
+	overflow: hidden;
+}
+/* Error */
+#vzaar .red {
+	border: solid 1px #B50000;
+	background-color: #FFEBEB;
+}
+/* Current */
+#vzaar .green {
+	border: solid 1px #DDF0DD;
+	background-color: #EBFFEB;
+}
+/* Complete */
+#vzaar .blue {
+	border: solid 1px #CEE2F2;
+	background-color: #F0F5FF;
+}
+#vzaar .progressName {
+	font-size: 8pt;
+	font-weight: 700;
+	color: #555;
+	width: 323px;
+	height: 14px;
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+}
+#vzaar .progressBarInProgress,
+#vzaar .progressBarComplete,
+#vzaar .progressBarError {
+	font-size: 0;
+	width: 0%;
+	height: 2px;
+	background-color: blue;
+	margin-top: 2px;
+}
+#vzaar .progressBarComplete {
+	width: 100%;
+	background-color: green;
+	visibility: hidden;
+}
+#vzaar .progressBarError {
+	width: 100%;
+	background-color: red;
+	visibility: hidden;
+}
+#vzaar .progressBarStatus {
+	margin-top: 2px;
+	width: 337px;
+	font-size: 7pt;
+	font-family: Arial;
+	text-align: left;
+	white-space: nowrap;
+}
+#vzaar a.progressCancel {
+	font-size: 0;
+	display: block;
+	height: 14px;
+	width: 14px;
+	background-image: url(cancelbutton.gif);
+	background-repeat: no-repeat;
+	background-position: -14px 0px;
+	float: right;
+}
+#vzaar a.progressCancel:hover {
+	background-position: 0px 0px;
+}
+/* -- SWFUpload Object Styles ------------------------------- */
+#vzaar .swfupload {
+	vertical-align: top;
+}
