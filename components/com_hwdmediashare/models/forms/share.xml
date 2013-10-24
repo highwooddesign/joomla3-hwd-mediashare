@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: share.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+                addfieldpath="/components/com_hwdmediashare/models/fields/"
+        >
+                <field
+			name="permalink"
+			type="text"
+			label="COM_HWDMS_PERMALINK_LABEL"
+			description="COM_HWDMS_PERMALINK_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="embed_code"
+			type="textarea"
+			label="COM_HWDMS_EMBED_CODE_LABEL"
+			description="COM_HWDMS_EMBED_CODE_DESC"
+                        rows="3" 
+                        cols="30"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="mailto"
+			type="text"
+			label="COM_HWDMS_EMAIL_TO_LABEL"
+			description="COM_HWDMS_EMAIL_TO_DESC"
+			size="20"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="sender"
+			type="text"
+			label="COM_HWDMS_SENDER_LABEL"
+			description="COM_HWDMS_SENDER_DESC"
+			size="20"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="from"
+			type="text"
+			label="COM_HWDMS_YOUR_EMAIL_LABEL"
+			description="COM_HWDMS_YOUR_EMAIL_DESC"
+			size="20"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="subject"
+			type="text"
+			label="COM_HWDMS_SUBJECT_LABEL"
+			description="COM_HWDMS_SUBJECT_DESC"
+			size="20"
+			class="inputbox"
+			default=""
+		/>
+	</fieldset>
+</form>

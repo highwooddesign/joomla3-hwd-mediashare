@@ -1,0 +1,228 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2011, All rights reserved
+   This sheet loads style for the slideshow view */
+/**********************************************************************************************/
+/* HWD Slideshow */
+html, body {
+	margin:0px 0px 0px 0px!important;
+	padding:0px 0px 0px 0px!important;
+}
+body { 
+	height:100%!important; 
+}
+div.fullscreen {
+	display:block;
+	background:-moz-linear-gradient(center top , #FFFFFF 0%, #45484D 100%) repeat scroll 0 0 transparent;
+	/* Set the div in the top-left corner of the screen*/
+	position:fixed;
+	top:0;
+	left:0;
+        /* Set the width and height to 100% of the screen*/
+	width:100%;
+	height:100%;
+}
+div.fullscreen #hwd-container {
+	padding:20px;
+}  
+#hwd-container .media-item-container {
+        position:absolute;
+        top:140px;
+        bottom:90px;
+        left:0;
+        right:0;
+        width:100%;
+        height:auto;
+        overflow:hidden;
+} 
+#hwd-container .media-item-full-slideshow {
+	position:relative;
+	text-align:center;
+        display: table;
+        width:100%;
+        height:100%;
+} 
+#hwd-container .centered-cell {
+	display: table-cell;
+	vertical-align: middle;
+}
+/**********************************************************************************************/
+/* Slideshow Zoom View */
+.media-slideshow {
+	margin:0;
+	padding:0;
+	font-size:0.8em;
+	background:#333;
+	color:#333;
+	font-family:Helvetica, Arial, sans-serif;
+	text-align:center;
+}
+.media-slideshow a {
+	color:#333;
+}
+.media-slideshow #hwd-container {
+	margin:0;
+}
+.media-slideshow #hwd-container .media-slideshow-view {
+	text-align:center;
+	margin:0;
+}
+.media-slideshow .media-item img {
+	margin:0;
+	padding:5px;
+	box-shadow:0 0 5px #000;
+	-moz-box-shadow:0 0 5px #000;
+	-webkit-box-shadow:0 0 5px #000;
+	background:#fff;
+	border:1px solid #ddd;
+	max-width:100%;
+}
+.media-slideshow .media-slideshow-toggle {
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;
+	border-top:1px solid #ddd;
+	background:#eeeeee; /* Old browsers */
+	background:-moz-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* FF3.6+ */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #eeeeee)); /* Chrome,Safari4+ */
+	background:-webkit-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background:-o-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* Opera 11.10+ */
+	background:-ms-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* IE10+ */
+	background:linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* W3C */
+	filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0 ); /* IE6-9 */
+	border-bottom:1px solid #ddd;
+}
+.media-slideshow .media-slideshow-tab {
+	border-bottom:1px solid #ddd;
+	border-left:1px solid #ddd;
+	border-right:1px solid #ddd;
+	padding:10px;
+	display:block;
+	color:#333;
+}
+.media-slideshow #slideshow-status {
+	float:left;
+}
+.media-slideshow #slideshow-position {
+	float:right;
+}
+.media-slideshow #slideshow-title {
+	font-weight:bold;
+}
+.media-slideshow .hidden {
+	display:none;
+}
+.media-slideshow .slide {
+	width:96%;
+	float:left;
+background:none repeat scroll 0 0 #333333;        
+}
+.media-slideshow .slide-previous {
+	width:2%;
+	float:left;
+	height:100px;
+}
+.media-slideshow .slide-next {
+	width:2%;
+	float:right;
+        height:100px;
+}
+.media-slideshow .slide-previous a, .media-slideshow .slide-next a {
+	background:#eeeeee; /* Old browsers */
+	background:-moz-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* FF3.6+ */
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #eeeeee)); /* Chrome,Safari4+ */
+	background:-webkit-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* Chrome10+,Safari5.1+ */
+	background:-o-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* Opera 11.10+ */
+	background:-ms-linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* IE10+ */
+	background:linear-gradient(top, #ffffff 0%, #eeeeee 100%); /* W3C */
+        filter:progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee', GradientType=0 ); /* IE6-9 */
+	margin:0;
+	display:block;
+	text-align:center;
+	height:96px;
+	line-height:100px;
+	text-decoration:none;
+	border-left:1px solid #ddd;
+	border-right:1px solid #ddd;
+}
+.media-slideshow #slide {
+	position:relative;
+	width:100%;
+	height:100px;
+	padding:0;
+	overflow:hidden;
+}
+.media-slideshow #slide div.slide-unit {
+	position:relative;
+	display:inline-block;
+        margin:0 10px;
+        height:100px;
+        width:300px;        
+	vertical-align:middle;
+	background:#1C1C1C;
+	color:#E8E8E8;
+	overflow:hidden;
+	text-align:left;
+	cursor:pointer;
+}
+.media-slideshow #slide a {
+	text-align:center;
+}
+.media-slideshow #slide img {
+	max-width:100px;
+	max-height:80px;
+	margin:5px;
+	padding:3px;
+	box-shadow:0 0 5px #000;
+	-moz-box-shadow:0 0 5px #000;
+	-webkit-box-shadow:0 0 5px #000;
+	background:#fff;
+	border:1px solid #ddd;
+}
+.media-slideshow #slide img.highlighted {
+	box-shadow:0 0 10px #00b4d9;
+	-moz-box-shadow:0 0 10px #00b4d9;
+	-webkit-box-shadow:0 0 10px #00b4d9;
+	border:1px solid #00b4d9;
+}
+.media-slideshow #slide div.slide-unit-count {
+        font-size: 1.3333em;
+        height: 100px;
+        left: 0;
+        line-height: 100px;
+        text-align: center;
+        text-shadow: 0 0 2px #000000;
+        top: 0;
+        width: 25px;
+        float: left;
+}
+.media-slideshow #slide div.slide-unit-title {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 14px;
+        padding-top: 25px;
+        width: 155px;
+        float: left;
+}
+.media-slideshow #slide div.slide-unit-thumb {
+        display: table;
+        height: 100px;
+        float: left;
+}
+.media-slideshow #slide div.slide-unit-title span.uploader {
+	display:block;
+	font-size:70%;
+}
+.media-slideshow #slide div.slide-unit-title span.now-playing {
+        position:absolute;
+        top:5px;
+        right:5px;
+        background-color: #62CFFC;
+        border-radius: 3px 3px 3px 3px;
+        color: #FFFFFF;
+        font-size: 9.75px;
+        font-weight: bold;
+        padding: 1px 3px 2px;
+        text-transform: uppercase;
+        white-space: nowrap;
+}

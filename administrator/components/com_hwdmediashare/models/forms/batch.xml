@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: batch.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
+<form>
+	<fieldset>
+ 		<field
+                        name="batch_user"
+                        type="user"
+			label="COM_HWDMS_USER_LABEL"
+                        description="COM_HWDMS_USER_DESC"
+                />
+                <field
+                        name="batch_access"
+                        type="accesslevel"
+                        label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC"
+                        class="inputbox"
+                        size="1"
+		>
+                        <option value="">JOPTION_SELECT_ACCESS</option>
+		</field>
+		<field
+                        name="batch_language"
+                        type="contentlanguage"
+                        label="JFIELD_LANGUAGE_LABEL"
+			description="COM_HWDMS_LANGUAGE_DESC"
+                        class="inputbox"
+		>
+                        <option value="">JOPTION_SELECT_LANGUAGE</option>
+		</field>
+                <field
+                        name="batch_element_type"
+                        type="element"
+			label="COM_HWDMS_ELEMENT_TYPE_LABEL"
+                        description="COM_HWDMS_ELEMENT_TYPE_DESC"
+                />
+		<field 
+                        name="batch_searchable" 
+                        type="list"
+			label="COM_HWDMS_SEARCHABLE_LABEL"
+			description="COM_HWDMS_SEARCHABLE_DESC"
+			default=""
+		>
+			<option value="">COM_HWDMS_LIST_SELECT</option>
+			<option value="0">COM_HWDMS_NOT_SEARCHABLE</option>
+			<option value="1">COM_HWDMS_SEARCHABLE</option>
+		</field>
+		<field 
+                        name="batch_visible" 
+                        type="list"
+			label="COM_HWDMS_VISIBLE_LABEL"
+			description="COM_HWDMS_VISIBLE_DESC"
+			default=""
+		>
+			<option value="">COM_HWDMS_LIST_SELECT</option>
+			<option value="0">COM_HWDMS_NOT_VISIBLE</option>
+			<option value="1">COM_HWDMS_VISIBLE</option>
+		</field>
+		<field 
+                        name="batch_required"
+                        type="list"
+			label="COM_HWDMS_REQUIRED_LABEL"
+			description="COM_HWDMS_REQUIRED_DESC"
+			default=""
+		>
+			<option value="">COM_HWDMS_LIST_SELECT</option>
+			<option value="0">COM_HWDMS_NOT_REQUIRED</option>
+			<option value="1">COM_HWDMS_REQUIRED</option>
+		</field> 
+
+                <field
+                        name="assign_category_id"
+                        type="category"
+                        extension="com_hwdmediashare"
+                        class="inputbox"
+                        default=""
+                        label="COM_HWDMS_CATEGORY_LABEL"
+                        description="COM_HWDMS_CATEGORY_DESC"
+                >
+                        <option value="0">JOPTION_SELECT_CATEGORY</option>
+                </field>
+                <field
+                        name="unassign_category_id"
+                        type="category"
+                        extension="com_hwdmediashare"
+                        class="inputbox"
+                        default=""
+                        label="COM_HWDMS_CATEGORY_LABEL"
+                        description="COM_HWDMS_CATEGORY_DESC"
+                >
+                        <option value="0">JOPTION_SELECT_CATEGORY</option>
+                </field>
+ 		<field
+                        name="assign_album_id"
+                        type="album"
+			label="COM_HWDMS_ALBUM_LABEL"
+                        description="COM_HWDMS_ALBUM_DESC"
+                />
+ 		<field
+                        name="unassign_album_id"
+                        type="album"
+			label="COM_HWDMS_ALBUM_LABEL"
+                        description="COM_HWDMS_ALBUM_DESC"
+                />
+ 		<field
+                        name="assign_playlist_id"
+                        type="playlist"
+			label="COM_HWDMS_PLAYLIST_LABEL"
+                        description="COM_HWDMS_PLAYLIST_DESC"
+                />
+ 		<field
+                        name="unassign_playlist_id"
+                        type="playlist"
+			label="COM_HWDMS_PLAYLIST_LABEL"
+                        description="COM_HWDMS_PLAYLIST_DESC"
+                />
+ 		<field
+                        name="assign_group_id"
+                        type="group"
+			label="COM_HWDMS_GROUP_LABEL"
+                        description="COM_HWDMS_GROUP_DESC"
+                />
+ 		<field
+                        name="unassign_group_id"
+                        type="group"
+			label="COM_HWDMS_GROUP_LABEL"
+                        description="COM_HWDMS_GROUP_DESC"
+                />
+                <field
+                        name="assign_process_type"
+                        type="process"
+			label="COM_HWDMS_PROCESS_LABEL"
+                        description="COM_HWDMS_PROCESS_DESC"
+                />
+        </fieldset>
+</form>
+

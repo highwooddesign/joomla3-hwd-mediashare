@@ -1,0 +1,462 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2011, All rights reserved
+   This sheet loads core Joomla styles which HWD attempts to use
+   Both for the component and module views */
+/**********************************************************************************************/
+/* Default Joomla Tabs */
+#hwd-container .tabs {
+ margin:0;
+}
+#hwd-container #media-item-container div.current {
+ clear:both;
+ /* background:#fff; */
+ padding:10px;
+ margin-bottom:20px;
+ border-left:1px solid #ddd;
+ border-right:1px solid #ddd;
+ border-bottom:1px solid #ddd;
+ border-top:1px solid #ddd;
+ max-width:100%;
+}
+#hwd-container #media-item-container div.current .tabs{
+ float:none;
+ border:0;
+}
+#hwd-container .tabs {
+ margin:0;
+ padding:0;
+ list-style:none;
+ zoom:1;
+}
+#hwd-container .tabs:before, #hwd-container .tabs:after {
+ display:table;
+ content:"";
+ zoom:1;
+}
+#hwd-container .tabs:after {
+ clear:both;
+}
+#hwd-container .tabs > dt {
+ float:left;
+ width:auto;
+}
+#hwd-container .tabs > dt > span {
+ display:block;
+}
+#hwd-container .tabs > dt {
+ position:relative;
+ margin-bottom:-1px;
+}
+#hwd-container .tabs > dt > span {
+ padding:0 15px;
+ margin-right:2px;
+ line-height:34px;
+ border:1px solid transparent;
+ -webkit-border-radius:4px 4px 0 0;
+ -moz-border-radius:4px 4px 0 0;
+ border-radius:4px 4px 0 0;
+}
+#hwd-container .tabs > dt > span:hover {
+ text-decoration:none;
+ background-color:#eee;
+ /* border-color:#eee #eee #ddd; */
+}
+#hwd-container .tabs dt.open > span, #hwd-container .tabs dt.open > span:hover {
+ color:#808080;
+ background-color:#ffffff;
+ border:1px solid #ddd;
+ border-bottom-color:transparent;
+ cursor:default;
+}    
+#hwd-container dl.tabs dt {
+  border:0;
+  margin:0;
+  background:none;
+  padding:0;
+}
+#hwd-container #pane h3 {
+  font-size:100%;
+  margin:3px 0;
+}
+#hwd-container #pane h3 a {
+  text-decoration:none;
+  color:#404040;
+}
+/**********************************************************************************************/
+/* Joomla Category List View */
+#hwd-container table.category,
+.hwd-module table.category  {
+  margin-top:20px;
+  border:1px solid #ddd;
+  border-collapse:separate;
+  *border-collapse:collapse;
+  /* IE7, collapse table to remove spacing */
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+  background:#fff;
+  color:#404040;
+  width:100%;
+}
+#hwd-container table.category th, #hwd-container table.category td {
+  padding:10px 10px 9px;  
+}
+#hwd-container table.category a {
+  color:#404040;
+}
+#hwd-container table.category th + th, #hwd-container table.category td + td, #hwd-container table.category th + td, 
+.hwd-module table.category th + th, .hwd-module table.category td + td, .hwd-module table.category th + td {
+  border-left:1px solid #ddd;
+}
+#hwd-container table.category thead tr:first-child th:first-child,
+.hwd-module table.category thead tr:first-child th:first-child {
+  -webkit-border-radius:4px 0 0 0;
+  -moz-border-radius:4px 0 0 0;
+  border-radius:4px 0 0 0;
+}
+#hwd-container table.category thead tr:first-child th:last-child,
+.hwd-module table.category thead tr:first-child th:last-child {
+-webkit-border-radius:0 4px 0 0;
+-moz-border-radius:0 4px 0 0;
+border-radius:0 4px 0 0;
+}
+#hwd-container table.category tbody tr:last-child td:last-child,
+.hwd-module table.category tbody tr:last-child td:last-child {
+  -webkit-border-radius:0 0 4px 0;
+  -moz-border-radius:0 0 4px 0;
+  border-radius:0 0 4px 0;
+}
+#hwd-container table.category tbody tr:nth-child(odd) td, #hwd-container table.category tbody tr:nth-child(odd) th,
+.hwd-module table.category tbody tr:nth-child(odd) td, .hwd-module table.category tbody tr:nth-child(odd) th {
+background-color:#f9f9f9;
+}
+#hwd-container table.category tbody tr:hover td, #hwd-container table.category tbody tr:hover th,
+.hwd-module table.category tbody tr:hover td, .hwd-module table.category tbody tr:hover th {
+  background-color:#f5f5f5;
+}
+/**********************************************************************************************/
+/* Tables for, you guessed it, tabular data */
+#hwd-container table:not(.mceToolbar .mceListBox),
+.hwd-module table:not(.mceToolbar .mceListBox) {
+  width:100%;
+  margin-bottom:18px;
+  padding:0;
+  font-size:1em;
+  border-collapse:collapse;
+}
+#hwd-container table th:not(.mceToolbar th), #hwd-container table td:not(.mceToolbar td),
+.hwd-module table th:not(.mceToolbar th), .hwd-module table td:not(.mceToolbar td) {
+  padding:10px 10px 9px;
+  line-height:1.385em;
+  text-align:left;
+}
+#hwd-container table th:not(.mceToolbar th),
+.hwd-module table th:not(.mceToolbar th) {
+  padding-top:9px;
+  font-weight:bold;
+  vertical-align:middle;
+}
+#hwd-container table td:not(.mceToolbar td),
+.hwd-module table td:not(.mceToolbar td) {
+  vertical-align:top;
+  border-top:1px solid #ddd;
+}
+#hwd-container table tbody th:not(.mceToolbar th),
+.hwd-module table tbody th:not(.mceToolbar th) {
+  border-top:1px solid #ddd;
+  vertical-align:top;
+}
+#hwd-container .condensed-table th, #hwd-container .condensed-table td,
+.hwd-module .condensed-table th, .hwd-module .condensed-table td {
+  padding:5px 5px 4px;
+}
+#hwd-container .bordered-table,
+.hwd-module .bordered-table {
+  border:1px solid #ddd;
+  border-collapse:separate;
+  *border-collapse:collapse;
+  /* IE7, collapse table to remove spacing */
+  -webkit-border-radius:4px;
+  -moz-border-radius:4px;
+  border-radius:4px;
+}
+#hwd-container .bordered-table th + th, #hwd-container .bordered-table td + td, #hwd-container .bordered-table th + td,
+.hwd-module .bordered-table th + th, .hwd-module .bordered-table td + td, .hwd-module .bordered-table th + td {
+  border-left:1px solid #ddd;
+}
+#hwd-container .bordered-table thead tr:first-child th:first-child, #hwd-container .bordered-table tbody tr:first-child td:first-child,
+.hwd-module .bordered-table thead tr:first-child th:first-child, .hwd-module .bordered-table tbody tr:first-child td:first-child {
+  -webkit-border-radius:4px 0 0 0;
+  -moz-border-radius:4px 0 0 0;
+  border-radius:4px 0 0 0;
+}
+#hwd-container .bordered-table thead tr:first-child th:last-child, #hwd-container .bordered-table tbody tr:first-child td:last-child,
+.hwd-module .bordered-table thead tr:first-child th:last-child, .hwd-module .bordered-table tbody tr:first-child td:last-child {
+  -webkit-border-radius:0 4px 0 0;
+  -moz-border-radius:0 4px 0 0;
+  border-radius:0 4px 0 0;
+}
+#hwd-container .bordered-table tbody tr:last-child td:first-child,
+.hwd-module .bordered-table tbody tr:last-child td:first-child {
+  -webkit-border-radius:0 0 0 4px;
+  -moz-border-radius:0 0 0 4px;
+  border-radius:0 0 0 4px;
+}
+#hwd-container .bordered-table tbody tr:last-child td:last-child,
+.hwd-module .bordered-table tbody tr:last-child td:last-child {
+  -webkit-border-radius:0 0 4px 0;
+  -moz-border-radius:0 0 4px 0;
+  border-radius:0 0 4px 0;
+}
+/**********************************************************************************************/
+/* Leading Articles */
+#hwd-container .items-leading,
+.hwd-module .items-leading {
+  width:100%;
+}
+/* 1 Column */
+#hwd-container .cols-1 .item,
+.hwd-module .cols-1 .item {
+  width:100%;
+  padding:0;
+}
+/* 2 Column */
+#hwd-container .cols-2 .item,
+.hwd-module .cols-2 .item {
+  width:48%;
+  float:left;
+  margin:0 1%;
+  padding:0;
+}
+/* 3 Column */
+#hwd-container .cols-3 .item,
+.hwd-module .cols-3 .item {
+  width:31%;
+  float:left;
+  margin:0 1%;
+  padding:0;
+}
+/* 4 Column */
+#hwd-container .cols-4 .item,
+.hwd-module .cols-4 .item {
+  width:23%;
+  float:left;
+  margin:0 1%;
+  padding:0;
+}
+/* 5 Column */
+#hwd-container .cols-5 .item,
+.hwd-module .cols-5 .item {
+  width:18%;
+  float:left;
+  margin:0 1%;
+  padding:0;
+}
+/* 6 Column */
+#hwd-container .cols-6 .item,
+.hwd-module .cols-6 .item {
+  width:14%;
+  float:left;
+  margin:0 1%;
+  padding:0;
+}
+#hwd-container .item-separator, #hwd-container .row-separator,
+.hwd-module .item-separator, .hwd-module .row-separator {
+  clear:both;
+  /* margin-bottom:20px; */
+  margin-bottom:5px;
+  display:block;
+}
+/* Tweak to prevent grid conflicts with some templates */
+#hwd-container .items-row,
+.hwd-module .items-row {
+  margin:0;
+  padding:0;
+}
+/**********************************************************************************************/
+/* HWDMediaShare Activity */
+#hwd-container .categories-list dt, #hwd-container .categories-list dd, #hwd-container .cat-children dt, #hwd-container .cat-children dd {
+  display:inline;
+  margin:0;
+}
+#hwd-container .categories-list dl, #hwd-container .cat-children dl {
+  clear:both;
+  display:block;
+}
+#hwd-container #member-profile .image-left, #hwd-container .categories-list .image-left {
+  float:left;
+  margin:0 10px 10px 0;
+}
+#hwd-container ul.category-module li {
+  border-bottom:1px solid #DDDDDD;
+  list-style:none outside none;
+  margin:10px 0;
+  padding:0 10px;
+}
+/*
+#hwd-container .categories-list li, #hwd-container .cat-children li {
+  background-color:#F5F5F5;
+  border:1px solid #DDDDDD;
+  border-radius:3px 3px 3px 3px;
+  list-style:none outside none;
+  margin:0 0 20px;
+  min-height:20px;
+  padding:19px;
+}
+*/
+/* A couple of fixes to prevent the category-module class styling the navigation button */
+#hwd-container ul.category-module ul.media-nav li {
+  margin:0;
+}
+#hwd-container ul.category-module ul.media-nav li {
+  border:none;
+}
+/**********************************************************************************************/
+/* Module styling */
+.hwd-module .column-1, .hwd-module .column-2, .hwd-module .column-3, .hwd-module .column-4, .hwd-module .column-5, .hwd-module .column-6 {
+  margin:0;
+  padding:0;
+}
+/**********************************************************************************************/
+/* Tweaks */
+#hwd-container .contentheading {
+  float:none; /* Stop template floats */
+  overflow:hidden; /* Stop display problems with long none breaking titles */
+}
+#hwd-container div.items-row {
+  display:block; /* Stop table cell */
+}
+#hwd-container label.filter-search-lbl {
+  display:none; /* Hide search filter text */
+}
+#hwd-container #filter_search {
+  width:auto; /* Prevent full width search fitlers */
+}
+/**********************************************************************************************/
+/* Some Joomla templates apply stupid styles to the modal class, here we try to 
+   prevent them styling modal links in HWD */
+#hwd-container .modal, .hwd-module .modal {
+  position:relative;
+  width:auto;
+  margin:0;
+  left:0;
+  right:0;
+  top:0;
+  bottom:0;
+  box-shadow:none;
+  border:0;
+}
+/* But avoid setting the position property in a thumbnail as it breaks the forced aspect ratio */
+#hwd-container .media-item .modal, .hwd-module .media-item .modal {
+  position:inherit!important;
+}
+/**********************************************************************************************/
+/* Control HWDMediaShare menu */
+#hwd-container .media-mediamenu ul.menu li {
+  margin:0 3px 5px 0!important;
+}
+#hwd-container .media-mediamenu ul.menu li a {
+  color:#404040!important;
+}
+/**********************************************************************************************/
+/* Set the search results in the related tab */
+#hwd-container .search-results {
+  clear:both;
+  margin-bottom:20px;
+  min-height:20px;
+  padding:19px;
+}
+#hwd-container .search-results dd {
+  margin:0;
+}
+#hwd-container .search-results .result-title {
+  float:left;
+  font-size:16px;
+  font-weight:bold;
+  line-height:36px;
+}
+#hwd-container .search-results .result-category {
+  float:right;
+  margin:0;
+}
+#hwd-container .search-results .result-text {
+  clear:both;
+}
+#hwd-container .search-results .result-text .image-left {
+  float:left;
+  padding:0 5px 5px 0;
+}
+/* We hide the "details" text and align the listing data, as some Joomla templates don't include this code */
+#hwd-container .article-info-term, .hwd-module .article-info-term, #hwd-container .hidelabeltxt, .hwd-module .hidelabeltxt {
+  display:none;
+}
+#hwd-container .article-info dd, .hwd-module .article-info dd {
+  display:block;
+  margin:0;
+  padding:2px 5px 2px 0;
+}
+#hwd-container dl.article-info, .hwd-module dl.article-info {
+  padding: 0;
+  margin: 0;
+}
+/* 
+ * Progressive Layouts
+ * ----------------------------------------------------- */
+/* #Tablet (Portrait)
+/* Note: Design for a width of 768px */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+
+}
+/* #Mobile (Landscape)
+/* Note: Design for a width 480px to 767px */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+    #hwd-container .items-leading,
+    .hwd-module .items-leading,
+    #hwd-container .cols-1 .item,
+    .hwd-module .cols-1 .item,
+    #hwd-container .cols-2 .item,
+    .hwd-module .cols-2 .item,
+    #hwd-container .cols-3 .item,
+    .hwd-module .cols-3 .item,
+    #hwd-container .cols-4 .item,
+    .hwd-module .cols-4 .item,
+    #hwd-container .cols-5 .item,
+    .hwd-module .cols-5 .item,
+    #hwd-container .cols-6 .item,
+    .hwd-module .cols-6 .item {
+    width:48%;
+    float:left;
+    margin:0 1%;
+    padding:0;
+    }
+    
+    #hwd-container .row-separator,
+    .hwd-module .row-separator {
+    /*  */
+    }
+
+}
+/* #Mobile (Portrait)
+/* Note: Design for a width up to 480px */
+@media only screen and (max-width: 479px) {
+
+    #hwd-container .items-leading,
+    .hwd-module .items-leading,
+    #hwd-container .cols-1 .item,
+    .hwd-module .cols-1 .item,
+    #hwd-container .cols-2 .item,
+    .hwd-module .cols-2 .item,
+    #hwd-container .cols-3 .item,
+    .hwd-module .cols-3 .item,
+    #hwd-container .cols-4 .item,
+    .hwd-module .cols-4 .item,
+    #hwd-container .cols-5 .item,
+    .hwd-module .cols-5 .item,
+    #hwd-container .cols-6 .item,
+    .hwd-module .cols-6 .item {
+    width:100%;
+    float:none;
+    }
+
+}

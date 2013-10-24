@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2011, All rights reserved
+   This sheet loads an ajax loader style */
+/**********************************************************************************************/
+.ajax-loading {
+    background:transparent url(../images/ajax-loader.gif) center center no-repeat;
+    width:16px;
+    height:11px;
+}

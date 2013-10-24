@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: com_hwdmediashare.xml 912 2013-01-15 16:10:48Z dhorsfall $ -->
+<extension type="component" version="1.7.0" method="upgrade">
+
+	<name>COM_HWDMEDIASHARE</name>
+	<creationDate>2013-10-24</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>1.1.12</version>
+	<svn>1691</svn>
+	<description>COM_HWDMEDIASHARE_DESCRIPTION</description>
+
+	<scriptfile>script.php</scriptfile>
+
+	<install> 
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+	<uninstall> 
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+                <filename>controller.php</filename>
+                <filename>hwdmediashare.php</filename>
+                <filename>index.html</filename>
+                <filename>router.php</filename>
+		<folder>controllers</folder>
+                <folder>helpers</folder>
+                <folder>language</folder>
+                <folder>libraries</folder>
+                <folder>models</folder>
+                <folder>views</folder>
+	</files>
+
+	<media destination="com_hwdmediashare" folder="media">
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</media>
+
+	<administration>
+		<menu img="../media/com_hwdmediashare/assets/images/icons/16/icon-16-hwdms.png">COM_HWDMEDIASHARE_MENU</menu>
+		<files folder="admin">
+			<filename>access.xml</filename>
+			<filename>cli.php</filename>
+                        <filename>config.ini</filename>
+                        <filename>config.xml</filename>
+                        <filename>controller.php</filename>
+                        <filename>hwdmediashare.php</filename>
+                        <filename>index.html</filename>
+                        <filename>toolbar.xml</filename>
+                        <folder>controllers</folder>
+                        <folder>helpers</folder>
+                        <folder>models</folder>
+                        <folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>	
+		</files>
+
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB.com_hwdmediashare.ini</language>
+			<language tag="en-GB">language/en-GB.com_hwdmediashare.sys.ini</language>
+		</languages>
+                
+	</administration>
+
+</extension>
+

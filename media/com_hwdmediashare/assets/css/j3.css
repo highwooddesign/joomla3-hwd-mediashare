@@ -1,0 +1,479 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2011, All rights reserved
+   This sheet loads Joomla 2.5 admin styles to correct layout in Joomla 3.0 usage */
+/**********************************************************************************************/
+
+/* Standards for commonly used elements */
+div.width-20	{width: 20%;}
+div.width-30	{width: 30%;}
+div.width-35	{width: 35%;}
+div.width-40	{width: 40%;}
+div.width-45	{width: 45%;}
+div.width-50	{width: 50%;}
+div.width-55	{width: 55%;}
+div.width-60	{width: 60%;}
+div.width-65	{width: 65%;}
+div.width-70	{width: 70%;}
+div.width-80	{width: 80%;}
+div.width-100	{width: 100%;}
+
+.clr            {clear: both;}
+.fltlft		{float: left;}
+.fltrt		{float: right;}
+
+div.width-20 fieldset,
+div.width-30 fieldset,
+div.width-35 fieldset,
+div.width-40 fieldset,
+div.width-45 fieldset,
+div.width-50 fieldset,
+div.width-55 fieldset,
+div.width-60 fieldset,
+div.width-65 fieldset,
+div.width-70 fieldset,
+div.width-80 fieldset,
+div.width-100 fieldset	{
+	background-color: #fff;
+	padding: 5px 17px 17px 17px;
+}
+
+/* Administrator forms, lists */
+fieldset.adminform {
+	margin: 10px;
+	overflow: hidden;
+}
+fieldset.adminform legend {
+        float: left;
+        margin: 0 0 20px 0;
+        padding: 0;
+}
+ul.adminformlist,
+ul.adminformlist li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+fieldset label,
+fieldset span.faux-label {
+	float: left;
+	clear: left;
+	display:block;
+	margin: 5px 0;
+}
+fieldset ul {
+	margin: 0;
+	padding: 0;
+}
+form label,
+form span.faux-label {
+	font-size: 1.091em;
+}
+fieldset input,
+fieldset textarea,
+fieldset select,
+fieldset img,
+fieldset button {
+	float: left;
+	width: auto;
+}
+fieldset.adminform {
+	width: auto;
+}
+input.readonly {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1.091em;
+	padding-top: 1px;
+	border: 0;
+	font-weight: bold;
+	color: #666;
+	background-color: #ffffff;        
+}
+span.readonly {
+        color: #666666;
+        display: block;
+        float: left;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 1.091em;
+        font-weight: bold;
+        margin: 5px 5px 5px 0;
+}
+
+/* Required elements */
+input.required {
+	background-color: #d5eeff;
+}
+.star {
+	color:#EB8207;
+	font-size:1.2em;
+}
+
+/* Batch section */
+fieldset.batch {
+	margin: 20px 0 10px 0;
+	padding: 10px;
+}
+fieldset.batch label {
+	margin: 5px;
+	min-width: 100px;
+}
+fieldset.batch button {
+        clear: right;
+	margin: 3px;
+}
+fieldset.batch label {
+	float: left;
+	clear: none;
+}
+
+/* Field label widths - short label */
+fieldset.adminform label, fieldset.adminform span.faux-label {
+        min-width: 135px;
+        padding: 0 5px 0 0;
+}
+fieldset.panelform {
+	overflow: hidden;
+	clear: both;
+}
+fieldset.panelform label,
+fieldset.panelform div.paramrow label,
+fieldset.panelform span.faux-label {
+	min-width: 145px;
+	max-width: 250px;
+	padding: 0 5px 0 0;
+}
+fieldset p {
+	margin: 0 0 15px 0;
+	font-size: 1.091em;
+}
+
+/* Radios */
+fieldset.adminform fieldset.radio,
+fieldset.panelform fieldset.radio,
+fieldset.adminform-legacy fieldset.radio {
+	border: 0;
+	float: left;
+	padding: 0;
+	margin: 0 0 5px 0;
+	/* clear: right; */
+}
+fieldset.adminform fieldset.radio label,
+fieldset.panelform fieldset.radio label {
+	min-width: 60px;
+	padding-left: 0;
+	padding-right: 10px;
+	float: left;
+	clear: none;
+	/*width: 40px;*/
+	display:inline;
+}
+
+/* Checkboxes */
+fieldset.adminform fieldset.checkboxes,
+fieldset.panelform fieldset.checkboxes,
+fieldset.adminform-legacy fieldset.checkboxes  {
+	border: 0;
+	float:left;
+	padding: 0;
+	margin: 0 0 5px 0;
+	clear:right;
+}
+fieldset.adminform fieldset.checkboxes input[type="checkbox"],
+fieldset.panelform fieldset.checkboxes input[type="checkbox"] {
+	float: left;
+	clear: left;
+}
+fieldset.adminform fieldset.checkboxes label,
+fieldset.panelform fieldset.checkboxes label,
+fieldset.adminform fieldset.checkboxes span.faux-label,
+fieldset.panelform fieldset.checkboxes span.faux-label {
+	clear: right;
+}
+
+/* Filters */
+fieldset.filter {
+	border: 0;
+	margin: 0;
+	padding: 0 0 5px;
+}
+fieldset.filter .left {
+	float: left;
+}
+fieldset.filter .right {
+	float: right;
+}
+fieldset.filter .right select {
+	margin-left: 10px;
+}
+fieldset#filter-bar {
+	min-height: 35px;
+	border: 0;
+	border-bottom: 1px solid #d5d5d5;
+}
+label.filter-search-lbl {
+	margin-left: 5px;
+}
+label.filter-hide-lbl {
+	margin-left: 5px;
+	clear: none;
+}
+div.filter-select input,
+div.filter-select select {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+label.filter-published-lbl {
+	clear: none;
+	margin-left: 10px;
+}
+
+/* Adminlist grids */
+table.adminlist td,
+table.adminlist th {
+	padding: 4px;
+}
+
+table.adminlist thead th {
+	text-align: center;
+	background: #f7f7f7;
+	color: #666;
+	border-bottom: 1px solid #CCC;
+	border-left: 1px solid #fff;
+        padding: 5px 0;
+}
+
+/* Table styles */
+p.smallsub {
+	margin: 3px 0 0;
+	font-size: 88%;
+}
+
+p.smallsub span {
+	color: #a0a0a0;
+}
+tr.row1 {
+	background-color: #f0f0ee;
+}
+
+/* Admin backend grid table elements */
+a.jgrid:hover {	text-decoration: none;}
+
+.jgrid span.state {
+	display: inline-block;
+	height: 16px;
+	width: 16px;
+}
+.jgrid span.text 					{ display:none; }
+.jgrid span.publish					{ background-image: url(../images/admin/tick.png); }
+.jgrid span.unpublish                                   { background-image: url(../images/admin/publish_x.png); }
+.jgrid span.archive                                     { background-image: url(../images/menu/icon-16-archive.png); }
+.jgrid span.trash					{ background-image: url(../images/menu/icon-16-trash.png); }
+.jgrid span.default					{ background-image: url(../images/menu/icon-16-default.png); }
+.jgrid span.notdefault                                  { background-image: url(../images/menu/icon-16-notdefault.png); }
+.jgrid span.checkedout                                  { background-image: url(../images/admin/checked_out.png); }
+.jgrid span.downarrow                                   { background-image: url(../images/admin/downarrow.png); }
+.jgrid span.downarrow_disabled                          { background-image: url(../images/admin/downarrow0.png); background-position: 0 -12px; }
+.jgrid span.uparrow					{ background-image: url(../images/admin/uparrow.png); }
+.jgrid span.uparrow_disabled                            { background-image: url(../images/admin/uparrow0.png); background-position: 0 -12px; }
+.jgrid span.published                                   { background-image: url(../images/admin/publish_g.png); }
+.jgrid span.expired					{ background-image: url(../images/admin/publish_r.png); }
+.jgrid span.pending					{ background-image: url(../images/admin/publish_y.png); }
+.jgrid span.warning					{ background-image: url(../images/admin/publish_y.png); }
+.jgrid span.protected                                   { background-image: url(../images/admin/icon-16-protected.png); }
+
+/* Pane sliders */
+.pane-sliders {
+	margin: 18px 0 0 0;
+	position:relative;
+}
+.pane-sliders .title {
+        border: 1px solid #E5E5E5;
+        border-radius: 4px 4px 4px 4px;
+	padding: 5px 15px;
+	cursor: pointer;
+}
+.pane-sliders .panel {
+	margin-bottom: 3px;
+}
+
+.pane-sliders .panel h3 {
+}
+
+.pane-sliders .content {
+}
+
+.pane-toggler span {
+}
+.pane-toggler-down span {
+}
+.pane-toggler-down {
+}
+
+/* Control panel - dashboard */
+.cpanel div.icon, #cpanel div.icon {
+	text-align: center;
+	margin-right: 15px;
+	float: left;
+	margin-bottom: 15px;
+
+}
+.cpanel div.icon a, #cpanel div.icon a {
+	background-color: #fff;
+	background-position: -30px;
+	display: block;
+	float: left;
+	height: 97px;
+	width: 108px;
+	color: #565656;
+	vertical-align: middle;
+	text-decoration: none;
+	border: 1px solid #CCC;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+#cpanel div.icon a:hover,
+#cpanel div.icon a:focus,
+#cpanel div.icon a:active,
+.cpanel div.icon a:hover,
+.cpanel div.icon a:focus,
+.cpanel div.icon a:active {
+	background-position: 0;
+	-webkit-box-shadow: -5px 10px 15px rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: -5px 10px 15px rgba(0, 0, 0, 0.25);
+	box-shadow: -5px 10px 15px rgba(0, 0, 0, 0.25);
+	position: relative;
+	z-index: 10;
+}
+#cpanel img,
+.cpanel img {
+	padding: 10px 0;
+	margin: 0 auto;
+}
+#cpanel span,
+.cpanel span {
+	display: block;
+	text-align: center;
+}
+div.cpanel-left {
+	width: 54%;
+	float: left;
+}
+div.cpanel-right {
+	width: 45%;
+	float: right;
+}
+
+/* Buttons */
+.button2-left {
+        float: left;
+        margin-right: 10px;
+}
+.button2-left {
+        background-color: #1D6CB0;
+        background-image: linear-gradient(to bottom, #2384D3, #15497C);
+        background-repeat: repeat-x;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        color: #FFFFFF;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        border-radius: 3px;
+        margin-left: -3px;
+        vertical-align: top;
+        padding: 5px 10px;
+        color: #fff;
+}
+.button2-left a,
+.button2-left a:link,
+.button2-left a:hover,
+.button2-left a:focus,
+.button2-left a:active
+{
+        color: #fff;
+        text-decoration: none;
+}
+input.button, input[type="checkbox"], button {
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-top-colors: none;
+        background-color: #F5F5F5;
+        background-image: linear-gradient(to bottom, #FFFFFF, #E6E6E6);
+        background-repeat: repeat-x;
+        border-color: #BBBBBB #BBBBBB #A2A2A2;
+        border-image: none;
+        border-radius: 4px 4px 4px 4px;
+        border-style: solid;
+        border-width: 1px;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+        color: #333333;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 13px;
+        line-height: 18px;
+        margin-bottom: 0;
+        padding: 4px 14px;
+        text-align: center;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+        vertical-align: middle;
+}
+
+/* Min width on batch processing labels */
+div.width-50 fieldset.adminform label, div.width-50 fieldset.adminform span.faux-label {
+        min-width: 100px!important;
+}
+
+/* Prevent padding on batch add / batch removal tools */
+div.width-50 fieldset.adminform {
+        padding: 20px 10px 10px 0!important;
+        margin: 0!important;
+}
+
+div.width-50 fieldset.adminform input[type="text"]{
+        width: 100px!important;
+}
+
+/* Fix order column width */
+input.text-area-order {
+        margin-right: 5px;
+        text-align: center;
+        width: 20px!important;
+}
+
+/* Hide list styles */
+fieldset li, ol#property-values li {
+        list-style: none outside none;
+        margin: 0;
+        padding: 5px;
+}
+
+/* Make tables 100% */
+table.adminlist {
+        border-spacing: 1px;
+        color: #666666;
+        width: 100%;
+}
+
+/* Set label widths for configuration page */
+#config-document div.width-50 fieldset.adminform label, #config-document div.width-50 fieldset.adminform span.faux-label {
+        min-width: 170px!important;
+}
+
+/* Cleanup radio buttons */
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+        float: left;
+        margin-left: 0px!important;
+}
+
+/* Cleanup radio labels */
+fieldset.adminform fieldset.radio label,
+fieldset.panelform fieldset.radio label {
+	padding-left: 10px;
+}
+
+/* Force width of radio labels in configuration page */
+#config-document div.width-50 fieldset.radio label {
+        min-width: 80px !important;
+}
+/* Force height of fitler bar to auto to prevent overlap when numerous filters applied */
+#filter-bar {
+        height: auto!important;
+}

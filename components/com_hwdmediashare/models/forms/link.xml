@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: link.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+                addfieldpath="/components/com_hwdmediashare/models/fields/"
+        >
+                <field 
+                        name="category_id" 
+                        type="category"
+                        label="COM_HWDMS_CATEGORY_LABEL"
+                        description="COM_HWDMS_CATEGORY_DESC"
+                        extension="com_hwdmediashare"
+		>
+			<option value="">JOPTION_SELECT_CATEGORY</option>
+		</field>
+                <field 
+                        name="playlist_id" 
+                        type="playlist"
+                        label="COM_HWDMS_PLAYLIST_LABEL"
+                        description="COM_HWDMS_PLAYLIST_DESC"
+                />
+		<field
+                        name="album_id"
+                        type="album"
+                        label="COM_HWDMS_ALBUM_LABEL"
+                        description="COM_HWDMS_ALBUM_DESC"
+                />
+		<field
+                        name="group_id"
+                        type="group"
+                        label="COM_HWDMS_GROUP_LABEL"
+                        description="COM_HWDMS_GROUP_DESC"
+                />
+	</fieldset>
+</form>

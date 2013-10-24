@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: config.xml 553 2012-10-08 14:37:25Z dhorsfall $ -->
+<config>
+        <fieldset
+                name="options"
+                label="COM_HWDMS_CONFIG_OPTIONS_LABEL"
+                description="COM_HWDMS_CONFIG_OPTIONS_DESC"
+        >
+        </fieldset>
+</config>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: country.xml 40 2011-10-15 17:02:47Z dhorsfall $ -->
+<config>
+	<params>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+	</params>
+</config>

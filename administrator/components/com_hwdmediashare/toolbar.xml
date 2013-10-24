@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolbar>
+	<items>
+		<item>
+			<name>Discover</name>
+			<alias>discover</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=discover]]></link>
+		</item>
+                <item>
+			<name>Media</name>
+			<alias>media-gallery</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=media]]></link>
+		</item>
+		<item>
+			<name>Categories</name>
+			<alias>categories</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=categories]]></link>
+		</item>
+		<item>
+			<name>Albums</name>
+			<alias>albums</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=albums]]></link>
+		</item>
+		<item>
+			<name>Groups</name>
+			<alias>groups</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=groups]]></link>
+		</item>
+		<item>
+			<name>Playlists</name>
+			<alias>playlists</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=playlists]]></link>
+		</item>
+		<item>
+			<name>User Channels</name>
+			<alias>channels</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=users]]></link>
+		</item>
+		<item>
+			<name>Upload</name>
+			<alias>upload</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=upload]]></link>
+		</item>
+                <item>
+			<name>My Account</name>
+			<alias>account</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=account]]></link>
+		</item>
+		<item>
+			<name>Search</name>
+			<alias>media-search</alias>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=search]]></link>
+		</item>
+	</items>
+</toolbar>

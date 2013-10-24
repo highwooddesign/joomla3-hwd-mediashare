@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: list.xml 566 2012-10-12 12:56:34Z dhorsfall $ -->
+<config>
+	<params>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+	</params>
+</config>

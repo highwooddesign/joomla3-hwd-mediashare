@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: user.xml 828 2012-12-21 16:44:13Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset 
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+		<field
+			name="id"
+			type="hidden"
+		/>
+                <field 
+                        name="asset_id" 
+                        type="hidden" 
+                        filter="unset"
+                />
+                <field
+			name="alias"
+			type="text"
+			label="COM_HWDMS_ALIAS_LABEL"
+			description="COM_HWDMS_ALIAS_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field 
+                        name="description" 
+                        type="editorhwd" 
+                        class="inputbox"
+			label="COM_HWDMS_DESCRIPTION_LABEL" 
+                        description="COM_HWDMS_DESCRIPTION_DESC"
+			filter="safehtml" 
+                        buttons="true"
+                />
+                <field
+			name="tags"
+			type="text"
+			label="COM_HWDMS_TAGS_LABEL"
+			description="COM_HWDMS_TAGS_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field 
+                        name="status" 
+                        type="list"
+			label="JSTATUS"
+			description="COM_HWDMS_STATUS_DESC"
+			default="0"
+                        readonly="true"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field 
+                        name="published" 
+                        type="list" 
+                        label="JPUBLISHED"
+			description="JFIELD_PUBLISHED_DESC" 
+                        class="inputbox"
+			filter="intval" 
+                        size="1" 
+                        default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="2">JARCHIVED</option>
+			<option value="-2">JTRASHED</option>
+		</field>
+		<field 
+                        name="featured" 
+                        type="list"
+			label="JFEATURED"
+			description="COM_HWDMS_FEATURED_DESC"
+			default="0"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field 
+                        name="publish_up" 
+                        type="calendar"
+			label="COM_HWDMS_PUBLISH_UP_LABEL" 
+                        description="COM_HWDMS_PUBLISH_UP_DESC"
+			class="inputbox" 
+                        format="%Y-%m-%d %H:%M:%S" 
+                        size="22"
+			filter="user_utc" 
+                />
+		<field 
+                        name="publish_down" 
+                        type="calendar"
+			label="COM_HWDMS_PUBLISH_DOWN_LABEL" 
+                        description="COM_HWDMS_PUBLISH_DOWN_DESC"
+			class="inputbox" 
+                        format="%Y-%m-%d %H:%M:%S" 
+                        size="22"
+			filter="user_utc" 
+                />
+		<field 
+                        name="access" 
+                        type="accesslevel" 
+                        label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC" 
+                        class="inputbox" 
+                        size="1" 
+                />
+		<field 
+                        name="language" 
+                        type="contentlanguage" 
+                        label="JFIELD_LANGUAGE_LABEL"
+			description="COM_HWDMS_LANGUAGE_DESC" 
+                        class="inputbox"
+		>
+			<option value="*">JALL</option>
+		</field>
+ 		<field
+                        name="thumbnail"
+                        type="file"
+			label="COM_HWDMS_NEW_THUMBNAIL_LABEL"
+                        description="COM_HWDMS_NEW_THUMBNAIL_DESC"
+                />
+ 		<field
+                        name="remove_thumbnail"
+                        type="checkbox"
+                        value="1"
+			label="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_LABEL"
+                        description="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_DESC"
+                />  
+ 	</fieldset>
+        <fields name="params">
+                <fieldset
+                        name="metadata"
+                        label="COM_HWDMS_METADATA"
+                >
+                        <field
+                                name="meta_desc"
+                                type="textarea"
+                                label="JFIELD_META_DESCRIPTION_LABEL"
+                                description="JFIELD_META_DESCRIPTION_DESC"
+                                filter="string"
+                                cols="55"
+                                rows="3" 
+                        />
+                        <field
+                                name="meta_keys"
+                                type="textarea"
+                                label="JFIELD_META_KEYWORDS_LABEL"
+                                description="JFIELD_META_KEYWORDS_DESC"
+                                filter="string"
+                                cols="55"
+                                rows="3"
+                        />
+                </fieldset>
+	</fields>
+</form>

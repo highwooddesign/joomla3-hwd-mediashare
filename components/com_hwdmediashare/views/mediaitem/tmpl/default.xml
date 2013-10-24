@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: default.xml 280 2012-03-28 16:49:16Z dhorsfall $ -->
+<metadata>
+        <layout title="COM_HWDMEDIASHARE_MEDIAITEM_VIEW_DEFAULT_TITLE">
+                <message>COM_HWDMEDIASHARE_MEDIAITEM_VIEW_DEFAULT_DESC</message>
+        </layout>
+	<!-- Add fields to the request variables for the layout. -->
+	<fields name="request" addfieldpath="/administrator/components/com_hwdmediashare/models/fields/">
+		<fieldset name="request">
+			<field 
+                                name="id" 
+                                type="mediaitem"
+				label="COM_HWDMS_MEDIA_ITEM_LABEL"
+                                description="COM_HWDMS_MEDIA_ITEM_DESC"
+				required="true"
+			/>
+		</fieldset>
+	</fields>         
+</metadata>
+
+
+

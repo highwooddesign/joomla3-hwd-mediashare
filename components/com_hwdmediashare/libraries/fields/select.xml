@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: select.xml 40 2011-10-15 17:02:47Z dhorsfall $ -->
+<config>
+	<params>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="disabled" type="radio" default="0" label="Disabled" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="multiple" type="radio" default="0" label="Multiple" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="size" type="text" default="" label="Size" description="" />
+		<param name="style" type="text" default="" label="Style Attribute" description="" />
+	</params>
+</config>

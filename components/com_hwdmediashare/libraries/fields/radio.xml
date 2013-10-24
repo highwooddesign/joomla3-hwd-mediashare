@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: radio.xml 40 2011-10-15 17:02:47Z dhorsfall $ -->
+<config>
+	<params>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="disabled" type="radio" default="0" label="Disabled" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="readonly" type="radio" default="0" label="Read Only" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="style" type="text" default="" label="Style Atrribute" description="" />
+	</params>
+</config>

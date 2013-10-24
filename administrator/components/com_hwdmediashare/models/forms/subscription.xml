@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: subscription.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+		<field
+			name="id"
+			type="hidden"
+		/>
+		<field 
+                        name="asset_id" 
+                        type="hidden" 
+                        filter="unset" 
+                />
+                <field
+			name="element_type"
+			type="hidden"
+			label="COM_HWDMS_ELEMENT_LABEL"
+			description="COM_HWDMS_ELEMENT_DESC"
+			class="inputbox"
+			default="5"
+                />
+                <field
+			name="element_id"
+			type="userchannel"
+			label="COM_HWDMS_USER_CHANNEL_LABEL"
+			description="COM_HWDMS_USER_CHANNEL_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+ 		<field
+                        name="user_id"
+                        type="user"
+			label="COM_HWDMS_SUBSCRIBER_LABEL"
+                        description="COM_HWDMS_SUBSCRIBER_DESC"
+                />
+	</fieldset>
+</form>
+

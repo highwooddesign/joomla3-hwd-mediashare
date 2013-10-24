@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: customfield.xml 287 2012-03-30 13:33:27Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+		<field
+			name="id"
+			type="hidden"
+		/>
+                <field
+			name="element_type"
+			type="element"
+			label="COM_HWDMS_ELEMENT_LABEL"
+			description="COM_HWDMS_ELEMENT_DESC"
+			class="inputbox"
+			default=""
+                >                      
+                </field>
+                <field
+			name="name"
+			type="text"
+			label="COM_HWDMS_TITLE_LABEL"
+			description="COM_HWDMS_TITLE_DESC"
+			size="40"
+			class="inputbox validate-title"
+			required="true"
+			default=""
+		/>
+                <field
+                        name="type"
+			type="field"
+                        class="inputbox"
+                        default=""
+                        label="COM_HWDMS_FIELD_TYPE_LABEL"
+                        description="COM_HWDMS_FIELD_TYPE_DESC"
+                >
+                </field>
+                <field
+			name="fieldcode"
+			type="text"
+			label="COM_HWDMS_FIELD_CODE_LABEL"
+			description="COM_HWDMS_FIELD_CODE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="published"
+			type="radio"
+			label="COM_HWDMS_PUBLISHED_LABEL"
+			description="COM_HWDMS_PUBLISHED_DESC"
+			class="inputbox"
+			default=""
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>
+                <field
+			name="searchable"
+			type="radio"
+			label="COM_HWDMS_SEARCHABLE_LABEL"
+			description="COM_HWDMS_SEARCHABLE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>
+                <field
+			name="visible"
+			type="radio"
+			label="COM_HWDMS_VISIBLE_LABEL"
+			description="COM_HWDMS_VISIBLE_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>
+                <field
+			name="required"
+			type="radio"
+			label="COM_HWDMS_REQUIRED_LABEL"
+			description="COM_HWDMS_REQUIRED_DESC"
+			class="inputbox"
+			default=""
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>
+                <field
+			name="tooltip"
+			type="textarea"
+			label="COM_HWDMS_TOOLTIP_LABEL"
+			description="COM_HWDMS_TOOLTIP_DESC"
+			class="inputbox"
+			default=""
+		/>
+                <field
+			name="options"
+			type="textarea"
+			label="COM_HWDMS_FIELD_OPTIONS_LABEL"
+			description="COM_HWDMS_FIELD_OPTIONS_DESC"
+			class="inputbox"
+			default=""
+		/>
+	</fieldset>
+</form>
+
+
+

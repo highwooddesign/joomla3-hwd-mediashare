@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: upload.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset
+                name="remote"
+                label="COM_HWDMS_DETAILS"
+        >
+		<field 
+                        name="remote" 
+                        type="textarea" 
+                        class="inputbox"
+			label="COM_HWDMS_REMOTE_LINK_LABEL" 
+                        description="COM_HWDMS_REMOTE_LINK_DESC"
+                />
+        </fieldset>
+        <fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+                <field
+                        name="catid"
+                        type="category"
+                        extension="com_hwdmediashare"
+                        class="inputbox"
+                        default=""
+                        label="COM_HWDMS_CATEGORY_LABEL"
+                        description="COM_HWDMS_CATEGORY_DESC"
+                        multiple="multiple"
+                >
+                        <option value="0">JOPTION_SELECT_CATEGORY</option>
+                </field>
+ 		<field
+                        name="album_id"
+                        type="album"
+			label="COM_HWDMS_ALBUM_LABEL"
+                        description="COM_HWDMS_ALBUM_DESC"
+                />
+ 		<field
+                        name="playlist_id"
+                        type="playlist"
+			label="COM_HWDMS_PLAYLIST_LABEL"
+                        description="COM_HWDMS_PLAYLIST_DESC"
+
+ 		/>
+                <field
+                        name="group_id"
+                        type="group"
+			label="COM_HWDMS_GROUP_LABEL"
+                        description="COM_HWDMS_GROUP_DESC"
+                />
+        </fieldset>
+</form>
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- $Id: report.xml 1289 2013-03-19 11:27:52Z dhorsfall $ -->
+<form
+	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+>
+	<fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+		<field 
+                        name="report_id"
+                        type="list"
+			label="COM_HWDMS_REASON_LABEL"
+			description="COM_HWDMS_REASON_DESC"
+		>
+			<option value="0">COM_HWDMS_LIST_SELECT_A_REASON</option>
+			<option value="1">COM_HWDMS_SEXUAL_CONTENT</option>
+                        <option value="2">COM_HWDMS_VIOLENT_OR_REPULSIVE_CONTENT</option>
+                        <option value="3">COM_HWDMS_HATEFUL_OR_ABUSIVE_CONTENT</option>
+                        <option value="4">COM_HWDMS_HARMFUL_ACTS</option>
+                        <option value="5">COM_HWDMS_CHILD_ABUSE</option>
+                        <option value="6">COM_HWDMS_SPAM</option>
+                        <option value="7">COM_HWDMS_INFRINGES_MY_RIGHTS</option>
+                        <option value="8">COM_HWDMS_BROKEN_MEDIA</option>
+		</field>
+		<field
+                        name="description"
+                        type="textarea"
+                        class="inputbox"
+			label="COM_HWDMS_NOTES_LABEL"
+                        description="COM_HWDMS_NOTES_DESC"
+                />
+	</fieldset>
+</form>
