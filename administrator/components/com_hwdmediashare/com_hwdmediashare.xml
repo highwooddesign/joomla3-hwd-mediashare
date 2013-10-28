@@ -3,14 +3,14 @@
 <extension type="component" version="1.7.0" method="upgrade">
 
 	<name>COM_HWDMEDIASHARE</name>
-	<creationDate>2013-10-24</creationDate>
+	<creationDate>@@CREATIONDATE@@</creationDate>
 	<author>Highwood Design</author>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
 	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>1.1.12</version>
-	<svn>1691</svn>
+	<version>@@VERSION@@</version>
+	<svn>@@SVN@@</svn>
 	<description>COM_HWDMEDIASHARE_DESCRIPTION</description>
 
 	<scriptfile>script.php</scriptfile>
