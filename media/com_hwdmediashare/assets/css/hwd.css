@@ -1547,3 +1547,11 @@ body.media-slideshow #slide span {
         margin-bottom: 10px;
 
 }
+
+
+
+/* Fix for hidden dropdown menu in some popular templates */
+#hwd-container ul.media-nav li {
+	overflow:visible!important;
+	background:none;
+}
