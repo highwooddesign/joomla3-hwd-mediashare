@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="module" client="site" method="upgrade">
+	<name>mod_hwd_youtube_videobox</name>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<author>Highwood Design</author>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<version>@@VERSION@@</version>
+	<description>MOD_HWD_YOUTUBE_VIDEOBOX_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_hwd_youtube_videobox">mod_hwd_youtube_videobox.php</filename>
+		<filename module="mod_hwd_youtube_videobox">helper.php</filename>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<folder>language</folder>
+		<folder>tmpl</folder>
+		<filename>index.html</filename>		
+		<filename>mod_hwd_youtube_videobox.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_youtube_videobox.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_youtube_videobox.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset 
+                                name="filtering"
+				label="MOD_HWD_FIELD_GROUP_FILTERING_LABEL"
+			>
+				<field 
+                                        name="video_source" 
+                                        type="list" 
+                                        default="standard_list"
+					label="MOD_HWD_FIELD_VIDEOS_LABEL"
+					description="MOD_HWD_FIELD_VIDEOS_DESC"
+				>
+					<option value="standard_list">MOD_HWD_OPTION_STANDARDLIST_VALUE</option>
+					<option value="keyword_search">MOD_HWD_OPTION_KEYWORDSEARCH_VALUE</option>
+					<option value="playlist_videos">MOD_HWD_OPTION_PLAYLISTVIDEOS_VALUE</option>
+					<option value="user_videos">MOD_HWD_OPTION_USERVIDEOS_VALUE</option>
+				</field>                         
+				<field 
+                                        name="standard_list" 
+                                        type="list" 
+                                        default="top_rated"
+					label="MOD_HWD_FIELD_STANDARDLIST_LABEL"
+					description="MOD_HWD_FIELD_STANDARDLIST_DESC"
+				>
+					<option value="top_rated">MOD_HWD_OPTION_TOPRATED_VALUE</option>
+					<option value="top_favorites">MOD_HWD_OPTION_TOPFAVORITES_VALUE</option>
+					<option value="most_shared ">MOD_HWD_OPTION_MOSTSHARED_VALUE</option>
+					<option value="most_popular">MOD_HWD_OPTION_MOSTPOPULAR_VALUE</option>
+					<option value="most_recent">MOD_HWD_OPTION_MOSTRECENT_VALUE</option>
+					<option value="most_discussed">MOD_HWD_OPTION_MOSTDISCUSSED_VALUE</option>
+					<option value="most_responded">MOD_HWD_OPTION_MOSTRESPONDED_VALUE</option>
+					<option value="recently_featured">MOD_HWD_OPTION_RECENTLYFEATURED_VALUE</option>
+					<option value="on_the_web">MOD_HWD_OPTION_TRENDINGVIDEOS_VALUE</option>
+					<option value="most_viewed">MOD_HWD_OPTION_MOSTVIEWED_VALUE</option>
+				</field>
+				<field 
+                                        name="keywords" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_FIELD_KEYWORDS_LABEL"
+					description="MOD_HWD_FIELD_KEYWORDS_DESC"
+				/>
+				<field 
+                                        name="ytplaylist" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_FIELD_PLAYLISTURL_LABEL"
+					description="MOD_HWD_FIELD_PLAYLISTURL_DESC"
+				/>
+				<field 
+                                        name="ytuser" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_FIELD_USERURL_LABEL"
+					description="MOD_HWD_FIELD_USERURL_DESC"
+				/>                                
+			</fieldset>
+			<fieldset 
+                                name="display"
+				label="MOD_HWD_FIELD_GROUP_LIST_DISPLAY_LABEL"
+			>
+				<field 
+                                        name="layout" 
+                                        type="modulelayout"
+                                        default="_:default"
+					label="MOD_HWD_FIELD_LAYOUT_LABEL" 
+                                        description="MOD_HWD_FIELD_LAYOUT_DESC" 
+                                />  
+				<field 
+                                        name="columns" 
+                                        type="list" 
+                                        default="3"
+					label="MOD_HWD_FIELD_MAXCOLS_LABEL"
+					description="MOD_HWD_FIELD_MAXCOLS_DESC"
+				>
+					<option value="1">J1</option>
+					<option value="2">J2</option>
+					<option value="3">J3</option>
+					<option value="4">J4</option>
+					<option value="6">J6</option>
+				</field>                                
+				<field 
+                                        name="count" 
+                                        type="text" 
+                                        default="5"
+					label="MOD_HWD_FIELD_COUNT_LABEL"
+					description="MOD_HWD_FIELD_COUNT_DESC" 
+                                />                                    
+			</fieldset>
+			<fieldset 
+                                name="player"
+				label="MOD_HWD_FIELD_GROUP_VIDEO_DISPLAY_LABEL"
+			>
+				<field 
+                                        name="video_size" 
+                                        type="text"
+					default="600"
+					label="MOD_HWD_FIELD_VIDEOWIDTH_LABEL"
+					description="MOD_HWD_FIELD_VIDEOWIDTH_DESC"
+                                        filter="integer"
+				/>
+				<field 
+                                        name="autohide" 
+                                        type="list"
+					default="2"
+					label="MOD_HWD_FIELD_AUTOHIDE_LABEL"
+					description="MOD_HWD_FIELD_AUTOHIDE_DESC"
+				>
+					<option value="0">JDISABLED</option>
+					<option value="1">MOD_HWD_OPTION_1SEC</option>
+					<option value="2">MOD_HWD_OPTION_2SEC</option>
+				</field>
+				<field 
+                                        name="border" 
+                                        type="radio"
+					default="0"
+					label="MOD_HWD_FIELD_BORDER_LABEL"
+					description="MOD_HWD_FIELD_BORDER_DESC"
+				>
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field>
+				<field 
+                                        name="cc_load_policy" 
+                                        type="radio"
+					default=""
+					label="MOD_HWD_FIELD_CCLOADPOLICY_LABEL"
+					description="MOD_HWD_FIELD_CCLOADPOLICY_DESC"
+				>
+					<option value="">JDISABLED</option>
+					<option value="1">JENABLED</option>
+				</field>
+				<field 
+                                        name="color" 
+                                        type="radio"
+					default="red"
+					label="MOD_HWD_FIELD_COLOR_LABEL"
+					description="MOD_HWD_FIELD_COLOR_DESC"
+				>
+					<option value="red">MOD_HWD_OPTION_RED</option>
+					<option value="white">MOD_HWD_OPTION_WHITE</option>
+				</field>
+				<field 
+                                        name="color1" 
+                                        type="text"
+					default=""
+					label="MOD_HWD_FIELD_COLOR1_LABEL"
+					description="MOD_HWD_FIELD_COLOR1_DESC"
+				/>
+				<field 
+                                        name="color2" 
+                                        type="text"
+					default=""
+					label="MOD_HWD_FIELD_COLOR2_LABEL"
+					description="MOD_HWD_FIELD_COLOR2_DESC"
+				/>
+				<field 
+                                        name="controls" 
+                                        type="radio"
+					default="1"
+					label="MOD_HWD_FIELD_CONTROLS_LABEL"
+					description="MOD_HWD_FIELD_CONTROLS_DESC"
+				>
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field>                             
+				<field 
+                                        name="fs" 
+                                        type="radio"
+					default="1"
+					label="MOD_HWD_FIELD_FS_LABEL"
+					description="MOD_HWD_FIELD_FS_DESC"
+				>
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field>                                 
+				<field 
+                                        name="hd" 
+                                        type="radio"
+					default="0"
+					label="MOD_HWD_FIELD_HD_LABEL"
+					description="MOD_HWD_FIELD_HD_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>                                 
+				<field 
+                                        name="iv_load_policy" 
+                                        type="radio"
+					default="1"
+					label="MOD_HWD_FIELD_IVLOADPOLICY_LABEL"
+					description="MOD_HWD_FIELD_IVLOADPOLICY_DESC"
+				>
+					<option value="3">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field> 
+				<field 
+                                        name="modestbranding" 
+                                        type="radio"
+					default="1"
+					label="MOD_HWD_FIELD_MODESTBRANDING_LABEL"
+					description="MOD_HWD_FIELD_MODESTBRANDING_DESC"
+				>
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field> 
+				<field 
+                                        name="rel" 
+                                        type="radio"
+					default="0"
+					label="MOD_HWD_FIELD_RELATED_LABEL"
+					description="MOD_HWD_FIELD_RELATED_DESC"
+				>
+					<option value="0">JHIDE</option>
+					<option value="1">JSHOW</option>
+				</field>
+				<field 
+                                        name="theme" 
+                                        type="radio"
+					default="dark"
+					label="MOD_HWD_FIELD_THEME_LABEL"
+					description="MOD_HWD_FIELD_THEME_DESC"
+				>
+					<option value="dark">MOD_HWD_OPTION_DARK</option>
+					<option value="light">MOD_HWD_OPTION_LIGHT</option>
+				</field>                                
+                                <field 
+                                        name="https" 
+                                        type="list"
+					description="MOD_HWD_FIELD_HTTPS_DESC"
+					label="MOD_HWD_FIELD_HTTPS_LABEL"
+                                        default="0" 
+				>
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+				</field> 
+			</fieldset>                        
+			<fieldset name="advanced">
+				<field 
+                                        name="moduleclass_sfx" 
+                                        type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" 
+                                />
+				<field 
+                                        name="owncache" 
+                                        type="list" 
+                                        default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL" 
+                                        description="COM_MODULES_FIELD_CACHING_DESC" 
+                                >
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+				<field 
+                                        name="cache_time" 
+                                        type="text" 
+                                        default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
+                                        description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                />
+			</fieldset>
+		</fields>
+	</config>
+</extension>
