@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="module" client="site" method="upgrade">
+<extension type="module" version="3.2" method="upgrade" client="site">
 	<name>mod_hwd_youtube_videobox</name>
 	<creationDate>@@CREATIONDATE@@</creationDate>
-	<author>Highwood Design</author>
+	<author>HWD</author>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
-	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<version>@@VERSION@@</version>
 	<description>MOD_HWD_YOUTUBE_VIDEOBOX_XML_DESCRIPTION</description>
@@ -31,7 +31,7 @@
 				label="MOD_HWD_FIELD_GROUP_FILTERING_LABEL"
 			>
 				<field 
-                                        name="video_source" 
+                                        name="source" 
                                         type="list" 
                                         default="standard_list"
 					label="MOD_HWD_FIELD_VIDEOS_LABEL"
@@ -104,6 +104,7 @@
 					<option value="2">J2</option>
 					<option value="3">J3</option>
 					<option value="4">J4</option>
+					<option value="5">J5</option>
 					<option value="6">J6</option>
 				</field>                                
 				<field 
@@ -112,20 +113,22 @@
                                         default="5"
 					label="MOD_HWD_FIELD_COUNT_LABEL"
 					description="MOD_HWD_FIELD_COUNT_DESC" 
-                                />                                    
+                                />
+                                <field 
+                                        name="icon" 
+                                        type="list"
+                                        default="1"
+					label="MOD_HWD_FIELD_ICON_LABEL" 
+                                        description="MOD_HWD_FIELD_ICON_DESC" 
+                                >
+                                        <option value="0">JHide</option>
+                                        <option value="1">JShow</option>
+                                </field>                                
 			</fieldset>
 			<fieldset 
                                 name="player"
 				label="MOD_HWD_FIELD_GROUP_VIDEO_DISPLAY_LABEL"
 			>
-				<field 
-                                        name="video_size" 
-                                        type="text"
-					default="600"
-					label="MOD_HWD_FIELD_VIDEOWIDTH_LABEL"
-					description="MOD_HWD_FIELD_VIDEOWIDTH_DESC"
-                                        filter="integer"
-				/>
 				<field 
                                         name="autohide" 
                                         type="list"
@@ -143,6 +146,7 @@
 					default="0"
 					label="MOD_HWD_FIELD_BORDER_LABEL"
 					description="MOD_HWD_FIELD_BORDER_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
@@ -150,16 +154,17 @@
 				<field 
                                         name="cc_load_policy" 
                                         type="radio"
-					default=""
+					default="0"
 					label="MOD_HWD_FIELD_CCLOADPOLICY_LABEL"
 					description="MOD_HWD_FIELD_CCLOADPOLICY_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
-					<option value="">JDISABLED</option>
+					<option value="0">JDISABLED</option>
 					<option value="1">JENABLED</option>
 				</field>
 				<field 
                                         name="color" 
-                                        type="radio"
+                                        type="list"
 					default="red"
 					label="MOD_HWD_FIELD_COLOR_LABEL"
 					description="MOD_HWD_FIELD_COLOR_DESC"
@@ -187,6 +192,7 @@
 					default="1"
 					label="MOD_HWD_FIELD_CONTROLS_LABEL"
 					description="MOD_HWD_FIELD_CONTROLS_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
@@ -197,6 +203,7 @@
 					default="1"
 					label="MOD_HWD_FIELD_FS_LABEL"
 					description="MOD_HWD_FIELD_FS_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
@@ -207,13 +214,14 @@
 					default="0"
 					label="MOD_HWD_FIELD_HD_LABEL"
 					description="MOD_HWD_FIELD_HD_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 				</field>                                 
 				<field 
                                         name="iv_load_policy" 
-                                        type="radio"
+                                        type="list"
 					default="1"
 					label="MOD_HWD_FIELD_IVLOADPOLICY_LABEL"
 					description="MOD_HWD_FIELD_IVLOADPOLICY_DESC"
@@ -227,6 +235,7 @@
 					default="1"
 					label="MOD_HWD_FIELD_MODESTBRANDING_LABEL"
 					description="MOD_HWD_FIELD_MODESTBRANDING_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
@@ -237,13 +246,14 @@
 					default="0"
 					label="MOD_HWD_FIELD_RELATED_LABEL"
 					description="MOD_HWD_FIELD_RELATED_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
 				</field>
 				<field 
                                         name="theme" 
-                                        type="radio"
+                                        type="list"
 					default="dark"
 					label="MOD_HWD_FIELD_THEME_LABEL"
 					description="MOD_HWD_FIELD_THEME_DESC"
@@ -253,13 +263,14 @@
 				</field>                                
                                 <field 
                                         name="https" 
-                                        type="list"
-					description="MOD_HWD_FIELD_HTTPS_DESC"
-					label="MOD_HWD_FIELD_HTTPS_LABEL"
+                                        type="radio"
                                         default="0" 
+					label="MOD_HWD_FIELD_HTTPS_LABEL"
+					description="MOD_HWD_FIELD_HTTPS_DESC"
+                                        class="btn-group btn-group-yesno"
 				>
-                                        <option value="1">JYES</option>
                                         <option value="0">JNO</option>
+                                        <option value="1">JYES</option>
 				</field> 
 			</fieldset>                        
 			<fieldset name="advanced">

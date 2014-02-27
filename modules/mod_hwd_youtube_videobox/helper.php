@@ -1,11 +1,9 @@
 <?php
 /**
- * @version    $Id: helper.php 1103 2013-02-12 14:59:30Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
+ * @package    HWD.MediaApps
+ * @copyright  Copyright (C) 2013 Highwood Design Limited. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Sam Cummings
- * @since      20-Dec-2012 11:01:24
+ * @author     Dave Horsfall
  */
 
 // No direct access to this file
@@ -13,24 +11,71 @@ defined('_JEXEC') or die('Restricted access');
 
 class modHwdYoutubeVideoBoxHelper extends JObject
 {
+	public $module 		= null;
 	public $params 		= null;
 	public $url		= null;
 
-	public function __construct($module, &$params)
+	public function __construct($module, $params)
 	{                
+                $this->set('module', $module);
                 $this->set('params', $params);
 		$this->set('url', JURI::root().'modules/mod_hwd_youtube_videobox/');
+                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
 	}
 
 	public function addHead()
 	{
+                JHtml::_('bootstrap.tooltip');
                 $doc = JFactory::getDocument();
+                $doc->addScript(JURI::root().'modules/mod_hwd_youtube_videobox/js/jquery.magnific-popup.js');
                 $doc->addScript(JURI::root().'modules/mod_hwd_youtube_videobox/js/aspect.js');
+                $doc->addStylesheet(JURI::root().'modules/mod_hwd_youtube_videobox/css/magnific-popup.css');
+                $doc->addStylesheet(JURI::root().'modules/mod_hwd_youtube_videobox/css/strapped.3.hwd.css');
+                $doc->addScriptDeclaration("
+jQuery.noConflict();
+(function( $ ) {
+  $(function() {
+    // More code using $ as alias to jQuery
+    $(document).ready(function() {
+      $('.popup-title-" . $this->module->id . "').magnificPopup({ 
+        type: 'iframe',
+        iframe: {     
+          patterns: {
+            youtube: {
+              id: function(url) {        
+                return url;
+              },
+              src: '%id%'
+            }
+          }
+        },
+        gallery: {
+          enabled: true
+        }
+      }); 
+      $('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
+        type: 'iframe',
+        iframe: {
+          patterns: {
+            youtube: {
+              id: function(url) {        
+                return url;
+              },
+              src: '%id%'
+            }
+          }
+        },
+        gallery: {
+          enabled: true
+        }
+      });       
+    });
+  });
+})(jQuery);");                
 	}
 
 	public function getItems()
 	{
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 $feed = $this->getFeed();
                 
                 $yt    = 'http://gdata.youtube.com/schemas/2007';
@@ -71,7 +116,7 @@ class modHwdYoutubeVideoBoxHelper extends JObject
                 // Set a default feed
                 $feed = 'http://gdata.youtube.com/feeds/api/standardfeeds/top_rated?v=2';
                 
-                switch ($this->get('params')->get('video_source'))
+                switch ($this->get('params')->get('source', 'standard_list'))
                 {
                     case 'standard_list':
                         switch ($this->get('params')->get('standard_list'))

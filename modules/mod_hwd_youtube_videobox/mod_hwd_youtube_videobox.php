@@ -1,11 +1,9 @@
 <?php
 /**
- * @version    $Id: mod_hwd_youtube_videobox.php 1103 2013-02-12 14:59:30Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
+ * @package    HWD.MediaApps
+ * @copyright  Copyright (C) 2013 Highwood Design Limited. All rights reserved.
  * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author     Dave Horsfall
- * @since      27-Nov-2012 09:37:24
  */
 
 // No direct access to this file
