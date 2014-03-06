@@ -1,32 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: albums.php 277 2012-03-28 10:03:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAlbums extends JControllerAdmin
 {
 	/**
 	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	hwdMediaShareControllerAlbums
-	 * @see		JController
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function __construct($config = array())
 	{
@@ -37,7 +25,7 @@ class hwdMediaShareControllerAlbums extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'Album', $prefix = 'hwdMediaShareModel')
 	{
@@ -46,10 +34,8 @@ class hwdMediaShareControllerAlbums extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to toggle the status setting of a list of albums.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function approve()
 	{
@@ -94,10 +80,8 @@ class hwdMediaShareControllerAlbums extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to toggle the featured setting of a list of albums.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function feature()
 	{
@@ -142,10 +126,8 @@ class hwdMediaShareControllerAlbums extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to set the values for multiple albums.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function batch()
 	{

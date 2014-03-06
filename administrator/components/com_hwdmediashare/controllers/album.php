@@ -1,24 +1,26 @@
 <?php
 /**
- * @version    SVN $Id: album.php 277 2012-03-28 10:03:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAlbum extends JControllerForm
 {
-    	var $view_list = "albums";
-        var $elementType = 2;
+	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "albums";
+        
+	/**
+	 * The ID of this element type.
+	 * @var    integer
+	 */
+    	protected $elementType = 2;
 }

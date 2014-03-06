@@ -1,32 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: processes.php 459 2012-08-13 12:58:37Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      09-Nov-2011 10:20:49
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerProcesses extends JControllerAdmin
 {
 	/**
 	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	hwdMediaShareControllerPlaylists
-	 * @see		JController
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function __construct($config = array())
 	{
@@ -36,7 +24,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'Process', $prefix = 'hwdMediaShareModel')
 	{
@@ -45,10 +33,8 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 	}
         
 	/**
-	 * Method to reset attempts on a list of items.
-	 *
+	 * Method to reset the attempt counter on a list of processes.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function reset()
 	{
@@ -95,9 +81,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
 	/**
 	 * Method to remove all processes marked as successful.
-	 *
 	 * @return	void
-	 * @since	0.1
 	 */
 	function deletesuccessful()
 	{
@@ -148,9 +132,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
 	/**
 	 * Method to remove all processes marked as unnecessary.
-	 *
 	 * @return	void
-	 * @since	0.1
 	 */
 	function deleteunnecessary()
 	{

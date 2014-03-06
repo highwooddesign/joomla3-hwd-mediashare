@@ -1,27 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: process.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      09-Nov-2011 09:17:39
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerProcess extends JControllerForm
 {
         /**
-	 * Method to run processes from a modal window periodically.
-	 * @since	0.1
+	 * Method to periodically run processes from a modal window.
+	 * @return	void
 	 */
         function run()
         {

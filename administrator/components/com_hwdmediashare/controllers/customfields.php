@@ -1,31 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: customfields.php 277 2012-03-28 10:03:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerCustomFields extends JControllerAdmin
 {
 	/**
 	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 *
-	 * @see         JController
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function __construct($config = array())
 	{
@@ -39,7 +28,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'CustomField', $prefix = 'hwdMediaShareModel')
 	{
@@ -48,10 +37,8 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of articles.
-	 *
+	 * Method to toggle the "searchable" setting of a list of custom fields.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function searchable()
 	{
@@ -98,10 +85,8 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of articles.
-	 *
+	 * Method to toggle the "visible" setting of a list of custom fields.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function visible()
 	{
@@ -148,10 +133,8 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of articles.
-	 *
+	 * Method to toggle the "required" setting of a list of custom fields.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function required()
 	{
@@ -198,10 +181,8 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to set the values for multiple custom fields.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function batch()
 	{

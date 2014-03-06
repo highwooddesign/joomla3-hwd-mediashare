@@ -1,32 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: media.php 320 2012-04-17 10:55:13Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerMedia extends JControllerAdmin
 {
 	/**
 	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	ContentControllerArticles
-	 * @see		JController
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function __construct($config = array())
 	{
@@ -37,7 +25,7 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'EditMedia', $prefix = 'hwdMediaShareModel')
 	{
@@ -46,10 +34,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to toggle the status setting of a list of media.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function approve()
 	{
@@ -94,10 +80,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of articles.
-	 *
+	 * Method to toggle the featured setting of a list of media.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function feature()
 	{
@@ -142,12 +126,9 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 		$this->setRedirect('index.php?option=com_hwdmediashare&view=media');
 	}
 
-        
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to set the values for multiple media.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function batch()
 	{
@@ -199,8 +180,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
 
 	/**
-	 * Method to assign the category settings of a list of items.
-	 * @since	0.1
+	 * Method to assign the category settings to a list of media.
+	 * @return	void
 	 */
 	public function assignCategory()
 	{
@@ -222,8 +203,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to unassign the category settings of a list of items.
-	 * @since	0.1
+	 * Method to remove the category settings from a list of items.
+	 * @return	void
 	 */
 	public function unassignCategory()
 	{
@@ -250,8 +231,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to unassign the album setting of a list of items.
-	 * @since	0.1
+	 * Method to unassign the album setting to a list of media.
+	 * @return	void
 	 */
 	public function assignAlbum()
 	{
@@ -278,8 +259,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to unassign the album settings of a list of items.
-	 * @since	0.1
+	 * Method to remove the album settings from a list of media.
+	 * @return	void
 	 */
 	public function unassignAlbum()
 	{
@@ -306,8 +287,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to assign the playlist settings of a list of items.
-	 * @since	0.1
+	 * Method to assign the playlist settings to a list of media.
+	 * @return	void
 	 */
 	public function assignPlaylist()
 	{
@@ -334,8 +315,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to unassign the playlist settings of a list of items.
-	 * @since	0.1
+	 * Method to remove the playlist settings from a list of media.
+	 * @return	void
 	 */
 	public function unassignPlaylist()
 	{
@@ -362,8 +343,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to assign the group settings of a list of items.
-	 * @since	0.1
+	 * Method to assign the group settings to a list of media.
+	 * @return	void
 	 */
 	public function assignGroup()
 	{
@@ -390,8 +371,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to unassign the user settings of a list of items.
-	 * @since	0.1
+	 * Method to remove the group settings from a list of media.
+	 * @return	void
 	 */
 	public function unassignGroup()
 	{
@@ -418,8 +399,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	}
         
 	/**
-	 * Method to assign the group settings of a list of items.
-	 * @since	0.1
+	 * Method to queue new processes to a list of media.
+	 * @return	void
 	 */
 	public function assignProcess()
 	{

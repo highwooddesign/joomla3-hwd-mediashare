@@ -1,30 +1,32 @@
 <?php
 /**
- * @version    SVN $Id: user.php 277 2012-03-28 10:03:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerUser extends JControllerForm
 {
-    	var $view_list = "users";
-        var $elementType = 5;
-
+    	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "users";
+        
 	/**
-	 * Proxy for edit.
-	 * @since	0.1
+	 * The ID of this element type.
+	 * @var    string
+	 */
+    	protected $elementType = 5;
+
+        /**
+	 * Proxy for edit, to generate the channel row in the database.
+	 * @return	void
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
@@ -41,13 +43,13 @@ class hwdMediaShareControllerUser extends JControllerForm
 	}
         
 	/**
-	 * Proxy for add.
-	 * @since	0.1
+	 * Proxy for add, to direct to the Joomla user manager.
+	 * @return	void
 	 */
 	public function add()
 	{
 		// Redirect to create Joomla user
-                $app     =& JFactory::getApplication();
+                $app = JFactory::getApplication();
                 $message = JText::_('COM_HWDMS_ADD_NEW_USER_CHANNEL_NOTICE');
 		$app->redirect( 'index.php?option=com_users&task=user.add' , $message );
 	}

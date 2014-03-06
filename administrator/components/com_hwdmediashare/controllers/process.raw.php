@@ -1,20 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: process.raw.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      08-Nov-2011 17:23:26
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-class HwdMediaShareControllerProcess extends JControllerLegacy {
+class HwdMediaShareControllerProcess extends JControllerLegacy 
+{
         /**
-	 * Method to run a process.
-	 * @since	0.1
+	 * Method to run a process
+	 * @return	void
 	 */
         function run()
         {

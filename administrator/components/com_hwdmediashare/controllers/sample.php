@@ -1,23 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: sample.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      22-Feb-2012 18:03:57
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-/**
- * hwdMediaShare Controller
- */
-class hwdMediaShareControllerSample extends JControllerLegacy {
+class hwdMediaShareControllerSample extends JControllerLegacy 
+{
         /**
-	 * Install sample data
-	 * @since	0.1
+	 * Method to install sample data
+	 * @return	void
 	 */
 	public function install()
 	{

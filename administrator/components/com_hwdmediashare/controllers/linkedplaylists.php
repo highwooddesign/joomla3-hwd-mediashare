@@ -1,29 +1,26 @@
 <?php
 /**
- * @version    SVN $Id: linkedplaylists.php 218 2012-02-29 13:32:42Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      24-Oct-2011 15:49:27
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerLinkedPlaylists extends JControllerAdmin
 {
-        var $view_list = "linkedplaylists";
+    	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "linkedplaylists";
 
         /**
-	 * Method to unlink
-	 * @since	0.1
+	 * Method to unlink playlists from a media item
+	 * @return	void
 	 */
 	public function unlink()
 	{
@@ -58,8 +55,8 @@ class hwdMediaShareControllerLinkedPlaylists extends JControllerAdmin
 	}
         
         /**
-	 * Method to link
-	 * @since	0.1
+	 * Method to link playlists to a media item
+	 * @return	void
 	 */
 	public function link()
 	{

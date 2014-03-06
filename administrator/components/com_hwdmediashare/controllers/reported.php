@@ -1,41 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: reported.php 1249 2013-03-08 14:24:48Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      08-Mar-2013 10:20:47
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerReported extends JControllerAdmin
 {
-	/**
-	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	ContentControllerArticles
-	 * @see		JController
-	 * @since	0.1
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-        
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'Reported', $prefix = 'hwdMediaShareModel')
 	{
@@ -44,10 +23,8 @@ class hwdMediaShareControllerReported extends JControllerAdmin
 	}
         
 	/**
-	 * Method to delete of a list of items.
-	 *
+	 * Method to delete of a list of reports.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function delete()
 	{

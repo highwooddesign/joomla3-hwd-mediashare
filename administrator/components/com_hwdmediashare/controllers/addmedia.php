@@ -1,27 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: addmedia.php 787 2012-12-17 14:19:38Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAddMedia extends JControllerForm
 {
 	/**
 	 * Method to process file upload
-	 * @since	0.1
+	 * @return	void
 	 */
         function upload()
         {
@@ -48,7 +41,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 
 	/**
 	 * Method to process uber upload
-	 * @since	0.1
+	 * @return	void
 	 */
         function uber()
         {
@@ -72,7 +65,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 
 	/**
 	 * Method to process embed code import
-	 * @since	0.1
+	 * @return	void
 	 */
         function embed()
         {
@@ -101,8 +94,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
 
 	/**
-	 * Method to process embed code import
-	 * @since	0.1
+	 * Method to process remote media import
+	 * @return	void
 	 */
         function remote()
         {
@@ -139,8 +132,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
 
 	/**
-	 * Method to process embed code import
-	 * @since	0.1
+	 * Method to process remote file import
+	 * @return	void
 	 */
         function link()
         {
@@ -169,8 +162,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process embed code import
-	 * @since	0.1
+	 * Method to process rtmp import
+	 * @return	void
 	 */
         function rtmp()
         {
@@ -199,8 +192,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process embed code import
-	 * @since	0.1
+	 * Method to process bulk import from server directory
+	 * @return	void
 	 */
         function import()
         {
@@ -229,8 +222,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process embed code import
-	 * @since	0.1
+	 * Method to display the directory scan tree view
+	 * @return	void
 	 */
         function scan()
         {
@@ -240,5 +233,20 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 $view = $this->getView('addmedia','html');
                 $view->setModel( $this->getModel( 'addmedia' ), true );
                 $view->scan();
+        }
+        
+	/**
+	 * Method to process two part upload process
+	 * @return	void
+	 */
+        function processForm()
+        {
+		// Check for request forgeries
+		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+                $view = $this->getView('addmedia','html');
+                $view->setModel($this->getModel('addmedia'), true);
+                $view->show_form = false;
+                $view->display();
         }
 }

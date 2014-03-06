@@ -1,32 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: users.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      02-Nov-2011 11:25:10
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerUsers extends JControllerAdmin
 {
 	/**
 	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	hwdMediaShareControllerUsers
-	 * @see		JController
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function __construct($config = array())
 	{
@@ -37,7 +25,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'User', $prefix = 'hwdMediaShareModel')
 	{
@@ -46,10 +34,8 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to toggle the status setting of a list of users.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function approve()
 	{
@@ -94,10 +80,8 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of articles.
-	 *
+	 * Method to toggle the featured setting of a list of users.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function feature()
 	{
@@ -142,12 +126,9 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 		$this->setRedirect('index.php?option=com_hwdmediashare&view=users');
 	}
         
-        
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to set the values for multiple users.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function batch()
 	{

@@ -1,27 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: get.raw.php 269 2012-03-22 10:07:58Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      25-Oct-2011 15:39:20
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerGet extends JControllerForm
 {
 	/**
 	 * Method to get the url of a media file
-	 * @since	0.1
+	 * @return	void
 	 */
         function url()
         {
@@ -75,7 +68,7 @@ class hwdMediaShareControllerGet extends JControllerForm
         
 	/**
 	 * Method to deliver a media file
-	 * @since	0.1
+	 * @return	void
 	 */
         function file()
         {

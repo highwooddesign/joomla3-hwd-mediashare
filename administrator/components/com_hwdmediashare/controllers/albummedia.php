@@ -1,27 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: albummedia.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      31-Oct-2011 16:05:58
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
 {
         /**
-	 * Method to unlink
-	 * @since	0.1
+	 * Method to unlink media from an album
+	 * @return	void
 	 */
 	public function unlink()
 	{
@@ -56,8 +49,8 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
 	}
         
         /**
-	 * Method to link
-	 * @since	0.1
+	 * Method to link media to an album
+	 * @return	void
 	 */
 	public function link()
 	{
