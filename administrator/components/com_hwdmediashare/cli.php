@@ -1,17 +1,17 @@
 <?php
 /**
- * @version    SVN $Id: cli.php 1687 2013-10-16 15:07:37Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      25-Feb-2012 14:38:45
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
+// Define some things
 define('_JEXEC', 1);
 define('_JCLI', 1);
 
-// Define some things.
 define('JPATH_BASE', dirname(__FILE__).'/../../..');
 define('JPATH_SITE', JPATH_BASE);
 define('JPATH_ROOT', JPATH_BASE);
@@ -40,6 +40,7 @@ class hwdMediaShare extends JApplicationCli
                 JLoader::register('JRequest', JPATH_PLATFORM.'/joomla/environment/request.php');
                 JLoader::register('JComponentHelper', JPATH_PLATFORM.'/joomla/application/component/helper.php');
                 JLoader::register('JComponentHelper', JPATH_PLATFORM.'/legacy/component/helper.php');  // Register in J3
+                JLoader::register('JComponentHelper', JPATH_PLATFORM.'/cms/component/helper.php');  // Register in J3.2
                 JLoader::register('hwdMediaShareFactory', JPATH_BASE.'/components/com_hwdmediashare/libraries/factory.php');
 
                 // Load process object

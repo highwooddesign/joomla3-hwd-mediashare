@@ -1,19 +1,15 @@
 <?php
 /**
- * @version    SVN $Id: script.php 550 2012-10-05 12:30:04Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-/**
- * Script file of hwdMediaShare component
- */
 class com_hwdMediaShareInstallerScript
 {
         /**
@@ -23,7 +19,6 @@ class com_hwdMediaShareInstallerScript
         
         /**
 	 * Method to install the component
-	 *
 	 * @return void
 	 */
 	function install($parent)
@@ -56,7 +51,6 @@ class com_hwdMediaShareInstallerScript
 
 	/**
 	 * Method to uninstall the component
-	 *
 	 * @return void
 	 */
 	function uninstall($parent)
@@ -103,7 +97,6 @@ class com_hwdMediaShareInstallerScript
 
 	/**
 	 * Method to update the component
-	 *
 	 * @return void
 	 */
 	function update($parent)
@@ -114,7 +107,6 @@ class com_hwdMediaShareInstallerScript
 
 	/**
 	 * Method to run before an install/update/uninstall method
-	 *
 	 * @return void
 	 */
 	function preflight($type, $parent)
@@ -126,7 +118,6 @@ class com_hwdMediaShareInstallerScript
 
 	/**
 	 * Method to run after an install/update/uninstall method
-	 *
 	 * @return void
 	 */
 	function postflight($type, $parent)
@@ -156,7 +147,6 @@ class com_hwdMediaShareInstallerScript
 
         /**
 	 * Method to check if hwdMediaShare menu exists
-	 *
 	 * @return boolean
 	 */
 	function checkMenuExists()
@@ -172,7 +162,6 @@ class com_hwdMediaShareInstallerScript
         
         /**
 	 * Method to check if hwdMediaShare menu exists
-	 *
 	 * @return boolean
 	 */
 	function checkModuleInstalled($module)
@@ -189,7 +178,6 @@ class com_hwdMediaShareInstallerScript
 
         /**
 	 * Method to create hwdMediaShare menu
-	 *
 	 * @return boolean
 	 */
         function writeMenu()
@@ -230,7 +218,6 @@ class com_hwdMediaShareInstallerScript
         
         /**
 	 * Method to add default hwdMediaShare menu items
-	 *
 	 * @return boolean
 	 */
         function addDefaultMenuItems()
@@ -371,7 +358,6 @@ class com_hwdMediaShareInstallerScript
         
         /**
 	 * Method to fix any broken menu items and associate them with the hwdMediaShare asset
-	 *
 	 * @return boolean
 	 */
         function fixBrokenMenuItems()
@@ -407,7 +393,6 @@ class com_hwdMediaShareInstallerScript
         
         /**
 	 * Method to check for valid aliases (no duplicates)
-	 *
 	 * @return boolean
 	 */
         function getAlias($alias)
@@ -438,8 +423,7 @@ class com_hwdMediaShareInstallerScript
         } 
                
         /**
-	 * Method to check if hwdMediaShare menu exists
-	 *
+	 * Method to setup modules for the discover page during initial installation.
 	 * @return boolean
 	 */
 	function setupModule($module, $position, $title, $params=null)
@@ -455,8 +439,7 @@ class com_hwdMediaShareInstallerScript
 	}
         
         /**
-	 * Method to check if hwdMediaShare menu exists
-	 *
+	 * Method to check if any modules are configured in a specific position.
 	 * @return boolean
 	 */
 	function checkModuleConfigured($module, $position)
@@ -472,8 +455,7 @@ class com_hwdMediaShareInstallerScript
 	}
         
         /**
-	 * Method to check if hwdMediaShare menu exists
-	 *
+	 * Method to add and configure a new module.
 	 * @return boolean
 	 */
 	function configureModule($module, $position, $title, $params=null)

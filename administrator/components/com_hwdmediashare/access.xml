@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- $Id: access.xml 236 2012-03-06 21:56:39Z dhorsfall $ -->
 <access component="com_hwdmediashare">
 	<section name="component">
 		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
