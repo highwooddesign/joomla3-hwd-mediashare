@@ -1,47 +1,93 @@
 <?php
 /**
- * @version    SVN $Id: hwdmediashare.php 541 2012-10-03 13:03:42Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-/**
- * hwdMediaShare component helper
- */
 abstract class hwdMediaShareHelper
 {
-        /**
-	 * Configure the Linkbar
+	/**
+	 * Configure the Linkbar.
+         * 
+	 * @param   string  $vName  The name of the active view.
+         * 
+	 * @return  void
 	 */
 	public static function addSubmenu($submenu)
 	{
                 $version = new JVersion();
 
-                JSubMenuHelper::addEntry(JText::_('COM_HWDMS_DASHBOARD'), 'index.php?option=com_hwdmediashare&view=dashboard', $submenu == 'dashboard');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_MEDIA'), 'index.php?option=com_hwdmediashare&view=media', $submenu == 'media');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_CATEGORIES'), 'index.php?option=com_categories&extension=com_hwdmediashare', $submenu == 'categories');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_ALBUMS'), 'index.php?option=com_hwdmediashare&view=albums', $submenu == 'albums');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_GROUPS'), 'index.php?option=com_hwdmediashare&view=groups', $submenu == 'groups');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_USER_CHANNELS'), 'index.php?option=com_hwdmediashare&view=users', $submenu == 'users');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_PLAYLISTS'), 'index.php?option=com_hwdmediashare&view=playlists', $submenu == 'playlists');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_ACTIVITIES'), 'index.php?option=com_hwdmediashare&view=activities', $submenu == 'activities');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_MAINTENANCE'), 'index.php?option=com_hwdmediashare&view=maintenance', $submenu == 'maintenance');
-		JSubMenuHelper::addEntry(JText::_('COM_HWDMS_CONFIGURATION'), 'index.php?option=com_hwdmediashare&view=configuration', $submenu == 'configuration');
-		// Set some global property
-		$document = JFactory::getDocument();
-		$document->addStyleDeclaration('.icon-48-hwdmediashare {background-image: url(../media/com_hwdmediashare/assets/images/icons/48/icon-48-hwdms.png);padding-left:60px!important;}');
-                // Load some styles when viewing in Joomla 3.0 and above
-                if ($version->RELEASE >= 3.0) $document->addStyleSheet(JURI::root( true ).'/media/com_hwdmediashare/assets/css/j3.css');
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_DASHBOARD'),
+			'index.php?option=com_hwdmediashare&view=dashboard',
+			$submenu == 'dashboard'
+		);
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_MEDIA'),
+			'index.php?option=com_hwdmediashare&view=media',
+			$submenu == 'media'
+		);                
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_CATEGORIES'),
+			'index.php?option=com_categories&extension=com_hwdmediashare',
+			$submenu == 'categories'
+		);    
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_ALBUMS'),
+			'index.php?option=com_hwdmediashare&view=albums',
+			$submenu == 'albums'
+		);    
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_GROUPS'),
+			'index.php?option=com_hwdmediashare&view=groups',
+			$submenu == 'groups'
+		);    
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_USER_CHANNELS'),
+			'index.php?option=com_hwdmediashare&view=users',
+			$submenu == 'users'
+		);    
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_PLAYLISTS'),
+			'index.php?option=com_hwdmediashare&view=playlists',
+			$submenu == 'playlists'
+		);    
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_ACTIVITIES'),
+			'index.php?option=com_hwdmediashare&view=activities',
+			$submenu == 'activities'
+		);    
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_MAINTENANCE'),
+			'index.php?option=com_hwdmediashare&view=maintenance',
+			$submenu == 'maintenance'
+		);   
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_CONFIGURATION'),
+			'index.php?option=com_hwdmediashare&view=configuration',
+			$submenu == 'configuration'
+		); 
+		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_MEDIA_PROCESSING'),
+			'index.php?option=com_hwdmediashare&view=processes',
+			$submenu == 'processes'
+		);  
         }
         
 	/**
-	 * Get the actions
+	 * Gets a list of the actions that can be performed.
+	 *
+	 * @param   string   $component  The component name.
+	 * @param   string   $section    The access section name.
+	 * @param   integer  $id         The item ID.
+	 *
+	 * @return  JObject
 	 */
 	public static function getActions($id = 0, $type = 'media')
 	{
