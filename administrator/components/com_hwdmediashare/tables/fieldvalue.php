@@ -1,19 +1,18 @@
 <?php
 /**
- * @version    SVN $Id: fieldvalue.php 1366 2013-04-23 12:13:03Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-/**
- * Field value table class
- */
+// Import Joomla table library
+jimport('joomla.database.table');
+
 class hwdMediaShareTableFieldValue extends JTable
 {
 	var $id 		= null;
@@ -22,22 +21,27 @@ class hwdMediaShareTableFieldValue extends JTable
 	var $value		= null;
 	var $access		= null;
 
-	public function __construct( &$db )
+	/**
+	 * Constructor.
+	 * @return	void
+	 */
+	function __construct($db)
 	{
-		parent::__construct( '#__hwdms_fields_values', 'id', $db );
+                parent::__construct('#__hwdms_fields_values', 'id', $db);
 	}
         
 	/**
 	 * Overloaded load function
 	 *
-	 * @param       int $pk primary key
-	 * @param       boolean $reset reset data
+	 * @param       int     $pk     primary key
+	 * @param       boolean $reset  reset data
+         * 
 	 * @return      boolean
-	 * @see JTable:load
 	 */
-	public function load( $elementType , $elementId, $fieldId )
+	public function load($elementType, $elementId, $fieldId)
 	{
-		$db		= $this->getDBO();
+		$db = $this->getDBO();
+                
 		$query	= 'SELECT * FROM ' . $db->quoteName( '#__hwdms_fields_values' ) . ' '
 				. 'WHERE ' . $db->quoteName('field_id') . ' = ' . $db->Quote( $fieldId ) . ''
                                 . 'AND ' . $db->quoteName('element_type') . '=' . $db->Quote( $elementType ) . ''
