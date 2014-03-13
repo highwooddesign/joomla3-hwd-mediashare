@@ -12,4 +12,12 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerMaintenance extends JControllerForm
 {
+        /**
+	 * Proxy for cancel.
+	 * @return	void
+	 */
+	public function cancel($key = null)
+	{
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=dashboard', false));
+	}
 }
