@@ -1,35 +1,36 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 459 2012-08-13 12:58:37Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewProcesses extends JViewLegacy {
-        /**
-	 * display method of Hello view
-	 * @return void
+class hwdMediaShareViewProcesses extends JViewLegacy
+{
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
-		$successful = $this->get('Successful');
-		$unnecessary = $this->get('Unnecessary');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+		$this->successful = $this->get('Successful');
+		$this->unnecessary = $this->get('Unnecessary');
+                $this->filterForm = $this->get('FilterForm');
+
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
@@ -37,95 +38,120 @@ class hwdMediaShareViewProcesses extends JViewLegacy {
                         JError::raiseError(500, implode('<br />', $errors));
                         return false;
                 }
-
-                // Assign data to the view
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-                $this->successful = $successful;
-                $this->unnecessary = $unnecessary;
-
-		// Set the toolbar
-		$this->addToolBar();
-
+                
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_HWDMS_PROCESSES'), 'hwdmediashare');
-
-                // Sample data install option
-                $document = JFactory::getDocument();
-                $document->addStyleDeclaration('.icon-32-process {background-image: url(../media/com_hwdmediashare/assets/images/icons/32/process.png);}');
-                JToolBarHelper::custom('process.run', 'process.png', 'process_f2.png', JText::_('COM_HWDMS_PROCESS'), true);
-
-                $document = JFactory::getDocument();
-                $document->addStyleDeclaration('.icon-32-process-all {background-image: url(../media/com_hwdmediashare/assets/images/icons/32/process-all.png);}');
-                JToolBarHelper::custom('process.all', 'process-all.png', 'process-all_f2.png', JText::_('COM_HWDMS_PROCESS_ALL'), false);
+		$user  = JFactory::getUser();
                 
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+                
+                JToolBarHelper::title(JText::_('COM_HWDMS_PROCESSES'), 'cog');
+
+                JToolBarHelper::custom('process.run', 'cog', 'cog', JText::_('COM_HWDMS_PROCESS'), true);
+                JToolBarHelper::custom('process.runall', 'cog', 'cog', JText::_('COM_HWDMS_PROCESS_ALL'), false);
 		if ($canDo->get('core.edit.state'))
                 {
 			JToolBarHelper::divider();
-                        JToolBarHelper::custom('processes.reset','remove.png','remove_f2.png','COM_HWDMS_RESET', true);
-                        JToolBarHelper::custom('processes.resetall','remove.png','remove_f2.png','COM_HWDMS_RESET_ALL', true);
+                        JToolBarHelper::custom('processes.reset', 'switch', 'switch','COM_HWDMS_RESET', true);
+                        JToolBarHelper::custom('processes.resetall', 'switch', 'switch','COM_HWDMS_FORCE_RESET', true);
 			JToolBarHelper::divider();
                         JToolBarHelper::checkin('processes.checkin');
 		}
-
                 if ($canDo->get('core.delete'))
 		{
 			JToolBarHelper::divider();
                         JToolBarHelper::deleteList('', 'processes.delete');
+			JToolBarHelper::divider();
                 }
+                if ($this->successful) 
+                {
+                        JToolBarHelper::custom('processes.deletesuccessful', 'delete', 'delete', JText::sprintf('COM_HWDMS_DELETE_X_SUCCESSFUL', $this->successful), false);
+                }
+                if ($this->unnecessary) 
+                {
+                        JToolBarHelper::custom('processes.deleteunnecessary', 'delete','delete', JText::sprintf('COM_HWDMS_DELETE_X_UNNECESSARY', $this->unnecessary), false);
+                }
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
+		{
+			JHtml::_('bootstrap.modal', 'collapseModal');
+			$title = JText::_('JTOOLBAR_BATCH');
 
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+			// Instantiate a new JLayoutFile instance and render the batch button
+			$layout = new JLayoutFile('joomla.toolbar.batch');
+
+			$dhtml = $layout->render(array('title' => $title));
+			$bar->appendButton('Custom', $dhtml, 'batch');
+		}
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
+        
 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
+	 * Method to display a human readable process type.
+	 * @return  void
 	 */
-        protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");
-                $document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_PROCESSES'));
-        }
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getProcessType( &$item )
+	public function getProcessType($item)
 	{
                 hwdMediaShareFactory::load('processes');
                 return hwdMediaShareProcesses::getType($item);
 	}
+        
 	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getStatus( &$item )
+	 * Method to display a human readable process status.
+	 * @return  void
+	 */
+	public function getStatus($item)
 	{
                 hwdMediaShareFactory::load('processes');
                 return hwdMediaShareProcesses::getStatus($item);
 	}
+        
+	/**
+	 * Display the run view
+	 *
+	 * @param   array  $cid  The array of process that should be run.
+	 *
+	 * @return  void
+	 */
+	function run($cid = array())
+	{
+                // Make sure the ids are integers
+                jimport('joomla.utilities.arrayhelper');
+                JArrayHelper::toInteger($cid);
+                        
+                $this->cid = $cid;
+                
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
+                {
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
+
+                JToolBarHelper::title(JText::_('COM_HWDMS_PROCESSES'), 'cog');
+                JToolBarHelper::cancel('processes.close', 'JTOOLBAR_CLOSE');
+                JToolBarHelper::divider();
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
+
+                // Display the template
+		parent::display('run');
+	}        
 }
