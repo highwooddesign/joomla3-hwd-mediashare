@@ -18,6 +18,10 @@ class hwdMediaShareViewProcess extends JViewLegacy
 
 	protected $form;
 
+	/**
+	 * The logs for this process.
+	 * @var    object
+	 */        
 	protected $items;
         
 	/**
