@@ -62,7 +62,7 @@ class hwdMediaShareViewConfiguration extends JViewLegacy
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
 		// Since we don't track these assets at the item level, use the category id.
-		$canDo		= hwdMediaShareHelper::getActions();
+		$canDo = hwdMediaShareHelper::getActions();
 
 		JToolBarHelper::title(JText::_('COM_HWDMS_CONFIGURATION'), 'cog');
 
