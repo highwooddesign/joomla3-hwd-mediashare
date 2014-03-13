@@ -1,33 +1,34 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 493 2012-08-28 13:20:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      07-Nov-2011 11:38:52
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewSubscriptions extends JViewLegacy {
+class hwdMediaShareViewSubscriptions extends JViewLegacy 
+{
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
+
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
@@ -35,28 +36,32 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy {
                         JError::raiseError(500, implode('<br />', $errors));
                         return false;
                 }
-                // Assign data to the view
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-
-		// Set the toolbar
-		$this->addToolBar();
-
+                
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_HWDMS_SUBSCRIPTIONS'), 'hwdmediashare');
+		$user  = JFactory::getUser();
+                
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+                
+		JToolBarHelper::title(JText::_('COM_HWDMS_SUBSCRIPTIONS'), 'users');
 
                 if ($canDo->get('core.create'))
 		{
@@ -64,20 +69,11 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy {
 		}
                 if ($canDo->get('core.delete'))
 		{
+			JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'subscriptions.delete');
+                        JToolBarHelper::divider();
                 }
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
-        }
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_SUBSCRIPTIONS'));
-	}
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');   
+        }        
 }
+
