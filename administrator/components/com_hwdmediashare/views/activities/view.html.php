@@ -1,75 +1,71 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 569 2012-10-12 14:34:39Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      26-Oct-2011 10:22:53
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewActivities extends JViewLegacy {
+class hwdMediaShareViewActivities extends JViewLegacy
+{
 	var $name = "activities";
-        /**
-	 * display method of Hello view
-	 * @return void
+        
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
 
                 hwdMediaShareFactory::load('activities');
-                
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
+
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
                         JError::raiseError(500, implode('<br />', $errors));
                         return false;
                 }
-
-                // Assign data to the view
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-
-		// Set the toolbar
-		$this->addToolBar();
-
+                
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_HWDMS_ACTIVITIES'), 'hwdmediashare');
+		$user  = JFactory::getUser();
+                
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+                
+                JToolBarHelper::title(JText::_('COM_HWDMS_ACTIVITIES'), 'grid');
 
-                if ($canDo->get('core.create'))
-		{
-			JToolBarHelper::addNew('activity.add');
-		}
-		if ($canDo->get('core.edit'))
-		{
-			JToolBarHelper::editList('activity.edit');
-		}
 		if ($canDo->get('core.edit.state'))
                 {
 			JToolBarHelper::divider();
@@ -93,74 +89,18 @@ class hwdMediaShareViewActivities extends JViewLegacy {
                         JToolBarHelper::trash('activities.trash');
                         JToolBarHelper::divider();
 		}
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
-	}
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-                $document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_ACTIVITIES'));
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getPublish( &$row, $type, $i )
-	{
-                $state = $row->$type ? 'publish' : 'unpublish';
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
+		{
+			JHtml::_('bootstrap.modal', 'collapseModal');
+			$title = JText::_('JTOOLBAR_BATCH');
 
-                unset($func);
-                unset($alt);
-                if ($type == "status")
-                {
-                        $func = ($row->$type == 1) ? 'unapprove' : 'approve';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_APPROVED') : JText::_('COM_HWDMS_UNAPPROVED');
-                        if ($row->$type == 2)
-                        {
-                                $state = 'pending';
-                                $func = 'approve';
-                                $alt = JText::_('COM_HWDMS_PENDING');
-                        }
-                        else if ($row->$type == 3)
-                        {
-                                $state = 'expired';
-                                $func = 'approve';
-                                $alt = JText::_('COM_HWDMS_REPORTED');
-                        }
-                }
-                else if ($type == "featured")
-                {
-                        $func = $row->$type ? 'unfeature' : 'feature';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_FEATURE') : JText::_('COM_HWDMS_UNFEATURE');
-                }
+			// Instantiate a new JLayoutFile instance and render the batch button
+			$layout = new JLayoutFile('joomla.toolbar.batch');
 
-                $image = '<span class="state '.$state.'"><span class="text">'.$alt.'</span></span>';
-
-                $href = '<a class="jgrid" href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\'activities.'.$func.'\')" title="'.JText::_($alt).'">';
-                $href .= $image.'</a>';
-
-		return $href;
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getActivityType( &$item )
-	{
-                hwdMediaShareFactory::load('activities');
-                return hwdMediaShareActivities::getActivityType($item);
-	}
+			$dhtml = $layout->render(array('title' => $title));
+			$bar->appendButton('Custom', $dhtml, 'batch');
+		}
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
+	}       
 }
