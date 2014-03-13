@@ -1,34 +1,40 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      09-Nov-2011 08:33:43
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
+class hwdMediaShareViewProcess extends JViewLegacy
+{
+	protected $state;
 
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewProcess extends JViewLegacy {
+	protected $item;
+
+	protected $form;
+
+	protected $items;
+        
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $process = $this->get('Process');
-		$state	= $this->get('State');
-
+                // Get data from the model.
+		$this->state	= $this->get('State');
+		$this->item	= $this->get('Item');
+		$this->form	= $this->get('Form');
+		$this->items	= $this->get('Items');               
+                
                 hwdMediaShareFactory::load('processes');
 
                 // Check for errors.
@@ -38,54 +44,36 @@ class hwdMediaShareViewProcess extends JViewLegacy {
                         return false;
                 }
 
-                // Assign data to the view
-                $this->items = $items;
-                $this->process = $process;
-                $this->state = $state;
-
-		// Set the toolbar
-		$this->addToolBar();
+		$this->addToolbar();
+		$this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_HWDMS_PROCESS_LOG'), 'hwdmediashare');
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 
-                JToolBarHelper::cancel('process.cancel', 'JTOOLBAR_CLOSE');
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+		JToolBarHelper::title(JText::_('COM_HWDMS_PROCESS_LOG'), 'cog');
+
+		JToolbarHelper::cancel('process.cancel', 'JTOOLBAR_CLOSE');
+		JToolbarHelper::divider();
+		JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);                
 	}
+        
 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
+	 * Add the human readable process type.
+	 * @return  void
 	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_PROCESS_LOG'));
-		$document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getProcessType( &$item )
+	public function getProcessType($item)
 	{
                 hwdMediaShareFactory::load('processes');
                 return hwdMediaShareProcesses::getType($item);
-	}        
+	}         
 }
