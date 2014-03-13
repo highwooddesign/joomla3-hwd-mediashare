@@ -1,42 +1,34 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 277 2012-03-28 10:03:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewLinkedGroups extends JViewLegacy {
-        /**
-	 * View list
-	 */
-        var $view_list = "linkedgroups";
-        var $view_edit = "editgroup";
-        var $view_type = "group";
-        var $view_header = "Groups linked with this media";
-        var $view_title = "COM_HWDMS_LINKED_GROUPS";
-
-        /**
-	 * display method of Hello view
-	 * @return void
+class hwdMediaShareViewLinkedGroups extends JViewLegacy
+{
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
+                $this->mediaId = JFactory::getApplication()->input->get('media_id', '', 'int');
+
+                hwdMediaShareFactory::load('downloads');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
@@ -44,63 +36,34 @@ class hwdMediaShareViewLinkedGroups extends JViewLegacy {
                         JError::raiseError(500, implode('<br />', $errors));
                         return false;
                 }
-                // Assign data to the view
-                $this->mediaId = JRequest::getInt( 'media_id', '' );
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-                $this->viewAll = $this->state->get('filter.linked') == "all" ? true:false;
-
-		// Set the toolbar
-		$this->addToolBar();
 
 		// Display the template
 		parent::display($tpl);
 
-		// Set the document
-		$this->setDocument();
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");                
 	}
+
 	/**
-	 * Setting the toolbar
+	 * Display appropriate button to either link or unlink the group from the media item.
+	 * @return  void
 	 */
-	protected function addToolBar()
+	public function getConnection($row, $i)
 	{
-		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_($this->view_title), 'hwdmediashare');
-	}
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-                $document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_($this->view_title));
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getConnection( &$row, $i )
-	{
-                $state = $row->connection ? 'publish' : 'unpublish';
+                $task = $row->connection ? 'unlink' : 'link';
+                $text = $row->connection ? JText::_('COM_HWDMS_UNLINK') : JText::_('COM_HWDMS_LINK');
 
-                unset($func);
-                unset($alt);
-
-                $func = $row->connection ? 'unlink' : 'link';
-                $alt  = $row->connection ? JText::_('COM_HWDMS_LINK') : JText::_('COM_HWDMS_UNLINK');
-
-                $image = '<span class="state '.$state.'"><span class="text">'.$alt.'</span></span>';
-
-                $href = '<a class="jgrid" href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\''.$this->view_list.'.'.$func.'\')" title="'.JText::_($alt).'">';
-                $href .= $image.'</a>';
-
-		return $href;
+                // Start output
+                ob_start();
+                ?>
+<div class="btn-wrapper pull-right">
+<a title="" class="btn hasTooltip btn-primary" href="index.php?option=com_hwdmediashare&task=playlistmedia.<?php echo $task; ?>&tmpl=component&playlist_id=28&tmpl=component&playlist_id=28&add=0" data-original-title="Filter the list items">
+<?php echo $text; ?>
+</a>
+</div> 
+                <?php
+                $html = ob_get_contents();
+                ob_end_clean();
+                return $html;
 	}
 }
