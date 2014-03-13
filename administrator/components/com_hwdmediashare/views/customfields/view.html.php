@@ -1,62 +1,64 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 493 2012-08-28 13:20:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewCustomFields extends JViewLegacy {
+class hwdMediaShareViewCustomFields extends JViewLegacy 
+{
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
-                
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
+
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
-                                JError::raiseError(500, implode('<br />', $errors));
-                                return false;
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
                 }
-                // Assign data to the view
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-                   
-		// Set the toolbar
-		$this->addToolBar();
-
+                
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_HWDMS_CUSTOM_FIELDS'), 'hwdmediashare');
+		$user  = JFactory::getUser();
+                
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+                            
+		JToolBarHelper::title(JText::_('COM_HWDMS_CUSTOM_FIELDS'), 'checkmark-circle');
 
                 if ($canDo->get('core.create'))
 		{
@@ -87,26 +89,26 @@ class hwdMediaShareViewCustomFields extends JViewLegacy {
                         JToolBarHelper::trash('customfields.trash');
                         JToolBarHelper::divider();
 		}
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
+		{
+			JHtml::_('bootstrap.modal', 'collapseModal');
+			$title = JText::_('JTOOLBAR_BATCH');
+
+			// Instantiate a new JLayoutFile instance and render the batch button
+			$layout = new JLayoutFile('joomla.toolbar.batch');
+
+			$dhtml = $layout->render(array('title' => $title));
+			$bar->appendButton('Custom', $dhtml, 'batch');
+		}
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
+
 	/**
-	 * Method to set up the document properties
+	 * Method to display the human readable field type.
 	 *
-	 * @return void
+	 * @return  void
 	 */
-	protected function setDocument()
-	{
-                $document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_CUSTOM_FIELDS'));
-	}
-	/**
-	 * Method to get the Field type in text
-	 *
-	 * @param	string	Type of field
-	 *
-	 * @return	string	Text representation of the field type.
-	 **/
 	public function getFieldText( $type )
 	{
 		$types	= $this->get('ProfileTypes');
@@ -114,57 +116,12 @@ class hwdMediaShareViewCustomFields extends JViewLegacy {
 
 		return $value;
 	}
+
 	/**
-	 * Method to get the publish status HTML
+	 * Method to display the human readable element type.
 	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getPublish( &$row, $type, $i )
-	{
-                $state = $row->$type ? 'publish' : 'unpublish';
-
-                unset($func);
-                unset($alt);
-
-                if ($type == "published")
-                {
-                        $func = $row->$type ? 'unpublish' : 'publish';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_PUBLISHED') : JText::_('COM_HWDMS_UNPUBLISH');
-                }
-                else if ($type == "searchable")
-                {
-                        $func = $row->$type ? 'unsearchable' : 'searchable';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_SEARCHABLE') : JText::_('COM_HWDMS_NOTSEARCHABLE');
-                }
-                else if ($type == "visible")
-                {
-                        $func = $row->$type ? 'unvisible' : 'visible';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_VISIBLE') : JText::_('COM_HWDMS_INVISIBLE');
-                }
-                else if ($type == "required")
-                {
-                        $func = $row->$type ? 'unrequired' : 'required';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_REQUIRED') : JText::_('COM_HWDMS_NOTREQUIRED');
-                }
-
-                $image = '<span class="state '.$state.'"><span class="text">'.$alt.'</span></span>';
-
-                $href = '<a class="jgrid" href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\'customfields.'.$func.'\')" title="'.JText::_($alt).'">';
-                $href .= $image.'</a>';
-
-		return $href;
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
+	 * @return  void
+	 */
 	public function getElementText( $element )
 	{
                 switch ($element) {
@@ -184,5 +141,5 @@ class hwdMediaShareViewCustomFields extends JViewLegacy {
                         return JText::_( 'COM_HWDMS_CHANNEL' );
                         break;
                 }
-	}
+	}         
 }
