@@ -68,7 +68,7 @@ class hwdMediaShareViewProcess extends JViewLegacy
 
 		JToolbarHelper::cancel('process.cancel', 'JTOOLBAR_CLOSE');
 		JToolbarHelper::divider();
-		JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);                
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
         
 	/**
