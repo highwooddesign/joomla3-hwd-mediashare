@@ -1,62 +1,67 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 493 2012-08-28 13:20:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewExtensions extends JViewLegacy {
+class hwdMediaShareViewExtensions extends JViewLegacy
+{
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
                 // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
+
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
-                                JError::raiseError(500, implode('<br />', $errors));
-                                return false;
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
                 }
-                // Assign data to the view
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-
-		// Set the toolbar
-		$this->addToolBar();
-
+                
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_HWDMS_FILE_EXTENSIONS'), 'hwdmediashare');
+		$user  = JFactory::getUser();
+                
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+                
+                JToolBarHelper::title(JText::_('COM_HWDMS_FILE_EXTENSIONS'), 'file-2');
 
                 if ($canDo->get('core.create'))
 		{
@@ -71,7 +76,6 @@ class hwdMediaShareViewExtensions extends JViewLegacy {
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('extensions.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('extensions.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			//JToolBarHelper::custom('extensions.featured', 'featured.png', 'featured_f2.png', 'JFEATURED', true);
 			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('extensions.archive');
 			JToolBarHelper::checkin('extensions.checkin');
@@ -87,32 +91,30 @@ class hwdMediaShareViewExtensions extends JViewLegacy {
 			JToolBarHelper::divider();
                         JToolBarHelper::trash('extensions.trash');
                         JToolBarHelper::divider();
+		}              
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
+		{
+			JHtml::_('bootstrap.modal', 'collapseModal');
+			$title = JText::_('JTOOLBAR_BATCH');
+
+			// Instantiate a new JLayoutFile instance and render the batch button
+			$layout = new JLayoutFile('joomla.toolbar.batch');
+
+			$dhtml = $layout->render(array('title' => $title));
+			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
         }
-	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-                $document = JFactory::getDocument();
-		$document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/extensions/submitbutton.js");
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_FILE_EXTENSIONS'));
-	}
         
 	/**
-	 * Method to get the publish status HTML
+	 * Method to display the type of media the extension is associated with (audio, document, image, video)
 	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getMediaType( &$item )
+	 * @return  void
+	 */
+	public function getMediaType($item)
 	{
                 hwdMediaShareFactory::load('media');
                 return hwdMediaShareMedia::getMediaType($item);
-	}
+	}         
 }
