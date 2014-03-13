@@ -89,6 +89,6 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 		}
 
 		JToolbarHelper::divider();
-		JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);                
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
