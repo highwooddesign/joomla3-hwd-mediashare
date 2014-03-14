@@ -114,10 +114,10 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
         <td class="nowrap small hidden-phone">
                 <?php echo $item->fieldcode; ?>
         </td>
-        <td class="nowrap small hidden-phone">
+        <td class="small hidden-phone">
                 <?php echo $this->getFieldText($item->type); ?>
         </td>
-        <td class="nowrap small hidden-phone">
+        <td class="small hidden-phone">
                 <?php echo $this->getElementText($item->element_type); ?>
         </td>  
         <td class="center hidden-phone">
