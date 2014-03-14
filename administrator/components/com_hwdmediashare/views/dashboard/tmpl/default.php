@@ -1,90 +1,194 @@
 <?php
 /**
- * @version    SVN $Id: default.php 492 2012-08-24 15:11:58Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
+
 JHtml::_('behavior.modal');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare'); ?>" method="post" name="adminForm" id="adminForm">
-<table width="100%" border="0">
-	<tr>
-		<td width="55%" valign="top">
-			<div id="cpanel">
-				<?php echo $this->addIcon('icon-48-media.png','index.php?option=com_hwdmediashare&view=media', JText::sprintf('COM_HWDMS_MEDIA_COUNTN', $this->nummedia));?>
-				<?php echo $this->addIcon('icon-48-add.png','index.php?option=com_hwdmediashare&view=addmedia', JText::_('COM_HWDMS_ADD_NEW_MEDIA'));?>
-				<?php echo $this->addIcon('icon-48-category.png','index.php?option=com_categories&extension=com_hwdmediashare', JText::sprintf('COM_HWDMS_CATEGORIES_COUNTN', $this->numcategories));?>
-				<?php echo $this->addIcon('icon-48-album.png','index.php?option=com_hwdmediashare&view=albums', JText::sprintf('COM_HWDMS_ALBUMS_COUNTN', $this->numalbums));?>
-				<?php echo $this->addIcon('icon-48-groups.png','index.php?option=com_hwdmediashare&view=groups', JText::sprintf('COM_HWDMS_GROUPS_COUNTN', $this->numgroups));?>
-				<?php echo $this->addIcon('icon-48-channels.png','index.php?option=com_hwdmediashare&view=users', JText::sprintf('COM_HWDMS_USER_CHANNELS_COUNTN', $this->numchannels));?>
-				<?php echo $this->addIcon('icon-48-playlist.png','index.php?option=com_hwdmediashare&view=playlists', JText::sprintf('COM_HWDMS_PLAYLISTS_COUNTN', $this->numplaylists));?>
-				<?php echo $this->addIcon('icon-48-activities.png','index.php?option=com_hwdmediashare&view=activities', JText::_('COM_HWDMS_ACTIVITIES'));?>
-				<?php echo $this->addIcon('icon-48-files.png','index.php?option=com_hwdmediashare&view=files', JText::_('COM_HWDMS_FILES'));?>
-				<?php echo $this->addIcon('icon-48-maintenance.png','index.php?option=com_hwdmediashare&view=maintenance', JText::_('COM_HWDMS_MAINTENANCE'));?>
-				<?php echo $this->addIcon('icon-48-reported.png','index.php?option=com_hwdmediashare&view=reported&tmpl=component', JText::_('COM_HWDMS_REPORTED'), false, true);?>
-				<?php echo $this->addIcon('icon-48-pending.png','index.php?option=com_hwdmediashare&view=pending&tmpl=component', JText::_('COM_HWDMS_PENDING'), false, true);?>
-				<?php echo $this->addIcon('icon-48-process.png','index.php?option=com_hwdmediashare&view=processes', JText::_('COM_HWDMS_PROCESSOR'));?>
-				<?php echo $this->addIcon('icon-48-config.png','index.php?option=com_hwdmediashare&view=configuration', JText::_('COM_HWDMS_CONFIGURATION'));?>
-				<?php echo $this->addIcon('icon-48-tag.png','index.php?option=com_hwdmediashare&view=tags', JText::_('COM_HWDMS_TAGS'));?>
-				<?php echo $this->addIcon('icon-48-subscription.png','index.php?option=com_hwdmediashare&view=subscriptions', JText::_('COM_HWDMS_SUBSCRIPTIONS'));?>
-				<?php echo $this->addIcon('icon-48-extensions.png','index.php?option=com_hwdmediashare&view=extensions', JText::_('COM_HWDMS_FILE_EXTENSIONS'));?>
-				<?php echo $this->addIcon('icon-48-field.png','index.php?option=com_hwdmediashare&view=customfields', JText::_('COM_HWDMS_CUSTOM_FIELDS'));?>
-				<?php echo $this->addIcon('icon-48-info.png','http://hwdmediashare.co.uk/about-hwdmediashare?version='.$this->version, JText::_('COM_HWDMS_ABOUT'), true );?>
-				<?php echo $this->addIcon('icon-48-help.png','http://hwdmediashare.co.uk/docs', JText::_('COM_HWDMS_HELP'), true ); ?>
-			</div>
-		</td>
-		<td width="45%" valign="top">
-			<?php echo JHtml::_('sliders.start', 'stat-pane'); ?>
-			<?php echo JHtml::_('sliders.panel', JText::_('COM_HWDMS_WELCOME_TO_HWDMEDIASHARE'), 'welcome'); ?>
-			<table class="adminlist">
-				<tr>
-					<td>
-                                                <div style="font-weight:700;">
-							<p><?php echo JText::_('COM_HWDMS_WELCOME_STATEMENT');?></p>
-						</div>
-						<p>
-							If you require support just head on to the forums at
-							<a href="http://hwdmediashare.co.uk/forum/" target="_blank">http://hwdmediashare.co.uk/forum</a>.
-							For developers, you can browse through the documentation at
-							<a href="http://hwdmediashare.co.uk/docs/" target="_blank">http://hwdmediashare.co.uk/docs</a>.
-						</p>
-					</td>
-				</tr>
-			</table>
-			<?php echo JHtml::_('sliders.end'); ?>
-                        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-                        <script type="text/javascript">
-                            google.load("visualization", "1", {packages:["corechart"]});
-                            google.setOnLoadCallback(drawChart);
-                            function drawChart() {
-                                var data = new google.visualization.DataTable();
-                                data.addColumn('date', '<?php echo JText::_( 'COM_HWDMS_DATE' ); ?>');
-                                data.addColumn('number', '<?php echo JText::_( 'COM_HWDMS_MEDIA' ); ?>');
-                                data.addRows([
-                                <?php foreach($this->media as $i => $item): ?>
-                                    [new Date('<?php echo date("Y", strtotime($item->created)); ?>, <?php echo date("m", strtotime($item->created)); ?>, <?php echo date("d", strtotime($item->created)); ?>'), <?php echo $item->total; ?>],
+</script>
+<div class="row-fluid">
+<?php if (!empty( $this->sidebar)) : ?>
+	<div id="j-sidebar-container" class="span2">
+                <div class="well well-small">
+                        <h4><?php echo JText::_('COM_HWDMS_WELCOME_STATEMENT');?></h4>
+                        <p>If you require support or help, just head on to the <a href="http://hwdmediashare.co.uk/forum/" target="_blank">forums</a> and browse through the <a href="http://hwdmediashare.co.uk/docs/" target="_blank">documentation</a>.</p>
+                </div>                    
+                <?php echo $this->sidebar; ?>
+	</div>
+	<div id="j-main-container" class="span6">
+<?php else : ?>
+	<div id="j-main-container" class="span8">
+<?php endif;?> 
+                <div class="well well-small">
+                        <div class="module-title nav-header"><?php echo JText::_('COM_HWDMS_RECENT_ACTIVITY'); ?></div>
+                        <div class="row-striped">
+                                <?php if (count($this->activity) == 0) : ?>
+                                <div class="row-fluid">
+                                        <div class="span12">
+                                                <div class="alert"><?php echo JText::_('COM_HWDMS_MSG_NO_RECENT_ACTIVITY'); ?></div>
+                                        </div>
+                                </div>
+                                <?php endif;?>  
+                                <?php foreach ($this->activity as $activity) : ?>
+                                <div class="row-fluid">
+                                        <div class="span9">
+                                                <strong class="row-title"><?php echo hwdMediaShareActivities::renderActivityHtml($activity); ?> </strong>
+                                        </div>
+                                        <div class="span3">
+                                                <span title="" class="small"><i class="icon-calendar"></i> <?php echo JHtml::_('date.relative', $activity->created); ?></span>
+                                        </div>
+                                </div>
                                 <?php endforeach; ?>
-                                ]);
+                        </div>
+                </div>  
+                <div class="well well-small">
+                        <div class="module-title nav-header"><?php echo JText::_( 'COM_HWDMS_RECENTLY_ADDED_MEDIA' ); ?></div>
+                        <div class="row-striped">
+                                <div class="row-fluid">
+                                        <div class="span12">
+                                                <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+                                                <script type="text/javascript">
+                                                    google.load("visualization", "1", {packages:["corechart"]});
+                                                    google.setOnLoadCallback(drawChart);
+                                                    function drawChart() {
+                                                        var data = new google.visualization.DataTable();
+                                                        data.addColumn('date', '<?php echo JText::_( 'COM_HWDMS_DATE' ); ?>');
+                                                        data.addColumn('number', '<?php echo JText::_( 'COM_HWDMS_MEDIA' ); ?>');
+                                                        data.addRows([
+                                                        <?php foreach($this->media as $i => $item): ?>
+                                                            [new Date('<?php echo date("Y", strtotime($item->created)); ?>, <?php echo date("m", strtotime($item->created)); ?>, <?php echo date("d", strtotime($item->created)); ?>'), <?php echo $item->total; ?>],
+                                                        <?php endforeach; ?>
+                                                        ]);
 
-                                var options = {
-                                    title: '<?php echo JText::_( 'COM_HWDMS_RECENTLY_ADDED_MEDIA' ); ?>',
-                                    hAxis: {format:'MMM d',gridlines: {count: 4}}
-                                };
+                                                        var options = {
+                                                            width: '100%',
+                                                            height: 300,
+                                                            backgroundColor: '#F9F9F9',                              
+                                                            hAxis: {format:'MMM d',gridlines: {count: 4}}
+                                                        };
 
-                                var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                                chart.draw(data, options);
-                            }
-                        </script>
-                        <div id="chart_div" style="width: 100%; height: 300px;"></div>
-                </td>
-	</tr>
-</table>
-<input type="hidden" name="task" value="" />
-<input type="hidden" name="boxchecked" value="1" />
-</form>
+                                                        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                                                        chart.draw(data, options);
+                                                    }
+                                                </script>
+                                                <div id="chart_div" style="width: 100%; height: 300px;"></div>
+                                        </div>
+                                </div>
+                        </div>          
+                </div>    
+	</div>
+	<div class="span4">
+                <div class="well well-small">
+                  <div class="module-title nav-header"><?php echo JText::_( 'COM_HWDMS_QUICK_LINKS' ); ?></div>
+                  <div class="row-striped">
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=media"><i class="icon-play"></i> <span><?php echo JText::sprintf('COM_HWDMS_MEDIA_COUNTN', $this->nummedia); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=addmedia"><i class="icon-upload"></i> <span><?php echo JText::_('COM_HWDMS_ADD_NEW_MEDIA'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_categories&extension=com_hwdmediashare"><i class="icon-folder"></i> <span><?php echo JText::sprintf('COM_HWDMS_CATEGORIES_COUNTN', $this->numcategories); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=albums"><i class="icon-book"></i> <span><?php echo JText::sprintf('COM_HWDMS_ALBUMS_COUNTN', $this->numalbums); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=groups"><i class="icon-users"></i> <span><?php echo JText::sprintf('COM_HWDMS_GROUPS_COUNTN', $this->numgroups); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=playlists"><i class="icon-list"></i> <span><?php echo JText::sprintf('COM_HWDMS_PLAYLISTS_COUNTN', $this->numplaylists); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=users"><i class="icon-user"></i> <span><?php echo JText::sprintf('COM_HWDMS_USER_CHANNELS_COUNTN', $this->numchannels); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=activities"><i class="icon-grid"></i> <span><?php echo JText::_('COM_HWDMS_ACTIVITIES'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=files"><i class="icon-file"></i> <span><?php echo JText::_('COM_HWDMS_FILES'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=maintenance"><i class="icon-cog"></i> <span><?php echo JText::_('COM_HWDMS_MAINTENANCE'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=reported&tmpl=component"><i class="icon-notification"></i> <span><?php echo JText::_('COM_HWDMS_REPORTED'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=pending&tmpl=component"><i class="icon-notification"></i> <span><?php echo JText::_('COM_HWDMS_PENDING'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=processes="><i class="icon-cog"></i> <span><?php echo JText::_('COM_HWDMS_PROCESSOR'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=configuration"><i class="icon-cog"></i> <span><?php echo JText::_('COM_HWDMS_CONFIGURATION'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_tags"><i class="icon-tag"></i> <span><?php echo JText::_('COM_HWDMS_TAGS'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=subscriptions"><i class="icon-users"></i> <span><?php echo JText::_('COM_HWDMS_SUBSCRIPTIONS'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=extensions"><i class="icon-file-2"></i> <span><?php echo JText::_('COM_HWDMS_FILE_EXTENSIONS'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="index.php?option=com_hwdmediashare&view=customfields"><i class="icon-checkmark-circle"></i> <span><?php echo JText::_('COM_HWDMS_CUSTOM_FIELDS'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="http://hwdmediashare.co.uk/about-hwdmediashare?version=<?php echo $this->version; ?>" target="_blank"><i class="icon-info"></i> <span><?php echo JText::_('COM_HWDMS_ABOUT'); ?></span></a>
+                      </div>
+                    </div>
+                    <div class="row-fluid">
+                      <div class="span12">
+                        <a href="http://hwdmediashare.co.uk/docs" target="_blank"><i class="icon-help"></i> <span><?php echo JText::_('COM_HWDMS_HELP'); ?></span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+	</div>
+</div>
