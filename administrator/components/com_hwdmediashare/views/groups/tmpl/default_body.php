@@ -1,108 +1,125 @@
 <?php
 /**
- * @version    SVN $Id: default_body.php 1265 2013-03-13 13:53:35Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-JHtml::_('behavior.tooltip');
-JHtml::_('script','system/multiselect.js', false, true);
 
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
 $saveOrder	= $listOrder == 'a.ordering';
-$canOrder	= $user->authorise('core.edit.state', 'com_hwdmediashare.category');
 
-$ordering	= ($listOrder == 'a.ordering');
-$canEdit	= $user->authorise('core.edit', 'com_hwdmediashare');
+$archived	= $this->state->get('filter.published') == 2 ? true : false;
+$trashed	= $this->state->get('filter.published') == -2 ? true : false;
+
 ?>
-<?php foreach($this->items as $i => $item):
-        $canCheckin	= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$userId || $item->checked_out==0;
-        $canChange	= $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCheckin;
-
-        $owner =& JFactory::getUser($item->created_user_id);
-        ?>
-        <tr class="row<?php echo $i % 2; ?>">
-                <td>
-                        <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                </td>
-                <?php if ($this->state->get('filter.status') == 3) : ?>  
-                <td>
-                        <?php echo (int) $item->report_count; ?>
-                </td>
+<?php foreach ($this->items as $i => $item) :
+$ordering   = ($listOrder == 'a.ordering');
+$canCreate  = $user->authorise('core.create',     'com_hwdmediashare.group');
+$canEdit    = $user->authorise('core.edit',       'com_hwdmediashare.group.'.$item->id);
+$canCheckin = $user->authorise('core.manage',     'com_hwdmediashare') || $item->checked_out == $userId || $item->checked_out == 0;
+$canEditOwn = $user->authorise('core.edit.own',   'com_hwdmediashare.group.'.$item->id) && $item->created_user_id == $userId;
+$canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.group.'.$item->id) && $canCheckin;
+?>
+<tr class="row<?php echo $i % 2; ?>">
+        <td class="order nowrap center hidden-phone">
+                <?php
+                $iconClass = '';
+                if (!$canChange)
+                {
+                        $iconClass = ' inactive';
+                }
+                elseif (!$saveOrder)
+                {
+                        $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+                }
+                ?>
+                <span class="sortable-handler<?php echo $iconClass ?>">
+                        <i class="icon-menu"></i>
+                </span>
+                <?php if ($canChange && $saveOrder) : ?>
+                        <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>" class="width-20 text-area-order " />
                 <?php endif; ?>
-                <td>
+        </td>
+        <td class="center hidden-phone">
+                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+        </td>
+        <td class="center">
+                <div class="btn-group">
+                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'groups.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
+                        <?php echo JHtml::_('HwdAdminGroups.featured', $item->featured, $i, $canChange); ?>
+                        <?php echo JHtml::_('HwdAdminGroups.status', $item->status, $i, $canChange); ?> 
+                        <?php
+                        // Create dropdown items
+                        $action = $archived ? 'unarchive' : 'archive';
+                        JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'groups');
+
+                        $action = $trashed ? 'untrash' : 'trash';
+                        JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'groups');
+
+                        // Render dropdown list
+                        echo JHtml::_('actionsdropdown.render', $this->escape($item->title));
+                        ?>                    
+                </div>
+        </td>
+        <td class="nowrap has-context">
+                <div class="pull-left">
                         <?php if ($item->checked_out) : ?>
                                 <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'groups.', $canCheckin); ?>
                         <?php endif; ?>
-                        <span class="editlinktip hasTip" title="<?php echo $this->escape($item->title); ?>::<?php echo $this->escape($item->description); ?>" >
-                        <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=group.edit&id='.(int) $item->id); ?>">
+                        <?php if ($item->language == '*'):?>
+                                <?php $language = JText::alt('JALL', 'language'); ?>
+                        <?php else:?>
+                                <?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                        <?php endif;?>
+                        <?php if ($canEdit || $canEditOwn) : ?>
+                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=group.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
                                         <?php echo $this->escape($item->title); ?></a>
                         <?php else : ?>
-                                        <?php echo $this->escape($item->title); ?>
+                                <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->title); ?></span>
                         <?php endif; ?>
-                        <p class="smallsub">
+                        <div class="small">
                                 <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias));?>
-                        </p>
-                        </span>
-                </td>
-                <td class="center">
-                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'groups.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
-                </td>
-                <td align="center">
-                        <?php echo $this->getPublish($item, 'status', $i); ?>
-                </td>
-                <td align="center">
-                        <?php echo $this->getPublish($item, 'featured', $i); ?>
-                </td>
-                <td class="order">
-                        <?php if ($canChange) : ?>
-                                <?php if ($saveOrder) :?>
-                                        <?php if ($listDirn == 'asc') : ?>
-                                                <span><?php echo $this->pagination->orderUpIcon($i, true, 'group.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                                <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, true, 'media.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                                        <?php elseif ($listDirn == 'desc') : ?>
-                                                <span><?php echo $this->pagination->orderUpIcon($i, true, 'group.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-                                                <span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, true, 'media.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-                                        <?php endif; ?>
-                                <?php endif; ?>
-                                <?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
-                                <input type="text" name="order[]" size="5" value="<?php echo $item->ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-                        <?php else : ?>
-                                <?php echo $item->ordering; ?>
-                        <?php endif; ?>
-                </td>
-                <td class="center">
-                        <?php echo $this->escape($item->access_level); ?>
-                </td>
-                <td class="center">
-                        <?php echo $this->escape($owner->username); ?>
-                </td>
-                <td class="center nowrap">
-                        <?php echo JHtml::_('date',$item->created, JText::_('DATE_FORMAT_LC4')); ?>
-                </td>
-                <td class="center">
-                        <?php echo (int) $item->hits; ?>
-                </td>
-                <td class="center">
-                        <?php if ($item->language=='*'):?>
-                                <?php echo JText::alt('JALL','language'); ?>
-                        <?php else:?>
-                                <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
-                        <?php endif;?>
-                </td>
-                <td class="center">
-                        <?php echo (int) $item->id; ?>
-                </td>
-        </tr>
+                        </div>                                
+                </div>
+        </td>     
+        <td class="small hidden-phone">
+                <?php echo $this->escape($item->access_level); ?>
+        </td>
+        <td class="small hidden-phone">
+                <?php if ($item->created_user_id_alias) : ?>
+                        <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id='.(int) $item->created_user_id); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
+                        <?php echo $this->escape($item->author); ?></a>
+                        <p class="smallsub"> <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->created_user_id_alias)); ?></p>
+                <?php else : ?>
+                        <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id='.(int) $item->created_user_id); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
+                        <?php echo $this->escape($item->author); ?></a>
+                <?php endif; ?>
+        </td>
+        <td class="small hidden-phone">
+                <?php if ($item->language == '*'):?>
+                        <?php echo JText::alt('JALL', 'language'); ?>
+                <?php else:?>
+                        <?php echo $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
+                <?php endif;?>
+        </td>
+        <td class="nowrap small hidden-phone">
+                <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
+        </td>
+        <td class="center">
+                <?php echo (int) $item->hits; ?>
+        </td>
+        <td class="center hidden-phone">
+                <?php echo (int) $item->id; ?>
+        </td>
+</tr>
 <?php endforeach; ?>
