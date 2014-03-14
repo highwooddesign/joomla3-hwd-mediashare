@@ -120,8 +120,21 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 	 */
 	public function getStatus($item)
 	{
-                hwdMediaShareFactory::load('processes');
-                return hwdMediaShareProcesses::getStatus($item);
+                switch ($item->status) {
+                    case 1:
+                        return '<span class="label label-warning">' . JText::_('COM_HWDMS_QUEUED') . '</span>';
+                        break;
+                    case 2:
+                        return '<span class="label label-success">' . JText::_('COM_HWDMS_SUCCESSFUL') . '</span>';
+                        break;
+                    case 3:
+                        return '<span class="label label-important">' . JText::_('COM_HWDMS_FAILED') . '</span>';
+                        break;
+                    case 4:
+                        return '<span class="label label-info">' . JText::_('COM_HWDMS_UNNECESSARY') . '</span>';
+                        break;
+                }
+                return ;
 	}
         
 	/**
