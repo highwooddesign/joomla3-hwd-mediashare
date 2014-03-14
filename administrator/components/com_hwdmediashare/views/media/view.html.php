@@ -1,33 +1,31 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 493 2012-08-28 13:20:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewMedia extends JViewLegacy {
+class hwdMediaShareViewMedia extends JViewLegacy
+{
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
 
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
@@ -35,31 +33,38 @@ class hwdMediaShareViewMedia extends JViewLegacy {
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
-                                JError::raiseError(500, implode('<br />', $errors));
-                                return false;
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
                 }
-                // Assign data to the view
-                $this->items = $items;
-                $this->pagination = $pagination;
-                $this->state = $state;
-
-		// Set the toolbar
-		$this->addToolBar();
+                
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
 
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
+                
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		$canDo = hwdMediaShareHelper::getActions();
-		JToolBarHelper::title(JText::_('COM_HWDMS_MEDIA'), 'hwdmediashare');
+		$user  = JFactory::getUser();
+                
+		// Get the toolbar object instance
+		$bar = JToolBar::getInstance('toolbar');
+                                
+		JToolBarHelper::title(JText::_('COM_HWDMS_MEDIA'), 'video');
 
                 if ($canDo->get('core.create'))
 		{
@@ -74,8 +79,8 @@ class hwdMediaShareViewMedia extends JViewLegacy {
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('media.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('media.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('media.feature', 'featured.png', 'featured_f2.png', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('media.unfeature','remove.png','remove_f2.png','COM_HWDMS_UNFEATURE', true);
+			JToolBarHelper::custom('media.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
+                        JToolBarHelper::custom('media.unfeature','removeg','remove','COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('media.archive');
 			JToolBarHelper::checkin('media.checkin');
@@ -92,73 +97,28 @@ class hwdMediaShareViewMedia extends JViewLegacy {
                         JToolBarHelper::trash('media.trash');
                         JToolBarHelper::divider();
 		}
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
+		{
+			JHtml::_('bootstrap.modal', 'collapseModal');
+			$title = JText::_('JTOOLBAR_BATCH');
+
+			// Instantiate a new JLayoutFile instance and render the batch button
+			$layout = new JLayoutFile('joomla.toolbar.batch');
+
+			$dhtml = $layout->render(array('title' => $title));
+			$bar->appendButton('Custom', $dhtml, 'batch');
+		}
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
+
 	/**
-	 * Method to set up the document properties
+	 * Method to get the icon for the media type
 	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-		$document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/media/submitbutton.js");
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_MEDIA'));
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
+	 * @param	object	$item   Media object
+	 * @return	string	Icon URL
 	 **/
-	public function getPublish( &$row, $type, $i )
-	{
-                $state = $row->$type ? 'publish' : 'unpublish';
-
-                unset($func);
-                unset($alt);
-
-                if ($type == "status")
-                {
-                        $func = ($row->$type == 1) ? 'unapprove' : 'approve';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_APPROVED') : JText::_('COM_HWDMS_UNAPPROVED');
-                        if ($row->$type == 2)
-                        {
-                                $state = 'pending';
-                                $func = 'approve';
-                                $alt = JText::_('COM_HWDMS_PENDING');
-                        }
-                        else if ($row->$type == 3)
-                        {
-                                $state = 'expired';
-                                $func = 'approve';
-                                $alt = JText::_('COM_HWDMS_REPORTED');
-                        }
-                }
-                else if ($type == "featured")
-                {
-                        $func = $row->$type ? 'unfeature' : 'feature';
-                        $alt  = $row->$type ? JText::_('COM_HWDMS_FEATURE') : JText::_('COM_HWDMS_UNFEATURE');
-                }
-
-                $image = '<span class="state '.$state.'"><span class="text">'.$alt.'</span></span>';
-
-                $href = '<a class="jgrid" href="javascript:void(0);" onclick="return listItemTask(\'cb'.$i.'\',\'media.'.$func.'\')" title="'.JText::_($alt).'">';
-                $href .= $image.'</a>';
-
-		return $href;
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getMediaTypeIcon( &$item )
+	public function getMediaTypeIcon($item)
 	{
                 switch ($item->media_type) 
                 {
@@ -191,35 +151,38 @@ class hwdMediaShareViewMedia extends JViewLegacy {
                             break;
                 }
 	}
-        /**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getCategories( &$item )
-	{
-                 if (count($item->categories) > 1)
-                 {
-                        $tooltip = JText::sprintf( 'COM_HWDMS_NCATEGORIES', count($item->categories)).'::';
-                        foreach ($item->categories as $value)
-                        {
-                                $tooltip.= $value->title . '<br/>';
-                        }
-                        unset($value);
 
-                        $href = '<span class="editlinktip hasTip" title="'.$tooltip.'" >';
-                        $href.= $this->escape($item->categories[0]->title);
-                        $href.= '<p class="smallsub">';
-                        $href.= JText::sprintf( 'COM_HWDMS_NMORECATEGORIES', count($item->categories)-1);
-                        $href.= '</p>';
-                        $href.= '</span>';
-                }
-                else if (count($item->categories) == 1)
+	/**
+	 * Method to get the human readable media type
+	 *
+	 * @param	object	$item   Media object
+	 * @return	string	Translated media type text
+	 **/
+	public function getMediaType($item)
+	{
+                hwdMediaShareFactory::load('media');
+                return hwdMediaShareMedia::getMediaType($item);
+	}
+        
+	/**
+	 * Method to get the linked category list
+	 *
+	 * @param	object	$item   Media object
+	 * @return	string	Linked, comma separated, category list
+	 **/
+	public function getCategories($item)
+	{
+                $href = '';
+                if (count($item->categories) > 0)
                 {
-                        $href = $this->escape($item->categories[0]->title);
+                        for($i = 0; $i < count($item->categories); $i++)
+                        {
+                                $value = $item->categories[$i];
+                                if ($i != 0) $href.= ', ';
+                                $href.= '<a href="index.php?option=com_hwdmediashare&view=media&filter_category_id='.$value->id.'">';
+                                $href.= $this->escape($value->title);
+                                $href.= '</a>';
+                        }                     
                 }
                 else
                 {
@@ -227,5 +190,5 @@ class hwdMediaShareViewMedia extends JViewLegacy {
                 }
 
                 return $href;
-	}
+	}      
 }
