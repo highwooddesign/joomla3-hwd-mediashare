@@ -21,6 +21,7 @@ JHtml::_('behavior.modal');
 
 $app = JFactory::getApplication();
 $input = $app->input;
+$isNew = $this->item->id == 0 ? true : false ;
 ?>
 <script type="text/javascript">
 	Joomla.submitbutton = function(task)
@@ -121,6 +122,7 @@ $input = $app->input;
                         </div>
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
             
+                <?php if (!$isNew) : ?>
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'media', JText::_('COM_HWDMS_MEDIA', true)); ?>
                 <div class="row-fluid">
                     <div class="well well-small">
@@ -147,6 +149,7 @@ $input = $app->input;
                     </div>
                 </div>
                 <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif; ?>
             
                 <?php foreach($this->item->customfields['fields'] as $group => $groupFields) : ?>
                         <?php echo JHtml::_('bootstrap.addTab', 'myTab', $group, JText::_($group, true)); ?>
