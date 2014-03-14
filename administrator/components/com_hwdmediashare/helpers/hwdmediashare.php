@@ -94,7 +94,7 @@ abstract class hwdMediaShareHelper
 		$user	= JFactory::getUser();
 		$result	= new JObject;
 
-		if (empty($id)) 
+		if ((int)$id == 0) 
                 {
 			$assetName = 'com_hwdmediashare';
 		}
