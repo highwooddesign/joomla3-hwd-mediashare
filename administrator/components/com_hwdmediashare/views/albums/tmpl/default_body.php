@@ -20,7 +20,6 @@ $saveOrder	= $listOrder == 'a.ordering';
 
 $archived	= $this->state->get('filter.published') == 2 ? true : false;
 $trashed	= $this->state->get('filter.published') == -2 ? true : false;
-
 ?>
 <?php foreach ($this->items as $i => $item) :
 $ordering   = ($listOrder == 'a.ordering');
