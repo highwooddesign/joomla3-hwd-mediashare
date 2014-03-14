@@ -32,7 +32,7 @@ $input = $app->input;
 		}
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
+<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=album&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
     
