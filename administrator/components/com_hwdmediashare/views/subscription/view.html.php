@@ -57,7 +57,6 @@ class hwdMediaShareViewSubscription extends JViewLegacy
 
 		$user		= JFactory::getUser();
 		$isNew		= ($this->item->id == 0);
-		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 
 		// Since we don't track these assets at the item level, use the category id.
 		$canDo		= hwdMediaShareHelper::getActions($this->item->id, 'subscription');
@@ -65,19 +64,14 @@ class hwdMediaShareViewSubscription extends JViewLegacy
 		JToolBarHelper::title($isNew ? JText::_('COM_HWDMS_NEW_SUBSCRIPTION') : JText::_('COM_HWDMS_EDIT_SUBSCRIPTION'), 'users');
 
 		// If not checked out, can save the item.
-		if (!$checkedOut && ($canDo->get('core.edit')||(count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create')))))
+		if ($canDo->get('core.edit')||(count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create'))))
 		{
 			JToolbarHelper::apply('subscription.apply');
 			JToolbarHelper::save('subscription.save');
 		}
-		if (!$checkedOut && (count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create'))))
+		if (count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create')))
 		{
 			JToolbarHelper::save2new('subscription.save2new');
-		}
-		// If an existing item, can save to a copy.
-		if (!$isNew && (count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create')) > 0))
-		{
-			JToolbarHelper::save2copy('subscription.save2copy');
 		}
 		if (empty($this->item->id))
 		{
