@@ -7,7 +7,9 @@
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
  */
-
+/**
+ * UNFINISHED
+ */
 defined('_JEXEC') or die;
 
 class HwdMediaShareControllerProcess extends JControllerLegacy 
@@ -16,7 +18,7 @@ class HwdMediaShareControllerProcess extends JControllerLegacy
 	 * Method to run a process
 	 * @return	void
 	 */
-        function run()
+        public function run()
         {
 		// Check for request forgeries
 		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));

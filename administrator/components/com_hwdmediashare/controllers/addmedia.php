@@ -13,29 +13,48 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerAddMedia extends JControllerForm
 {
 	/**
+	 * The URL view variable.
+	 * @var    string
+	 */
+    	protected $view = "addmedia";
+        
+        /**
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'AddMedia', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+        
+	/**
 	 * Method to process file upload
 	 * @return	void
 	 */
-        function upload()
+        public function upload()
         {
-                $app = & JFactory::getApplication();
+		// Check for request forgeries
+		// JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
+		// Define input field to process from the request.
                 $upload = new stdClass();
                 $upload->input  = 'Filedata';
-
+                
+                // Get the upload library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
-                // Add embed code
-                if (!$model->process($upload))
+                // Process the upload.
+                if ($model->process($upload))
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=addmedia');
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false));                                              
                 }
                 else
                 {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
-                        $this->setRedirect('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id);
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
                 }
         }
 
@@ -45,21 +64,23 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 */
         function uber()
         {
-                $app = & JFactory::getApplication();
+		// Check for request forgeries
+		// JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
+                // Get the upload library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
-                // Add embed code
-                if (!$model->uber())
+                // Process the upload.
+                if ($model->uber($upload))
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=addmedia');
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false));                                              
                 }
                 else
                 {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title).' (<a href="index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id.'">'.JText::_('COM_HWDMS_EDIT_MEDIA').'</a>)');
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=media');
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
                 }
         }
 
@@ -70,26 +91,22 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         function embed()
         {
 		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-
-                // Load the embed library
+                // Get the embed library.
                 hwdMediaShareFactory::load('embed');
                 $model = hwdMediaShareEmbed::getInstance();
 
-                // Add embed code
-                if (!$model->addEmbed())
+                // Process the embed code.
+                if ($model->addEmbed())
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=addmedia');
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_EMBED_CODE_FROM_X', $model->_host));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false));                                              
                 }
                 else
                 {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_EMBED_CODE_FROM_X', $model->_host));
-                        $this->setRedirect('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id); 
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
                 }
         }
 
@@ -100,35 +117,32 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         function remote()
         {
 		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-
-                // Load the embed library
+                // Get the remote library.
                 hwdMediaShareFactory::load('remote');
                 $model = hwdMediaShareRemote::getInstance();
 
-                // Add remote urls
-                if (!$model->addRemote())
-                {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=addmedia');
-                }
-                else
+                // Process the remote url.
+                if ($model->addRemote())
                 {
                         if ($model->_count > 1)
                         {
-                                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X_REMOTES', $model->_count));
-                                $this->setRedirect('index.php?option=com_hwdmediashare&view=media');
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X_REMOTES', $model->_count));
+                                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
                         }
                         else
                         {
-                                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X', $model->_title));
-                                $this->setRedirect('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id);
-                        }                    
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_EMBED_CODE_FROM_X', $model->_host));
+                                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false)); 
+                        }  
+                                             
                 }
+                else
+                {
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                }        
         }
 
 	/**
@@ -138,26 +152,22 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         function link()
         {
 		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-
-                // Load the embed library
+                // Load the remote library.
                 hwdMediaShareFactory::load('remote');
                 $model = hwdMediaShareRemote::getInstance();
 
-                // Add remote urls
-                if (!$model->addLink())
+                // Process the remote link.
+                if ($model->addLink())
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=addmedia');
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X', $model->_title));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false));                                              
                 }
                 else
                 {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X', $model->_title));
-                        $this->setRedirect('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id); 
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
                 }
         }
         
@@ -168,26 +178,22 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         function rtmp()
         {
 		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-
-                // Load the embed library
+                // Load the rtmp library.
                 hwdMediaShareFactory::load('rtmp');
                 $model = hwdMediaShareRtmp::getInstance();
 
-                // Add embed code
-                if (!$model->addRtmp())
+                // Process the remote stream.
+                if ($model->addRtmp($upload))
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&view=addmedia');
+                        $this->setMessage(JText::_('COM_HWDMS_SUCCESSFULLY_ADDED_RTMP_STREAM'));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false));                                              
                 }
                 else
                 {
-                        JFactory::getApplication()->enqueueMessage(JText::_('COM_HWDMS_SUCCESSFULLY_ADDED_RTMP_STREAM'));
-                        $this->setRedirect('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id);
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
                 }
         }
         
@@ -200,24 +206,20 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		// Check for request forgeries
 		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-
-                // Load the embed library
+                // Load the remote library.
                 hwdMediaShareFactory::load('remote');
                 $model = hwdMediaShareRemote::getInstance();
 
-                // Add remote urls
-                if (!$model->addImport())
+                // Process the local import data.
+                if ($model->addImport())
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect('index.php?option=com_hwdmediashare&task=addmedia.scan&tmpl=component');
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X_IMPORTS', $model->_count));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=addmedia.scan&tmpl=component', false));                                              
                 }
                 else
                 {
-                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X', $model->_title).' (<a href="index.php?option=com_hwdmediashare&task=editmedia.edit&id='.$model->_id.'" target="_top">'.JText::_('COM_HWDMS_EDIT_MEDIA').'</a>)');
-                        $this->setRedirect('index.php?option=com_hwdmediashare&task=addmedia.scan&tmpl=component');
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=addmedia.scan&tmpl=component', false));                                              
                 }
         }
         
@@ -227,12 +229,25 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 */
         function scan()
         {
-		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-            
-                $view = $this->getView('addmedia','html');
-                $view->setModel( $this->getModel( 'addmedia' ), true );
-                $view->scan();
+		// Get the document object.
+		$document	= JFactory::getDocument();
+		$vName		= 'addmedia';
+		$vFormat	= 'html';
+
+		// Get and render the view.
+		if ($view = $this->getView($vName, $vFormat))
+		{
+			// Get the model for the view.
+			$model = $this->getModel($vName);
+
+			// Push the model into the view (as default).
+			$view->setModel($model, true);
+
+			// Push document object into the view.
+			$view->document = $document;
+
+			$view->scan();
+		}
         }
         
 	/**
@@ -241,12 +256,25 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 */
         function processForm()
         {
-		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// Get the document object.
+		$document	= JFactory::getDocument();
+		$vName		= 'addmedia';
+		$vFormat	= 'html';
 
-                $view = $this->getView('addmedia','html');
-                $view->setModel($this->getModel('addmedia'), true);
-                $view->show_form = false;
-                $view->display();
+		// Get and render the view.
+		if ($view = $this->getView($vName, $vFormat))
+		{
+			// Get the model for the view.
+			$model = $this->getModel($vName);
+
+			// Push the model into the view (as default).
+			$view->setModel($model, true);
+
+			// Push document object into the view.
+			$view->document = $document;
+                        $view->show_form = false;
+
+			$view->display();
+		}
         }
 }

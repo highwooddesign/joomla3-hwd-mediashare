@@ -28,11 +28,11 @@ class hwdMediaShareControllerSample extends JControllerLegacy
                 
                 if ($nummedia > 0 || $numcategories > 0 || $numalbums > 0 || $numgroups > 0 || $numchannels > 0 || $numplaylists > 0)
                 {
-                    JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_EXISTS') );
-                    JFactory::getApplication()->redirect( 'index.php?option=com_hwdmediashare' );
+                        JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_EXISTS') );
+                        JFactory::getApplication()->redirect( 'index.php?option=com_hwdmediashare' );
                 }
                 
-                $db =& JFactory::getDBO();
+                $db = JFactory::getDBO();
                 
                 // Install sample album data
 $query = <<<SQL
@@ -42,9 +42,15 @@ INSERT INTO `#__hwdms_albums` (`id`, `thumbnail_ext_id`, `key`, `title`, `alias`
 (30, 0, '9835cd076f3d9ccf7b797438d9fb33aa', 'Business', 'business', '<p>\r\nFacilisis elementum pid odio habitasse! Magna platea dapibus turpis. Adipiscing. Sit, sed facilisis magnis. Porttitor sed porttitor? Purus tristique turpis lorem et ac pid tempor in etiam integer vel? Ut vel. Diam facilisis est porttitor! \r\n</p>\r\n<p>\r\nNunc sit sed! Augue! Platea ultrices, enim eu sed parturient nisi! Augue turpis dictumst? Nisi cras ac cum purus ultrices mid porta, cras porttitor ultricies proin eu turpis sagittis, non magna etiam phasellus augue pulvinar et vel sit amet, velit augue diam pid montes enim elementum tortor porttitor odio dignissim porttitor, porta cum lacus risus habitasse platea lorem lorem in? Etiam et integer, vut. \r\n</p>\r\n<p>\r\nMassa magna natoque turpis, phasellus tincidunt? Lorem pellentesque! Eros dapibus mauris mattis dictumst dapibus, tempor tristique urna est. Massa eu.\r\n</p>', 563, 149, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '{"metadesc":"","metakey":"","robots":"","author":"","rights":""}', 0, 42, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', 42, '0000-00-00 00:00:00', 4987, '*');
 SQL;
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
-                
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
+
                 // Install sample group data
 $query = <<<SQL
 INSERT INTO `#__hwdms_groups` (`id`, `thumbnail_ext_id`, `key`, `title`, `alias`, `description`, `likes`, `dislikes`, `status`, `published`, `featured`, `checked_out`, `checked_out_time`, `access`, `params`, `ordering`, `created_user_id`, `created_user_id_alias`, `created`, `publish_up`, `publish_down`, `modified_user_id`, `modified`, `hits`, `language`) VALUES
@@ -53,8 +59,14 @@ INSERT INTO `#__hwdms_groups` (`id`, `thumbnail_ext_id`, `key`, `title`, `alias`
 (30, 0, '223d09680e0751aa6f489cba37951283', 'Business Moguls', 'business-moguls', '<p>Elit sit nascetur nec nec sit rhoncus integer diam? Habitasse augue magnis dignissim elementum risus. Odio porttitor nunc montes, placerat mattis risus elementum. Habitasse turpis aenean. Lundium, vut turpis cras magnis habitasse duis hac et, nec velit nec pulvinar! \r\n</p>\r\n<p>\r\nA magnis elit a! Tempor augue eu elementum diam hac, tempor porta elit elit? Montes scelerisque et lorem a magna, ac enim amet, augue, duis! Lorem tincidunt arcu cras, vel placerat lectus, parturient scelerisque pulvinar, augue nascetur penatibus magna elementum, sed pid cum cras? Magna ac sit. Sagittis cum lacus enim lundium. Elementum vel! Facilisis enim ac lundium et, odio nisi ac eu velit, platea, est risus habitasse urna, a, porta habitasse, porttitor tincidunt sit dolor adipiscing ultrices. Aliquam ac.\r\n</p>', 783, 241, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '{"metadesc":"","metakey":"","robots":"","author":"","rights":""}', 0, 42, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', 42, '0000-00-00 00:00:00', 4964, '*');
 SQL;
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Install sample playlist data
 $query = <<<SQL
@@ -64,8 +76,14 @@ INSERT INTO `#__hwdms_playlists` (`id`, `thumbnail_ext_id`, `key`, `title`, `ali
 (30, 0, '08f98abdcd416bfea04d1486a58ebf4d', 'Sports', 'sports', '<p>\r\nTurpis tortor tortor, dictumst cras adipiscing augue nec porttitor risus! Parturient? Tempor? Lectus phasellus enim scelerisque! Quis? Sociis integer, adipiscing enim, tortor odio ultrices nascetur amet odio mid natoque amet turpis a! \r\n</p>\r\n<p>\r\nAc urna nisi pid duis platea lectus, purus turpis quis? Tincidunt nec ac, phasellus nec placerat, adipiscing elementum penatibus enim amet rhoncus proin ac enim diam aliquam, in purus amet mattis egestas facilisis scelerisque eros. Ultrices ac adipiscing pulvinar! Etiam ultrices. Augue pid sit amet. Velit sed, nisi, sit magna, magna! \r\n</p>\r\n<p>\r\nDapibus sit natoque pellentesque aliquam est rhoncus. Rhoncus et? Urna nec? Aliquam. Augue augue odio odio augue magna est augue enim penatibus egestas amet. Magna scelerisque ac mid mauris nascetur tincidunt lectus, arcu in sociis, ultricies.\r\n</p>', 428, 72, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '{"metadesc":"","metakey":"","robots":"","author":"","rights":""}', 0, 42, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', 42, '0000-00-00 00:00:00', 6934, '*');
 SQL;
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Install sample activity data
 $query = <<<SQL
@@ -83,10 +101,15 @@ INSERT INTO `#__hwdms_activities` (`id`, `activity_type`, `element_type`, `eleme
 (38, 5, 4, 29, 0, '', '', '', 94, 6, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '', 0, 42, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, ''),
 (39, 5, 4, 30, 0, '', '', '', 45, 5, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '', 0, 42, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Now we download the sample data pack, and save it to the /tmp folder
                 $url  = 'http://hwdmediashare.co.uk/media/sample.zip';
@@ -131,8 +154,14 @@ INSERT INTO `#__hwdms_media` (`id`, `asset_id`, `ext_id`, `key`, `title`, `alias
 (45, 0, 29, 'c4a4edfa160cacc342d75014e8799dd5', 'Tennis Court', 'tennis-court', 'Donec id risus justo. Donec gravida erat ac leo rutrum fermentum. Donec ac condimentum magna. Donec congue lectus ut felis consequat consectetur. Donec rutrum lorem sed felis pretium in sollicitudin diam auctor. Sed id porta sapien. Donec euismod tellus non risus congue porttitor.', 1, '', '', '', '', '', '', '', 'Uppsala, Sweden', 0, 0, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '', 0, 42, '', '2012-02-22 20:01:41', '2012-02-22 20:01:41', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '*');
 SQL;
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Install sample file data
 $query = <<<SQL
@@ -156,10 +185,15 @@ INSERT INTO `#__hwdms_files` (`id`, `element_type`, `element_id`, `file_type`, `
 (44, 1, 44, 1, 'abe13b5b248fb65f6f43022edacd6c45', 'jpg', 74197, '2012-01-25 12:00:00'),
 (45, 1, 45, 1, '4b049e8403ec68e441c81ee47a638f36', 'jpg', 116968, '2012-01-25 12:00:00');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Install sample album map data
 $query = <<<SQL
@@ -183,10 +217,15 @@ INSERT INTO `#__hwdms_album_map` (`id`, `media_id`, `album_id`, `created_user_id
 (17, 39, 30, 0, '0000-00-00 00:00:00'),
 (18, 38, 30, 0, '0000-00-00 00:00:00');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Install sample group map data
 $query = <<<SQL
@@ -210,10 +249,15 @@ INSERT INTO `#__hwdms_group_map` (`id`, `media_id`, `group_id`, `created_user_id
 (17, 39, 30, 0, '0000-00-00 00:00:00'),
 (18, 38, 30, 0, '0000-00-00 00:00:00');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
 
                 // Install sample playlist map data
 $query = <<<SQL
@@ -237,10 +281,15 @@ INSERT INTO `#__hwdms_playlist_map` (`id`, `playlist_id`, `media_id`, `ordering`
 (17, 30, 44, 2, 0, '0000-00-00 00:00:00'),
 (18, 30, 45, 1, 0, '0000-00-00 00:00:00');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                $db->getErrorMsg();               
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }             
                     
                 JTable::addIncludePath(JPATH_SITE.'/libraries/joomla/database/table');
 
@@ -323,10 +372,15 @@ INSERT INTO `#__hwdms_category_map` (`id`, `element_type`, `element_id`, `catego
 (11, 1, 42, $business->id, 0, '0000-00-00 00:00:00'),
 (12, 1, 43, $business->id, 0, '0000-00-00 00:00:00');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                echo $db->getErrorMsg(); 
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
                 
                 // Setup sample sports category               
                 $sports = JTable::getInstance('Category', 'JTable');
@@ -365,10 +419,15 @@ INSERT INTO `#__hwdms_category_map` (`id`, `element_type`, `element_id`, `catego
 (17, 1, 44, $sports->id, 0, '0000-00-00 00:00:00'),
 (18, 1, 45, $sports->id, 0, '0000-00-00 00:00:00');
 SQL;
-
                 $db->setQuery($query);
-                $db->query();
-                echo $db->getErrorMsg(); 
+                try
+                {
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        JError::raiseError(500, $e->getMessage());
+                }
                 
                 JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_SUCCESS') );
                 JFactory::getApplication()->redirect( 'index.php?option=com_hwdmediashare' );

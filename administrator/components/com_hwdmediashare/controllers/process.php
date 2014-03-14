@@ -12,83 +12,65 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerProcess extends JControllerForm
 {
+	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+        
+	/**
+	 * Constructor.
+	 * @return	void
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+                
+		// Define standard task mappings.                
+                $this->registerTask('runall', 'run');
+	}
+        
         /**
-	 * Method to periodically run processes from a modal window.
+	 * Method to run processes sequentially using ajax.
 	 * @return	void
 	 */
         function run()
         {
-                $document = JFactory::getDocument();
-                $document->addStyleSheet(JURI::root() . 'media/com_hwdmediashare/assets/css/administrator.css');
-                JHtml::_('behavior.framework', true);
-                $cids	    = JRequest::getVar('cid', array(), '', 'array');
-                $cidsString = implode(",", $cids);
-                $cidsPost   = (count($cids) > 0 ? '&cid[]='.implode('&cid[]=', $cids) : '');                
-                ?>
-<table class="adminlist">
-<tbody>        
-    <tr class="row0">
-        <td>
-            <?php echo JText::_('COM_HWDMS_TOTAL_QUEUED_PROCESSES'); ?>
-        </td>
-        <td>
-            <div id="ajax-remaining"></div>      
-        </td>
-    </tr>
-    <tr class="row1">
-        <td>
-            <?php echo JText::_('COM_HWDMS_QUEUED_PROCESSES'); ?>
-        </td>
-        <td>
-            <?php echo (count($cids) > 0 ? $cidsString : JText::_('COM_HWDMS_ALL')); ?>            
-        </td>
-    </tr>
-    <tr class="row0">
-        <td colspan="2">
-            <div id="ajax-loader"></div>  
-        </td>
-    </tr> 
-</tbody>
-</table>
-                <?php
-$ajax = <<<EOD
-window.addEvent( 'domready', function() {
-        var a = new Request({
-                url: 'index.php?option=com_hwdmediashare&task=process.run&format=raw$cidsPost',
-                method: 'get',
-                initialDelay: 1000,
-                delay: 2000,
-                limit: 100000,
-                onRequest: function()
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+
+		// Initialise variables.
+		$values	= array('runall' => 1, 'run' => 0);
+		$task	= $this->getTask();
+		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
+                
+                // If we want to process everything, then reset the $cid array
+                if ($value)
                 {
-                        $('ajax-loader').empty().addClass('ajax-loading');
-                },
-                onComplete: function( response )
-                {
-                        $('ajax-loader').removeClass('ajax-loading');
-                        var object = JSON.decode(response);
-                        if(object.complete)
-                        {
-                                $('ajax-loader').set('html', '<strong>Processing complete</strong>');
-                                a.stopTimer();
-                        }
-                        else
-                        {
-                                $('ajax-remaining').set('html', object['data']['total']);
-                                if (object['data']['error_msg'])
-                                {
-                                    $('ajax-loader').set('html', object['data']['error_msg']);
-                                }
-                                else
-                                {
-                                    $('ajax-loader').set('html', 'No errors');
-                                }
-                                
-                        }
+                        $cid = array();
                 }
-        }).startTimer();
-});
-EOD;
-                $document->addScriptDeclaration( $ajax );
+
+		// Get the document object.
+		$document	= JFactory::getDocument();
+		$vName		= 'processes';
+		$vFormat	= 'html';
+
+		// Get and render the view.
+		if ($view = $this->getView($vName, $vFormat))
+		{
+			// Get the model for the view.
+			$model = $this->getModel($vName);
+
+			// Push the model into the view (as default).
+			$view->setModel($model, true);
+
+			// Push document object into the view.
+			$view->document = $document;
+
+			$view->run($cid);
+		}
         }
 }

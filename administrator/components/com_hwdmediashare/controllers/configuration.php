@@ -13,6 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerConfiguration extends JControllerForm
 {
 	/**
+	 * The URL view list variable (we redirect back to dashboard when saving and closing).
+	 * @var    string
+	 */
+    	protected $view_list = "dashboard";
+        
+	/**
 	 * Method to test background execution and display results.
 	 * @return	void
 	 */

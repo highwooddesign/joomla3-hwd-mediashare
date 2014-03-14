@@ -7,7 +7,9 @@
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
  */
-
+/**
+ * UNFINISHED
+ */
 defined('_JEXEC') or die;
 
 class hwdMediaShareControllerMedia extends JControllerAdmin
@@ -37,7 +39,7 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	 * Method to toggle the status setting of a list of media.
 	 * @return	void
 	 */
-	function approve()
+	public function approve()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -83,7 +85,7 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	 * Method to toggle the featured setting of a list of media.
 	 * @return	void
 	 */
-	function feature()
+	public function feature()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
@@ -130,7 +132,7 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	 * Method to set the values for multiple media.
 	 * @return	void
 	 */
-	function batch()
+	public function batch()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));

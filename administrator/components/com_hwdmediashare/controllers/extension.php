@@ -13,9 +13,18 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerExtension extends JControllerForm
 {
 	/**
-	 * Method to run batch operations.
-	 * @return      boolean     True if successful, false otherwise and internal error is set.
+	 * The URL view list variable.
+	 * @var    string
 	 */
+    	protected $view_list = "extensions";
+
+	/**
+	 * Method to run batch operations.
+	 *
+	 * @param   object      $model  The model.
+	 *
+	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 */    
 	public function batch($model = null)
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));

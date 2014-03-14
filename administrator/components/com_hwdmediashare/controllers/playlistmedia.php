@@ -11,19 +11,7 @@
 defined('_JEXEC') or die;
 
 class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
-{
-	/**
-	 * Constructor.
-	 * @return	void
-	 */
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-
-		$playlistId = JRequest::getInt('playlist_id');
-                $this->view_list = "playlistmedia&tmpl=component&playlist_id=$playlistId";
-	}
-        
+{       
         /**
 	 * Proxy for getModel.
 	 * @return	void
@@ -40,34 +28,40 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 	 */
 	public function unlink()
 	{
-                $playlistId     = JRequest::getInt( 'playlist_id', '' );
-                $app            =& JFactory::getApplication();
-		$model		=& $this->getModel();
-		$id		= JRequest::getVar( 'cid' , '' );
-		$errors		= false;
-		$message	= JText::_('COM_HWDMS_LINKED');
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                if( empty($id) )
+		// Get items to remove from the request.
+                // We select the mid array which contains the media ID integers. The cid array will 
+                // contain the original checkbox values which relate to the mapping table
+		$cid = JFactory::getApplication()->input->get('mid', array(), 'array');
+		$playlistId = JFactory::getApplication()->input->get('playlist_id', '', 'int');
+
+                if (!is_array($cid) || count($cid) < 1)
 		{
-			JError::raiseError( '500' , JText::_('COM_HWDMS_INVALID_ID') );
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
-
-                $params = new StdClass;
-                $params->playlistId = $playlistId;
-
-		for( $i = 0; $i < count($id); $i++ )
+		else
 		{
-			if( !$model->unlink( $id[ $i ], $params ) )
+			// Get the model.
+			$model = $this->getModel();
+
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->unlink($cid, $playlistId))
 			{
-				$errors	= true;
+				$this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_UNLINKED_FROM_PLAYLIST', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-		if( $errors )
-		{
-			$message = JText::_('COM_HWDMS_ERROR');
-		}
-		$app->redirect( 'index.php?option=com_hwdmediashare&view='.$this->view_list.'&tmpl=component&playlist_id='.$playlistId , $message );
+                
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&playlist_id=' . $playlistId, false));
 	}
         
         /**
@@ -76,34 +70,39 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 	 */
 	public function link()
 	{
-                $playlistId     = JRequest::getInt( 'playlist_id', '' );
-                $app            =& JFactory::getApplication();
-		$model		=& $this->getModel();
-		$id		= JRequest::getVar( 'cid' , '' );
-		$errors		= false;
-		$message	= JText::_('COM_HWDMS_LINKED');
+		// Check for request forgeries
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                if( empty($id) )
+		// Get items to remove from the request.
+                // We select the mid array which contains the media ID integers. The cid array will 
+                // contain the original checkbox values which relate to the mapping table
+		$cid = JFactory::getApplication()->input->get('mid', array(), 'array');
+		$playlistId = JFactory::getApplication()->input->get('playlist_id', '', 'int');
+
+                if (!is_array($cid) || count($cid) < 1)
 		{
-			JError::raiseError( '500' , JText::_('COM_HWDMS_INVALID_ID') );
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
-
-                $params = new StdClass;
-                $params->playlistId = $playlistId;
-
-		for( $i = 0; $i < count($id); $i++ )
+		else
 		{
-			if( !$model->link( $id[ $i ], $params ) )
+			// Get the model.
+			$model = $this->getModel();
+
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->link($cid, $playlistId))
 			{
-				$errors	= true;
+				$this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_LINKED_TO_PLAYLIST', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-		if( $errors )
-		{
-			$message = JText::_('COM_HWDMS_ERROR');
-		}
                 
-		$app->redirect( 'index.php?option=com_hwdmediashare&view='.$this->view_list.'&tmpl=component&playlist_id='.$playlistId , $message );
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&playlist_id=' . $playlistId, false));
 	}
 }

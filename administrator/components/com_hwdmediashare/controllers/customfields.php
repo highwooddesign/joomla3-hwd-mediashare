@@ -13,6 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerCustomFields extends JControllerAdmin
 {
 	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+            
+	/**
 	 * Constructor.
 	 * @return	void
 	 */
@@ -40,198 +46,131 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 	 * Method to toggle the "searchable" setting of a list of custom fields.
 	 * @return	void
 	 */
-	function searchable()
+	public function searchable()
 	{
 		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		// Initialise variables.
-		$app	=& JFactory::getApplication();
-                $user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', array(), '', 'array');
 		$values	= array('searchable' => 1, 'unsearchable' => 0);
 		$task	= $this->getTask();
-
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_array($cid) || count($cid) < 1)
 		{
-			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.media.'.(int) $id)) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
-                        for( $i = 0; $i < count($ids); $i++ )
-                        {
-                                $model = $this->getModel();
-                                if( !$model->searchable( $ids[$i], $value ) )
-                                {
-                                        JError::raiseWarning(500, $model->getError());
-                                }
-                        }
-		}
+		{
+			// Get the model.
+			$model = $this->getModel();
 
-		$app->redirect( 'index.php?option=com_hwdmediashare&view='.$this->view_list , $message );
-	}
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->searchable($cid, $value))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task), count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+ 	}
         
 	/**
 	 * Method to toggle the "visible" setting of a list of custom fields.
 	 * @return	void
 	 */
-	function visible()
+	public function visible()
 	{
 		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		// Initialise variables.
-		$app	=& JFactory::getApplication();
-                $user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', array(), '', 'array');
-		$values	= array('visible' => 1, 'invisible' => 0);
+		$values	= array('visible' => 1, 'unvisible' => 0);
 		$task	= $this->getTask();
-
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_array($cid) || count($cid) < 1)
 		{
-			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.media.'.(int) $id)) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
-                        for( $i = 0; $i < count($ids); $i++ )
-                        {
-                                $model = $this->getModel();
-                                if( !$model->visible( $ids[$i], $value ) )
-                                {
-                                        JError::raiseWarning(500, $model->getError());
-                                }
-                        }
-		}
+		{
+			// Get the model.
+			$model = $this->getModel();
 
-		$app->redirect( 'index.php?option=com_hwdmediashare&view='.$this->view_list , $message );
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->visible($cid, $value))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task), count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
         
 	/**
 	 * Method to toggle the "required" setting of a list of custom fields.
 	 * @return	void
 	 */
-	function required()
+	public function required()
 	{
 		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		// Initialise variables.
-		$app	=& JFactory::getApplication();
-                $user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', array(), '', 'array');
 		$values	= array('required' => 1, 'unrequired' => 0);
 		$task	= $this->getTask();
-
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_array($cid) || count($cid) < 1)
 		{
-			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.media.'.(int) $id)) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
-                        for( $i = 0; $i < count($ids); $i++ )
-                        {
-                                $model = $this->getModel();
-                                if( !$model->required( $ids[$i], $value ) )
-                                {
-                                        JError::raiseWarning(500, $model->getError());
-                                }
-                        }
-		}
-
-		$app->redirect( 'index.php?option=com_hwdmediashare&view='.$this->view_list , $message );
-	}
-        
-	/**
-	 * Method to set the values for multiple custom fields.
-	 * @return	void
-	 */
-	function batch()
-	{
-		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', array(), '', 'array');
-		$task	= $this->getTask();
-
-		$value = array();
-                $value['element_type'] = JRequest::getInt('batch_element_type');
-                $value['searchable'] = JRequest::getInt('batch_searchable');
-                $value['visible'] = JRequest::getInt('batch_visible');
-                $value['required'] = JRequest::getInt('batch_required');
-
-		// Access checks.
-		foreach ($ids as $i => $id)
 		{
-			if (!$user->authorise('core.edit', 'com_hwdmediashare.activity.'.(int) $id)) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
-		}
-		else
-                {
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->batch($ids, $value))
-                        {
-				JError::raiseWarning(500, $model->getError());
-			}
-                        else
-                        {
-                                JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_SUCCESSFULLY_PERFORMED_BATCH_OPERATION') );
-                        }
-		}
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
 
-		$this->setRedirect('index.php?option=com_hwdmediashare&view='.$this->view_list);
+			// Approve the items.
+			if ($model->required($cid, $value))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task), count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
 }
-
