@@ -1,54 +1,74 @@
 <?php
 /**
- * @version    SVN $Id: default_body.php 1140 2013-02-21 11:09:27Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
+
+JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+
 $user		= JFactory::getUser();
 $userId		= $user->get('id');
-$canEdit	= $user->authorise('core.edit',	'com_hwdmediashare');
-?>
-<?php foreach($this->items as $i => $item):
-        $canCheckin	= $user->authorise('core.manage', 'com_checkin') || $item->checked_out==$userId || $item->checked_out==0;
-        $canChange	= $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCheckin;
+$listOrder	= $this->escape($this->state->get('list.ordering'));
+$listDirn	= $this->escape($this->state->get('list.direction'));
 
-        $owner =& JFactory::getUser($item->created_user_id);
-        ?>
-        <tr class="row<?php echo $i % 2; ?>">
-                <td>
-                        <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-                </td>
-                <td>
+$archived	= $this->state->get('filter.published') == 2 ? true : false;
+$trashed	= $this->state->get('filter.published') == -2 ? true : false;
+?>
+<?php foreach ($this->items as $i => $item) :
+$ordering   = ($listOrder == 'a.ordering');
+$canCreate  = $user->authorise('core.create',     'com_hwdmediashare');
+$canEdit    = $user->authorise('core.edit',       'com_hwdmediashare');
+$canCheckin = $user->authorise('core.manage',     'com_hwdmediashare') || $item->checked_out == $userId || $item->checked_out == 0;
+$canEditOwn = $user->authorise('core.edit.own',   'com_hwdmediashare') && $item->created_user_id == $userId;
+$canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCheckin;
+?>
+<tr class="row<?php echo $i % 2; ?>">
+        <td class="center hidden-phone">
+                <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+        </td>
+        <td class="center">
+                <div class="btn-group">
+                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'extensions.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
+                        <?php
+                        // Create dropdown items
+                        $action = $archived ? 'unarchive' : 'archive';
+                        JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'extensions');
+
+                        $action = $trashed ? 'untrash' : 'trash';
+                        JHtml::_('actionsdropdown.' . $action, 'cb' . $i, 'extensions');
+
+                        // Render dropdown list
+                        echo JHtml::_('actionsdropdown.render', $this->escape($item->ext));
+                        ?>                    
+                </div>
+        </td>
+        <td class="nowrap has-context">
+                <div class="pull-left">
                         <?php if ($item->checked_out) : ?>
                                 <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'extensions.', $canCheckin); ?>
                         <?php endif; ?>
-                        <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=extension.edit&id='.(int) $item->id); ?>">
+                        <?php if ($canEdit || $canEditOwn) : ?>
+                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=extension.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
                                         <?php echo $this->escape($item->ext); ?></a>
                         <?php else : ?>
-                                        <?php echo $this->escape($item->ext); ?>
+                                <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->ext); ?></span>
                         <?php endif; ?>
-                </td>
-                <td class="center">
-                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'extensions.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
-                </td>
-                <td>
-                        <?php echo $this->getMediaType($item); ?>
-                </td>
-                <td class="center">
-                        <?php echo $this->escape($item->access_level); ?>
-                </td>
-                <td class="center">
-                        <?php echo $this->escape($owner->username); ?>
-                </td>
-                <td>
-                        <?php echo $item->id; ?>
-                </td>
-        </tr>
+                </div>
+        </td>     
+        <td class="small hidden-phone">
+                <?php echo $this->getMediaType($item); ?>
+        </td>
+        <td class="small hidden-phone">
+                <?php echo $this->escape($item->access_level); ?>
+        </td>
+        <td class="center hidden-phone">
+                <?php echo (int) $item->id; ?>
+        </td>
+</tr>
 <?php endforeach; ?>
