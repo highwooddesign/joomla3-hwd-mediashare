@@ -32,6 +32,8 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 		$this->item	= $this->get('Item');
 		$this->form	= $this->get('Form');
 
+                hwdMediaShareFactory::load('downloads');
+
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
