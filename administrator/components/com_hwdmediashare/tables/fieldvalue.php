@@ -46,10 +46,10 @@ class hwdMediaShareTableFieldValue extends JTable
 				. 'WHERE ' . $db->quoteName('field_id') . ' = ' . $db->Quote( $fieldId ) . ''
                                 . 'AND ' . $db->quoteName('element_type') . '=' . $db->Quote( $elementType ) . ''
                                 . 'AND ' . $db->quoteName('element_id') . '=' . $db->Quote( $elementId );
-		$db->setQuery( $query );
+		$db->setQuery($query);
 		if ($result = $db->loadObject())
                 {
-                        return $this->bind( $result );
+                        return $this->bind($result);
                 }
                 else
                 {
