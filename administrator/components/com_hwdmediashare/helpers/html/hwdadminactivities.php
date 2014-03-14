@@ -27,8 +27,8 @@ abstract class JHtmlHwdAdminActivities
 
 		// Array of image, task, title, action
 		$states	= array(
-			0	=> array('unfeatured',	'media.feature',	'COM_HWDMS_UNFEATURED',         'COM_HWDMS_TOGGLE_TO_FEATURE'),
-			1	=> array('featured',	'media.unfeature',	'COM_HWDMS_FEATURED',		'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
+			0	=> array('unfeatured',	'activities.feature',	'COM_HWDMS_UNFEATURED',         'COM_HWDMS_TOGGLE_TO_FEATURE'),
+			1	=> array('featured',	'activities.unfeature',	'COM_HWDMS_FEATURED',		'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -62,10 +62,10 @@ abstract class JHtmlHwdAdminActivities
 
 		// Array of image, task, title, action
 		$states	= array(
-			0	=> array('unpublish',	'media.approve',	'COM_HWDMS_UNAPPROVED',         'COM_HWDMS_TOGGLE_TO_APPROVE'),
-			1	=> array('publish',	'media.unapprove',	'COM_HWDMS_APPROVED',		'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
-			2	=> array('pending',	'media.approve',	'COM_HWDMS_PENDING',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
-			3	=> array('not-ok',	'media.approve',	'COM_HWDMS_REPORTED',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			0	=> array('unpublish',	'activities.approve',	'COM_HWDMS_UNAPPROVED',         'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			1	=> array('publish',	'activities.unapprove',	'COM_HWDMS_APPROVED',		'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
+			2	=> array('pending',	'activities.approve',	'COM_HWDMS_PENDING',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			3	=> array('not-ok',	'activities.approve',	'COM_HWDMS_REPORTED',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
