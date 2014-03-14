@@ -27,8 +27,8 @@ abstract class JHtmlHwdAdminCustomFields
 
 		// Array of image, task, title, action
 		$states	= array(
-			0	=> array('search',    'customfields.searchable',    'COM_HWDMS_NOTSEARCHABLE',      'COM_HWDMS_TOGGLE_TO_SEARCHABLE'),
-			1	=> array('search',      'customfields.unsearchable',  'COM_HWDMS_SEARCHABLE',         'COM_HWDMS_TOGGLE_TO_NOTSEARCHABLE'),
+			0	=> array('search',    'customfields.searchable',    'COM_HWDMS_JHTML_UNSEARCHABLE',       'COM_HWDMS_TOGGLE_TO_SEARCHABLE'),
+			1	=> array('search',    'customfields.unsearchable',  'COM_HWDMS_JHTML_SEARCHABLE',         'COM_HWDMS_TOGGLE_TO_UNSEARCHABLE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -62,8 +62,8 @@ abstract class JHtmlHwdAdminCustomFields
 
 		// Array of image, task, title, action
 		$states	= array(
-			0	=> array('eye',    'customfields.visible',    'COM_HWDMS_INVISIBLE',      'COM_HWDMS_TOGGLE_TO_VISIBLE'),
-			1	=> array('eye',      'customfields.unvisible',  'COM_HWDMS_VISIBLE',        'COM_HWDMS_TOGGLE_TO_INVISIBLE'),
+			0	=> array('eye',    'customfields.visible',    'COM_HWDMS_JHTML_UNVISIBLE',      'COM_HWDMS_TOGGLE_TO_VISIBLE'),
+			1	=> array('eye',    'customfields.unvisible',  'COM_HWDMS_JHTML_VISIBLE',        'COM_HWDMS_TOGGLE_TO_UNVISIBLE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -97,8 +97,8 @@ abstract class JHtmlHwdAdminCustomFields
 
 		// Array of image, task, title, action
 		$states	= array(
-			0	=> array('star',    'customfields.required',    'COM_HWDMS_NOTREQUIRED',     'COM_HWDMS_TOGGLE_TO_REQUIRED'),
-			1	=> array('star',      'customfields.unrequired',  'COM_HWDMS_REQUIRED',        'COM_HWDMS_TOGGLE_TO_NOTREQUIRED'),
+			0	=> array('star',    'customfields.required',    'COM_HWDMS_JHTML_UNREQUIRED',      'COM_HWDMS_TOGGLE_TO_REQUIRED'),
+			1	=> array('star',    'customfields.unrequired',  'COM_HWDMS_JHTML_REQUIRED',        'COM_HWDMS_TOGGLE_TO_UNREQUIRED'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
