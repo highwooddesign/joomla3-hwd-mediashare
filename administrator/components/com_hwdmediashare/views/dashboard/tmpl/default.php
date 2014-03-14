@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.modal');
 ?>
-</script>
 <div class="row-fluid">
 <?php if (!empty( $this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
