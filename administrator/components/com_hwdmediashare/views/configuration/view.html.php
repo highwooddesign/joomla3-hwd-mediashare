@@ -8,14 +8,16 @@
  * @author      Dave Horsfall
  */
 
-
-/**
- * UNFINISHED
- */
 defined('_JEXEC') or die;
 
 class hwdMediaShareViewConfiguration extends JViewLegacy 
 {
+    	protected $state;
+
+	protected $item;
+
+	protected $form;
+        
 	/**
 	 * Display the view
 	 *
@@ -49,7 +51,6 @@ class hwdMediaShareViewConfiguration extends JViewLegacy
                 
 		$document = JFactory::getDocument();
 		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css"); 
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/maintenance/submitbutton.js");
 	}
 
 	/**
