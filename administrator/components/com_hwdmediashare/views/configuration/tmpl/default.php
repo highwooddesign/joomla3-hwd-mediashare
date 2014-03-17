@@ -1,20 +1,20 @@
 <?php
 /**
- * @version    SVN $Id: default.php 1052 2013-02-07 14:50:07Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access
 defined('_JEXEC') or die;
 
-// Load tooltips behavior
 JHtml::_('behavior.formvalidation');
-JHtml::_('behavior.switcher');
 JHtml::_('behavior.tooltip');
+JHtml::_('behavior.multiselect');
+JHtml::_('dropdown.init');
+JHtml::_('formbehavior.chosen', 'select');
 
 // Some servers have a "suhosin.post.max_vars" limit (or similar), and this can lead to the end variables being 
 // dropped during submission. Therefore, we have brought the "task" and "token" variables to the start of the 
@@ -22,44 +22,48 @@ JHtml::_('behavior.tooltip');
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare');?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
-        <input type="hidden" name="task" value="" />
-	<?php echo JHtml::_('form.token'); ?>    
-	<div id="config-document">
-		<div id="page-site" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('site'); ?>
-			</div>
-		</div>
-		<div id="page-media" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('media'); ?>
-			</div>
-		</div>
-		<div id="page-processing" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('processing'); ?>
-			</div>
-		</div>
-		<div id="page-permissions" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('permissions'); ?>
-			</div>
-		</div>
-		<div id="page-layout" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('layout'); ?>
-			</div>
-		</div>
-		<div id="page-integrations" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('integrations'); ?>
-			</div>
-		</div>
-		<div id="page-uploads" class="tab">
-			<div class="noshow">
-				<?php echo $this->loadTemplate('uploads'); ?>
-			</div>
-		</div>            
+<input type="hidden" name="task" value="" />
+<?php echo JHtml::_('form.token'); ?>   
+<?php if (!empty( $this->sidebar)) : ?>
+	<div id="j-sidebar-container" class="span2">
+		<?php echo $this->sidebar; ?>
 	</div>
-	<div class="clr"></div>
+	<div id="j-main-container" class="span10">
+<?php else : ?>
+	<div id="j-main-container">
+<?php endif;?>
+		<!-- Begin Content -->
+                <?php echo JHtml::_('bootstrap.startTabSet', 'config', array('active' => 'page-site')); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-site', JText::_('COM_HWDMS_SITE', true)); ?>
+                        <?php echo $this->loadTemplate('site'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-media', JText::_('COM_HWDMS_MEDIA', true)); ?>
+                        <?php echo $this->loadTemplate('media'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-processing', JText::_('COM_HWDMS_PROCESSING', true)); ?>
+                        <?php echo $this->loadTemplate('processing'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-permissions', JText::_('COM_HWDMS_PERMISSIONS', true)); ?>
+                        <?php echo $this->loadTemplate('permissions'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-layout', JText::_('COM_HWDMS_LAYOUT', true)); ?>
+                        <?php echo $this->loadTemplate('layout'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-integrations', JText::_('COM_HWDMS_INTEGRATIONS', true)); ?>
+                        <?php echo $this->loadTemplate('integrations'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+
+                <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-uploads', JText::_('COM_HWDMS_UPLOADS', true)); ?>
+                        <?php echo $this->loadTemplate('uploads'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>                   
+
+                <?php echo JHtml::_('bootstrap.endTabSet'); ?>
+		<!-- End Content -->
+        </div>
 </form>
