@@ -1,33 +1,37 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 1245 2013-03-08 14:13:12Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      20-Feb-2012 20:13:08
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// import Joomla view library
-jimport('joomla.application.component.view');
 
 /**
- * hwdMediaShare View
+ * UNFINISHED
  */
-class hwdMediaShareViewReported extends JViewLegacy {
+defined('_JEXEC') or die;
+
+class hwdMediaShareViewReported extends JViewLegacy
+{
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-                $layout = JRequest::getWord('layout');
+                $jinput = JFactory::getApplication()->input;
+                $layout = $jinput->get('layout', '', 'word');
+                
+                // Get data from the model based on layout.
                 switch ($layout) {
                     case 'media':
-                        // Get data from the model
+                        
                         $this->items = $this->get('Items');
                         $this->pagination = $this->get('Pagination');
                         $this->state	= $this->get('State');
@@ -42,57 +46,45 @@ class hwdMediaShareViewReported extends JViewLegacy {
                         $this->activities = $this->get('activities');
                         break;
                 }
-
-                hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('files');
-
+                
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
-                                JError::raiseError(500, implode('<br />', $errors));
-                                return false;
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
                 }
 
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
+		}
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();  
+                
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css"); 
 	}
 
 	/**
-	 * Method to set up the document properties
+	 * Add the page title and toolbar.
 	 *
-	 * @return void
+	 * @return  void
 	 */
-	protected function setDocument()
+	protected function addToolBar()
 	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_REPORTED_ITEMS'));
-		$document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-                JText::script('COM_HWDMS_ERROR_UNACCEPTABLE');
-	}
-        
+		JToolBarHelper::title(JText::_('COM_HWDMS_REPORTED_ITEMS'), 'notification');
 
-	function addIcon( $image, $url, $text )
-	{
-		$lang		=& JFactory::getLanguage();
-                ?>
-		<div style="float:<?php echo ($lang->isRTL()) ? 'right' : 'left'; ?>;">
-			<div class="icon">
-				<a href="<?php echo $url; ?>" target="_top">
-					<?php echo JHtml::_('image', 'media/com_hwdmediashare/assets/images/icons/48/' . $image , NULL, NULL ); ?>
-					<span><?php echo $text; ?></span>
-                                </a>
-			</div>
-		</div>
-                <?php
+		JToolbarHelper::cancel('reported.cancel', 'JTOOLBAR_CLOSE');
+		JToolbarHelper::divider();
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
         
 	/**
 	 * Method to get human readable report type
-         * 
-         * @since   0.1
+	 * @return  void
 	 **/
 	public function getReportType($item)
 	{
