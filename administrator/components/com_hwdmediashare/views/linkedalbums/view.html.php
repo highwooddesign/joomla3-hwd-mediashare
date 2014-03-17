@@ -57,7 +57,7 @@ class hwdMediaShareViewLinkedAlbums extends JViewLegacy
                 ?>
                 <div class="btn-wrapper pull-right">
                         <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','linkedalbums.<?php echo $task; ?>')">
-                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_MEDIA FROM_ALBUM') : JText::_('COM_HWDMS_BTN_ADD_MEDIA TO_ALBUM')); ?>
+                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_MEDIA_FROM_ALBUM') : JText::_('COM_HWDMS_BTN_ADD_MEDIA_TO_ALBUM')); ?>
                         </a>
                 </div>
                 <?php
