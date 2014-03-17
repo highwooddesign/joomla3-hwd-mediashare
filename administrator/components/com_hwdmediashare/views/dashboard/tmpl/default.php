@@ -139,12 +139,12 @@ JHtml::_('behavior.modal');
                     </div>
                     <div class="row-fluid">
                       <div class="span12">
-                        <a href="index.php?option=com_hwdmediashare&view=reported&tmpl=component"><i class="icon-notification"></i> <span><?php echo JText::_('COM_HWDMS_REPORTED'); ?></span></a>
+                        <a href="index.php?option=com_hwdmediashare&view=reported"><i class="icon-notification"></i> <span><?php echo JText::_('COM_HWDMS_REPORTED'); ?></span></a>
                       </div>
                     </div>
                     <div class="row-fluid">
                       <div class="span12">
-                        <a href="index.php?option=com_hwdmediashare&view=pending&tmpl=component"><i class="icon-notification"></i> <span><?php echo JText::_('COM_HWDMS_PENDING'); ?></span></a>
+                        <a href="index.php?option=com_hwdmediashare&view=pending"><i class="icon-notification"></i> <span><?php echo JText::_('COM_HWDMS_PENDING'); ?></span></a>
                       </div>
                     </div>
                     <div class="row-fluid">
