@@ -1,78 +1,86 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 405 2012-05-31 12:21:35Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
+class hwdMediaShareViewEditMedia extends JViewLegacy 
+{
+	protected $state;
 
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewEditMedia extends JViewLegacy {
+	protected $item;
+
+	protected $form;
+        
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-                $app = & JFactory::getApplication();
-
-                // get the Data
-		$form = $this->get('Form');
-		$item = $this->get('Item');
-		$script = $this->get('Script');
+                // Get data from the model.
+		$this->state	= $this->get('State');
+		$this->item	= $this->get('Item');
+		$this->form	= $this->get('Form');
 
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
                 
-                $isNew = $item->id == 0;
-                if ($isNew)
+                $isNew = $this->item->id == 0;
+                if ($isNew) JFactory::getApplication()->redirect(JRoute::_('index.php?option='.JRequest::getCmd('option').'&view=addmedia', false));
+
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
                 {
-                    JFactory::getApplication()->redirect(JRoute::_('index.php?option='.JRequest::getCmd('option').'&view=addmedia', false));
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
                 }
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
-		// Assign the Data
-		$this->form = $form;
-		$this->item = $item;
-		$this->script = $script;
-
-		// Set the toolbar
-		$this->addToolBar();
+		$this->addToolbar();
+		$this->sidebar = JHtmlSidebar::render();
 
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
 
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
-		JRequest::setVar('hidemainmenu', true);
-		$user = JFactory::getUser();
-		$userId = $user->id;
-		$isNew = $this->item->id == 0;
-		$canDo = hwdMediaShareHelper::getActions($this->item->id, 'media');
-		JToolBarHelper::title(JText::_('COM_HWDMS_EDIT_MEDIA'), 'hwdmediashare');
+		JFactory::getApplication()->input->set('hidemainmenu', true);
 
+		$user		= JFactory::getUser();
+		$isNew		= ($this->item->id == 0);
+		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
+
+		// Since we don't track these assets at the item level, use the category id.
+		$canDo		= hwdMediaShareHelper::getActions($this->item->id, 'media');
+
+		JToolBarHelper::title(JText::_('COM_HWDMS_EDIT_MEDIA'), 'video');
+
+		// If not checked out, can save the item.
+		if (!$checkedOut && ($canDo->get('core.edit')||(count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create')))))
+		{
+			JToolbarHelper::apply('editmedia.apply');
+			JToolbarHelper::save('editmedia.save');
+		}
+		if (!$checkedOut && (count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create'))))
+		{
+			JToolbarHelper::save2new('editmedia.save2new');
+		}
+		// If CDN then show sync options.
 		if ($this->item->type == 6)
 		{
                         // Load the HWDMediaShare language file
@@ -80,110 +88,58 @@ class hwdMediaShareViewEditMedia extends JViewLegacy {
                         $plugin = 'plg_hwdmediashare_'.$this->item->storage;
                         $lang->load($plugin, JPATH_SITE.'/administrator', $lang->getTag());
 
-                        // Sample data install option
-                        $document = JFactory::getDocument();
-                        $document->addStyleDeclaration('.icon-32-platform {background-image: url(../plugins/hwdmediashare/'.$this->item->storage.'/assets/logo-32.png);}');
-                        JToolBarHelper::custom('editmedia.syncToCdn', 'platform.png', 'platform_f2.png', 'COM_HWDMS_SYNC_TO_CDN', false);
-			JToolBarHelper::custom('editmedia.syncFromCdn', 'platform.png', 'platform_f2.png', 'COM_HWDMS_SYNC_FROM_CDN', false);
+                        JToolBarHelper::custom('editmedia.syncToCdn', 'database', 'database', 'COM_HWDMS_SYNC_TO_CDN', false);
+			JToolBarHelper::custom('editmedia.syncFromCdn', 'database', 'database', 'COM_HWDMS_SYNC_FROM_CDN', false);
                         JToolBarHelper::divider();
-		}
-                
-                // Built the actions for new and existing records.
-		if ($isNew)
+		}                
+		if (empty($this->item->id))
 		{
-			// For new records, check the create permission.
-			if ($canDo->get('core.create'))
-			{
-				JToolBarHelper::apply('editmedia.apply', 'JTOOLBAR_APPLY');
-				JToolBarHelper::save('editmedia.save', 'JTOOLBAR_SAVE');
-				JToolBarHelper::custom('editmedia.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-			}
-			JToolBarHelper::cancel('editmedia.cancel', 'JTOOLBAR_CANCEL');
+			JToolbarHelper::cancel('editmedia.cancel');
 		}
 		else
 		{
-			if ($canDo->get('core.edit'))
-			{
-				// We can save the new record
-				JToolBarHelper::apply('editmedia.apply', 'JTOOLBAR_APPLY');
-				JToolBarHelper::save('editmedia.save', 'JTOOLBAR_SAVE');
-
-				// We can save this record, but check the create permission to see if we can return to make a new one.
-				if ($canDo->get('core.create'))
-				{
-					JToolBarHelper::custom('editmedia.save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
-				}
-			}
-			JToolBarHelper::cancel('editmedia.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('editmedia.cancel', 'JTOOLBAR_CLOSE');
 		}
-                JToolBarHelper::divider();
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+
+		JToolbarHelper::divider();
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
+
 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
+	 * Method to display the human readable file type.
+	 * @return  void
 	 */
-	protected function setDocument()
-	{
-		$isNew = $this->item->id == 0;
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_EDIT_MEDIA'));
-		$document->addScript(JURI::root() . $this->script);
-		$document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-                JText::script('COM_HWDMS_ERROR_UNACCEPTABLE');
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getFileType( &$item )
+	public function getFileType($item)
 	{
                 hwdMediaShareFactory::load('files');
                 return hwdMediaShareFiles::getFileType($item);
 	}
         
 	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getType( &$item )
+	 * Method to display the human readable media source (local, remote, etc).
+	 * @return  void
+	 */
+	public function getType($item)
 	{
                 hwdMediaShareFactory::load('media');
                 return hwdMediaShareMedia::getType($item);
 	}
 
 	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getMediaType( &$item )
+	 * Method to display the human readable media type (audio, document, image, video).
+	 * @return  void
+	 */
+	public function getMediaType($item)
 	{
                 hwdMediaShareFactory::load('media');
                 return hwdMediaShareMedia::getMediaType($item);
 	}
         
 	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getPath( &$item )
+	 * Method to display the relative path to a media file.
+	 * @return  void
+	 */
+	public function getPath($item)
 	{
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFiles::getLocalStoragePath();
@@ -193,17 +149,14 @@ class hwdMediaShareViewEditMedia extends JViewLegacy {
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                 return str_replace(JPATH_SITE, '', $path);
 	}
+        
 	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getExtension( &$item )
+	 * Method to display the extension for a media file.
+	 * @return  void
+	 */
+	public function getExtension($item)
 	{
                 hwdMediaShareFactory::load('files');
-                return hwdMediaShareFiles::getExtension($this->item,$item->file_type);
+                return hwdMediaShareFiles::getExtension($this->item, $item->file_type);
 	}
 }
