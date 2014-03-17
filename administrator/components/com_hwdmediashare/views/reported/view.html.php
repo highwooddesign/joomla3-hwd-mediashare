@@ -8,10 +8,6 @@
  * @author      Dave Horsfall
  */
 
-
-/**
- * UNFINISHED
- */
 defined('_JEXEC') or die;
 
 class hwdMediaShareViewReported extends JViewLegacy
