@@ -12,6 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerLinkedResponses extends JControllerAdmin
 {
+    	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "linkedresponses";
+            
+        /**
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'LinkedResponses', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+
         /**
 	 * Method to unlink responses from a media item
 	 * @return	void

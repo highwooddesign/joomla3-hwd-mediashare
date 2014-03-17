@@ -12,6 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerLinkedPlaylists extends JControllerAdmin
 {
+    	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "linkedplaylists";
+            
+        /**
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'LinkedPlaylists', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+
         /**
 	 * Method to unlink playlists from a media item
 	 * @return	void

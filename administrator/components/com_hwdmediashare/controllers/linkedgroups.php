@@ -12,6 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerLinkedGroups extends JControllerAdmin
 {
+    	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "linkedgroups";
+            
+        /**
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'LinkedGroups', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+
         /**
 	 * Method to unlink groups from a media item
 	 * @return	void
