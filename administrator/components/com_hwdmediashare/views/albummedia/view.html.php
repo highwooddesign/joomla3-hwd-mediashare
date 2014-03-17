@@ -25,7 +25,6 @@ class hwdMediaShareViewAlbumMedia extends JViewLegacy
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
-                $this->filterForm = $this->get('FilterForm');
                 $this->albumId = JFactory::getApplication()->input->get('album_id', '', 'int');
 
                 hwdMediaShareFactory::load('downloads');
@@ -48,19 +47,19 @@ class hwdMediaShareViewAlbumMedia extends JViewLegacy
 	 * Display appropriate button to either link or unlink the media from the album.
 	 * @return  void
 	 */
-	public function getConnection($row, $i)
+	public function getButton($row, $i)
 	{
                 $task = $row->connection ? 'unlink' : 'link';
-                $text = $row->connection ? JText::_('COM_HWDMS_UNLINK') : JText::_('COM_HWDMS_LINK');
+                $buttonClass = $row->connection ? 'btn btn-danger' : 'btn';
 
                 // Start output
                 ob_start();
                 ?>
-<div class="btn-wrapper pull-right">
-<a title="" class="btn hasTooltip btn-primary" href="index.php?option=com_hwdmediashare&task=playlistmedia.<?php echo $task; ?>&tmpl=component&playlist_id=28&tmpl=component&playlist_id=28&add=0" data-original-title="Filter the list items">
-<?php echo $text; ?>
-</a>
-</div> 
+                <div class="btn-wrapper pull-right">
+                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('mb<?php echo $i; ?>','albummedia.<?php echo $task; ?>')">
+                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_FROM_ALBUM') : JText::_('COM_HWDMS_BTN_ADD_TO_ALBUM')); ?>
+                        </a>
+                </div>
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
