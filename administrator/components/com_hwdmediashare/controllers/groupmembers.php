@@ -12,12 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 {
-    	/**
+	/**
 	 * The URL view list variable.
 	 * @var    string
 	 */
-    	protected $view_list = "groupmembers";    
-
+    	protected $view_list = "groupmembers";
+            
+        /**
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'GroupMembers', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+        
         /**
 	 * Method to unlink groups from a media item
 	 * @return	void
@@ -45,7 +55,7 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 			JArrayHelper::toInteger($cid);
 
 			// Approve the items.
-			if ($model->unlink($cid, $mediaId))
+			if ($model->unlink($cid, $groupId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_UNLINKED_FROM_GROUP', count($cid)));
 			}
@@ -85,7 +95,7 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 			JArrayHelper::toInteger($cid);
 
 			// Approve the items.
-			if ($model->link($cid, $mediaId))
+			if ($model->link($cid, $groupId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_LINKED_FROM_GROUP', count($cid)));
 			}
