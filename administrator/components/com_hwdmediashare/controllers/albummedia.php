@@ -12,6 +12,12 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
 {
+	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "albummedia";
+                
         /**
 	 * Proxy for getModel.
 	 * @return	void
