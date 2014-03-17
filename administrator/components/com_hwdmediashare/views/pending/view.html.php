@@ -1,85 +1,66 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      14-Feb-2012 14:42:36
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewPending extends JViewLegacy {
+class hwdMediaShareViewPending extends JViewLegacy
+{
 	/**
-	 * display method of Hello view
-	 * @return void
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
-                // get the Data
-		$media = $this->get('media');
-		$albums = $this->get('albums');
-		$groups = $this->get('groups');
-		$users = $this->get('users');
-		$playlists = $this->get('playlists');
-		$activities = $this->get('activities');
+                // Get data from the model.
+                $this->media = $this->get('media');
+                $this->albums = $this->get('albums');
+                $this->groups = $this->get('groups');
+                $this->users = $this->get('users');
+                $this->playlists = $this->get('playlists');
+                $this->activities = $this->get('activities');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
+                {
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
+
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
 		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
 		}
-
-		// Assign the Data
-		$this->media = $media;
-		$this->albums = $albums;
-		$this->groups = $groups;
-		$this->users = $users;
-		$this->playlists = $playlists;
-		$this->activities = $activities;
-
+                
 		// Display the template
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
+                
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css"); 
 	}
 
 	/**
-	 * Method to set up the document properties
+	 * Add the page title and toolbar.
 	 *
-	 * @return void
+	 * @return  void
 	 */
-	protected function setDocument()
+	protected function addToolBar()
 	{
-		$document = JFactory::getDocument();
-		$document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_PENDING_ITEMS'));
-		$document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-                JText::script('COM_HWDMS_ERROR_UNACCEPTABLE');
-	}
-        
+		JToolBarHelper::title(JText::_('COM_HWDMS_PENDING_ITEMS'), 'notification');
 
-	function addIcon( $image, $url, $text )
-	{
-		$lang		=& JFactory::getLanguage();
-                ?>
-		<div style="float:<?php echo ($lang->isRTL()) ? 'right' : 'left'; ?>;">
-			<div class="icon">
-				<a href="<?php echo $url; ?>" target="_top">
-					<?php echo JHtml::_('image', 'media/com_hwdmediashare/assets/images/icons/48/' . $image , NULL, NULL ); ?>
-					<span><?php echo $text; ?></span>
-                                </a>
-			</div>
-		</div>
-                <?php
+		JToolbarHelper::cancel('pending.cancel', 'JTOOLBAR_CLOSE');
+		JToolbarHelper::divider();
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
