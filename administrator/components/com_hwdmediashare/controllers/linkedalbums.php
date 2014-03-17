@@ -12,6 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerLinkedAlbums extends JControllerAdmin
 {
+	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "linkedalbums";
+            
+        /**
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'LinkedAlbums', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+
         /**
 	 * Method to unlink albums from a media item
 	 * @return	void
