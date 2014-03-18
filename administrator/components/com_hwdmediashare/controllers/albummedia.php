@@ -42,6 +42,7 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
                 // contain the original checkbox values which relate to the mapping table
 		$cid = JFactory::getApplication()->input->get('mid', array(), 'array');
 		$albumId = JFactory::getApplication()->input->get('album_id', '', 'int');
+		$add = JFactory::getApplication()->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
@@ -67,7 +68,7 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
 			}
 		}
                 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&album_id=' . $albumId, false));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&album_id=' . $albumId . '&add=' . $add, false));
 	}
         
         /**
@@ -84,6 +85,7 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
                 // contain the original checkbox values which relate to the mapping table
 		$cid = JFactory::getApplication()->input->get('mid', array(), 'array');
 		$albumId = JFactory::getApplication()->input->get('album_id', '', 'int');
+		$add = JFactory::getApplication()->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
@@ -109,6 +111,6 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
 			}
 		}
                 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&album_id=' . $albumId, false));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&album_id=' . $albumId . '&add=' . $add, false));
 	}
 }

@@ -40,6 +40,7 @@ class hwdMediaShareControllerLinkedResponses extends JControllerAdmin
 		// Get items to remove from the request.
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 		$mediaId = JFactory::getApplication()->input->get('media_id', '', 'int');
+		$add = JFactory::getApplication()->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
@@ -65,7 +66,7 @@ class hwdMediaShareControllerLinkedResponses extends JControllerAdmin
 			}
 		}
                 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&media_id=' . $mediaId, false));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&media_id=' . $mediaId . '&add=' . $add, false));
 	}
         
         /**
@@ -80,6 +81,7 @@ class hwdMediaShareControllerLinkedResponses extends JControllerAdmin
 		// Get items to remove from the request.
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 		$mediaId = JFactory::getApplication()->input->get('media_id', '', 'int');
+		$add = JFactory::getApplication()->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
@@ -105,6 +107,6 @@ class hwdMediaShareControllerLinkedResponses extends JControllerAdmin
 			}
 		}
                 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&media_id=' . $mediaId, false));
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&tmpl=component&media_id=' . $mediaId . '&add=' . $add, false));
 	}
 }
