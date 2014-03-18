@@ -190,7 +190,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
         }
 
 	/**
-	 * Method to change the link one or more albums to a media.
+	 * Method to link one or more albums to a media.
 	 *
 	 * @param   array    $pks      A list of the primary keys to change.
 	 * @param   integer  $mediaId  The value of the media key to associate with.
