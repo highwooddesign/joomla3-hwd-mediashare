@@ -1,131 +1,141 @@
 <?php
 /**
- * @version    SVN $Id: pending.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      14-Feb-2012 15:01:40
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-/**
- * hwdMediaShare Model
- */
-class hwdMediaShareModelPending extends JModelLegacy {
+class hwdMediaShareModelPending extends JModelLegacy 
+{
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to count pending media.
+         * 
+         * @return	mixed	Object on success, false on failure.
 	 */
-	public function getMedia($pk = null)
+	public function getMedia()
 	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_media')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_media')
+                        ->where('status = ' . $db->quote(2));
                 $db->setQuery($query);
-                return $db->loadResult();
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count pending albums.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getAlbums($pk = null)
+	public function getAlbums()
 	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_albums')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_albums')
+                        ->where('status = ' . $db->quote(2));
                 $db->setQuery($query);
-                return $db->loadResult();
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count pending groups.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getGroups($pk = null)
+	public function getGroups()
 	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_groups')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_groups')
+                        ->where('status = ' . $db->quote(2));
                 $db->setQuery($query);
-                return $db->loadResult();
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
         
         /**
-	 * Method to count media media.
+	 * Method to count pending users.
 	 *
 	 * @param	integer	The id of the primary key.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getUsers($pk = null)
+	public function getUsers()
 	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_users')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_users')
+                        ->where('status = ' . $db->quote(2));
                 $db->setQuery($query);
-                return $db->loadResult();
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}  
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count pending playlists.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getPlaylists($pk = null)
+	public function getPlaylists()
 	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_playlists')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_playlists')
+                        ->where('status = ' . $db->quote(2));
                 $db->setQuery($query);
-                return $db->loadResult();
-	}
-        
-        /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getActivities($pk = null)
-	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_activities')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
-                $db->setQuery($query);
-                return $db->loadResult();
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
 }
