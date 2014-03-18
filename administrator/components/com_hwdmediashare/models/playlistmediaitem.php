@@ -207,9 +207,3 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
                 return $condition;
 	}      
 }
-
-
-
-
-
-
