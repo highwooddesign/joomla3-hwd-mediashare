@@ -102,12 +102,12 @@ class hwdMediaShareModelProcess extends JModelAdmin
         }
         
 	/**
-	 * Method to toggle the featured setting of articles.
+	 * Method to reset processes in manage.
 	 *
-	 * @param	array	The ids of the items to toggle.
-	 * @param	int		The value to toggle to.
+	 * @param   array    $pks  An array of record primary keys.
+	 * @param   boolean  $all  True if all processes should be reset regardless of their status.
 	 *
-	 * @return	boolean	True on success.
+	 * @return  boolean  True on success.
 	 */
 	public function reset($pks, $all)
 	{
@@ -149,6 +149,14 @@ class hwdMediaShareModelProcess extends JModelAdmin
 		return true;
         }
 
+	/**
+	 * Method to delete one or more records. Overload to remove any
+         * associated process log entries.
+	 *
+	 * @param   array    $pks  An array of record primary keys.
+	 *
+	 * @return  boolean  True if successful, false if an error occurs.
+	 */        
 	public function delete($pks)
 	{
                 if (!parent::delete($pks))
