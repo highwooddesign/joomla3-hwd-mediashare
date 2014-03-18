@@ -1,174 +1,245 @@
 <?php
 /**
- * @version    SVN $Id: groupmembers.php 493 2012-08-28 13:20:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      01-Nov-2011 14:29:37
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelGroupMembers extends JModelList
 {
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        protected function getListQuery()
-        {
-                $groupId = JRequest::getInt( 'group_id', '' );
-                $viewAll = $this->getState('filter.linked') == "all" ? true:false;
+        protected $model;
 
-                // Create a new query object.
-                $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
-
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'DISTINCT a.id, a.name, a.username'
-			)
-		);
-
-                // From the albums table
-                $query->from('#__users AS a');
-
-                // Join over the language
-		$query->select('IF(map.group_id = '.$groupId.', true, false) AS connection');
-                $query->join('LEFT', '`#__hwdms_group_members` AS map ON map.member_id = a.id AND map.group_id = '.$groupId);
-
-		// Filter by search in title
-		$search = $this->getState('filter.search');
-		if (!empty($search))
-                {
-			if (stripos($search, 'id:') === 0)
-                        {
-				$query->where('a.id = '.(int) substr($search, 3));
-			}
-                        else
-                        {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('(a.name LIKE '.$search.' OR a.username LIKE '.$search.')');
-			}
+    	/**
+	 * Constructor override, defines a white list of column filters.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'name', 'u.name',
+				'username', 'u.username',
+				'registerDate', 'u.registerDate',
+			);
 		}
 
-                if (!$viewAll)
-                {
-                        $query->where('map.group_id = ' . $db->quote($groupId));
-                }
+		parent::__construct($config);
+	}
 
-		// Add the list ordering clause.
-                $listOrder = $this->state->get('list.ordering');
-                $listDirn = $this->state->get('list.direction');
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 */
+	public function getTable($name = 'GroupMembers', $prefix = 'hwdMediaShareTable', $config = array())
+	{
+		return JTable::getInstance($name, $prefix, $config);
+	}
+        
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+                $jinput = JFactory::getApplication()->input;
 
-		$query->order($db->escape($listOrder.' '.$listDirn));
-                //$query->group('a.id');
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                $this->model = JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->model->populateState();
+                $this->model->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
+                $this->model->setState('filter.group_id',  $jinput->get('group_id', '', 'int'));
+                $this->model->setState('list.ordering', 'u.registerDate');
+                $this->model->setState('list.direction', 'ASC');
+                
+                return $this->model->getItems(); 
+	}
 
-                //echo nl2br(str_replace('#__','jos_',$query));
- 		return $query;
-        }
+	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getPagination()
+	{
+                return $this->model->getPagination(); 
+	}
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
+                $jinput = JFactory::getApplication()->input;
+ 
+                $this->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
+                $this->setState('filter.group_id', $jinput->get('group_id', '', 'int'));
 
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$linked = $this->getUserStateFromRequest($this->context.'.filter.linked', 'filter_linked', null, 'string');
-		$this->setState('filter.linked', $linked);
-
-                $listOrder = JRequest::getCmd('filter_order', 'name');
-                $this->setState('list.ordering', $listOrder);
-
-                $listDirn  = JRequest::getCmd('filter_order_Dir', 'ASC');
-                $this->setState('list.direction', $listDirn);
-
-		// Load the parameters.
+                // Load the parameters.
 		$params = JComponentHelper::getParams('com_hwdmediashare');
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState('u.registerDate', 'ASC');
 	}
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function unlink($id, $params)
+        
+	/**
+	 * Method to unlink one or more users from a group.
+	 *
+	 * @param   array    $pks      A list of the primary keys to change.
+	 * @param   integer  $groupId  The value of the media key to associate with.
+	 *
+	 * @return  boolean  True on success.
+	 */
+        public function unlink($pks, $groupId = null)
         {
-            $table =& JTable::getInstance('GroupMembers', 'hwdMediaShareTable');
-
-            $db =& JFactory::getDBO();
-            $query = "
-              SELECT id
-                FROM ".$db->quoteName('#__hwdms_group_members')."
-                WHERE ".$db->quoteName('member_id')." = ".$db->quote($id)." AND ".$db->quoteName('group_id')." = ".$db->quote($params->groupId).";
-              ";
-            $db->setQuery($query);
-            $rows = $db->loadObjectList();
-
-		for( $i = 0; $i < count($rows); $i++ )
+                $db = JFactory::getDbo();
+		$pks = (array) $pks;
+		$table = $this->getTable();            
+            
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk)
 		{
-			$row = $rows[$i];
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_group_members')
+                                ->where('member_id = ' . $db->quote($pk))
+                                ->where('group_id = ' . $db->quote($groupId)); 
+                                    
+                        $db->setQuery($query);
+                        try
+                        {
+                                $rows = $db->loadColumn();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
 
-                        if( !$table->delete( $row->id ) )
-			{
-				$errors	= true;
-			}
+                                return false;                            
+                        }
+
+                        // Iterate the items to delete each one.
+                        foreach ($rows as $x => $row)
+                        {
+                                if ($table->load($row))
+                                {
+                                        if ($utilities->authoriseGroupAction('leave', $groupId, $pk))
+                                        {
+                                                if (!$table->delete($row))
+                                                {
+                                                        $this->setError($table->getError());
+
+                                                        return false;
+                                                }
+                                        }
+                                        else
+                                        {
+                                                // Prune items that you can't change.
+                                                unset($rows[$x]);
+                                                $error = $this->getError();
+
+                                                if ($error)
+                                                {
+                                                        JLog::add($error, JLog::WARNING, 'jerror');
+
+                                                        return false;
+                                                }
+                                                else
+                                                {
+                                                        JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                                                        return false;
+                                                }
+                                        }
+                                }
+                                else
+                                {
+                                        $this->setError($table->getError());
+
+                                        return false;
+                                }
+                        }
 		}
-		if( $errors )
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+        }
+
+	/**
+	 * Method to link one or more users to a group.
+	 *
+	 * @param   array    $pks      A list of the primary keys to change.
+	 * @param   integer  $groupId  The value of the media key to associate with.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function link($pks, $groupId = null)
+	{
+		$user = JFactory::getUser();
+                $date = JFactory::getDate();
+		$table = $this->getTable();
+		$pks = (array) $pks;
+
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                                
+		// Access checks.
+		foreach ($pks as $i => $pk)
 		{
-			$message	= JText::_('COM_HWDMS_ERROR');
+			$table->reset();
+
+                        if (!$utilities->authoriseGroupAction('join', $groupId, $pk))
+                        {
+                                // Prune items that you can't change.
+                                unset($pks[$i]);
+                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                                return false;
+                        }
+                        
+                        // Create an object to bind to the database
+                        $object = new StdClass;
+                        $object->group_id = (int) $groupId;
+                        $object->member_id = (int) $pk;
+                        $object->approved = (int) 1;
+                        $object->created = $date->format('Y-m-d H:i:s');
+ 
+                        // Attempt to change the state of the records.
+                        if (!$table->save($object))
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
 		}
 
-            return true;
-        }
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function link($id, $params)
-        {
-            $date =& JFactory::getDate();
-            $table =& JTable::getInstance('GroupMembers', 'hwdMediaShareTable');
+		// Clear the component's cache
+		$this->cleanCache();
 
-            // Create an object to bind to the database
-            $object = new StdClass;
-            $object->member_id = $id;
-            $object->group_id = $params->groupId;
-            $object->created = $date->format('Y-m-d H:i:s');
-
-            if (!$table->bind($object))
-            {
-                    return JError::raiseWarning( 500, $table->getError() );
-            }
-
-            if (!$table->store())
-            {
-                    JError::raiseError(500, $table->getError() );
-            }
-            return true;
-        }
+		return true;
+	}
 }
