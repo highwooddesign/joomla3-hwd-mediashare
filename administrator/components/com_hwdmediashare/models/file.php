@@ -80,39 +80,6 @@ class hwdMediaShareModelFile extends JModelAdmin
 	}
         
 	/**
-	 * Method to save the form data.
-	 *
-	 * @param	array   $data   The form data.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function save($data)
-	{
-		// Initialise variables.            
-                $app = JFactory::getApplication();
-                $date = JFactory::getDate();
-                $user = JFactory::getUser();
-                $isNew = false;
-                
-                // Set the modified details
-                $data['modified'] = $date->format('Y-m-d H:i:s');
-                $data['modified_user_id'] = $user->id;
-
-                // Populate empty data                
-                empty($data['created_user_id']) ? $data['created_user_id'] = $user->id : null;
-                empty($data['created']) ? $data['created'] = $date->format('Y-m-d H:i:s') : null;
-                empty($data['publish_up']) ? $data['publish_up'] = $date->format('Y-m-d H:i:s') : null;
-                empty($data['publish_down']) ? $data['publish_down'] = "0000-00-00 00:00:00" : null;
-                
-		if (parent::save($data))
-                {
-			return true;
-		}    
-                
-                return false;
-	}
-        
-	/**
 	 * Method to delete one or more records. Overload to remove the
          * associated file.
 	 *
