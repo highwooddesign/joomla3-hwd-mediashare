@@ -102,7 +102,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
         }
         
 	/**
-	 * Method to reset processes in manage.
+	 * Method to reset processes in manager.
 	 *
 	 * @param   array    $pks  An array of record primary keys.
 	 * @param   boolean  $all  True if all processes should be reset regardless of their status.
