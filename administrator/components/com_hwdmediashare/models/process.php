@@ -128,7 +128,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 			$db = $this->getDbo();
 			$query = $db->getQuery(true)
                                     ->update($db->quoteName('#__hwdms_processes'))
-                                    ->set('attempts = ' . $db->quote((int) $value) . ', status = ' . $db->quote(1))
+                                    ->set('attempts = ' . $db->quote(0) . ', status = ' . $db->quote(1))
                                     ->where('id IN (' . implode(',', $pks) . ')');
                         
                         // Only reset queued processes unless specified
