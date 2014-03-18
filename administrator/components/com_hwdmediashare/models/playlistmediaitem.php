@@ -1,135 +1,211 @@
 <?php
 /**
- * @version    SVN $Id: playlistmediaitem.php 846 2013-01-07 10:01:03Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      08-Dec-2011 17:21:21
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
 {
 	/**
-	 * Returns a reference to the a Table object, always creating it.
+	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	0.1
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
 	 */
-	public function getTable($type = 'LinkedPlaylists', $prefix = 'hwdMediaShareTable', $config = array())
+	public function getTable($name = 'LinkedPlaylists', $prefix = 'hwdMediaShareTable', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($name, $prefix, $config);
 	}
+
 	/**
-	 * Method to get the record form.
+	 * Abstract method for getting the form from the model.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_hwdmediashare.playlist', 'playlist', array('control' => 'jform', 'load_data' => $loadData));
-                if (empty($form))
+
+		if (empty($form))
 		{
 			return false;
 		}
+
 		return $form;
 	}
-       /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function unlink($id, $params)
+
+	/**
+	 * Method to unlink one or more media items with a playlist.
+	 *
+	 * @param   array    $pks         A list of the primary keys to change.
+	 * @param   integer  $playlistId  The value of the playlist key to associate with.
+	 *
+	 * @return  boolean  True on success.
+	 */
+        public function unlink($pks, $playlistId = null)
         {
-                $table =& JTable::getInstance('LinkedPlaylists', 'hwdMediaShareTable');
-
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT id
-                    FROM ".$db->quoteName('#__hwdms_playlist_map')."
-                    WHERE ".$db->quoteName('media_id')." = ".$db->quote($id)." AND ".$db->quoteName('playlist_id')." = ".$db->quote($params->playlistId).";
-                  ";
-                $db->setQuery($query);
-                $rows = $db->loadObjectList();
-
-		for( $i = 0; $i < count($rows); $i++ )
+                $db = JFactory::getDbo();
+		$pks = (array) $pks;
+		$table = $this->getTable();            
+            
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk)
 		{
-			$row = $rows[$i];
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_playlist_map')
+                                ->where('playlist_id = ' . $db->quote($playlistId))
+                                ->where('media_id = ' . $db->quote($pk));
 
-                        if( !$table->delete( $row->id ) )
-			{
-				$errors	= true;
-			}
+                        $db->setQuery($query);
+                        try
+                        {
+                                $rows = $db->loadColumn();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+
+                                return false;                            
+                        }
+
+                        // Iterate the items to delete each one.
+                        foreach ($rows as $x => $row)
+                        {
+                                if ($table->load($row))
+                                {
+                                        if ($utilities->authorisePlaylistAction('unlink', $playlistId, $pk))
+                                        {
+                                                if (!$table->delete($row))
+                                                {
+                                                        $this->setError($table->getError());
+
+                                                        return false;
+                                                }
+                                        }
+                                        else
+                                        {
+                                                // Prune items that you can't change.
+                                                unset($rows[$x]);
+                                                $error = $this->getError();
+
+                                                if ($error)
+                                                {
+                                                        JLog::add($error, JLog::WARNING, 'jerror');
+
+                                                        return false;
+                                                }
+                                                else
+                                                {
+                                                        JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                                                        return false;
+                                                }
+                                        }
+                                }
+                                else
+                                {
+                                        $this->setError($table->getError());
+
+                                        return false;
+                                }
+                        }
+                        
+                        // Reorder this playlist
+                        $table->reorder(' playlist_id = '.$pk.' ');
 		}
-		if( $errors )
+
+		// Clear the component's cache
+		$this->cleanCache();
+             
+		return true;
+        }
+
+	/**
+	 * Method to link one or more media items with a playlist.
+	 *
+	 * @param   array    $pks         A list of the primary keys to change.
+	 * @param   integer  $playlistId  The value of the playlist key to associate with.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function link($pks, $playlistId = null)
+	{
+		$user = JFactory::getUser();
+                $date = JFactory::getDate();
+		$table = $this->getTable();
+		$pks = (array) $pks;
+
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                                
+		// Access checks.
+		foreach ($pks as $i => $pk)
 		{
-			$message = JText::_('COM_HWDMS_ERROR');
+			$table->reset();
+
+                        if (!$utilities->authorisePlaylistAction('link', $playlistId, $pk))
+                        {
+                                // Prune items that you can't change.
+                                unset($pks[$i]);
+                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                                return false;
+                        }
+                        
+                        // Create an object to bind to the database
+                        $object = new StdClass;
+                        $object->playlist_id = (int) $playlistId;
+                        $object->media_id = (int) $pk;
+                        $object->created_user_id = (int) $user->id;
+                        $object->created = $date->format('Y-m-d H:i:s');
+
+                        // Attempt to change the state of the records.
+                        if (!$table->save($object))
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
+                        // Reorder this playlist
+                        $table->reorder(' playlist_id = '.$playlistId.' ');                        
 		}
+
+		// Clear the component's cache
+		$this->cleanCache();
 
                 return true;
-        }
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function link($id, $params)
-        {
-                $table = $this->getTable();
-
-                // Create an object to bind to the database
-                $object = new StdClass;
-                $object->media_id = $id;
-                $object->playlist_id = $params->playlistId;
-                $object->ordering = 1000;
-
-                if (!$table->bind($object))
-                {
-                        return JError::raiseWarning( 500, $table->getError() );
-                }
-
-                if (!$table->store())
-                {
-                        JError::raiseError(500, $table->getError() );
-                }
-                
-                // Reorder this playlist in integer increments
-                $where = ' playlist_id = '.$params->playlistId.' ';
-                $table->reorder($where);
-                
-                return true;
-        }
-                
+	}
+       
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
 	 * @param	object	A record object.
 	 *
 	 * @return	array	An array of conditions to add to add to ordering queries.
-	 * @since	1.6
 	 */
 	protected function getReorderConditions($table)
 	{
 		$condition = array();
 		$condition[] = 'playlist_id = '.(int) $table->playlist_id;
-		return $condition;
-	}        
+                return $condition;
+	}      
 }
 
 
