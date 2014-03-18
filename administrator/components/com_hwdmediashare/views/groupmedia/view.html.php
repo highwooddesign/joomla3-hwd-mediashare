@@ -56,8 +56,8 @@ class hwdMediaShareViewGroupMedia extends JViewLegacy
                 ob_start();
                 ?>
                 <div class="btn-wrapper pull-right">
-                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('mb<?php echo $i; ?>','linkedgroups.<?php echo $task; ?>')">
-                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_FROM_PLAYLIST') : JText::_('COM_HWDMS_BTN_ADD_TO_PLAYLIST')); ?>
+                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('mb<?php echo $i; ?>','groupmedia.<?php echo $task; ?>')">
+                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_FROM_GROUP') : JText::_('COM_HWDMS_BTN_ADD_TO_GROUP')); ?>
                         </a>
                 </div>
                 <?php
