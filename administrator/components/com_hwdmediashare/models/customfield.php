@@ -90,9 +90,9 @@ class hwdMediaShareModelCustomField extends JModelAdmin
 		foreach ($pks as $i => $pk)
 		{
                         // Delete associated field value data
-                       $queries[] = $db->getQuery(true)
-                                  ->delete('#__hwdms_fields_values')
-                                  ->where('field_id = ' . $db->quote($pk));
+                        $queries[] = $db->getQuery(true)
+                                   ->delete('#__hwdms_fields_values')
+                                   ->where('field_id = ' . $db->quote($pk));
 		}
 
                 // Execute the generated queries.
