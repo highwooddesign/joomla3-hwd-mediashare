@@ -124,7 +124,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
 		{
                         $query = $db->getQuery(true)
                                 ->select('id')
-                                ->from('#__hwdms_album_map AS a')
+                                ->from('#__hwdms_album_map')
                                 ->where('album_id = ' . $db->quote($pk))
                                 ->where('media_id = ' . $db->quote($mediaId));
 
