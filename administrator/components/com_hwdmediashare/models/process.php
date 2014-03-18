@@ -1,114 +1,106 @@
 <?php
 /**
- * @version    SVN $Id: process.php 459 2012-08-13 12:58:37Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      09-Nov-2011 09:18:53
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelProcess extends JModelAdmin
 {
-	/**
-	 * Returns a reference to the a Table object, always creating it.
+    	/**
+	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	0.1
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
 	 */
-	public function getTable($type = 'Process', $prefix = 'hwdMediaShareTable', $config = array())
+	public function getTable($name = 'Process', $prefix = 'hwdMediaShareTable', $config = array())
 	{
-		return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($name, $prefix, $config);
 	}
+        
 	/**
-	 * Method to get the record form.
+	 * Abstract method for getting the form from the model.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 	}
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
+
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param   integer  $pk  The id of the primary key.
+	 *
+	 * @return  mixed  Object on success, false on failure.
+	 *
+	 * @since   1.6
+	 */
+        public function getItem($pk = null)
+        {
+                $processId = JFactory::getApplication()->input->get('id');
+
+		try
+		{
+			$db = $this->getDbo();
+                        $query = $db->getQuery(true)
+                                ->select('a.id, a.process_type, a.attempts, a.checked_out, a.checked_out_time, m.title, ext.media_type')
+                                ->from('#__hwdms_processes AS a')
+                                ->join('LEFT', '`#__hwdms_media` AS m ON m.id = a.media_id')
+                                ->join('LEFT', '`#__hwdms_ext` AS ext ON ext.id = m.ext_id')
+                                ->where('a.id = ' . $db->quote((int) $processId));
+			$db->setQuery($query);
+			$item = $db->loadObject();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+                return $item;
+        }
+
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
         public function getItems()
         {
-                // Create a new query object.
-                $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $processId = JRequest::getInt('id');
+                $processId = JFactory::getApplication()->input->get('id');
 
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.input, a.output, a.status, a.created'
-			)
-		);
+		try
+		{
+			$db = $this->getDbo();
+                        $query = $db->getQuery(true)
+                                ->select('id, input, output, status, created')
+                                ->from('#__hwdms_process_log')
+                                ->where('process_id = ' . $db->quote((int) $processId))
+                                ->order('created DESC');
+			$db->setQuery($query);
+			$items = $db->loadObjectList();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
 
-                // From the albums table
-                $query->from('#__hwdms_process_log AS a');
-
-		$query->where('a.process_id = '.(int) $processId);
-                $query->order('created DESC');
-
-		//echo nl2br(str_replace('#__','jos_',$query));
-
-                $db->setQuery($query);
-                return $db->loadObjectList();
+                return $items;
         }
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function getProcess()
-        {
-                // Create a new query object.
-                $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $processId = JRequest::getInt('id');
-
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'a.id, a.process_type, a.attempts'
-			)
-		);
-
-                // From the albums table
-                $query->from('#__hwdms_processes AS a');
-		$query->where('a.id = ' . $processId);
-
-                // Join over the media
-		$query->select('m.title');
-		$query->join('LEFT', '`#__hwdms_media` AS m ON m.id = a.media_id');
-
-                // Join over the media
-		$query->select('ext.media_type');
-		$query->join('LEFT', '`#__hwdms_ext` AS ext ON ext.id = m.ext_id');
-
-                $db->setQuery($query);
-                return $db->loadObject();
-        }
+        
 	/**
 	 * Method to toggle the featured setting of articles.
 	 *
@@ -119,83 +111,80 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 */
 	public function reset($pks, $all)
 	{
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$table		= $this->getTable();
-		$pks		= (array) $pks;
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
 
-                $db =& JFactory::getDBO();
-                $query = "
-                  UPDATE ".$db->quoteName('#__hwdms_processes')."
-                    SET ".$db->quoteName('attempts')." = ".$db->quote(0).", ".$db->quoteName('status')." = ".$db->quote(1)."
-                    WHERE ".$db->quoteName('id')." = ".implode(" OR ".$db->quoteName('id')." = ", $pks)."
-                  ";
-
-                if (!$all)
-                {
-                        $query.= "
-                            AND ".$db->quoteName('status')." IN (3)
-                        ";
-                }
-                                
-                $db->setQuery($query);
-
-                // Check for a database error.
-		if (!$db->query())
-                {
-			$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_PUBLISH_FAILED', get_class($this), $this->_db->getErrorMsg()));
-			$this->setError($e);
-
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_CONTENT_NO_ITEM_SELECTED'));
 			return false;
 		}
 
-                // Clear the component's cache
+		$table = $this->getTable();
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__hwdms_processes'))
+                                    ->set('attempts = ' . $db->quote((int) $value) . ', status = ' . $db->quote(1))
+                                    ->where('id IN (' . implode(',', $pks) . ')');
+                        
+                        // Only reset queued processes unless specified
+                        if (!$all) $query->where('status = ' . $db->quote(1));
+                   
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		// Clear the component's cache
 		$this->cleanCache();
 
 		return true;
         }
-        
-        /**
-	 * Method to assign user to a single record
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function delete(&$pks)
-	{            
-		if (!parent::delete($pks))
+
+	public function delete($pks)
+	{
+                if (!parent::delete($pks))
                 {
 			return false;
 		}
-
-		$db =& JFactory::getDBO();
-                $pks = (array) $pks;
-                $query = array();
                 
-		// Iterate the items to delete each one.
+		$db = JFactory::getDBO();
+                $pks = (array) $pks;
+                
+                // Array holding all queries
+                $queries = array();
+
+		// Loop through keys and generate queries to execute.
 		foreach ($pks as $i => $pk)
 		{
-                        $queries = array();
+                        // Delete associated field value data
+                       $queries[] = $db->getQuery(true)
+                                  ->delete('#__hwdms_process_log')
+                                  ->where('process_id = ' . $db->quote($pk));
+		}                       
                         
-                        // Delete records from process log
-                        $queries[] = "
-                            DELETE
-                                FROM ".$db->quoteName('#__hwdms_process_log')."
-                                WHERE ".$db->quoteName('process_id')." = ".$db->quote($pk)."
-                            ";
-
-                        // Iterate the queries to execute each one.
-                        foreach ($queries as $query)
+                // Execute the generated queries.
+                foreach ($queries as $query)
+                {
+                        try
                         {
                                 $db->setQuery($query);
-                                if (!$db->query())
-                                {
-                                        $this->setError(nl2br($db->getErrorMsg()));
-                                        return false;
-                                }
-                        }                        
-		}
+                                $db->query();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;                            
+                        }
+                }   
 
 		// Clear the component's cache
 		$this->cleanCache();
