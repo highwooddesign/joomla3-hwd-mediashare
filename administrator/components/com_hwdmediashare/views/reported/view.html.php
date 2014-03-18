@@ -39,7 +39,6 @@ class hwdMediaShareViewReported extends JViewLegacy
                         $this->groups = $this->get('groups');
                         $this->users = $this->get('users');
                         $this->playlists = $this->get('playlists');
-                        $this->activities = $this->get('activities');
                         break;
                 }
                 
