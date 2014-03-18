@@ -73,16 +73,6 @@ JHtml::_('behavior.framework', true);
                                         </div>                                      
                                 </td>
                         </tr>
-                        <tr>
-                                <td>
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_PENDING_ACTIVITIES', $this->activities); ?></div>
-                                </td>
-                                <td>
-                                        <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=activities&filter_status=2'); ?>"><?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                        </div>
-                                </td>
-                        </tr>
                 </tbody>
         </table>
         <input type="hidden" name="task" value="" />
