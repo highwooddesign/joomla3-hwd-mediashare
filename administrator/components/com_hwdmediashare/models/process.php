@@ -117,7 +117,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('COM_CONTENT_NO_ITEM_SELECTED'));
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
 			return false;
 		}
 
