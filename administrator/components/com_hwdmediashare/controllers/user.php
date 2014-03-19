@@ -49,8 +49,7 @@ class hwdMediaShareControllerUser extends JControllerForm
 	public function add()
 	{
 		// Redirect to create Joomla user
-                $app = JFactory::getApplication();
-                $message = JText::_('COM_HWDMS_ADD_NEW_USER_CHANNEL_NOTICE');
-		$app->redirect( 'index.php?option=com_users&task=user.add' , $message );
+                $this->setMessage(JText::_('COM_HWDMS_ADD_NEW_USER_CHANNEL_NOTICE'));
+		$this->setRedirect(JRoute::_('index.php?option=com_users&task=user.add', false));
 	}
 }
