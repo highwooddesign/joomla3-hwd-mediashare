@@ -98,7 +98,7 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
                 $defaultConfig = JFile::read($ini);
 
                 // Load default configuration
-                $config	= new JRegistry( $defaultConfig );
+                $config	= new JRegistry($defaultConfig);
 
                 $dataWithoutRules = $data;
                 unset($dataWithoutRules['rules']);
