@@ -77,8 +77,8 @@ class hwdMediaShareViewUsers extends JViewLegacy
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('users.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('users.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('users.feature', 'featured.png', 'featured_f2.png', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('users.unfeature','remove.png','remove_f2.png','COM_HWDMS_UNFEATURE', true);
+			JToolBarHelper::custom('users.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
+                        JToolBarHelper::custom('users.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('users.archive');
 			JToolBarHelper::checkin('users.checkin');
