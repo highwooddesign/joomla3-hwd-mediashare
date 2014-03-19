@@ -33,6 +33,8 @@ class hwdMediaShareModelProcesses extends JModelList
 				'created', 'a.created',
 				'modified_user_id', 'a.modified_user_id',
 				'modified', 'a.modified',
+                                /** Filter fields for additional joins **/
+				'title', 'm.title',
 			);
 		}
 
