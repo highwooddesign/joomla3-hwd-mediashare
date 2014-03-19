@@ -12,8 +12,6 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewPlaylists extends JViewLegacy
 {
-	var $name = "playlists";
-        
 	/**
 	 * Display the view
 	 *

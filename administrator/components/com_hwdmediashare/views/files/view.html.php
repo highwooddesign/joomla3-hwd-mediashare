@@ -12,8 +12,6 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewFiles extends JViewLegacy 
 {
-	var $name = "files";
-        
 	/**
 	 * Display the view
 	 *
