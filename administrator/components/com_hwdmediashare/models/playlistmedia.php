@@ -23,6 +23,7 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 	{
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
+				'title', 'a.title',
 				'created', 'a.created',
 				'map.ordering',
 			);
