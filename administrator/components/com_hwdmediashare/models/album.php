@@ -169,7 +169,7 @@ class hwdMediaShareModelAlbum extends JModelAdmin
 	}
         
 	/**
-	 * Method to toggle the featured vvalue of one or more records.
+	 * Method to toggle the featured value of one or more records.
 	 *
 	 * @param   array    $pks   An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
