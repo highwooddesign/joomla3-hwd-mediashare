@@ -1,262 +1,209 @@
 <?php
 /**
- * @version    SVN $Id: dashboard.php 1136 2013-02-21 11:05:01Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
-/**
- * hwdMediaShare Model
- */
-class hwdMediaShareModelDashboard extends JModelAdmin
+class hwdMediaShareModelDashboard extends JModelLegacy
 {
         /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to count the number of media added each day for the past 30 days.
+	 * @return  void
 	 */
-	public function getMedia($pk = null)
+	public function getMedia()
 	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "
-                    SELECT 
-                        created,
-                        DATE_FORMAT(created, '%d') AS day,
-                        COUNT(*) AS total 
-                    FROM 
-                        ".$db->quoteName('#__hwdms_media')."
-                    WHERE 
-                        ".$db->quoteName('created')." > (NOW() - INTERVAL 30 DAY)
-                    GROUP BY 
-                        DATE_FORMAT(created, '%d')
-                    ORDER BY 
-                        created ASC
-                ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('created, DATE_FORMAT(created, ' . $db->quote('%d') . ') AS day, COUNT(*) AS total')
+                        ->from('#__hwdms_media')
+                        ->where('created > (NOW() - INTERVAL 30 DAY)')
+                        ->group('DATE_FORMAT(created, ' . $db->quote('%d') . ')')
+                        ->order('created ASC');
                 $db->setQuery($query);
-                $rows = $db->loadObjectList();
-
-                if ($db->getErrorMsg())
+                try
                 {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                        $rows = $db->loadObjectList();
                 }
-                else
+                catch (RuntimeException $e)
                 {
-			return $rows;
-                }
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }              
+                return $rows;
 	}
           
         /**
-	 * Returns a reference to the a Table object, always creating it.
-	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	0.1
+	 * Method to get the recent gallery activity.
+	 * @return  void
 	 */
-	public function getTable($type = 'Media', $prefix = 'hwdMediaShareTable', $config = array())
+	public function getActivity()
 	{
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                return JTable::getInstance($type, $prefix, $config);
-	}
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                $this->model = JModelLegacy::getInstance('Activities', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->model->populateState();
+                $this->model->setState('list.start', 0);
+                $this->model->setState('list.limit', 8);
+                $this->model->setState('list.ordering', 'a.created');
+                $this->model->setState('list.direction', 'desc');
+                
+                return $this->model->getItems(); 
+	}        
         
         /**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * Method to count the number of media in the gallery.
+	 * @return  void
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getMediaCount()
 	{
-		parent::getForm($data, $loadData);
-	}
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getCountMedia($pk = null)
-	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "SELECT COUNT(*) FROM `#__hwdms_media`";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_media')
+                        ->where('published IN (0, 1)');
                 $db->setQuery($query);
-                $count = $db->loadResult();
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
+	}
 
-                if ($db->getErrorMsg())
+        /**
+	 * Method to count the number of categories in the gallery.
+	 * @return  void
+	 */
+	public function getCategoryCount()
+	{
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__categories')
+                        ->where('extension = ' . $db->quote('com_hwdmediashare'));
+                $db->setQuery($query);
+                try
                 {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                        $count = $db->loadResult();
                 }
-                else
+                catch (RuntimeException $e)
                 {
-			return $count;
+                        $this->setError($e->getMessage());
+                        return false;                            
                 }
+                return $count;
 	}
         
         /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to count the number of albums in the gallery.
+	 * @return  void
 	 */
-	public function getCountCategories($pk = null)
+	public function getAlbumCount()
 	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "SELECT COUNT(*) FROM `#__categories` WHERE `extension` = 'com_hwdmediashare'";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_albums')
+                        ->where('published IN (0, 1)');
                 $db->setQuery($query);
-                $count = $db->loadResult();
-
-                if ($db->getErrorMsg())
+                try
                 {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                        $count = $db->loadResult();
                 }
-                else
+                catch (RuntimeException $e)
                 {
-			return $count;
+                        $this->setError($e->getMessage());
+                        return false;                            
                 }
+                return $count;
 	}
         
         /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to count the number of groups in the gallery.
+	 * @return  void
 	 */
-	public function getCountAlbums($pk = null)
+	public function getGroupCount()
 	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "SELECT COUNT(*) FROM `#__hwdms_albums`";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_groups')
+                        ->where('published IN (0, 1)');
                 $db->setQuery($query);
-                $count = $db->loadResult();
-
-                if ($db->getErrorMsg())
+                try
                 {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                        $count = $db->loadResult();
                 }
-                else
+                catch (RuntimeException $e)
                 {
-			return $count;
+                        $this->setError($e->getMessage());
+                        return false;                            
                 }
+                return $count;
 	}
         
         /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to count the number of user channels in the gallery.
+	 * @return  void
 	 */
-	public function getCountGroups($pk = null)
+	public function getUserCount()
 	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "SELECT COUNT(*) FROM `#__hwdms_groups`";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_users')
+                        ->where('published IN (0, 1)');
                 $db->setQuery($query);
-                $count = $db->loadResult();
-
-                if ($db->getErrorMsg())
+                try
                 {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                        $count = $db->loadResult();
                 }
-                else
+                catch (RuntimeException $e)
                 {
-			return $count;
+                        $this->setError($e->getMessage());
+                        return false;                            
                 }
+                return $count;
 	}
         
         /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to count the number of categories in the gallery.
+	 * @return  void
 	 */
-	public function getCountChannels($pk = null)
+	public function getPlaylistCount($pk = null)
 	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "SELECT COUNT(*) FROM `#__hwdms_users`";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_playlists')
+                        ->where('published IN (0, 1)');
                 $db->setQuery($query);
-                $count = $db->loadResult();
-
-                if ($db->getErrorMsg())
+                try
                 {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+                        $count = $db->loadResult();
                 }
-                else
+                catch (RuntimeException $e)
                 {
-			return $count;
+                        $this->setError($e->getMessage());
+                        return false;                            
                 }
-	}
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getCountPlaylists($pk = null)
-	{
-                // Create a new query object.
-                $db =& JFactory::getDBO();
-
-                $query = "SELECT COUNT(*) FROM `#__hwdms_playlists`";
-                $db->setQuery($query);
-                $count = $db->loadResult();
-
-                if ($db->getErrorMsg())
-                {
-                        $this->setError($db->getErrorMsg());
-                        return false;
-                }
-                else
-                {
-			return $count;
-                }
+                return $count;
 	}  
         
         /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to get the version number of HWD.
+	 * @return  void
 	 */
-	public function getVersion($pk = null)
+	public function getVersion()
 	{
                 jimport( 'joomla.application.component.helper' );
                 $params = JComponentHelper::getComponent('com_hwdmediashare');
