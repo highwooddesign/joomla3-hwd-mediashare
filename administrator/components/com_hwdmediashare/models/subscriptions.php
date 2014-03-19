@@ -76,7 +76,7 @@ class hwdMediaShareModelSubscriptions extends JModelList
 
 		// Filter by published state.
 		$element_type = $this->getState('filter.element_type');
-		if (is_numeric($element_type) && $element_type)
+		if (is_numeric($element_type))
                 {
 			$query->where('a.element_type = '.(int) $element_type);
 		}
@@ -125,7 +125,7 @@ class hwdMediaShareModelSubscriptions extends JModelList
 		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
 		$this->setState('filter.search', $search);
 
-		$elementType = $this->getUserStateFromRequest($this->context.'.filter.element_type', 'filter_element_type', '0', 'int');
+		$elementType = $this->getUserStateFromRequest($this->context.'.filter.element_type', 'filter_element_type', '', 'string');
 		$this->setState('filter.element_type', $elementType);
 
 		// Load the parameters.
