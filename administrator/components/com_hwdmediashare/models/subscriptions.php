@@ -23,9 +23,12 @@ class hwdMediaShareModelSubscriptions extends JModelList
 		{
 			$config['filter_fields'] = array(
 				'id', 'a.id',
-				'title', 'a.title',
+				'element_type', 'a.element_type',
+				'element_id', 'a.element_id',
 				'user_id', 'a.user_id',
 				'created', 'a.created',
+                                /** Filter fields for additional joins **/
+				'title', 'm.title',
 			);
 		}
 
