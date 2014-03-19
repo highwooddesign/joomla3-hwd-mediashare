@@ -1,80 +1,107 @@
 <?php
 /**
- * @version    SVN $Id: files.php 1400 2013-04-30 09:31:12Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Mar-2012 21:27:34
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelFiles extends JModelList
 {
-        /**
-	 * Method to get a single record.
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
-	public function getItems($pk = null)
+	public function __construct($config = array())
 	{
-                if ($items = parent::getItems($pk))
-                {
-                        for ($i=0, $n=count($items); $i < $n; $i++)
-                        {
-                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                switch ($items[$i]->element_type)
-                                {
-                                        case 1:
-                                            // Media
-                                            $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                                            break;
-                                        case 2:
-                                            // Album
-                                            $table =& JTable::getInstance('Album', 'hwdMediaShareTable');
-                                            break;
-                                        case 3:
-                                            // Group
-                                            $table =& JTable::getInstance('Group', 'hwdMediaShareTable');
-                                            break;
-                                        case 4:
-                                            // Playlist
-                                            $table =& JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                                            break;
-                                        case 5:
-                                            // Channel
-                                            $table =& JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                                            break;
-                                        case 6:
-                                            // Category
-                                            $table =& JTable::getInstance('Category', 'hwdMediaShareTable');
-                                            break;
-                                }
-                                
-                                $table->load( $items[$i]->element_id );
-                                $properties = $table->getProperties(1);
-                                $row = JArrayHelper::toObject($properties, 'JObject');
+		if (empty($config['filter_fields']))
+		{
+			$config['filter_fields'] = array(
+				'id', 'a.id',
+				'title', 'a.title',
+				'alias', 'a.alias',
+				'likes', 'a.likes',
+				'dislikes', 'a.dislikes',
+				'status', 'a.status',   
+				'published', 'a.published', 
+				'featured', 'a.featured',
+				'checked_out', 'a.checked_out',
+				'checked_out_time', 'a.checked_out_time',
+				'access', 'a.access', 'access_level',
+				'ordering', 'a.ordering', 'map.ordering',
+				'created_user_id', 'a.created_user_id', 'author',
+				'created', 'a.created',
+				'publish_up', 'a.publish_up',
+				'publish_down', 'a.publish_down',
+				'modified_user_id', 'a.modified_user_id',
+				'modified', 'a.modified',
+				'hits', 'a.hits',
+				'language', 'a.language',
+				'report_count', 'a.report_count',
+			);
+		}
 
-                                $items[$i]->title = (isset($row->title) ? $row->title : '');
-                                $items[$i]->ext_id = (isset($row->ext_id) ? $row->ext_id : '');
-                                $items[$i]->thumbnail_ext_id = (isset($row->thumbnail_ext_id) ? $row->thumbnail_ext_id : '');
-                                $items[$i]->key = (isset($row->key) ? $row->key : '');
-                                $items[$i]->mediaid = (isset($row->id) ? $row->id : '');
+		parent::__construct($config);
+	}
+        
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+                for ($x = 0, $count = count($items); $x < $count; $x++)
+                {
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        switch ($items[$x]->element_type)
+                        {
+                                case 1:
+                                    // Media
+                                    $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                    break;
+                                case 2:
+                                    // Album
+                                    $table = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                    break;
+                                case 3:
+                                    // Group
+                                    $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                    break;
+                                case 4:
+                                    // Playlist
+                                    $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                    break;
+                                case 5:
+                                    // Channel
+                                    $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                    break;
+                                case 6:
+                                    // Category
+                                    $table = JTable::getInstance('Category', 'hwdMediaShareTable');
+                                    break;
                         }
+
+                        $table->load($items[$x]->element_id);
+                        $properties = $table->getProperties(1);
+                        $row = JArrayHelper::toObject($properties, 'JObject');
+
+                        $items[$x]->title = (isset($row->title) ? $row->title : '');
+                        $items[$x]->ext_id = (isset($row->ext_id) ? $row->ext_id : '');
+                        $items[$x]->thumbnail_ext_id = (isset($row->thumbnail_ext_id) ? $row->thumbnail_ext_id : '');
+                        $items[$x]->key = (isset($row->key) ? $row->key : '');
                 }
 
 		return $items;
 	}
+
         /**
          * Method to build an SQL query to load the list data.
          *
@@ -85,7 +112,7 @@ class hwdMediaShareModelFiles extends JModelList
                 // Create a new query object.
                 $db = JFactory::getDBO();
                 $query = $db->getQuery(true);
-
+                
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
@@ -95,18 +122,17 @@ class hwdMediaShareModelFiles extends JModelList
 			)
 		);
 
-                // From the albums table
+                // From the files table
                 $query->from('#__hwdms_files AS a');
 
-		// Join over the language
-		$query->select('m.title, m.ext_id, m.key, m.id AS mediaid');
-		$query->join('LEFT', '`#__hwdms_media` AS m ON m.id = a.element_id');
-		
-                // Join over the asset groups.
-		//$query->select('ag.title AS access_level');
-		$query->select('ag.title AS download_level');
-                $query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.download');
-		
+		// Join over the asset groups (for access).
+		$query->select('ag.title AS access_level');
+		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
+
+		// Join over the asset groups (for download).
+		$query->select('dg.title AS download_level');
+		$query->join('LEFT', '#__viewlevels AS dg ON dg.id = a.download');
+
                 // Filter by access level.
 		if ($access = $this->getState('filter.access'))
                 {
@@ -135,10 +161,10 @@ class hwdMediaShareModelFiles extends JModelList
                         else
                         {
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('(m.title LIKE '.$search.' OR a.basename LIKE '.$search.')');
+				$query->where('(a.basename LIKE '.$search.')');
 			}
 		}
-
+                
 		// Add the list ordering clause.
                 $listOrder = $this->state->get('list.ordering');
                 $listDirn = $this->state->get('list.direction');
@@ -148,12 +174,16 @@ class hwdMediaShareModelFiles extends JModelList
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -170,19 +200,11 @@ class hwdMediaShareModelFiles extends JModelList
 		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
                 $this->setState('filter.published', $published);
 		
-                // Passing additional parameters to prevent resetting the page
-                $listOrder = $this->getUserStateFromRequest($this->context.'.filter_order', 'filter_order', 'a.created', null, false);
-                $this->setState('list.ordering', $listOrder);
-
-                // Passing additional parameters to prevent resetting the page
-                $listDirn  = $this->getUserStateFromRequest($this->context.'.filter_order_Dir', 'filter_order_Dir', 'DESC', null, false);
-                $this->setState('list.direction', $listDirn);
-                
 		// Load the parameters.
 		$params = JComponentHelper::getParams('com_hwdmediashare');
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState('a.created', 'desc');
 	}
 }
