@@ -25,12 +25,12 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 $this->media = $this->get('Media');
                 $this->activity = $this->get('Activity');
                 $this->version = $this->get('Version');
-                $this->nummedia = $this->get('CountMedia');
-                $this->numcategories = $this->get('CountCategories');
-                $this->numalbums = $this->get('CountAlbums');
-                $this->numgroups = $this->get('CountGroups');
-                $this->numchannels = $this->get('CountChannels');
-                $this->numplaylists = $this->get('CountPlaylists');
+                $this->nummedia = $this->get('MediaCount');
+                $this->numcategories = $this->get('CategoryCount');
+                $this->numalbums = $this->get('AlbumCount');
+                $this->numgroups = $this->get('GroupCount');
+                $this->numchannels = $this->get('UserCount');
+                $this->numplaylists = $this->get('PlaylistCount');
                 
                 // Load HWD libaries
                 hwdMediaShareFactory::load('activities');
