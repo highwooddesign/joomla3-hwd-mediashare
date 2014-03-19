@@ -80,7 +80,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
 			JToolBarHelper::publish('media.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('media.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::custom('media.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('media.unfeature','removeg','remove','COM_HWDMS_UNFEATURE', true);
+                        JToolBarHelper::custom('media.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('media.archive');
 			JToolBarHelper::checkin('media.checkin');
