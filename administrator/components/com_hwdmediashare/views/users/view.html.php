@@ -12,8 +12,6 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewUsers extends JViewLegacy
 {
-	var $name = "users";
-        
 	/**
 	 * Display the view
 	 *
@@ -27,6 +25,7 @@ class hwdMediaShareViewUsers extends JViewLegacy
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
+                $this->filterForm = $this->get('FilterForm');
 
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
@@ -47,6 +46,9 @@ class hwdMediaShareViewUsers extends JViewLegacy
                 
 		// Display the template
 		parent::display($tpl);
+                
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");                
 	}
 
 	/**
@@ -95,6 +97,18 @@ class hwdMediaShareViewUsers extends JViewLegacy
                         JToolBarHelper::trash('users.trash');
                         JToolBarHelper::divider();
 		}
+		// Add a batch button
+		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
+		{
+			JHtml::_('bootstrap.modal', 'collapseModal');
+			$title = JText::_('JTOOLBAR_BATCH');
+
+			// Instantiate a new JLayoutFile instance and render the batch button
+			$layout = new JLayoutFile('joomla.toolbar.batch');
+
+			$dhtml = $layout->render(array('title' => $title));
+			$bar->appendButton('Custom', $dhtml, 'batch');
+		}                
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}        
 }
