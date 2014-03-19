@@ -71,8 +71,8 @@ class hwdMediaShareViewActivities extends JViewLegacy
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('activities.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('activities.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('activities.feature', 'featured.png', 'featured_f2.png', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('activities.unfeature','remove.png','remove_f2.png','COM_HWDMS_UNFEATURE', true);
+			JToolBarHelper::custom('activities.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
+                        JToolBarHelper::custom('activities.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('activities.archive');
 			JToolBarHelper::checkin('activities.checkin');
