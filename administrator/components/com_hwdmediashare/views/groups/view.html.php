@@ -73,8 +73,8 @@ class hwdMediaShareViewGroups extends JViewLegacy
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('groups.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('groups.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('groups.feature', 'featured.png', 'featured_f2.png', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('groups.unfeature','remove.png','remove_f2.png','COM_HWDMS_UNFEATURE', true);
+			JToolBarHelper::custom('groups.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
+                        JToolBarHelper::custom('groups.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('groups.archive');
 			JToolBarHelper::checkin('groups.checkin');
