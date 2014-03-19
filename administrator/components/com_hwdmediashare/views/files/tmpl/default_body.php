@@ -27,7 +27,6 @@ $ordering   = ($listOrder == 'a.ordering');
 $canCreate  = $user->authorise('core.create',     'com_hwdmediashare');
 $canEdit    = $user->authorise('core.edit',       'com_hwdmediashare');
 $canCheckin = $user->authorise('core.manage',     'com_hwdmediashare') || $item->checked_out == $userId || $item->checked_out == 0;
-$canEditOwn = $user->authorise('core.edit.own',   'com_hwdmediashare') && $item->created_user_id == $userId;
 $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCheckin;
 ?>
 <tr class="row<?php echo $i % 2; ?>">
@@ -36,7 +35,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
         </td>
         <td class="nowrap">
                 <div class="pull-left">
-                        <?php if ($canEdit || $canEditOwn) : ?>
+                        <?php if ($canEdit) : ?>
                                 <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
                                         <?php echo $this->escape(JHtmlString::truncate($item->title, 20, false, false)); ?></a>
                         <?php else : ?>
@@ -45,7 +44,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                 </div>
         </td>  
         <td class="nowrap has-context">
-                <a href="<?php echo hwdMediaShareDownloads::protectedUrl($item->mediaid, $item->file_type, 1, 1); ?>"><?php echo $this->getPath($item); ?></a>
+                <a href="<?php echo hwdMediaShareDownloads::protectedUrl($item->element_id, $item->file_type, $item->element_type, 1); ?>"><?php echo $this->getPath($item); ?></a>
         </td>        
         <td class="small hidden-phone">
                 <?php echo $this->getFileType($item); ?>
