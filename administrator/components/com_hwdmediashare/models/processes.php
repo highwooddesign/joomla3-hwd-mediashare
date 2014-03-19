@@ -1,29 +1,65 @@
 <?php
 /**
- * @version    SVN $Id: processes.php 1404 2013-04-30 09:31:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelProcesses extends JModelList
 {
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
+    	/**
+	 * Constructor override, defines a white list of column filters.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields']))
+		{
+			$config['filter_fields'] = array(
+				'id', 'a.id',
+				'process_type', 'a.process_type',
+				'media_id', 'a.media_id',
+				'status', 'a.status',   
+				'attempts', 'a.attempts',  
+				'checked_out', 'a.checked_out',
+				'checked_out_time', 'a.checked_out_time',
+				'created_user_id', 'a.created_user_id', 'author',
+				'created', 'a.created',
+				'modified_user_id', 'a.modified_user_id',
+				'modified', 'a.modified',
+			);
+		}
+
+		parent::__construct($config);
+	}
+        
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+		$items = parent::getItems();
+
+                for ($x = 0, $count = count($items); $x < $count; $x++)
+                {
+                }
+
+		return $items;
+	}
+        
+	/**
+	 * Method to get the database query.
+	 *
+	 * @return  JDatabaseQuery  database query
+	 */
         protected function getListQuery()
         {
                 // Create a new query object.
@@ -41,7 +77,7 @@ class hwdMediaShareModelProcesses extends JModelList
 			)
 		);
 
-                // From the albums table
+                // From the processes table.
                 $query->from('#__hwdms_processes AS a');
 
 		// Join over the users for the checked out user.
@@ -71,123 +107,82 @@ class hwdMediaShareModelProcesses extends JModelList
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
 
+		// Load the filter state.
                 $status = $this->getUserStateFromRequest($this->context.'.filter.status', 'filter_status', '', 'string');
 		$this->setState('filter.status', $status);
 
                 $process_type = $this->getUserStateFromRequest($this->context.'.filter.process_type', 'filter_process_type', '', 'string');
 		$this->setState('filter.process_type', $process_type);
                 
-                // Passing additional parameters to prevent resetting the page
-                $listOrder = $this->getUserStateFromRequest($this->context.'.filter_order', 'filter_order', 'a.created', null, false);
-                $this->setState('list.ordering', $listOrder);
-
-                // Passing additional parameters to prevent resetting the page
-                $listDirn  = $this->getUserStateFromRequest($this->context.'.filter_order_Dir', 'filter_order_Dir', 'DESC', null, false);
-                $this->setState('list.direction', $listDirn);
-                
 		// Load the parameters.
 		$params = JComponentHelper::getParams('com_hwdmediashare');
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState('a.created', 'desc');
 	}
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * Method to get the count the number of successful processes.
+	 * @return  void
 	 */
-	public function getSuccessful($pk = null)
+	public function getSuccessful()
 	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_processes')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(2).";
-                  ";
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_processes')
+                        ->where('status = ' . $db->quote(2));
                 $db->setQuery($query);
-                return $db->loadResult();
-	}
-        
-        /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getUnnecessary($pk = null)
-	{
-                $db =& JFactory::getDBO();
-                $query = "
-                  SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_processes')."
-                    WHERE ".$db->quoteName('status')." = ".$db->quote(4).";
-                  ";
-                $db->setQuery($query);
-                return $db->loadResult();
-	}
-        
-	/**
-	 * Method to toggle the featured setting of articles.
-	 *
-	 * @param	array	The ids of the items to toggle.
-	 * @param	int		The value to toggle to.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function deletesuccessful()
-	{
-
-            
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$table		= $this->getTable();
-		$pks		= (array) $pks;
-
-                $db =& JFactory::getDBO();
-                $query = "
-                  UPDATE ".$db->quoteName('#__hwdms_processes')."
-                    SET ".$db->quoteName('attempts')." = ".$db->quote(0).", ".$db->quoteName('status')." = ".$db->quote(1)."
-                    WHERE ".$db->quoteName('id')." = ".implode(" OR ".$db->quoteName('id')." = ", $pks)."
-                  ";
-
-                if (!$all)
+                try
                 {
-                        $query.= "
-                            AND ".$db->quoteName('status')." IN (3)
-                        ";
+                        $count = $db->loadResult();
                 }
-                                
-                $db->setQuery($query);
-
-                // Check for a database error.
-		if (!$db->query())
+                catch (RuntimeException $e)
                 {
-			$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_PUBLISH_FAILED', get_class($this), $this->_db->getErrorMsg()));
-			$this->setError($e);
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
+	}
 
-			return false;
-		}
-
-                // Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-        }        
+        /**
+	 * Method to get the count the number of unnecessary processes.
+	 * @return  void
+	 */
+	public function getUnnecessary()
+	{
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_processes')
+                        ->where('status = ' . $db->quote(4));
+                $db->setQuery($query);
+                try
+                {
+                        $count = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
+	}      
 }
