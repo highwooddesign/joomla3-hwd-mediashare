@@ -143,7 +143,7 @@ class hwdMediaShareModelProcesses extends JModelList
 	}
         
         /**
-	 * Method to get the count the number of successful processes.
+	 * Method to count the number of successful processes.
 	 * @return  void
 	 */
 	public function getSuccessful()
@@ -167,7 +167,7 @@ class hwdMediaShareModelProcesses extends JModelList
 	}
 
         /**
-	 * Method to get the count the number of unnecessary processes.
+	 * Method to count the number of unnecessary processes.
 	 * @return  void
 	 */
 	public function getUnnecessary()
