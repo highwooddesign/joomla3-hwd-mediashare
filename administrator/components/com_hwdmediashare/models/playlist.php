@@ -103,7 +103,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	}
         
         /**
-	 * Method to get the count the number of media in the playlist.
+	 * Method to count the number of media in the playlist.
 	 * @return  void
 	 */
 	public function getMediaCount($item)
