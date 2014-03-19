@@ -64,6 +64,138 @@ class hwdMediaShareModelCustomField extends JModelAdmin
 
 		return $data;
 	}
+
+        /**
+	 * Method to toggle the searchable status of one or more records.
+	 *
+	 * @param   array    $pks   An array of record primary keys.
+	 * @param   integer  $value The value to toggle to.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function searchable($pks, $value = 0)
+	{
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		$table = $this->getTable();
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__hwdms_fields'))
+                                    ->set('searchable = ' . $db->quote((int) $value))
+                                    ->where('id IN (' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}   
+        
+        /**
+	 * Method to toggle the visibility status of one or more records.
+	 *
+	 * @param   array    $pks   An array of record primary keys.
+	 * @param   integer  $value The value to toggle to.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function visible($pks, $value = 0)
+	{
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		$table = $this->getTable();
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__hwdms_fields'))
+                                    ->set('visible = ' . $db->quote((int) $value))
+                                    ->where('id IN (' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}        
+        
+        /**
+	 * Method to toggle the required status of one or more records.
+	 *
+	 * @param   array    $pks   An array of record primary keys.
+	 * @param   integer  $value The value to toggle to.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function required($pks, $value = 0)
+	{
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		$table = $this->getTable();
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__hwdms_fields'))
+                                    ->set('required = ' . $db->quote((int) $value))
+                                    ->where('id IN (' . implode(',', $pks) . ')');
+			$db->setQuery($query);
+			$db->execute();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
         
 	/**
 	 * Method to delete one or more records. Overload to remove any
