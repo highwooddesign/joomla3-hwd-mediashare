@@ -42,10 +42,9 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                 </div>
         </td>     
         <td class="small hidden-phone">
-                <?php $subscriber = JFactory::getUser($item->user_id); ?>
                 <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id='.(int) $item->user_id); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
-                <?php echo $this->escape($subscriber->name); ?></a>
-                <p class="smallsub"><?php echo $this->escape($subscriber->username); ?></p>  
+                <?php echo $this->escape($item->name); ?></a>
+                <p class="smallsub"><?php echo $this->escape($item->username); ?></p>  
         </td>
         <td class="nowrap small hidden-phone">
                 <?php echo JHtml::_('date.relative', $item->created); ?>
