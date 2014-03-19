@@ -31,6 +31,7 @@ class hwdMediaShareModelGroups extends JModelList
 				'id', 'a.id',
 				'title', 'a.title',
 				'alias', 'a.alias',
+				'private', 'a.private',
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
 				'status', 'a.status',   
@@ -40,7 +41,7 @@ class hwdMediaShareModelGroups extends JModelList
 				'checked_out_time', 'a.checked_out_time',
 				'access', 'a.access', 'access_level',
 				'ordering', 'a.ordering', 'map.ordering',
-				'created_user_id', 'a.created_user_id', 'author',
+				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
 				'created', 'a.created',
 				'publish_up', 'a.publish_up',
 				'publish_down', 'a.publish_down',
@@ -48,6 +49,7 @@ class hwdMediaShareModelGroups extends JModelList
 				'modified', 'a.modified',
 				'hits', 'a.hits',
 				'language', 'a.language',
+                                /** Filter fields for additional joins **/                            
 				'report_count', 'a.report_count',
 			);
 		}
