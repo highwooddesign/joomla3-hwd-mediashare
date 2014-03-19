@@ -1,69 +1,93 @@
 <?php
 /**
- * @version    SVN $Id: playlistmedia.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      01-Nov-2011 22:17:03
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelPlaylistMedia extends JModelList
 {
-        var $view_list = "playlistmedia";
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function getListQuery()
-        {
-                JLoader::register('hwdMediaShareModelMedia', JPATH_ROOT.'/administrator/components/com_hwdmediashare/models/media.php');
-                $query = hwdMediaShareModelMedia::getListQuery();
-              	return $query;
-        }
+        protected $model;
+
+    	/**
+	 * Constructor override, defines a white list of column filters.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'created', 'a.created',
+				'map.ordering',
+			);
+		}
+
+		parent::__construct($config);
+	}
+        
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+                $jinput = JFactory::getApplication()->input;
+
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                $this->model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->model->populateState();
+                $this->model->setState('filter.add_to_playlist', $jinput->get('add', '0', 'int'));
+                $this->model->setState('filter.playlist_id',  $jinput->get('playlist_id', '', 'int'));
+                $this->model->setState('list.ordering', ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
+                $this->model->setState('list.direction', ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
+                
+                return $this->model->getItems(); 
+	}
+
+	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getPagination()
+	{
+                return $this->model->getPagination(); 
+	}
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
+                $jinput = JFactory::getApplication()->input;
+ 
+                $this->setState('filter.add_to_playlist', $jinput->get('add', '0', 'int'));
+                $this->setState('filter.playlist_id', $jinput->get('playlist_id', '', 'int'));
 
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-                $listOrder = $this->getUserStateFromRequest($this->context.'.filter_order', 'filter_order', 'a.title');
-                $this->setState('list.ordering', $listOrder);
-
-                $listDirn  = $this->getUserStateFromRequest($this->context.'.filter_order_Dir', 'filter_order_Dir', 'ASC');
-                $this->setState('list.direction', $listDirn);
-
-                $linked = $this->getUserStateFromRequest($this->context.'.filter.linked', 'filter_linked', null, 'string');
-		$this->setState('filter.linked', $linked);
-
-                $playlist  = JRequest::getInt('playlist_id','');
-                $this->setState('filter.playlist_id', $playlist);
-
+                $ordering = ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
+                $direction = ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
+                
 		// Load the parameters.
 		$params = JComponentHelper::getParams('com_hwdmediashare');
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState($ordering, $direction);
 	}
 }
