@@ -104,7 +104,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	}
         
         /**
-	 * Method to get the count the number of media in the group.
+	 * Method to count the number of media in the group.
 	 * @return  void
 	 */
 	public function getMediaCount($item)
@@ -128,7 +128,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	}
         
         /**
-	 * Method to get the count the number of members in the group.
+	 * Method to count the number of members in the group.
 	 * @return  void
 	 */
 	public function getMemberCount($item)
