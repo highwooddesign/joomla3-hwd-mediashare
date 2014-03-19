@@ -51,7 +51,7 @@ class hwdMediaShareModelProcesses extends JModelList
                 for ($x = 0, $count = count($items); $x < $count; $x++)
                 {
                 }
-
+                
 		return $items;
 	}
         
@@ -83,6 +83,10 @@ class hwdMediaShareModelProcesses extends JModelList
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
 		$query->join('LEFT', '#__users AS uc ON uc.id=a.checked_out');
+
+		// Join over the media for the media title.
+		$query->select('m.title');
+		$query->join('LEFT', '#__hwdms_media AS m ON m.id=a.media_id');
 
                 // Filter by status state
 		$status = $this->getState('filter.status');
