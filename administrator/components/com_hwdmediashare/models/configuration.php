@@ -90,7 +90,7 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
 	public function save($data)
 	{
  		// Initialise variables.
-		$data  = $this->input->post->get('jform', array(), 'array');
+		$data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
                 $date = JFactory::getDate();
 
                 jimport( 'joomla.filesystem.file');
