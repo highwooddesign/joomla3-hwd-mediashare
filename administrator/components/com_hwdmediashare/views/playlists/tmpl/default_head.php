@@ -36,7 +36,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
         </th>
         <th width="10%" class="nowrap hidden-phone">
-		<?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $listDirn, $listOrder); ?>
+		<?php echo JHtml::_('searchtools.sort', 'JAUTHOR', 'author', $listDirn, $listOrder); ?>
         </th>
         <th width="5%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'language', $listDirn, $listOrder); ?>
