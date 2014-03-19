@@ -73,8 +73,8 @@ class hwdMediaShareViewAlbums extends JViewLegacy
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('albums.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('albums.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('albums.feature', 'featured.png', 'featured_f2.png', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('albums.unfeature','remove.png','remove_f2.png','COM_HWDMS_UNFEATURE', true);
+			JToolBarHelper::custom('albums.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
+                        JToolBarHelper::custom('albums.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('albums.archive');
 			JToolBarHelper::checkin('albums.checkin');
