@@ -23,18 +23,22 @@ class hwdMediaShareModelFiles extends JModelList
 		{
 			$config['filter_fields'] = array(
 				'id', 'a.id',
-				'title', 'a.title',
-				'alias', 'a.alias',
-				'likes', 'a.likes',
-				'dislikes', 'a.dislikes',
+				'element_type', 'a.element_type',                            
+				'element_id', 'a.element_id',                            
+				'file_type', 'a.file_type',                            
+				'basename', 'a.basename',                            
+				'ext', 'a.ext',                            
+				'size', 'a.size',                            
+				'checked', 'a.checked',                            
 				'status', 'a.status',   
 				'published', 'a.published', 
 				'featured', 'a.featured',
 				'checked_out', 'a.checked_out',
 				'checked_out_time', 'a.checked_out_time',
 				'access', 'a.access', 'access_level',
+				'download', 'a.download', 'download_level',
 				'ordering', 'a.ordering', 'map.ordering',
-				'created_user_id', 'a.created_user_id', 'author',
+				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
 				'created', 'a.created',
 				'publish_up', 'a.publish_up',
 				'publish_down', 'a.publish_down',
@@ -42,7 +46,6 @@ class hwdMediaShareModelFiles extends JModelList
 				'modified', 'a.modified',
 				'hits', 'a.hits',
 				'language', 'a.language',
-				'report_count', 'a.report_count',
 			);
 		}
 
