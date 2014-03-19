@@ -101,7 +101,7 @@ class hwdMediaShareModelAlbum extends JModelAdmin
 	}
         
         /**
-	 * Method to get the count the number of media in the album.
+	 * Method to count the number of media in the album.
 	 * @return  void
 	 */
 	public function getMediaCount($item)
