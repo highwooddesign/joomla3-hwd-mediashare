@@ -27,7 +27,7 @@ $saveOrder	= $listOrder == 'a.ordering';
         </th>
         <?php endif; ?>        
         <th>
-		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_TITLE', 'a.title', $listDirn, $listOrder); ?>
+		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_TITLE', 'title', $listDirn, $listOrder); ?>
         </th>     
         <th width="10%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
