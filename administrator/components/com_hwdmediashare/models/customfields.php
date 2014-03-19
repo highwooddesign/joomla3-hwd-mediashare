@@ -25,8 +25,10 @@ class hwdMediaShareModelCustomFields extends JModelList
 				'id', 'a.id',
 				'element_type', 'a.element_type',
 				'type', 'a.type',
- 				'ordering', 'a.ordering', 'map.ordering',
+ 				'ordering', 'a.ordering',
 				'published', 'a.published', 
+				'min', 'a.min', 
+				'max', 'a.max', 
 				'name', 'a.name',
 				'visible', 'a.visible',
 				'required', 'a.required',
@@ -154,6 +156,6 @@ class hwdMediaShareModelCustomFields extends JModelList
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState('a.created', 'desc');
+		parent::populateState('a.ordering', 'asc');
 	}
 }
