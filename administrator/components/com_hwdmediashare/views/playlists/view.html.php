@@ -75,8 +75,8 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 			JToolBarHelper::divider();
 			JToolBarHelper::publish('playlists.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('playlists.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('playlists.feature', 'featured.png', 'featured_f2.png', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('playlists.unfeature','remove.png','remove_f2.png','COM_HWDMS_UNFEATURE', true);
+			JToolBarHelper::custom('playlists.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
+                        JToolBarHelper::custom('playlists.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
                         JToolBarHelper::divider();
 			JToolBarHelper::archiveList('playlists.archive');
 			JToolBarHelper::checkin('playlists.checkin');
