@@ -42,10 +42,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.process.'.$
                                 <?php echo $this->getProcessType($item); ?>
                         <?php endif; ?>   
                         <div class="small">
-                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.(int) $item->media_id); ?>">
-                                        <?php echo (int) $item->media_id; ?>
-                                </a>                            
-                                <?php //echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias));?>
+                                <?php echo JText::sprintf('COM_HWDMS_FOR_MEDIA_N', '<a href="' . JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.(int) $item->media_id) . '">' . $this->escape($item->title) . '</a>'); ?>
                         </div>  
                 </div>
         </td>     
