@@ -126,7 +126,7 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
                                 ->select('id')
                                 ->from('#__hwdms_playlist_map')
                                 ->where('playlist_id = ' . $db->quote($pk))
-                                ->where('playlist_id = ' . $db->quote($mediaId));
+                                ->where('media_id = ' . $db->quote($mediaId));
 
                         $db->setQuery($query);
                         try
