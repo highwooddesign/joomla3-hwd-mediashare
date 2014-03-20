@@ -1,12 +1,13 @@
 <?php
 /**
- * @package		Joomla.Administrator
- * @subpackage	com_media
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access.
 defined('_JEXEC') or die;
 ?>
 <ul <?php echo $this->folders_id; ?>>
