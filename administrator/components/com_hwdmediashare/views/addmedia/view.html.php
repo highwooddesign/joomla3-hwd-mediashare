@@ -89,9 +89,9 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 
                                 $session = JFactory::getSession();
                                 $state = $this->get('state');
-                                $this->assignRef('state', $state);
-                                $this->assign('folders', $this->get('folderTree'));
-                                $this->assign('folders_id', ' id="media-tree"');
+                                $this->state = $state;
+                                $this->folders = $this->get('folderTree');
+                                $this->folders_id = ' id="media-tree"';
                         } 
                 }
                 
@@ -136,7 +136,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		}
 
                 JToolBarHelper::divider();
-                JToolbarHelper::cancel('addmedia.cancel', 'JTOOLBAR_CLOSE');
+                JToolbarHelper::cancel('addmedia.cancel');
                 JToolBarHelper::divider();
 
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
@@ -217,8 +217,8 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 			window.parent.document.updateUploader();
 		});");
                 
-                $folder = JRequest::getVar('folder', '', '', 'path');
-
+                $folder = JFactory::getApplication()->input->get('folder', '', 'path');
+                        
 		// Get some paths from the request
 		$base = JPATH_SITE.'/media/'.$folder;
 
@@ -251,8 +251,8 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                         }
 		}
 
-                $this->assign('count', $count);
-                $this->assign('folder', $folder);
+                $this->count = $count;
+                $this->folder = $folder;
 
                 // Display the view
                 parent::display('scan');
