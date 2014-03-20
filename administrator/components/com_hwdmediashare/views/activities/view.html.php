@@ -12,8 +12,6 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewActivities extends JViewLegacy
 {
-	var $name = "activities";
-        
 	/**
 	 * Display the view
 	 *
