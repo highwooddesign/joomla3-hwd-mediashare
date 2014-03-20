@@ -115,7 +115,7 @@ class hwdMediaShareModelMedia extends JModelList
 
 		// Join over the language.
 		$query->select('l.title AS language_title');
-		$query->join('LEFT', '`#__languages` AS l ON l.lang_code = a.language');
+		$query->join('LEFT', '#__languages AS l ON l.lang_code = a.language');
 
 		// Join over the users for the checked out user.
 		$query->select('uc.name AS editor');
@@ -221,7 +221,7 @@ class hwdMediaShareModelMedia extends JModelList
 			if ($status == 3)
                         {
                                 $query->select('COUNT(report.element_id) AS report_count');
-                                $query->join('LEFT', '`#__hwdms_reports` AS report ON report.element_id = a.id AND report.element_type = 1');
+                                $query->join('LEFT', '#__hwdms_reports AS report ON report.element_id = a.id AND report.element_type = 1');
                                 $query->where('(a.id = report.element_id OR a.status = 3)');
                                 $query->group('report.element_id');
                         }
@@ -272,20 +272,20 @@ class hwdMediaShareModelMedia extends JModelList
                 $query->select('ext.ext');
 		$query->join('LEFT', '#__hwdms_ext AS ext ON ext.id = a.ext_id');
 
-                // Filter by media type
+                // Filter by media type.
 		$mediaType = $this->getState('filter.media_type');
 		if (is_numeric($mediaType))
                 {
                         $query->where('(ext.media_type = '.(int) $mediaType.' OR a.media_type = '.(int) $mediaType.')');
 		} 
 
-                // Filter by album
+                // Filter by album.
                 $albumId = $this->getState('filter.album_id');
                 if ($albumId > 0)
                 {
                         // Join over the album_map
                         $query->select('map.id AS mapid, map.album_id, map.ordering AS mapordering, IF(map.album_id = '.$albumId.', true, false) AS connection');
-                        $query->join('LEFT', '`#__hwdms_album_map` AS map ON map.media_id = a.id AND map.album_id = '.$albumId);
+                        $query->join('LEFT', '#__hwdms_album_map AS map ON map.media_id = a.id');
 
                         $viewAll = $this->getState('filter.add_to_album') ? true : false;
                         if (!$viewAll)
@@ -294,13 +294,13 @@ class hwdMediaShareModelMedia extends JModelList
                         }
                 }
 
-                // Filter by group
+                // Filter by group.
                 $groupId = $this->getState('filter.group_id');
                 if ($groupId > 0)
                 {
                         // Join over the group_map
                         $query->select('map.id AS mapid, map.group_id, map.ordering AS mapordering, IF(map.group_id = '.$groupId.', true, false) AS connection');
-                        $query->join('LEFT', '`#__hwdms_group_map` AS map ON map.media_id = a.id AND map.group_id = '.$groupId);
+                        $query->join('LEFT', '#__hwdms_group_map AS map ON map.media_id = a.id');
 
                         $viewAll = $this->getState('filter.add_to_group') ? true : false;
                         if (!$viewAll)
@@ -309,13 +309,13 @@ class hwdMediaShareModelMedia extends JModelList
                         }
                 }
                 
-                // Filter by playlist
+                // Filter by playlist.
                 $playlistId = $this->getState('filter.playlist_id');
                 if ($playlistId > 0)
                 {
                         // Join over the playlist_map
                         $query->select('map.id AS mapid, map.playlist_id, map.ordering AS mapordering, IF(map.playlist_id = '.$playlistId.', true, false) AS connection');
-                        $query->join('LEFT', '`#__hwdms_playlist_map` AS map ON map.media_id = a.id AND map.playlist_id = '.$playlistId);
+                        $query->join('LEFT', '#__hwdms_playlist_map AS map ON map.media_id = a.id');
 
                         $viewAll = $this->getState('filter.add_to_playlist') ? true : false;
                         if (!$viewAll)
@@ -324,7 +324,7 @@ class hwdMediaShareModelMedia extends JModelList
                         }
                 }
 
-                // Filter by linked media            
+                // Filter by linked media.
 		$mediaId = $this->getState('filter.media_id');
                 if ($mediaId > 0)
                 {
@@ -332,28 +332,30 @@ class hwdMediaShareModelMedia extends JModelList
                     
                         // Join over the media_map
                         $query->select('map.id AS mapid, map.media_id_1, map.media_id_2, map.ordering AS mapordering, IF(map.media_id_1 = '.$mediaId.' OR map.media_id_2 = '.$mediaId.', true, false) AS connection');
-                        $query->join('LEFT', '`#__hwdms_media_map` AS map ON map.media_id_1 = a.id OR map.media_id_2 = a.id');
+                        $query->join('LEFT', '#__hwdms_media_map AS map ON map.media_id_1 = a.id OR map.media_id_2 = a.id');
 
                         $viewAll = $this->getState('filter.add_to_media') ? true : false;
                         if (!$viewAll)
                         {
-                                $query->where('map.media_id_1 = ' . $db->quote($mediaId) . ' OR map.media_id_2 = ' . $db->quote($mediaId));
+                                $query->where('(map.media_id_1 = ' . $db->quote($mediaId) . ' OR map.media_id_2 = ' . $db->quote($mediaId) . ')');
                         }
                 }
                 
-                // Filter by linked responses
+                // Filter by linked responses.
                 $responseId = $this->getState('filter.response_id');
                 if ($responseId > 0)
                 {
+                        //$query->where('a.id <> '.$responseId);
+                    
                         // Join over the response_map
-                        $query->select('IF(map.media_id = '.$responseId.', true, false) AS connection');
-                        $query->join('LEFT', '`#__hwdms_response_map` AS map ON map.response_id = a.id AND map.media_id = '.$responseId);
+                        $query->select('map.id AS mapid, map.response_id, map.ordering AS mapordering, IF(map.media_id = '.$responseId.', true, false) AS connection');
+                        $query->join('LEFT', '#__hwdms_response_map AS map ON map.response_id = a.id');
 
-                        $viewAll = $this->getState('filter.linked') == "all" ? true:false;
+                        $viewAll = $this->getState('filter.add_responses') ? true : false;
                         if (!$viewAll)
                         {
                                 $query->where('map.media_id = ' . $db->quote($responseId));
-                        }
+                        }                    
                 }
 
 		//echo nl2br(str_replace('#__','jos_',$query));
