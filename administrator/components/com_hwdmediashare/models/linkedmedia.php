@@ -126,6 +126,7 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                                 ->select('id')
                                 ->from('#__hwdms_media_map')
                                 ->where('((media_id_1 = ' . $db->quote($pk) . ' AND media_id_2 = ' . $db->quote($mediaId) . ') OR (media_id_1 = ' . $db->quote($mediaId) . ' AND media_id_2 = ' . $db->quote($pk) . '))');
+                        
                         $db->setQuery($query);
                         try
                         {
