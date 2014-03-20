@@ -1,132 +1,242 @@
 <?php
 /**
- * @version    SVN $Id: linkedmedia.php 493 2012-08-28 13:20:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelLinkedMedia extends JModelList
 {
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function getListQuery()
-        {
-                JLoader::register('hwdMediaShareModelMedia', JPATH_ROOT.'/administrator/components/com_hwdmediashare/models/media.php');
-                $query = hwdMediaShareModelMedia::getListQuery();
-              	return $query;
-        }
+        protected $model;
+
+    	/**
+	 * Constructor override, defines a white list of column filters.
+	 *
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'title', 'a.title',
+				'created', 'a.created',
+			);
+		}
+
+		parent::__construct($config);
+	}
+
+	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 */
+	public function getTable($name = 'LinkedMedia', $prefix = 'hwdMediaShareTable', $config = array())
+	{
+		return JTable::getInstance($name, $prefix, $config);
+	}
+        
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+                $jinput = JFactory::getApplication()->input;
+
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                $this->model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->model->populateState();
+                $this->model->setState('filter.add_to_media', $jinput->get('add', '0', 'int'));
+                $this->model->setState('filter.media_id',  $jinput->get('media_id', '', 'int'));
+                $this->model->setState('list.ordering', 'a.title');
+                $this->model->setState('list.direction', 'ASC');
+                
+                return $this->model->getItems(); 
+	}
+
+	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getPagination()
+	{
+                return $this->model->getPagination(); 
+	}
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication('administrator');
+                $jinput = JFactory::getApplication()->input;
+ 
+                $this->setState('filter.add_to_media', $jinput->get('add', '0', 'int'));
+                $this->setState('filter.media_id', $jinput->get('media_id', '', 'int'));
 
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-                $listOrder = $this->getUserStateFromRequest($this->context.'.filter_order', 'filter_order', 'a.title');
-                $this->setState('list.ordering', $listOrder);
-
-                $listDirn  = $this->getUserStateFromRequest($this->context.'.filter_order_Dir', 'filter_order_Dir', 'ASC');
-                $this->setState('list.direction', $listDirn);
-
-                $linked = $this->getUserStateFromRequest($this->context.'.filter.linked', 'filter_linked', null, 'string');
-		$this->setState('filter.linked', $linked);
-
-                $media  = JRequest::getInt('media_id','');
-                $this->setState('filter.media_id', $media);
-
-		// Load the parameters.
+                // Load the parameters.
 		$params = JComponentHelper::getParams('com_hwdmediashare');
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState('a.title', 'ASC');
 	}
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function unlink($id, $params)
+
+	/**
+	 * Method to unlink one or more media from another media.
+	 *
+	 * @param   array    $pks      A list of the primary keys to change.
+	 * @param   integer  $mediaId  The value of the media key to associate with.
+	 *
+	 * @return  boolean  True on success.
+	 */
+        public function unlink($pks, $mediaId = null)
         {
-            $table =& JTable::getInstance('LinkedMedia', 'hwdMediaShareTable');
-
-            $db =& JFactory::getDBO();
-            $query = "
-              SELECT id
-                FROM ".$db->quoteName('#__hwdms_media_map')."
-                WHERE ((".$db->quoteName('media_id_1')." = ".$db->quote($id)." AND ".$db->quoteName('media_id_2')." = ".$db->quote($params->mediaId).")
-                OR (".$db->quoteName('media_id_1')." = ".$db->quote($params->mediaId)." AND ".$db->quoteName('media_id_2')." = ".$db->quote($id).")) ;
-              ";
-            $db->setQuery($query);
-            $rows = $db->loadObjectList();
-
-		for( $i = 0; $i < count($rows); $i++ )
-		{
-			$row = $rows[$i];
-
-                        if( !$table->delete( $row->id ) )
-			{
-				$errors	= true;
-			}
-		}
-		if( $errors )
-		{
-			$message	= JText::_('COM_HWDMS_ERROR');
-		}
+                $db = JFactory::getDbo();
+		$pks = (array) $pks;
+		$table = $this->getTable();            
+            
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
                 
-            return true;
-        }
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
-        public function link($id, $params)
-        {
-            $user = & JFactory::getUser();
-            $date =& JFactory::getDate();
-            $table =& JTable::getInstance('LinkedMedia', 'hwdMediaShareTable');
-            
-            // Create an object to bind to the database
-            $object = new StdClass;
-            $object->media_id_1 = $id;
-            $object->media_id_2 = $params->mediaId;
-            $object->created_user_id = $user->id;
-            $object->created = $date->format('Y-m-d H:i:s');
-            
-            if (!$table->bind($object))
-            {
-                    return JError::raiseWarning( 500, $table->getError() );
-            }
+		// Iterate the items to delete each one.
+		foreach ($pks as $i => $pk)
+		{
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_media_map')
+                                ->where('((media_id_1 = ' . $db->quote($pk) . ' AND media_id_2 = ' . $db->quote($mediaId) . ') OR (media_id_1 = ' . $db->quote($mediaId) . ' AND media_id_2 = ' . $db->quote($pk) . '))');
+                        $db->setQuery($query);
+                        try
+                        {
+                                $rows = $db->loadColumn();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
 
-            if (!$table->store())
-            {
-                    JError::raiseError(500, $table->getError() );
-            }
-            return true;
+                                return false;                            
+                        }
+
+                        // Iterate the items to delete each one.
+                        foreach ($rows as $x => $row)
+                        {
+                                if ($table->load($row))
+                                {
+                                        if ($utilities->authoriseMediaAction('unlink', $pk, $mediaId))
+                                        {
+                                                if (!$table->delete($row))
+                                                {
+                                                        $this->setError($table->getError());
+
+                                                        return false;
+                                                }
+                                        }
+                                        else
+                                        {
+                                                // Prune items that you can't change.
+                                                unset($rows[$x]);
+                                                $error = $this->getError();
+
+                                                if ($error)
+                                                {
+                                                        JLog::add($error, JLog::WARNING, 'jerror');
+
+                                                        return false;
+                                                }
+                                                else
+                                                {
+                                                        JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                                                        return false;
+                                                }
+                                        }
+                                }
+                                else
+                                {
+                                        $this->setError($table->getError());
+
+                                        return false;
+                                }
+                        }
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
         }
+
+	/**
+	 * Method to link one or more media to another media.
+	 *
+	 * @param   array    $pks      A list of the primary keys to change.
+	 * @param   integer  $mediaId  The value of the media key to associate with.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function link($pks, $mediaId = null)
+	{
+		$user = JFactory::getUser();
+                $date = JFactory::getDate();
+		$table = $this->getTable();
+		$pks = (array) $pks;
+
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                                
+		// Access checks.
+		foreach ($pks as $i => $pk)
+		{
+			$table->reset();
+
+                        if (!$utilities->authoriseMediaAction('link', $pk, $mediaId))
+                        {
+                                // Prune items that you can't change.
+                                unset($pks[$i]);
+                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+
+                                return false;
+                        }
+                        
+                        // Create an object to bind to the database
+                        $object = new StdClass;
+                        $object->media_id_1 = (int) $pk;
+                        $object->media_id_2 = (int) $mediaId;
+                        $object->created_user_id = (int) $user->id;
+                        $object->created = $date->format('Y-m-d H:i:s');
+
+                        // Attempt to change the state of the records.
+                        if (!$table->save($object))
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
 }
