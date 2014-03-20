@@ -17,6 +17,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 * @var    string
 	 */
     	protected $view = "addmedia";
+    	protected $view_list = "dashboard";
         
         /**
 	 * Proxy for getModel.
