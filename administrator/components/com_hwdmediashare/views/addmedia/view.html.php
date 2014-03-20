@@ -1,154 +1,159 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 792 2012-12-17 14:59:10Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla view library
-jimport('joomla.application.component.view');
+class hwdMediaShareViewAddMedia extends JViewLegacy
+{
+	/**
+	 * The show form view variable.
+	 * @var    boolean
+	 */
+	public $show_form = true;
 
-/**
- * hwdMediaShare View
- */
-class hwdMediaShareViewAddMedia extends JViewLegacy {
-        /**
-	 * display method of Hello view
-	 * @return void
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
+                // Load HWD config
                 $hwdms = hwdMediaShareFactory::getInstance();
-                $this->config = $hwdms->getConfig();
-		
-		$app	= JFactory::getApplication();
-                $lang	= JFactory::getLanguage();
+		$app = JFactory::getApplication();
+                $lang = JFactory::getLanguage();
+                $document = JFactory::getDocument();
 
-                // Get data from the model
-		$form = $this->get('Form');
-		$script = $this->get('Script');
-                $standardExtensions = $this->get('standardExtensions');
-                $largeExtensions = $this->get('largeExtensions');
-                $platformExtensions = $this->get('platformExtensions');
-                        
-                // Check for errors.
-		if (count($errors = $this->get('Errors')))
+                // Get data from the model.
+		$this->config = $hwdms->getConfig();
+                $this->state = $this->get('State');
+		$this->form = $this->get('Form');
+                $this->replace = (JFactory::getApplication()->input->get('id', '', 'int') > 0 ? true: false);
+
+		// Determine if we need to show the form
+		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace) 
 		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
+			$this->setLayout('form');
+		}
+                else
+                {              
+                        $this->jformdata = $this->get('processedUploadData'); 
+                        $this->standardExtensions = $this->get('standardExtensions');
+                        $this->largeExtensions = $this->get('largeExtensions');
+                        $this->platformExtensions = $this->get('platformExtensions');
+
+                        if ($this->config->get('enable_uploads_file') == 1) 
+                        {
+                                if ($this->config->get('upload_tool_fancy') == 1 && !$this->replace && (is_array($this->standardExtensions) && count($this->standardExtensions) > 0)) 
+                                {
+                                        // Add assets to the document.
+                                        $this->get('FancyUploadScript');
+                                }
+                                if ($this->config->get('upload_tool_perl') == 1) 
+                                {
+                                        $this->uberUploadHtml = $this->get('UberUploadScript');
+                                }
+                        }
+
+                        // Bulk import from server (unless we are updating an existing media)
+                        if (!$this->replace) 
+                        {
+                                $style = $app->getUserStateFromRequest('media.list.layout', 'layout', 'thumbs', 'word');
+
+                                JHtml::_('behavior.framework', true);
+
+                                $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/MooTree.js");
+
+                                JHtml::_('script', 'system/mootree.js', true, true, false, false);
+                                JHtml::_('stylesheet', 'system/mootree.css', array(), true);
+                                if ($lang->isRTL()) :
+                                        JHtml::_('stylesheet', 'media/mootree_rtl.css', array(), true);
+                                endif;
+
+                                $base = JPATH_SITE.'/media';
+
+                                $js = "
+                                        var basepath = '';
+                                        var viewstyle = 'thumbs';
+                                " ;
+                                $document->addScriptDeclaration($js);
+
+                                $session = JFactory::getSession();
+                                $state = $this->get('state');
+                                $this->assignRef('state', $state);
+                                $this->assign('folders', $this->get('folderTree'));
+                                $this->assign('folders_id', ' id="media-tree"');
+                        } 
+                }
+                
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
+                {
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
+
+		// We don't need toolbar in the modal window.
+		if ($this->getLayout() !== 'modal')
+		{
+			$this->addToolbar();
+			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-                // Assign data to the view
-                $this->replace = (JRequest::getInt('id') > 0 ? true: false);
-                
-                if ($this->config->get('enable_uploads_file') == 1) 
-                {
-                        if ($this->config->get('upload_tool_fancy') == 1 && !$this->replace && (is_array($standardExtensions) && count($standardExtensions) > 0)) 
-                        {
-                                $fancyUploadHtml = $this->get('FancyUploadScript');
-                        }
-                        if ($this->config->get('upload_tool_perl') == 1) 
-                        {
-                                $uberUploadHtml = $this->get('UberUploadScript');
-                                $this->uberUploadHtml = $uberUploadHtml;
-                        }
-                }
-                
-                // Assign data to the view
-		$this->form = $form;
-                $this->standardExtensions = $standardExtensions;
-                $this->largeExtensions = $largeExtensions;
-                $this->platformExtensions = $platformExtensions;
-                
-                // Bulk Import from server
-                if (!$this->replace) 
-                {
-                        $style = $app->getUserStateFromRequest('media.list.layout', 'layout', 'thumbs', 'word');
-
-                        $document = JFactory::getDocument();
-
-                        JHtml::_('behavior.framework', true);
-
-                        $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/MooTree.js");
-
-                        JHtml::_('script', 'system/mootree.js', true, true, false, false);
-                        JHtml::_('stylesheet', 'system/mootree.css', array(), true);
-                        if ($lang->isRTL()) :
-                                JHtml::_('stylesheet', 'media/mootree_rtl.css', array(), true);
-                        endif;
-
-                        $base = JPATH_SITE.'/media';
-
-                        $js = "
-                                var basepath = '';
-                                var viewstyle = 'thumbs';
-                        " ;
-                        $document->addScriptDeclaration($js);
-
-                        $session	= JFactory::getSession();
-                        $state		= $this->get('state');
-                        $this->assignRef('state', $state);
-                        $this->assign('folders', $this->get('folderTree'));
-                        $this->assign('folders_id', ' id="media-tree"');
-                }
-                
-		// Set the toolbar
-		$this->addToolBar();
-
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
-
-		// Set the document
-		$this->setDocument();
 	}
+
 	/**
-	 * Setting the toolbar
+	 * Add the page title and toolbar.
+	 *
+	 * @return  void
 	 */
 	protected function addToolBar()
 	{
-		JToolBarHelper::title(JText::_('COM_HWDMS_ADD_NEW_MEDIA'), 'hwdmediashare');
-                JToolBarHelper::custom('help', 'help.png', 'help.png', 'JHELP', false);
+		JFactory::getApplication()->input->set('hidemainmenu', true);
+                $canDo = hwdMediaShareHelper::getActions();
+		$user  = JFactory::getUser();
+                
+		JToolBarHelper::title(JText::_('COM_HWDMS_ADD_NEW_MEDIA'), 'upload');
+
+                if ($this->config->get('upload_workflow') == 0 && $this->show_form)
+		{
+                        if ($canDo->get('core.create'))
+                        {
+				JToolBarHelper::custom('addmedia.processform', 'save-new', 'save-new', 'COM_HWDMS_TOOLBAR_SAVE_AND_UPLOAD', false);
+				JToolBarHelper::custom('addmedia.processform', 'arrow-right', 'arrow-right', 'COM_HWDMS_TOOLBAR_SKIP', false);
+                        }
+		}
+
+                JToolBarHelper::divider();
+                JToolbarHelper::cancel('addmedia.cancel', 'JTOOLBAR_CLOSE');
+                JToolBarHelper::divider();
+
+		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
+                
  	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function setDocument()
-	{
-                $document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/".JRequest::getCmd('view')."/submitbutton.js");
-                if ($this->config->get('upload_tool_fancy') == 1) 
-                {
-                        $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/Swiff.Uploader.js");
-                        $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/Fx.ProgressBar.js");
-                        $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/FancyUpload2.js");
-                        $document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/fancy.css");
-                }
-                $document->setTitle(JText::_('COM_HWDMS_HWDMEDIASHARE').' '.JText::_('COM_HWDMS_ADD_NEW_MEDIA'));
-	}
-        
- 	/**
-	 * Method to set up the document properties
-	 *
+	 * Method to render the platform upload form
 	 * @return void
 	 */
 	protected function getPlatformUploadForm()
 	{
-                // Load hwdMediaShare config
+                // Load HWD config
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
                 $pluginClass = 'plgHwdmediashare'.$config->get('platform');
                 $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('platform').'/'.$config->get('platform').'.php';
-
-                // Import hwdMediaShare plugins
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
@@ -158,8 +163,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy {
 	}
         
  	/**
-	 * Method to set up the document properties
-	 *
+	 * Method to get the human readable allowed media types
 	 * @return void
 	 */
 	protected function getReadableAllowedMediaTypes($method=null)
@@ -169,8 +173,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy {
 	}
         
  	/**
-	 * Method to set up the document properties
-	 *
+	 * Method to get the human readable allowed media extensions
 	 * @return void
 	 */
 	protected function getReadableAllowedExtensions($extensions)
@@ -179,11 +182,16 @@ class hwdMediaShareViewAddMedia extends JViewLegacy {
                 return hwdMediaShareUpload::getReadableAllowedExtensions($extensions);
 	}
         
-	function getFolderLevel($folder)
+ 	/**
+	 * Method to get the folder level for the server driectory scan tool
+	 * @return void
+	 */        
+	protected function getFolderLevel($folder)
 	{
 		$this->folders_id = null;
 		$txt = null;
-		if (isset($folder['children']) && count($folder['children'])) {
+		if (isset($folder['children']) && count($folder['children'])) 
+                {
 			$tmp = $this->folders;
 			$this->folders = $folder;
 			$txt = $this->loadTemplate('folders');
@@ -192,11 +200,16 @@ class hwdMediaShareViewAddMedia extends JViewLegacy {
 		return $txt;
 	}
         
-	// Overwriting JView display method
+	/**
+	 * Display the scan view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
 	function scan($tpl = null)
 	{
                 $document = JFactory::getDocument();
-                $document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/addmedia/submitbutton.js");
 
 		// Required to initiate the MooTree functionality
                 $document->addScriptDeclaration("
@@ -217,13 +230,13 @@ class hwdMediaShareViewAddMedia extends JViewLegacy {
 
 		foreach ($files as $file)
 		{
-                        //Import filesystem libraries. Perhaps not necessary, but does not hurt
+                        // Import filesystem libraries. Perhaps not necessary, but does not hurt
                         jimport('joomla.filesystem.file');
                         
-                        //Retrieve file details
+                        // Retrieve file details
                         $ext = strtolower(JFile::getExt($file));
 
-                        //First check if the file has the right extension, we need jpg only
+                        // First check if the file has the right extension, we need jpg only
                         $db = JFactory::getDBO();
                         $query = $db->getQuery(true);
                         $query->select('id');
