@@ -147,7 +147,7 @@ class hwdMediaShareModelUsers extends JModelList
                         {
                                 $query->select('COUNT(report.element_id) AS report_count');
                                 $query->join('LEFT', '`#__hwdms_reports` AS report ON report.element_id = a.id AND report.element_type = 5');
-                                $query->where('a.id = report.element_id');
+                                $query->where('(a.id = report.element_id OR a.status = 3)');
                                 $query->group('report.element_id');
                         }
                         else
