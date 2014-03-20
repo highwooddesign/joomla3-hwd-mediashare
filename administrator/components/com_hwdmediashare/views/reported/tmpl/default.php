@@ -29,8 +29,8 @@ JHtml::_('behavior.framework', true);
                                 </td>
                                 <td width="20%">
                                         <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media&filter_status=3'); ?>"><?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=media'); ?>"><?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=media'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                            
                                 </td>
                         </tr>
@@ -40,8 +40,8 @@ JHtml::_('behavior.framework', true);
                                 </td>
                                 <td>
                                         <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albums&filter_status=3'); ?>"><?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=albums'); ?>"><?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albums&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=albums'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                                      
                                 </td>
                         </tr>
@@ -51,8 +51,8 @@ JHtml::_('behavior.framework', true);
                                 </td>
                                 <td>
                                         <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groups&filter_status=3'); ?>"><?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=groups'); ?>"><?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groups&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=groups'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                                       
                                 </td>
                         </tr>
@@ -62,8 +62,8 @@ JHtml::_('behavior.framework', true);
                                 </td>
                                 <td>
                                         <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter_status=3'); ?>"><?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=users'); ?>"><?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=users'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                                      
                                 </td>
                         </tr>
@@ -73,8 +73,8 @@ JHtml::_('behavior.framework', true);
                                 </td>
                                 <td>
                                         <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlists&filter_status=3'); ?>"><?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=playlists'); ?>"><?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlists&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=playlists'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                                      
                                 </td>
                         </tr>
