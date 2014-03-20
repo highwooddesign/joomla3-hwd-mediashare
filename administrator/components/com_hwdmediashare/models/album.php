@@ -28,9 +28,11 @@ class hwdMediaShareModelAlbum extends JModelAdmin
 	public function getItem($pk = null)
 	{
                 if ($item = parent::getItem($pk))
-                {
+                {                        
                         hwdMediaShareFactory::load('customfields');
-                        $item->customfields = hwdMediaShareCustomFields::get($item);
+                        $cf = hwdMediaShareCustomFields::getInstance();
+                        $cf->elementType = 2;
+                        $item->customfields = $cf->get($item);
                         $item->nummedia = $this->getMediaCount($item);
                         $item->thumbnail = $this->getThumbnail($item);
                 }
