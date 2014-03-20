@@ -23,11 +23,11 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         <th width="1%" style="min-width:55px" class="nowrap center">
 		<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
         </th>      
-        <?php if ($this->state->get('filter.status') == 3) : ?>  
+        <?php if ($this->state->get('filter.status') == 3) : ?>
         <th width="5%">
-		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_REPORTS', 'a.report_count', $listDirn, $listOrder); ?>
+		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_REPORTS', 'report_count', $listDirn, $listOrder); ?>
         </th>
-        <?php endif; ?>        
+        <?php endif; ?>     
         <th>
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_TITLE', 'a.title', $listDirn, $listOrder); ?>
         </th>     
