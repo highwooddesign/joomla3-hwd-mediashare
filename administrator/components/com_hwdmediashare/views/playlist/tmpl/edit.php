@@ -126,23 +126,22 @@ $isNew = $this->item->id == 0 ? true : false ;
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'media', JText::_('COM_HWDMS_MEDIA', true)); ?>
                 <div class="row-fluid">
                     <div class="well well-small">
-                        <h2 class="module-title nav-header"><?php echo JText::_( 'COM_HWDMS_ITEMS_LINKED_WITH_THIS_MEDIA' ); ?></h2>
+                        <h2 class="module-title nav-header"><?php echo JText::_( 'COM_HWDMS_MEDIA_IN_THIS_PLAYLIST' ); ?></h2>
                         <div class="row-striped">
                             <div class="row-fluid">
                                 <div class="span9">
-                                    <span title="" class="badge badge- hasTooltip" data-original-title="<?php echo JText::_('COM_HWDMS_MEDIA', true); ?>"><?php echo $this->item->mediacount; ?></span>
+                                    <span class="badge"><?php echo $this->item->nummedia; ?></span>
                                     <strong class="row-title">
                                         <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlistmedia&tmpl=component&playlist_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal">
-                                            <?php echo JText::_( 'COM_HWDMS_PLAYLIST_MEDIA' ); ?>
+                                            <?php echo JText::_( 'COM_HWDMS_MEDIA' ); ?>
                                         </a>
                                     </strong>
                                 </div>
                                 <div class="span3">
-                                    <span class="small"><i class="icon-cog"></i> 
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlistmedia&tmpl=component&playlist_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal">
-                                            <?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>
-                                        </a>
-                                    </span>
+                                    <div class="btn-group">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlistmedia&tmpl=component&playlist_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlistmedia&tmpl=component&playlist_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_( 'COM_HWDMS_ADD_MEDIA' ); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_( 'COM_HWDMS_ADD_MEDIA' ); ?></a>
+                                    </div>                                       
                                 </div>
                             </div>                            
                         </div>
