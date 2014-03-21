@@ -1,72 +1,77 @@
 <?php
 /**
- * @version    SVN $Id: uber.raw.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      14-Jan-2012 10:48:13
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerUber extends JControllerForm
 {
 	/**
-	 * Method to route to uber upload libraries
+	 * Function that allows uber upload to communicate with HWD during active uploads
+	 * @return  void
 	 */
         function link_upload()
         {
-                // Load the parameters.
+                // Get the document object
+                $document = JFactory::getDocument();
+                            
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                
-                header('Content-type: text/javascript');
 
+                // Set the MIME type for output
+                $document->setMimeEncoding( 'text/javascript' );
+    
                 hwdMediaShareFactory::load('uber.ubr_link_upload');
-
-                // Exit the application.
-                return;
+                
+		JFactory::getApplication()->close();
         }
         
 	/**
-	 * Method to route to uber upload libraries
+	 * Function that allows uber upload to communicate with HWD during active uploads
+	 * @return  void
 	 */
         function set_progress()
         {
-                // Load the parameters.
+                // Get the document object
+                $document = JFactory::getDocument();
+                            
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                
-                header('Content-type: text/javascript');
 
+                // Set the MIME type for output
+                $document->setMimeEncoding( 'text/javascript' );
+    
                 hwdMediaShareFactory::load('uber.ubr_set_progress');
-
-                // Exit the application.
-                return;
+                
+		JFactory::getApplication()->close();
         }
         
 	/**
-	 * Method to route to uber upload libraries
+	 * Function that allows uber upload to communicate with HWD during active uploads
+	 * @return  void
 	 */
         function get_progress()
         {
-                // Load the parameters.
+                // Get the document object
+                $document = JFactory::getDocument();
+                            
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                
-                header('Content-type: text/javascript');
 
+                // Set the MIME type for output
+                $document->setMimeEncoding( 'text/javascript' );
+    
                 hwdMediaShareFactory::load('uber.ubr_get_progress');
-
-                // Exit the application.
-                return;
+                
+		JFactory::getApplication()->close();
         }
 }
