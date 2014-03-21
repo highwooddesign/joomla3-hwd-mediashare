@@ -49,7 +49,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	}
         
 	/**
-	 * Method to toggle the status setting of a list of groups.
+	 * Method to toggle the published value of a list of groups.
 	 * @return	void
 	 */
 	function publish()
@@ -78,7 +78,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Publish/unpublish the groups.
 			if ($model->publish($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
@@ -118,7 +118,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Delete the groups.
 			if ($model->delete($cid))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
@@ -132,4 +132,184 @@ class hwdMediaShareControllerGroups extends JControllerForm
                 $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
 		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
+        
+	/**
+	 * Method to like a single group.
+	 * @return	void
+	 */
+	public function like()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Like the group.
+			if ($model->like($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_LIKED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to dislike a single group.
+	 * @return	void
+	 */
+	public function dislike()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Dislike the group.
+			if ($model->dislike($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_DISLIKED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to report a group.
+	 * @return	void
+	 */
+	public function report()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Report the group.
+			if ($model->report($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_REPORTED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	} 
+
+	/**
+	 * Method to join a group.
+	 * @return	void
+	 */
+	public function join()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Join the group.
+			if ($model->join($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_JOINED_GROUP'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to leave a group.
+	 * @return	void
+	 */
+	public function leave()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Leave the group.
+			if ($model->leave($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_LEFT_GROUP'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	} 
 }
