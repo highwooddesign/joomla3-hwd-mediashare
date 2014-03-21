@@ -206,7 +206,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	}
         
 	/**
-	 * Method to report a album.
+	 * Method to report a single album.
 	 * @return	void
 	 */
 	public function report()
