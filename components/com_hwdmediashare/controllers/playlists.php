@@ -206,7 +206,7 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 	}
         
 	/**
-	 * Method to report a playlist.
+	 * Method to report a single playlist.
 	 * @return	void
 	 */
 	public function report()
