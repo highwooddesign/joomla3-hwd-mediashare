@@ -1,36 +1,35 @@
 <?php
 /**
- * @version    SVN $Id: controller.php 1559 2013-06-13 09:56:17Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controller library
-jimport('joomla.application.component.controller');
-
-/**
- * hwdMediaShare Component Controller
- */
-class hwdMediaShareController extends JControllerLegacy {
+class hwdMediaShareController extends JControllerLegacy
+{
 	/**
-	 * Display task
+	 * Method to display a view.
 	 *
-	 * @return void
+	 * @param   boolean         If true, the view output will be cached
+	 * @param   array           An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 *
+	 * @return  JController     This object to support chaining.
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-		// Set default view if not set
-		JRequest::setVar('view', JRequest::getCmd('view', 'media'));
-                
+		// Set the default view name.
+		$view = $this->input->get('view', 'dashboard');
+                $this->input->set('view', $view);
+
+                // Override caching if set.
                 if (!$cachable)
                 {
-                        // Get hwdMediaShare config
+                        // Get HWD config.
                         $hwdms = hwdMediaShareFactory::getInstance();
                         $config = $hwdms->getConfig();
                         $cachable = $config->get('caching', JFactory::getConfig()->get( 'caching' ));
@@ -54,7 +53,8 @@ class hwdMediaShareController extends JControllerLegacy {
                                        'print'=>'BOOLEAN',
                                        'lang'=>'CMD');
 
-                // Call parent behavior
 		parent::display($cachable, $safeurlparams);
+
+		return $this;
 	}
 }
