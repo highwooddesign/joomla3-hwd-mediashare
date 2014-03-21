@@ -1,106 +1,114 @@
 <?php
 /**
- * @version    SVN $Id: account.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      18-Jan-2012 15:29:54
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAccount extends JControllerForm
 {
-        /**
-	 * @since	0.1
+	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
 	 */
-        public $elementType = 5;
+	protected $text_prefix = 'COM_HWDMS';
         
-        /**
-	 * @since	0.1
+	/**
+	 * The URL view item variable.
+	 *
+	 * @var    string
 	 */
 	protected $view_item = 'account';
 
 	/**
-	 * @since	0.1
+	 * The URL view list variable.
+	 *
+	 * @var    string
 	 */
 	protected $view_list = 'users';
         
 	/**
-	 * Method to remove favourites from a list of items.
-	 *
+	 * Method to remove media from favourite list.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function removefavourite()
 	{
 		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', JRequest::getInt('id', array()), '', 'array');
-		$task	= $this->getTask();
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+		if (!is_array($cid) || count($cid) < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
+		{
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->removefavourite($ids))
-                        {
-				JError::raiseWarning(500, $model->getError());
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Remove favourites.
+			if ($model->removefavourite($cid))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-                $this->setRedirect('index.php?option=com_hwdmediashare&view=account&layout=favourites' , JText::_('COM_HWDMS_MEDIA_REMOVED_FROM_FAVOURITES'));
-	}     
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . '&layout=favourites', false));
+	}
         
 	/**
-	 * Method to unsubscribe a list of items.
-	 *
+	 * Method to remove media from favourite list.
 	 * @return	void
-	 * @since	0.1
 	 */
-	function unsubscribe()
+	function removefavourite()
 	{
 		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', JRequest::getInt('id', array()), '', 'array');
-		$task	= $this->getTask();
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+		if (!is_array($cid) || count($cid) < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
+		{
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->unsubscribe($ids))
-                        {
-				JError::raiseWarning(500, $model->getError());
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Remove favourites.
+			if ($model->removefavourite($cid))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-                $this->setRedirect('index.php?option=com_hwdmediashare&view=account&layout=subscriptions' , JText::_('COM_HWDMS_MEDIA_UNSUBSCRIBED'));
-	}            
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_item . '&layout=favourites', false));
+	}
 }
