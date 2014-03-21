@@ -53,7 +53,7 @@ class hwdMediaShareViewUserForm extends JViewLegacy
                 // Check access.
 		if (empty($this->item->id))
 		{
-			$authorised = $user->authorise('core.create', 'com_content') || (count($user->getAuthorisedCategories('com_content', 'core.create')));
+			$authorised = $user->authorise('core.create', 'com_hwdmediashare') || (count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create')));
 		}
 		else
 		{
