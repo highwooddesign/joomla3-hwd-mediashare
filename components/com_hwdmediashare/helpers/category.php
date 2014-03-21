@@ -1,35 +1,21 @@
 <?php
 /**
- * @version    SVN $Id: category.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Nov-2011 09:00:03
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import Joomla categories library
-jimport('joomla.application.categories');
-
-/**
- * hwdMediaShare Component Category Tree
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
  *
- * @package	hwdMediaShare
- * @since       0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareCategories extends JCategories
 {
 	/**
-	 * Constructor.
+	 * Class constructor
 	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	hwdMediaShareCategories
-	 * @see		JCategories
-	 * @since	0.1
+	 * @param   array  $options  Array of options
 	 */
         public function __construct($options = array())
 	{
