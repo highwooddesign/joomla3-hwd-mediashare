@@ -23,7 +23,7 @@ class hwdMediaShareController extends JControllerLegacy
 	public function display($cachable = false, $urlparams = false)
 	{
 		// Set the default view name.
-		$view = $this->input->get('view', 'dashboard');
+		$view = $this->input->get('view', 'media');
                 $this->input->set('view', $view);
 
                 // Override caching if set.
