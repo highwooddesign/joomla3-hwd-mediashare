@@ -12,13 +12,13 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewAlbum extends JViewLegacy
 {
-	protected $album;
+	public $album;
 
-	protected $items;
+	public $items;
         
-	protected $state;
+	public $state;
         
-	protected $params;
+	public $params;
         
 	/**
 	 * Display the view
@@ -49,7 +49,7 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
                 $this->return = base64_encode(JFactory::getURI()->toString());
-                $this->display = $state->get('media.display', 'details');
+                $this->display = $this->state->get('media.display', 'details');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
