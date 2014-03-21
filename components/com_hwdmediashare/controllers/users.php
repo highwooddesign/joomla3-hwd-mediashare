@@ -49,7 +49,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 	}
         
 	/**
-	 * Method to toggle the status setting of a list of users.
+	 * Method to toggle the published value of a list of users.
 	 * @return	void
 	 */
 	function publish()
@@ -78,7 +78,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Publish/unpublish the users.
 			if ($model->publish($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
@@ -94,7 +94,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 	}
         
 	/**
-	 * Method to delete a list of users.
+	 * Method to delete a list of playlists.
 	 * @return	void
 	 */
 	function delete()
@@ -118,10 +118,190 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Delete the playlists.
 			if ($model->delete($cid))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to like a single user.
+	 * @return	void
+	 */
+	public function like()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Like the user.
+			if ($model->like($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_LIKED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to dislike a single user.
+	 * @return	void
+	 */
+	public function dislike()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Dislike the user.
+			if ($model->dislike($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_DISLIKED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to report a single user.
+	 * @return	void
+	 */
+	public function report()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Report the user.
+			if ($model->report($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+
+	/**
+	 * Method to subscribe to a single user.
+	 * @return	void
+	 */
+	public function subscribe()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Subscribe to the user.
+			if ($model->subscribe($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+
+	/**
+	 * Method to unsubscribe from a single user.
+	 * @return	void
+	 */
+	public function unsubscribe()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Subscribe to the user.
+			if ($model->unsubscribe($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
 			}
 			else
 			{
