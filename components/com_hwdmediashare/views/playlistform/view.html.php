@@ -102,7 +102,7 @@ class hwdMediaShareViewPlaylistForm extends JViewLegacy
 	/**
 	 * Display the report view
 	 *
-	 * @param   array  $cid  The array of process that should be run.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
 	 * @return  void
 	 */
