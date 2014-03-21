@@ -12,6 +12,14 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewAlbum extends JViewLegacy
 {
+	protected $album;
+
+	protected $items;
+        
+	protected $state;
+        
+	protected $params;
+        
 	/**
 	 * Display the view
 	 *
