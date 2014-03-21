@@ -1,42 +1,46 @@
 <?php
 /**
- * @version    SVN $Id: albums.php 1602 2013-06-25 12:44:38Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      27-Nov-2011 10:37:21
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAlbums extends JControllerForm
 {
 	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+        
+	/**
+	 * The URL view list variable.
+	 * @var    string
+	 */
+    	protected $view_list = "albums";
+        
+	/**
 	 * Constructor.
-	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	hwdMediaShareControllerAlbums
-	 * @see		JController
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
+                
+		// Define standard task mappings.                
                 $this->registerTask('unpublish', 'publish');
+                $this->registerTask('unfeature', 'feature');
+                $this->registerTask('unapprove', 'approve');
 	}
         
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 * @return	void
 	 */
 	public function getModel($name = 'Album', $prefix = 'hwdMediaShareModel')
 	{
@@ -45,105 +49,87 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	}
         
 	/**
-	 * Method to toggle the featured setting of a list of items.
-	 *
+	 * Method to toggle the status setting of a list of albums.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function publish()
 	{
 		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', JRequest::getInt('id', array()), '', 'array');
 		$values	= array('publish' => 1, 'unpublish' => 0);
 		$task	= $this->getTask();
-
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_array($cid) || count($cid) < 1)
 		{
-			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.album.'.(int) $id)) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
+		{
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->publish($ids, $value))
-                        {
-				JError::raiseWarning(500, $model->getError());
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->publish($cid, $value))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-                $this->setRedirect(base64_decode(JRequest::getVar('return', '')));
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
         
 	/**
-	 * Method to toggle the delete setting of a list of items.
-	 *
+	 * Method to delete a list of albums.
 	 * @return	void
-	 * @since	0.1
 	 */
 	function delete()
 	{
 		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', JRequest::getInt('id', array()), '', 'array');
-		$task	= $this->getTask();
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_array($cid) || count($cid) < 1)
 		{
-			// Get a level row instance.
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-			$table = JTable::getInstance('Album', 'hwdMediaShareTable');
-			$table->load($id);
-			// Convert the JTable to a clean JObject.
-			$properties = $table->getProperties(1);
-			$item = JArrayHelper::toObject($properties, 'JObject');
- 
-			if (!($user->authorise('core.edit.state', 'com_hwdmediashare.album.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare') && ($item->created_user_id == $user->id)))) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
+		{
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->delete($ids))
-                        {
-				JError::raiseWarning(500, $model->getError());
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->delete($cid))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-                $this->setRedirect(base64_decode(JRequest::getVar('return', '')));
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
 }
