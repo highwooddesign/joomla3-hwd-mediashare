@@ -49,7 +49,7 @@ class hwdMediaShareControllerCategories extends JControllerForm
 	}
         
 	/**
-	 * Method to toggle the status setting of a list of users.
+	 * Method to toggle the published value of a list of categories.
 	 * @return	void
 	 */
 	function publish()
@@ -78,7 +78,7 @@ class hwdMediaShareControllerCategories extends JControllerForm
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Publish/unpublish the categories.
 			if ($model->publish($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
@@ -118,7 +118,7 @@ class hwdMediaShareControllerCategories extends JControllerForm
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Delete the users.
 			if ($model->delete($cid))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
@@ -132,4 +132,40 @@ class hwdMediaShareControllerCategories extends JControllerForm
                 $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
 		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
+
+	/**
+	 * Method to report a single category.
+	 * @return	void
+	 */
+	public function report()
+	{
+		// Check for request forgeries
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Report the category.
+			if ($model->report($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_ALBUM_REPORTED'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}          
 }
