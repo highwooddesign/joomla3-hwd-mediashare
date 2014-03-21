@@ -206,7 +206,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	}
         
 	/**
-	 * Method to report a group.
+	 * Method to report a single group.
 	 * @return	void
 	 */
 	public function report()
