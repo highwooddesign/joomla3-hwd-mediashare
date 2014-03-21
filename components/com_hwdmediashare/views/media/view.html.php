@@ -1,88 +1,83 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 928 2013-01-16 11:25:38Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      09-Nov-2011 14:01:21
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * HTML View class for the hwdMediaShare Component
- */
-class hwdMediaShareViewMedia extends JViewLegacy {
-	// Overwriting JView display method
+class hwdMediaShareViewMedia extends JViewLegacy 
+{
+	public $items;
+        
+	public $state;
+        
+	public $params;
+        
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-                $pagination = $this->get('Pagination');
-		$state	= $this->get('State');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+		$this->params = $this->state->params;
 
-                // Download links
+                // Load libraries.
+                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
+                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+		hwdMediaShareFactory::load('utilities');
+                
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+                $this->columns = $this->params->get('list_columns', 3);
+                $this->return = base64_encode(JFactory::getURI()->toString());
+                $this->display = $this->state->get('media.display', 'details');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
                 {
-			JError::raiseWarning(500, implode("\n", $errors));
-			return false;
-		}
-
-                if (count($items) == 0)
-                {
-                        JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_NO_MEDIA') );
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
                 }
-                
-                if ($items === false)
-		{
-			JError::raiseError(404, JText::_('COM_HWDMS_ERROR'));
-			return false;
-		}
-
-                $params = &$state->params;
-
-                //Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-
-                $this->assign('columns',	        $params->get('list_columns', 3));
-                $this->assign('display',		$state->get('media.media-display'));                
-                $this->assign('return',                 base64_encode(JFactory::getURI()->toString()));
-                
-                $this->assignRef('items',		$items);
-                $this->assignRef('pagination',		$pagination);
-                $this->assignRef('state',		$state);
-                $this->assignRef('params',		$params);
 
 		$this->_prepareDocument();
-
+                
+		// Display the template.
 		parent::display($tpl);
 	}
+        
 	/**
 	 * Prepares the document
+	 *
+	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app	= JFactory::getApplication();
-                $menus	= $app->getMenu();
+		$app = JFactory::getApplication();
+		$menus = $app->getMenu();
 		$pathway = $app->getPathway();
-		$title	= null;
+		$title = null;
 
+                // Add page assets.
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->state->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->state->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->state->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
@@ -115,18 +110,19 @@ class hwdMediaShareViewMedia extends JViewLegacy {
 		}
                 
 		// Check for empty title and add site name if param is set
-		if (empty($title)) {
+		if (empty($title))
+                {
 			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+                {
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+                {
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
-		if (empty($title)) {
-			$title = JText::_('COM_HWDMS_MEDIA');
-		}
+                
 		$this->document->setTitle($title);
 
                 if ($this->params->get('meta_desc'))
@@ -142,38 +138,19 @@ class hwdMediaShareViewMedia extends JViewLegacy {
 		if ($this->params->get('meta_rights'))
                 {
 			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
-                }             
+                }   
 	}
         
-        /**
-	 * Method to get the publish status HTML
+	/**
+	 * Prepares the category list
 	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getCategories( &$item )
+	 * @return  void
+	 */
+	public function getCategories($item)
 	{            
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if (count($item->categories) > 0)
-                {
-                        foreach ($item->categories as $value)
-                        {
-                                $href.= '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($value->id)).'">' . $value->title . '</a> ';
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
+                hwdMediaShareFactory::load('category');
+                $cat = hwdMediaShareCategory::getInstance();
+                $cat->elementType = 1;
+                return $cat->getCategories($item);
 	}
 }
