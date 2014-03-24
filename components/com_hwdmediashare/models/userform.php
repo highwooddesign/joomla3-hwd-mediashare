@@ -76,7 +76,8 @@ class hwdMediaShareModelUserForm extends hwdMediaShareModelUser
 		$properties = $table->getProperties(1);
 		$value = JArrayHelper::toObject($properties, 'JObject');
 
-		// Convert params field to registry.
+		// Convert params field to array. We don't convert to registry to avoid 
+                // SimpleXMLElement warnings when binding the data to the form
 		if (property_exists($value, 'params'))
 		{
 			$registry = new JRegistry;
