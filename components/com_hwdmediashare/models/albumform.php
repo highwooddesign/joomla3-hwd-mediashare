@@ -125,7 +125,9 @@ class hwdMediaShareModelAlbumForm extends hwdMediaShareModelAlbum
 			//$value->tags = new JHelperTags;
 			//$value->tags->getTagIds($value->id, 'com_content.article');
                         hwdMediaShareFactory::load('customfields');
-                        $value->customfields = hwdMediaShareCustomFields::get($value);
+                        $cf = hwdMediaShareCustomFields::getInstance();
+                        $cf->elementType = 2;
+                        $item->customfields = $cf->get($item);
                         $value->thumbnail = $this->getThumbnail($value);
 		}
 
