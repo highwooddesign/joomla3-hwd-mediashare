@@ -1,110 +1,95 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 1215 2013-03-05 13:30:52Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * HTML View class for the hwdMediaShare Component
- */
-class hwdMediaShareViewCategories extends JViewLegacy {
-	protected $state = null;
-	protected $item = null;
-	protected $items = null;
-        protected $view_item = 'category';
-        protected $elementType = 6;
-        protected $elementName = 'Category';
-
-        /**
+class hwdMediaShareViewCategories extends JViewLegacy
+{
+	public $items;
+        
+	public $parent;
+                
+	public $state;
+        
+	public $params;
+        
+	/**
 	 * Display the view
 	 *
-	 * @return	mixed	False on error, null otherwise.
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
 	 */
 	function display($tpl = null)
 	{
-                // Get data from the model
-                $items = $this->get('Items');
-		$state = $this->get('State');
-                $parent = $this->get('Parent');
+                // Get data from the model.
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+                $this->parent = $this->get('Parent');
+		$this->state = $this->get('State');
+		$this->params = $this->state->params;
 
-                // Download links
-                hwdMediaShareFactory::load('media');
-                hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('files');
+                // Load libraries.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('media');
+		hwdMediaShareFactory::load('utilities');
+                
+                $this->items = array($this->parent->id => $this->items);
+                $this->maxLevelcat = $this->params->get('maxLevelcat', -1);
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+                $this->columns = $this->params->get('list_columns', 3);
+                $this->return = base64_encode(JFactory::getURI()->toString());
+                $this->display = $this->state->get('media.display', 'details');
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
                 {
-			JError::raiseWarning(500, implode("\n", $errors));
-			return false;
-		}
-                
-		if (count($items) == 0)
-		{
-                        JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_NO_CATEGORIES') );
-		}
-                
-		if ($items === false)
-		{
-			JError::raiseError(404, JText::_('COM_HWDMS_ERROR'));
-			return false;
-		}
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
 
                 if ($parent == false)
 		{
-			return JError::raiseError(404, JText::_('COM_HWDMS_ERROR_CATEGORY_NOT_FOUND'));
+                        JError::raiseError(500, JText::_('COM_HWDMS_ERROR_CATEGORY_NOT_FOUND'));
+                        return false;
 		}
-
-                $params = &$state->params;
-
-                $items = array($parent->id => $items);
-
-		//Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-
-		$this->assign('maxLevelcat',	        $params->get('maxLevelcat', -1));
-                $this->assign('columns',	        $params->get('list_columns', 3));
-                $this->assign('display',		$state->get('media.category-display'));                
-
-                $this->assignRef('items',		$items);
-                $this->assignRef('state',		$state);
-                $this->assignRef('params',		$params);
-                $this->assignRef('parent',		$parent);
-                $this->assignRef('media',		$media);
-
+                
 		$this->_prepareDocument();
-
+                
+		// Display the template.
 		parent::display($tpl);
 	}
+        
 	/**
 	 * Prepares the document
+	 *
+	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app	= JFactory::getApplication();
-                $menus	= $app->getMenu();
+		$app = JFactory::getApplication();
+		$menus = $app->getMenu();
 		$pathway = $app->getPathway();
-		$title	= null;
+		$title = null;
 
+                // Add page assets.
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->state->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->state->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->state->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
-                $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/ToolTip.js');
-           
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
 		$menu = $menus->getActive();
@@ -136,18 +121,19 @@ class hwdMediaShareViewCategories extends JViewLegacy {
 		}
                 
 		// Check for empty title and add site name if param is set
-		if (empty($title)) {
+		if (empty($title))
+                {
 			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+                {
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+                {
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
-		if (empty($title)) {
-			$title = JText::_('COM_HWDMS_CATEGORIES');
-		}
+                
 		$this->document->setTitle($title);
 
                 if ($this->params->get('meta_desc'))
@@ -163,18 +149,15 @@ class hwdMediaShareViewCategories extends JViewLegacy {
 		if ($this->params->get('meta_rights'))
                 {
 			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
-                }    
+                }   
 	}
-        
+
 	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getCategoryMedia( &$item )
+	 * Gets a list of media for a category
+         * 
+	 * @return  void
+	 */
+	public function getCategoryMedia($item)
 	{
                 return $this->get('Media');
 	}
