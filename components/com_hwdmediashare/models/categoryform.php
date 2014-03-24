@@ -126,7 +126,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 			//$value->tags->getTagIds($value->id, 'com_content.article');
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 2;
+                        $cf->elementType = 6;
                         $item->customfields = $cf->get($item);
                         $value->thumbnail = $this->getThumbnail($value);
 		}
