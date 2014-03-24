@@ -12,10 +12,10 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewAlbum extends JViewLegacy
 {
-	public $album;
-
 	public $items;
         
+	public $album;
+
 	public $state;
         
 	public $params;
@@ -30,11 +30,13 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 	function display($tpl = null)
 	{
                 // Get data from the model.
-                $this->album = $this->get('Album');
+                // Album is called afterwards so we have data from the items.
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
+                $this->album = $this->get('Album');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
+                $this->filterForm = $this->get('FilterForm');
 
                 // Load libraries.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
