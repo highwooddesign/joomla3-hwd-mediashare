@@ -57,7 +57,7 @@ class hwdMediaShareViewPlaylistForm extends JViewLegacy
 		}
 		else
 		{
-			$authorised = $this->item->params->get('access-edit');
+			$authorised = $this->item->access->get('access-edit');
 		}
 		if ($authorised !== true)
 		{
