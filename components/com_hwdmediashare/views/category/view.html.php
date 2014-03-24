@@ -32,10 +32,11 @@ class hwdMediaShareViewCategory extends JViewLegacy
 	function display($tpl = null)
 	{
                 // Get data from the model.
-                $this->category = $this->get('Category');
+                // Category is called afterwards so we have data from the items.            
                 $this->subcategories = $this->get('Subcategories');
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
+                $this->category = $this->get('Category');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
 
