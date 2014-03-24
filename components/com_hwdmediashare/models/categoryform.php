@@ -49,11 +49,11 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 	}
 
 	/**
-	 * Method to get article data.
+	 * Method to get a single record.
 	 *
-	 * @param	integer	The id of the article.
-	 *
-	 * @return	mixed	Content item data object on success, false on failure.
+	 * @param   integer  $itemId  The id of the primary key.
+         * 
+	 * @return  mixed    Object on success, false on failure.
 	 */
 	public function getItem($itemId = null)
 	{
