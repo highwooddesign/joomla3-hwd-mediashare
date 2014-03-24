@@ -30,9 +30,10 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 	function display($tpl = null)
 	{
                 // Get data from the model.
-                $this->playlist = $this->get('Playlist');
+                // Category is called afterwards so we have data from the items.                        
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
+                $this->playlist = $this->get('Playlist');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
 
