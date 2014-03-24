@@ -32,6 +32,7 @@ class hwdMediaShareViewAlbums extends JViewLegacy
                 $this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
+                $this->filterForm = $this->get('FilterForm');
 
                 // Load libraries.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
