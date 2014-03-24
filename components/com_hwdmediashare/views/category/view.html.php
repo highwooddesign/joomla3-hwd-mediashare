@@ -165,16 +165,7 @@ class hwdMediaShareViewCategory extends JViewLegacy
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
                 }
 
-		if ($this->params->get('meta_rights'))
-                {
-			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
-                }               
-                
-		if ($this->category->params->get('meta_author') == 1)
-		{
-			$this->document->setMetadata('author', $this->category->author);
-		}
-                elseif ($this->params->get('meta_author') == 1)
+		if ($this->params->get('meta_author') == 1)
                 {
 			$this->document->setMetadata('author', $this->category->author);
                 }      
