@@ -89,18 +89,13 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
                 $jinput = JFactory::getApplication()->input;
  
                 $this->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
                 $this->setState('filter.group_id', $jinput->get('group_id', '', 'int'));
 
-                // Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
-		parent::populateState('u.registerDate', 'ASC');
+		parent::populateState('u.registerDate', 'asc');
 	}
         
 	/**
@@ -113,14 +108,17 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
         public function unlink($pks, $groupId = null)
         {
+		// Initialiase variables.
                 $db = JFactory::getDbo();
-		$pks = (array) $pks;
-		$table = $this->getTable();            
-            
+		$table = $this->getTable();    
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-		// Iterate the items to delete each one.
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
                         $query = $db->getQuery(true)
@@ -137,7 +135,6 @@ class hwdMediaShareModelGroupMembers extends JModelList
                         catch (RuntimeException $e)
                         {
                                 $this->setError($e->getMessage());
-
                                 return false;                            
                         }
 
@@ -151,7 +148,6 @@ class hwdMediaShareModelGroupMembers extends JModelList
                                                 if (!$table->delete($row))
                                                 {
                                                         $this->setError($table->getError());
-
                                                         return false;
                                                 }
                                         }
@@ -164,13 +160,11 @@ class hwdMediaShareModelGroupMembers extends JModelList
                                                 if ($error)
                                                 {
                                                         JLog::add($error, JLog::WARNING, 'jerror');
-
                                                         return false;
                                                 }
                                                 else
                                                 {
-                                                        JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
-
+                                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
                                                         return false;
                                                 }
                                         }
@@ -178,7 +172,6 @@ class hwdMediaShareModelGroupMembers extends JModelList
                                 else
                                 {
                                         $this->setError($table->getError());
-
                                         return false;
                                 }
                         }
@@ -200,15 +193,19 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
 	public function link($pks, $groupId = null)
 	{
+		// Initialiase variables.
+                $db = JFactory::getDbo();
 		$user = JFactory::getUser();
-                $date = JFactory::getDate();
-		$table = $this->getTable();
-		$pks = (array) $pks;
-
+                $date = JFactory::getDate();                
+		$table = $this->getTable();    
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                                
-		// Access checks.
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
 			$table->reset();
@@ -216,10 +213,19 @@ class hwdMediaShareModelGroupMembers extends JModelList
                         if (!$utilities->authoriseGroupAction('join', $groupId, $pk))
                         {
                                 // Prune items that you can't change.
-                                unset($pks[$i]);
-                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                unset($pks[$x]);
+                                $error = $this->getError();
 
-                                return false;
+                                if ($error)
+                                {
+                                        JLog::add($error, JLog::WARNING, 'jerror');
+                                        return false;
+                                }
+                                else
+                                {
+                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                        return false;
+                                }
                         }
                         
                         // Create an object to bind to the database
