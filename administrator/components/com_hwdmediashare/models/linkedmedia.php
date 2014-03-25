@@ -88,15 +88,10 @@ class hwdMediaShareModelLinkedMedia extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
                 $jinput = JFactory::getApplication()->input;
  
                 $this->setState('filter.add_to_media', $jinput->get('add', '0', 'int'));
                 $this->setState('filter.media_id', $jinput->get('media_id', '', 'int'));
-
-                // Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
 
 		// List state information.
 		parent::populateState('a.title', 'ASC');
@@ -112,14 +107,19 @@ class hwdMediaShareModelLinkedMedia extends JModelList
 	 */
         public function unlink($pks, $mediaId = null)
         {
+		// Initialiase variables.
                 $db = JFactory::getDbo();
-		$pks = (array) $pks;
-		$table = $this->getTable();            
-            
+
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-		// Iterate the items to delete each one.
+		$table = $this->getTable();    
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
                         $query = $db->getQuery(true)
@@ -135,7 +135,6 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                         catch (RuntimeException $e)
                         {
                                 $this->setError($e->getMessage());
-
                                 return false;                            
                         }
 
@@ -149,7 +148,6 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                                                 if (!$table->delete($row))
                                                 {
                                                         $this->setError($table->getError());
-
                                                         return false;
                                                 }
                                         }
@@ -162,13 +160,11 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                                                 if ($error)
                                                 {
                                                         JLog::add($error, JLog::WARNING, 'jerror');
-
                                                         return false;
                                                 }
                                                 else
                                                 {
-                                                        JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
-
+                                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
                                                         return false;
                                                 }
                                         }
@@ -198,15 +194,21 @@ class hwdMediaShareModelLinkedMedia extends JModelList
 	 */
 	public function link($pks, $mediaId = null)
 	{
+		// Initialiase variables.
+                $db = JFactory::getDbo();
 		$user = JFactory::getUser();
-                $date = JFactory::getDate();
-		$table = $this->getTable();
-		$pks = (array) $pks;
+                $date = JFactory::getDate();                
 
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                                
-		// Access checks.
+                
+		$table = $this->getTable();    
+
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
 			$table->reset();
@@ -215,9 +217,18 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                         {
                                 // Prune items that you can't change.
                                 unset($pks[$i]);
-                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                $error = $this->getError();
 
-                                return false;
+                                if ($error)
+                                {
+                                        JLog::add($error, JLog::WARNING, 'jerror');
+                                        return false;
+                                }
+                                else
+                                {
+                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                        return false;
+                                }
                         }
                         
                         // Create an object to bind to the database
