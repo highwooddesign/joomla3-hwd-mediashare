@@ -128,7 +128,7 @@ class hwdMediaShareModelUserForm extends hwdMediaShareModelUser
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 5;
-                        $item->customfields = $cf->get($item);
+                        $value->customfields = $cf->get($value);
                         $value->thumbnail = $this->getThumbnail($value);
 		}
 
