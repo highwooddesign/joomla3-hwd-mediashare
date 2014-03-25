@@ -34,9 +34,15 @@ class hwdMediaShareControllerAlbums extends JControllerForm
                 
 		// Define standard task mappings.                
                 $this->registerTask('unpublish', 'publish');
+                $this->registerTask('delete', 'publish');
                 $this->registerTask('unfeature', 'feature');
                 $this->registerTask('unapprove', 'approve');
                 $this->registerTask('dislike', 'like');
+                
+		// Check if the cid array exists, otherwise populate with the id
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+                $id = JFactory::getApplication()->input->get('id', 0, 'int');
+                if (empty($cid) && $id) JFactory::getApplication()->input->set('cid', array($id));
 	}
         
         /**
@@ -62,7 +68,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		// Initialise variables.
-		$values	= array('publish' => 1, 'unpublish' => 0);
+		$values	= array('publish' => 1, 'unpublish' => 0, 'delete' => -2);
 		$task	= $this->getTask();
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
@@ -93,47 +99,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
                 $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
 		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
-        
-	/**
-	 * Method to delete a list of albums.
-	 * @return	void
-	 */
-	function delete()
-	{
-		// Check for request forgeries
-		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
-
-		if (!is_array($cid) || count($cid) < 1)
-		{
-			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
-		}
-		else
-		{
-			// Get the model.
-			$model = $this->getModel();
-
-			// Make sure the item ids are integers
-			jimport('joomla.utilities.arrayhelper');
-			JArrayHelper::toInteger($cid);
-
-			// Delete the albums.
-			if ($model->delete($cid))
-			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
-			}
-			else
-			{
-				$this->setMessage($model->getError());
-			}
-		}
-                
-                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
-		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
-	}
-        
 	/**
 	 * Method to like or dislike a single album.
 	 * @return	void
