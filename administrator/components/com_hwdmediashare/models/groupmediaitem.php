@@ -59,10 +59,12 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
         {
 		// Initialiase variables.
                 $db = JFactory::getDbo();
-		$table = $this->getTable();    
+
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+		$table = $this->getTable();    
+
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
@@ -149,10 +151,12 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                 $db = JFactory::getDbo();
 		$user = JFactory::getUser();
                 $date = JFactory::getDate();                
-		$table = $this->getTable();    
+
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+		$table = $this->getTable();    
+
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
@@ -165,7 +169,7 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                         if (!$utilities->authoriseGroupAction('link', $groupId, $pk))
                         {
                                 // Prune items that you can't change.
-                                unset($pks[$x]);
+                                unset($pks[$i]);
                                 $error = $this->getError();
 
                                 if ($error)
