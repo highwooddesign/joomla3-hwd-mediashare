@@ -41,22 +41,6 @@ class hwdMediaShareModelCustomFields extends JModelList
 	}
         
 	/**
-	 * Method to get a list of items.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                }
-
-		return $items;
-	}
-        
-	/**
 	 * Method to get the database query.
 	 *
 	 * @return  JDatabaseQuery  database query
@@ -138,23 +122,6 @@ class hwdMediaShareModelCustomFields extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
-
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-                $this->setState('filter.published', $published);
-                
-		$elementType = $this->getUserStateFromRequest($this->context.'.filter.element_type', 'filter_element_type', '1', 'string');
-		$this->setState('filter.element_type', $elementType);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
 		parent::populateState('a.ordering', 'asc');
 	}
