@@ -161,17 +161,29 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	 */
 	public function approve($pks, $value = 0)
 	{
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                            
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
 
+		// Access checks.
+		foreach ($pks as $i => $id)
+		{
+			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.group.'. (int) $id))
+			{
+				// Prune items that the user can't change.
+				unset($pks[$i]);
+				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			}
+		}
+                
 		if (empty($pks))
 		{
 			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
 			return false;
 		}
-
-		$table = $this->getTable();
 
 		try
 		{
@@ -205,17 +217,29 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	 */
 	public function feature($pks, $value = 0)
 	{
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                     
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
 
+		// Access checks.
+		foreach ($pks as $i => $id)
+		{
+			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.group.'. (int) $id))
+			{
+				// Prune items that the user can't change.
+				unset($pks[$i]);
+				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			}
+		}
+                
 		if (empty($pks))
 		{
 			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
 			return false;
 		}
-
-		$table = $this->getTable();
 
 		try
 		{
