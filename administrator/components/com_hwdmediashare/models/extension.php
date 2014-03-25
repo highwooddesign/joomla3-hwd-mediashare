@@ -75,8 +75,12 @@ class hwdMediaShareModelExtension extends JModelAdmin
 	 */
 	public function delete($pks)
 	{
+		// Initialiase variables.
 		$db = JFactory::getDBO();
-                $pks = (array) $pks;
+        
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
                 
 		// Iterate the items to check for contents
 		foreach ($pks as $i => $pk)
