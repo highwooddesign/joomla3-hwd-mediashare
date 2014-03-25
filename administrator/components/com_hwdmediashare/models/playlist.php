@@ -146,7 +146,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 		// Access checks.
 		foreach ($pks as $i => $id)
 		{
-			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.playlists.'. (int) $id))
+			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.playlist.'. (int) $id))
 			{
 				// Prune items that the user can't change.
 				unset($pks[$i]);
@@ -202,7 +202,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 		// Access checks.
 		foreach ($pks as $i => $id)
 		{
-			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.playlists.'. (int) $id))
+			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.playlist.'. (int) $id))
 			{
 				// Prune items that the user can't change.
 				unset($pks[$i]);
