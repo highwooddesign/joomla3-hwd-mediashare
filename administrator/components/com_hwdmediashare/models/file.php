@@ -89,12 +89,26 @@ class hwdMediaShareModelFile extends JModelAdmin
 	 */
 	public function delete($pks)
 	{
+		// Initialiase variables.
+		$db = JFactory::getDBO();
+        
                 // Load the file system library
                 jimport( 'joomla.filesystem.file' );
-
-		// Iterate the items to delete each one.
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+                
+		// Iterate the items to check permission for delete.
 		foreach ($pks as $i => $pk)
 		{
+			if (!$user->authorise('core.delete', 'com_hwdmediashare'))
+			{
+				// Prune items that the user can't change.
+				unset($pks[$i]);
+				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			}
+                        
                         $table = JTable::getInstance('File', 'hwdMediaShareTable');
                         $table->load($pk);
                         $properties = $table->getProperties(1);
@@ -128,8 +142,11 @@ class hwdMediaShareModelFile extends JModelAdmin
                                     break;
                         }
                         
-                        if (!is_object($element)) {
-                            continue;
+                        if (!is_object($element))
+                        {
+				// Prune items that the user can't change.
+				unset($pks[$i]);
+                                continue;
                         }
                         
                         $element->load($file->element_id);
@@ -142,15 +159,14 @@ class hwdMediaShareModelFile extends JModelAdmin
                         $foldersSource = hwdMediaShareFiles::getFolders($item->key);
                         $filenameSource = hwdMediaShareFiles::getFilename($item->key, $file->file_type);
                         $extSource = hwdMediaShareFiles::getExtension($item, $file->file_type);
-
                         $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
-
                         if (JFile::exists($pathSource)) 
                         {
                                 if(!JFile::delete($pathSource))
                                 {
-                                        $this->setError(JText::_('COM_HWDMS_UNABLE_TO_REMOVE_FILE_FROM_DISK'));
-                                        return false;
+                                        // Prune items that the user can't change.
+                                        unset($pks[$i]);
+                                        JError::raiseNotice(403, JText::_('COM_HWDMS_UNABLE_TO_REMOVE_FILE_FROM_DISK'));
                                 }
                         }
                         
