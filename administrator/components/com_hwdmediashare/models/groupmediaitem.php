@@ -57,14 +57,17 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	 */
         public function unlink($pks, $groupId = null)
         {
+		// Initialiase variables.
                 $db = JFactory::getDbo();
-		$pks = (array) $pks;
-		$table = $this->getTable();            
-            
+		$table = $this->getTable();    
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-		// Iterate the items to delete each one.
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
                         $query = $db->getQuery(true)
@@ -81,7 +84,6 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                         catch (RuntimeException $e)
                         {
                                 $this->setError($e->getMessage());
-
                                 return false;                            
                         }
 
@@ -95,7 +97,6 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                                 if (!$table->delete($row))
                                                 {
                                                         $this->setError($table->getError());
-
                                                         return false;
                                                 }
                                         }
@@ -108,13 +109,11 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                                 if ($error)
                                                 {
                                                         JLog::add($error, JLog::WARNING, 'jerror');
-
                                                         return false;
                                                 }
                                                 else
                                                 {
-                                                        JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
-
+                                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
                                                         return false;
                                                 }
                                         }
@@ -122,7 +121,6 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                 else
                                 {
                                         $this->setError($table->getError());
-
                                         return false;
                                 }
                         }
@@ -147,15 +145,19 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	 */
 	public function link($pks, $groupId = null)
 	{
+		// Initialiase variables.
+                $db = JFactory::getDbo();
 		$user = JFactory::getUser();
-                $date = JFactory::getDate();
-		$table = $this->getTable();
-		$pks = (array) $pks;
-
+                $date = JFactory::getDate();                
+		$table = $this->getTable();    
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                                
-		// Access checks.
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
 			$table->reset();
@@ -163,10 +165,19 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                         if (!$utilities->authoriseGroupAction('link', $groupId, $pk))
                         {
                                 // Prune items that you can't change.
-                                unset($pks[$i]);
-                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                unset($pks[$x]);
+                                $error = $this->getError();
 
-                                return false;
+                                if ($error)
+                                {
+                                        JLog::add($error, JLog::WARNING, 'jerror');
+                                        return false;
+                                }
+                                else
+                                {
+                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                        return false;
+                                }
                         }
                         
                         // Create an object to bind to the database
