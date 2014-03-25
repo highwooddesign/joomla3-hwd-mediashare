@@ -82,7 +82,7 @@ class hwdMediaShareModelExtension extends JModelAdmin
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
                 
-		// Iterate the items to check for contents
+		// Iterate the items to check permission for delete.
 		foreach ($pks as $i => $pk)
 		{
 			if (!$user->authorise('core.delete', 'com_hwdmediashare'))
