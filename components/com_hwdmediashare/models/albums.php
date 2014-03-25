@@ -98,10 +98,13 @@ class hwdMediaShareModelAlbums extends JModelList
                 $query->from('#__hwdms_albums AS a');
 
                 // Restrict based on access.
-                $query->where('a.access IN ('.$groups.')');
+		if ($config->get('entice_mode') == 0)
+                {
+                        $query->where('a.access IN ('.$groups.')');
+                }
                 
-                // Restrict based on privacy.
-                $query->where('a.private = 0');
+                // Restrict based on privacy access.
+                $query->where('(a.private = 0 OR (a.private = 1 && a.created_user_id = '.$user->id.'))');
                 
                 // Join over the users for the author, with value based on configuration.
                 $config->get('author') == 0 ? $query->select('CASE WHEN a.created_user_id_alias > ' . $db->Quote(' ') . ' THEN a.created_user_id_alias ELSE ua.name END AS author') : $query->select('CASE WHEN a.created_user_id_alias > ' . $db->Quote(' ') . ' THEN a.created_user_id_alias ELSE ua.username END AS author');
@@ -110,7 +113,16 @@ class hwdMediaShareModelAlbums extends JModelList
 
 		// Filter by published state.
 		$published = $this->getState('filter.published');
-		if (is_numeric($published))
+		if (is_array($published)) 
+                {
+			JArrayHelper::toInteger($published);
+			$published = implode(',', $published);
+			if ($published) 
+                        {
+                                $query->where('a.published IN ('.$published.')');
+			}
+		}
+                else if (is_numeric($published))
                 {
 			$query->where('a.published = '.(int) $published);
 		}
@@ -297,7 +309,7 @@ class hwdMediaShareModelAlbums extends JModelList
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
                 
-		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) &&  (!$user->authorise('core.edit', 'com_hwdmediashare')))
+		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
 			// Limit to published for people who can't edit or edit.state.
 			$this->setState('filter.published',	1);
