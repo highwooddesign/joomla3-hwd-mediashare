@@ -42,22 +42,6 @@ class hwdMediaShareModelProcesses extends JModelList
 	}
         
 	/**
-	 * Method to get a list of items.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                }
-                
-		return $items;
-	}
-        
-	/**
 	 * Method to get the database query.
 	 *
 	 * @return  JDatabaseQuery  database query
@@ -126,20 +110,6 @@ class hwdMediaShareModelProcesses extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
-
-		// Load the filter state.
-                $status = $this->getUserStateFromRequest($this->context.'.filter.status', 'filter_status', '', 'string');
-		$this->setState('filter.status', $status);
-
-                $process_type = $this->getUserStateFromRequest($this->context.'.filter.process_type', 'filter_process_type', '', 'string');
-		$this->setState('filter.process_type', $process_type);
-                
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
 		parent::populateState('a.created', 'desc');
 	}
