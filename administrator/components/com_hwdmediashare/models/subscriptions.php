@@ -36,22 +36,6 @@ class hwdMediaShareModelSubscriptions extends JModelList
 	}
         
 	/**
-	 * Method to get a list of items.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                }
-
-		return $items;
-	}
-        
-	/**
 	 * Method to get the database query.
 	 *
 	 * @return  JDatabaseQuery  database query
@@ -100,10 +84,10 @@ class hwdMediaShareModelSubscriptions extends JModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering');
-		$orderDirn	= $this->state->get('list.direction');
+                $listOrder = $this->state->get('list.ordering');
+                $listDirn = $this->state->get('list.direction');
 
-		$query->order($db->escape($orderCol.' '.$orderDirn));
+		$query->order($db->escape($listOrder.' '.$listDirn));
 
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
@@ -121,20 +105,6 @@ class hwdMediaShareModelSubscriptions extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
-
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$elementType = $this->getUserStateFromRequest($this->context.'.filter.element_type', 'filter_element_type', '', 'string');
-		$this->setState('filter.element_type', $elementType);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
 		parent::populateState('a.created', 'desc');
 	}
