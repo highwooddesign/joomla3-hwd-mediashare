@@ -57,14 +57,19 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
 	 */
         public function unlink($pks, $playlistId = null)
         {
+		// Initialiase variables.
                 $db = JFactory::getDbo();
-		$pks = (array) $pks;
-		$table = $this->getTable();            
-            
+
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-		// Iterate the items to delete each one.
+		$table = $this->getTable();    
+
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
                         $query = $db->getQuery(true)
@@ -81,7 +86,6 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
                         catch (RuntimeException $e)
                         {
                                 $this->setError($e->getMessage());
-
                                 return false;                            
                         }
 
@@ -95,7 +99,6 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
                                                 if (!$table->delete($row))
                                                 {
                                                         $this->setError($table->getError());
-
                                                         return false;
                                                 }
                                         }
@@ -108,13 +111,11 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
                                                 if ($error)
                                                 {
                                                         JLog::add($error, JLog::WARNING, 'jerror');
-
                                                         return false;
                                                 }
                                                 else
                                                 {
                                                         JLog::add(JText::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
-
                                                         return false;
                                                 }
                                         }
@@ -122,7 +123,6 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
                                 else
                                 {
                                         $this->setError($table->getError());
-
                                         return false;
                                 }
                         }
@@ -147,15 +147,21 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
 	 */
 	public function link($pks, $playlistId = null)
 	{
+		// Initialiase variables.
+                $db = JFactory::getDbo();
 		$user = JFactory::getUser();
-                $date = JFactory::getDate();
-		$table = $this->getTable();
-		$pks = (array) $pks;
+                $date = JFactory::getDate();                
 
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                                
-		// Access checks.
+
+		$table = $this->getTable();    
+
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
 			$table->reset();
@@ -164,9 +170,18 @@ class hwdMediaShareModelPlaylistMediaItem extends JModelAdmin
                         {
                                 // Prune items that you can't change.
                                 unset($pks[$i]);
-                                JLog::add(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                $error = $this->getError();
 
-                                return false;
+                                if ($error)
+                                {
+                                        JLog::add($error, JLog::WARNING, 'jerror');
+                                        return false;
+                                }
+                                else
+                                {
+                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                        return false;
+                                }
                         }
                         
                         // Create an object to bind to the database
