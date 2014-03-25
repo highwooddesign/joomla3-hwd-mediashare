@@ -36,6 +36,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
                 $this->registerTask('unpublish', 'publish');
                 $this->registerTask('unfeature', 'feature');
                 $this->registerTask('unapprove', 'approve');
+                $this->registerTask('dislike', 'like');
 	}
         
         /**
@@ -134,7 +135,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	}
         
 	/**
-	 * Method to like a single album.
+	 * Method to like or dislike a single album.
 	 * @return	void
 	 */
 	public function like()
@@ -142,8 +143,13 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 		// Check for request forgeries
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-		// Get items to remove from the request.
+		// Get items to like from the request.
 		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		// Initialise variables.
+		$values	= array('like' => 1, 'dislike' => 0);
+		$task	= $this->getTask();
+		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
 		if (!is_numeric($cid) || $cid < 1)
 		{
@@ -154,46 +160,10 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Like the album.
-			if ($model->like($cid))
+			// Publish/unpublish the albums.
+			if ($model->like($cid, $value))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_ALBUM_LIKED'));
-			}
-			else
-			{
-				$this->setMessage($model->getError());
-			}
-		}
-                
-                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
-		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
-	}
-        
-	/**
-	 * Method to dislike a single album.
-	 * @return	void
-	 */
-	public function dislike()
-	{
-		// Check for request forgeries
-		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
-
-		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
-
-		if (!is_numeric($cid) || $cid < 1)
-		{
-			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
-		}
-		else
-		{
-			// Get the model.
-			$model = $this->getModel();
-
-			// Dislike the album.
-			if ($model->dislike($cid))
-			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_ALBUM_DISLIKED'));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'D', count($cid)));
 			}
 			else
 			{
@@ -214,7 +184,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 		// Check for request forgeries
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-		// Get items to remove from the request.
+		// Get items to report from the request.
 		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
 
 		if (!is_numeric($cid) || $cid < 1)
