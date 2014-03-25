@@ -75,7 +75,6 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
                 $jinput = JFactory::getApplication()->input;
  
                 $this->setState('filter.add_to_playlist', $jinput->get('add', '0', 'int'));
@@ -83,10 +82,6 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 
                 $ordering = ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
                 $direction = ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
-                
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
 
 		// List state information.
 		parent::populateState($ordering, $direction);
