@@ -42,22 +42,6 @@ class hwdMediaShareModelExtensions extends JModelList
 	}
         
 	/**
-	 * Method to get a list of items.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                }
-
-		return $items;
-	}
-        
-	/**
 	 * Method to get the database query.
 	 *
 	 * @return  JDatabaseQuery  database query
@@ -129,50 +113,28 @@ class hwdMediaShareModelExtensions extends JModelList
 		}
 
 		// Add the list ordering clause.
-		$orderCol	= $this->state->get('list.ordering');
-		$orderDirn	= $this->state->get('list.direction');
+                $listOrder = $this->state->get('list.ordering');
+                $listDirn = $this->state->get('list.direction');
 
-		$query->order($db->escape($orderCol.' '.$orderDirn));
+		$query->order($db->escape($listOrder.' '.$listDirn));
 
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
 	}
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
-
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$accessId = $this->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);
-
-		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-                $this->setState('filter.published', $published);
-
-		$mediaType = $this->getUserStateFromRequest($this->context.'.filter.media_type', 'filter_media_type', '', 'string');
-		$this->setState('filter.media_type', $mediaType);
-
-                $listOrder = JRequest::getCmd('filter_order', 'ext');
-                $this->setState('list.ordering', $listOrder);
-
-                $listDirn  = JRequest::getCmd('filter_order_Dir', 'ASC');
-                $this->setState('list.direction', $listDirn);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState('a.ext', 'asc');
 	}
 }
