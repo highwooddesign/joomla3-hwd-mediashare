@@ -76,7 +76,8 @@ class hwdMediaShareModelAlbumForm extends hwdMediaShareModelAlbum
 		$properties = $table->getProperties(1);
 		$value = JArrayHelper::toObject($properties, 'JObject');
 
-		// Convert params field to registry.
+		// Convert params field to array. We don't convert to registry to avoid 
+                // SimpleXMLElement warnings when binding the data to the form
 		if (property_exists($value, 'params'))
 		{
 			$registry = new JRegistry;
@@ -127,7 +128,7 @@ class hwdMediaShareModelAlbumForm extends hwdMediaShareModelAlbum
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 2;
-                        $item->customfields = $cf->get($item);
+                        $value->customfields = $cf->get($value);
                         $value->thumbnail = $this->getThumbnail($value);
 		}
 
