@@ -214,29 +214,6 @@ class hwdMediaShareModelUsers extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
-
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$accessId = $this->getUserStateFromRequest($this->context.'.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);
-
-		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-                $this->setState('filter.published', $published);
-		
-                $status = $this->getUserStateFromRequest($this->context.'.filter.status', 'filter_status', '', 'string');
-		$this->setState('filter.status', $status);
-
-		$language = $this->getUserStateFromRequest($this->context.'.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $language);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
 		parent::populateState('a.created', 'desc');
 	}
