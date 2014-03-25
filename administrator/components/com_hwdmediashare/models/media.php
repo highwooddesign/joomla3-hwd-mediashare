@@ -374,37 +374,7 @@ class hwdMediaShareModelMedia extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-		$accessId = $this->getUserStateFromRequest($this->context . '.filter.access', 'filter_access', null, 'int');
-		$this->setState('filter.access', $accessId);
-
-		$published = $this->getUserStateFromRequest($this->context.'.filter.published', 'filter_published', '', 'string');
-		$this->setState('filter.published', $published);
-                
-		$status = $this->getUserStateFromRequest($this->context . '.filter.status', 'filter_status', '', 'string');
-		$this->setState('filter.status', $status);
-
-		$categoryId = $this->getUserStateFromRequest($this->context . '.filter.category_id', 'filter_category_id', '');
-		$this->setState('filter.category_id', $categoryId);
-
-		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
-		$this->setState('filter.language', $language);
-
-		$tag = $this->getUserStateFromRequest($this->context . '.filter.tag', 'filter_tag', '');
-		$this->setState('filter.tag', $tag);
-
-                // Set custom component states
-		$mediaType = $this->getUserStateFromRequest($this->context.'.filter.media_type', 'filter_media_type', '');
-		$this->setState('filter.media_type', $mediaType);
-
-		// Load the parameters.
-		$params = JComponentHelper::getParams('com_hwdmediashare');
-		$this->setState('params', $params);
-
 		// List state information.
-		parent::populateState('a.created', 'desc');                
+		parent::populateState('a.created', 'desc');
 	}
 }
