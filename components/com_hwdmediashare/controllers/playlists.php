@@ -126,7 +126,7 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Like the playlist.
+			// Like/dislike the playlist.
 			if ($model->like($cid, $value))
 			{
 				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_LIKED'));
