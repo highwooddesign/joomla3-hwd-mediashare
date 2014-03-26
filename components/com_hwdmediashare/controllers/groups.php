@@ -126,7 +126,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Like the group.
+			// Like/dislike the group.
 			if ($model->like($cid, $value))
 			{
 				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_LIKED'));
