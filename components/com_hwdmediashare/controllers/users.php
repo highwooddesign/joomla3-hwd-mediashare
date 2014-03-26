@@ -126,7 +126,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			// Get the model.
 			$model = $this->getModel();
 
-			// Like the user.
+			// Like/dislike the user.
 			if ($model->like($cid, $value))
 			{
 				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_LIKED'));
