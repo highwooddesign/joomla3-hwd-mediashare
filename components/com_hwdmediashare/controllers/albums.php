@@ -126,7 +126,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish/unpublish the albums.
+			// Like/dislike the album.
 			if ($model->like($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'D', count($cid)));
