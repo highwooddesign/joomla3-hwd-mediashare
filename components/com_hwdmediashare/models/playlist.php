@@ -1,148 +1,121 @@
 <?php
 /**
- * @version    SVN $Id: playlist.php 1596 2013-06-14 13:34:58Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      26-Oct-2011 17:06:52
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla modelitem library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelPlaylist extends JModelList
 {
-        /**
-	 * The album element type integer
-	 * http://hwdmediashare.co.uk/learn/api/68-api-definitions
+	/**
+	 * Model context string.
+	 * @var string
 	 */
-        public $elementType = 4;
-
-        /**
-	 * Model context string
-	 *
-	 * @var		string
-	 */
-	public $_context = 'com_hwdmediashare.playlist';
+	public $context = 'com_hwdmediashare.playlist';
 
 	/**
-	 * The category context (allows other extensions to derived from this model).
-	 *
-	 * @var		string
+	 * Modal data
+	 * @var array
 	 */
-	protected $_extension = 'com_hwdmediashare';
-
-	/**
-	 * @var    integer  Number of media in the album
-	 */
-	private $_numMedia = null;
+	protected $_playlist = null;
+	protected $_items = null;
+	protected $_model = null;
+        protected $_numMedia = null;
         
-	/**
-	 * @var    object  The media model object
-	 */
-	private $_model = null;
-        
-	/**
-	 * @var    object  The album
-	 */
-	private $_playlist = null;
-
-        /**
-	 * @var    object  The album media
-	 */
-	private $_items = null;
-
-        /**
-	 * Constructor.
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param	array	An optional associative array of configuration settings.
-	 * @see		JController
-	 * @since	0.1
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
-				'playlist_order', 'playlist_order',                           
-				'created', 'a.created',
-				'hits', 'a.hits',
 				'title', 'a.title',
+				'viewed', 'a.viewed',                            
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
-				'modified', 'a.modified',
-				'viewed', 'a.viewed',
-				'title', 'a.title',
-                                'author', 'author',
+				'ordering', 'a.ordering', 'map.ordering',
+				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
                                 'created', 'a.created',
-                                'ordering', 'a.ordering',
+				'modified', 'a.modified',
+				'hits', 'a.hits',
                                 'random', 'random',
 			);
 		}
 
 		parent::__construct($config);
 	}
-
-        /**
-	 * Returns a reference to the a Table object, always creating it.
+        
+	/**
+	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	0.1
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
 	 */
-	public function getTable($type = 'Playlist', $prefix = 'hwdMediaShareTable', $config = array())
+	public function getTable($name = 'Playlist', $prefix = 'hwdMediaShareTable', $config = array())
 	{
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($name, $prefix, $config);
 	}
-
-        /**
-	 * Method to get a single record.
+        
+	/**
+	 * Method to get a single playlist.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * @param   integer	The id of the primary key.
+         * 
+	 * @return  mixed  Object on success, false on failure.
 	 */
 	public function getPlaylist($pk = null)
 	{
-                // Get hwdMediaShare config
+		// Initialise variables.
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('filter.playlist_id');
+
+                // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-        
-                // First check for item id in the state
-                if (empty($pk)) {
-                        $pk = $this->getState('filter.playlist_id');
-                }
-
-                // Then check in the url parameters
-                if (empty($pk)) {
-                        $pk = JRequest::getInt( 'id', '0' );
-                }
                 
-                if ($pk > 0)
-                {   
-                        // Load playlist
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table =& JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                        $table->load( $pk );
+		// Get a row instance.
+		$table = $this->getTable();
 
-                        $properties = $table->getProperties(1);
-                        $this->_playlist = JArrayHelper::toObject($properties, 'JObject');
+		// Attempt to load the row.
+		$return = $table->load($pk);
 
-                        hwdMediaShareFactory::load('tags');
-                        $this->_playlist->tags = hwdMediaShareTags::getInput($this->_playlist);
+		// Check for a table object error.
+		if ($return === false && $table->getError())
+                {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		$properties = $table->getProperties(1);
+		$this->_playlist = JArrayHelper::toObject($properties, 'JObject');
+
+		// Convert params field to registry.
+		if (property_exists($this->_playlist, 'params'))
+		{
+			$registry = new JRegistry;
+			$registry->loadString($this->_playlist->params);
+			$this->_playlist->params = $registry;
+		}
+
+		if ($pk)
+		{
+                        //@TODO: FINISH
+			//$value->tags = new JHelperTags;
+			//$value->tags->getTagIds($value->id, 'com_content.article');
                         hwdMediaShareFactory::load('customfields');
-                        $this->_playlist->customfields = hwdMediaShareCustomFields::get($this->_playlist);
-
-                        // Add data to object
+                        $cf = hwdMediaShareCustomFields::getInstance();
+                        $cf->elementType = 4;
+                        $this->_playlist->customfields = $cf->get($this->_playlist);
+                        $this->_playlist->nummedia = $this->_numMedia;
                         if ($this->_playlist->created_user_id > 0)
                         {   
                                 if (!empty($this->_playlist->created_user_id_alias))
@@ -158,409 +131,228 @@ class hwdMediaShareModelPlaylist extends JModelList
                         else
                         {
                                 $this->_playlist->author = JText::_('COM_HWDMS_GUEST');
-                        }
-                        
-                        $this->_playlist->nummedia = $this->_numMedia;
+                        }                       
+		}
 
-                        return $this->_playlist;
-                }
-                else
-                {
-			$this->setError(JText::_('COM_HWDMS_ERROR_ITEM_DOES_NOT_EXIST'));
-			return false;
-                }
-
-
+		return $this->_playlist;
 	}
 
 	/**
-	 * Method to get an array of data items.
+	 * Method to get a list of items.
 	 *
 	 * @return  mixed  An array of data items on success, false on failure.
-         *
 	 */
-	public function getItems($pk = null)
+	public function getItems()
 	{
-                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $model =& JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model->populateState();
+                $this->_model->setState('filter.playlist_id', $this->getState('filter.playlist_id'));
 
-                // Get hwdMediaShare config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-
-                // Set application parameters in model
-		$app = JFactory::getApplication();
-		$appParams = $app->getParams();
-		$model->setState('params', $appParams);
-
-                // Set HWD listing states
-                $limit = $app->getUserStateFromRequest($this->context . '.list.limit', 'limit', $config->get('list_limit', $app->getCfg('list_limit') )); // Get global list limit from request, with default value read from HWD configuration and fallback to global Joomla value
-                $model->setState('list.limit', $limit);
-                $this->setState('list.limit', $limit);
-
-                if (JRequest::getVar('limitstart', 0, '', 'int') == 0) JRequest::setVar('limitstart', 0); // We want to go to page one, unless a different page has been specifically selected
-                $value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
-
-                $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-                $model->setState('list.start', $limitstart); 
-
-                // Set other filters
-                $model->setState('filter.playlist_id', $this->getState('filter.playlist_id'));
-
-                // Load the filter state.
-		$search = $this->getUserStateFromRequest('filter.search', 'filter_search');
-                $model->setState('filter.search', $search); 
-		$this->setState('filter.search', $search);
-                
-                // Check if the ordering field is in the white list, otherwise use a default value.
-                $listOrder = $app->getUserStateFromRequest($this->_context.'.list.ordering', 'filter_order', JRequest::getCmd('filter_order', $this->_playlist->params->get('list_order_media', $config->get('list_order_media', 'playlist_order'))));
-                if (!in_array($listOrder, $this->filter_fields))
+                if ($this->_items = $this->_model->getItems())
                 {
-                        $listOrder = 'playlist_order';
+                        $this->_numMedia = $this->_model->getTotal();
                 }
-                $model->setState('com_hwdmediashare.media.list.ordering', $listOrder);                
-                $this->setState($this->_context.'.list.ordering', $listOrder);                
-                
-		$listDirn = JRequest::getCmd('filter_order_Dir', 'DESC');
-                if (in_array(strtolower($listOrder), array('a.title', 'author', 'a.ordering')))
-                {
-                        $listDirn = 'ASC';
-                }
-                else if (!in_array(strtoupper($listDirn), array('ASC', 'DESC', '')))
-                {
-                        $listDirn = 'DESC';
-		}
-                $model->setState('com_hwdmediashare.media.list.direction', $listDirn);
-                $this->setState($this->_context.'.list.direction', $listDirn);
-
-                $user = JFactory::getUser();
-		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) &&  (!$user->authorise('core.edit', 'com_hwdmediashare')))
-                {
-			// Limit to published for people who can't edit or edit.state.
-			$model->setState('filter.published',	1);
-			$model->setState('filter.status',	1);
-
-			// Filter by start and end dates.
-			$model->setState('filter.publish_date', true);
-		}
-                else
-                {
-			// Limit to published for people who can't edit or edit.state.
-			$model->setState('filter.published',	array(0,1));
-			$model->setState('filter.status',	1);
-                }
-                
-                $mediaType = $this->getUserStateFromRequest('filter.mediaType', 'filter_mediaType', $config->get('list_default_media_type', '' ), 'integer', false);
-                // If we are viewing a menu item that has a media type filter applied, then we need to show that instead of the user state.
-                if ($config->get('list_default_media_type')) $mediaType = $config->get('list_default_media_type');
-                $model->setState('filter.mediaType', $mediaType);
-                $this->setState('filter.mediaType', $mediaType);
-                
-		// Filter by language
-		$model->setState('filter.language', $app->getLanguageFilter());
-    
-                if ($this->_items = $model->getItems())
-                {
-                        for ($i=0, $n=count($this->_items); $i < $n; $i++)
-                        {
-                                if (empty($this->_items[$i]->author))
-                                {
-                                        $this->_items[$i]->author = JText::_('COM_HWDMS_GUEST');
-                                }
-                                // Load category library object
-                                hwdMediaShareFactory::load('category');
-                                $categoryLib = hwdMediaShareCategory::getInstance();
-                                $categoryLib->elementType = 1;
-                                $this->_items[$i]->categories = $categoryLib->get($this->_items[$i]);
-                        }
-                }
-
-		$this->_numMedia = $model->getTotal();
-		$this->_model = $model;
 
                 return $this->_items; 
 	}
 
 	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getPagination()
+	{
+                return $this->_model->getPagination(); 
+	}
+        
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
 	protected function populateState()
 	{
-            	$app = JFactory::getApplication();
-
-		// Load state from the request.
-		$id = JRequest::getInt('id');
-		$this->setState('filter.playlist_id', $id);
-
-		$return = JRequest::getVar('return', null, 'default', 'base64');
-		$this->setState('return_page', base64_decode($return));
-
+		// Initialise variables.
+		$app = JFactory::getApplication();
+                $user = JFactory::getUser();
+                
 		// Load the parameters.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
 
-		parent::populateState();  
+		// Load state from the request.
+		$id = $app->input->getInt('id');
+		$this->setState('filter.playlist_id', $id);
+
+		$return = $app->input->get('return', null, 'base64');
+		$this->setState('return_page', base64_decode($return));
+
+		$this->setState('layout', $app->input->getString('layout'));                
+
+		parent::populateState();           
 	}
-
-      	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param	string		$id	A prefix for the store id.
-	 *
-	 * @return	string		A store id.
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id	.= ':'.$this->getState('filter.extension');
-		$id	.= ':'.$this->getState('filter.published');
-		$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.parentId');
-
-		return parent::getStoreId($id);
-        }
 
 	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
-	 */
-	public function hit($pk = 0)
-	{
-            $hitcount = JRequest::getInt('hitcount', 1);
-
-            if ($hitcount)
-            {
-                // Initialise variables.
-                $pk = (!empty($pk)) ? $pk : (int) $this->getState('filter.playlist_id');
-                $db = $this->getDbo();
-
-                $db->setQuery(
-                        'UPDATE #__hwdms_playlists' .
-                        ' SET hits = hits + 1' .
-                        ' WHERE id = '.(int) $pk
-                );
-
-                if (!$db->query()) {
-                        $this->setError($db->getErrorMsg());
-                        return false;
-                }
-            }
-
-            return true;
-	}
-        
-	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
-	 */
-	public function like()
-	{
-            $app = JFactory::getApplication();
-                
-            if (!JFactory::getUser()->authorise('hwdmediashare.like','com_hwdmediashare'))
-            {
-                    return JError::raiseWarning(404, JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-            }
-            
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
-            $db = $this->getDbo();
-
-            $db->setQuery(
-                    'UPDATE #__hwdms_playlists' .
-                    ' SET likes = likes + 1' .
-                    ' WHERE id = '.(int) $pk
-            );
-
-            if (!$db->query()) {
-                    $this->setError($db->getErrorMsg());
-                    return false;
-            }
-
-            JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_PLAYLIST_LIKED') );
-            return true;
-	}
-        
-	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
-	 */
-	public function dislike()
-	{
-            $app = JFactory::getApplication();
-                
-            if (!JFactory::getUser()->authorise('hwdmediashare.like','com_hwdmediashare'))
-            {
-                    return JError::raiseWarning(404, JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-            }
-            
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
-            $db = $this->getDbo();
-
-            $db->setQuery(
-                    'UPDATE #__hwdms_playlists' .
-                    ' SET dislikes = dislikes + 1' .
-                    ' WHERE id = '.(int) $pk
-            );
-
-            if (!$db->query()) {
-                    $this->setError($db->getErrorMsg());
-                    return false;
-            }
-
-            JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_PLAYLIST_DISLIKED') );
-            return true;
-	}
-        
-        /**
-	 * Method to toggle the featured setting of articles.
-	 *
-	 * @param	array	The ids of the items to toggle.
-	 * @param	int		The value to toggle to.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function publish($pks, $value = 0)
-	{
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$table		= $this->getTable();
-		$pks		= (array) $pks;
-
-                $db =& JFactory::getDBO();
-                $query = "
-                  UPDATE ".$db->quoteName('#__hwdms_playlists')."
-                    SET ".$db->quoteName('published')." = ".$db->quote($value)."
-                    WHERE ".$db->quoteName('id')." = ".implode(" OR ".$db->quoteName('id')." = ", $pks)."
-                  ";
-                $db->setQuery($query);
-
-                // Check for a database error.
-		if (!$db->query())
-                {
-			$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_PUBLISH_FAILED', get_class($this), $this->_db->getErrorMsg()));
-			$this->setError($e);
-
-			return false;
-		}
-
-                // Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-	}
-        
-	/**
-	 * Method to toggle the featured setting of articles.
-	 *
-	 * @param	array	The ids of the items to toggle.
-	 * @param	int		The value to toggle to.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function delete($pks)
-	{
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$table		= $this->getTable();
-		$pks		= (array) $pks;
-
-                $db =& JFactory::getDBO();
-                $query = "
-                  UPDATE ".$db->quoteName('#__hwdms_playlists')."
-                    SET ".$db->quoteName('published')." = ".$db->quote('-2')."
-                    WHERE ".$db->quoteName('id')." = ".implode(" OR ".$db->quoteName('id')." = ", $pks)."
-                  ";
-                $db->setQuery($query);
-
-                // Check for a database error.
-		if (!$db->query())
-                {
-			$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_PUBLISH_FAILED', get_class($this), $this->_db->getErrorMsg()));
-			$this->setError($e);
-
-			return false;
-		}
-
-                // Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-        /**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
-	 */
-	public function report()
-	{
-                $app = JFactory::getApplication();
-                
-                if (!JFactory::getUser()->authorise('hwdmediashare.report','com_hwdmediashare'))
-                {
-                        return JError::raiseWarning(404, JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-                }
-                
-                $array = JRequest::get( 'post' );
-                $user = JFactory::getUser();
-
-                $params = new StdClass;
-                $params->elementType = 4;
-                $params->elementId = JRequest::getInt('id');
-                $params->reportId = JRequest::getInt('report_id');
-                $params->description = JRequest::getVar('description');
-                $params->userId = $user->id;
-
-                hwdMediaShareFactory::load('reports');
-                hwdMediaShareReports::add($params);
-
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                $utilities->printModalNotice('COM_HWDMS_NOTICE_PLAYLIST_REPORTED', 'COM_HWDMS_NOTICE_PLAYLIST_REPORTED_DESC'); 
-                return;
-	}
-        
-      	/**
-	 * Method to get the item count.
-	 *
-	 * @return	int		The number of media in the album.
+	 * Method to get the number of media.
+	 * @return  void.
 	 */
 	public function getNumMedia()
 	{
 		return $this->_numMedia;
-        } 
+        }
         
-        /**
-	 * Method to get a JPagination object for the data set.
+	/**
+	 * Increment the hit counter for the record.
 	 *
-	 * @return  JPagination  A JPagination object for the data set.
+	 * @param   integer  $pk  Optional primary key of the record to increment.
 	 *
-	 * @since   11.1
+	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
-	public function getPagination()
+	public function hit($pk = 0)
 	{
-		return $this->_model->getPagination();
-	}         
+		$input = JFactory::getApplication()->input;
+		$hitcount = $input->getInt('hitcount', 1);
+
+		if ($hitcount)
+		{
+			$pk = (!empty($pk)) ? $pk : (int) $this->getState('filter.playlist_id');
+
+			$table = $this->getTable();
+			$table->load($pk);
+			$table->hit($pk);
+		}
+
+		return true;
+	}
+
+	/**
+	 * Increment the like counter for the record.
+	 *
+	 * @param   integer  $pk     Optional primary key of the record to increment.
+	 * @param   integer  $value  The value of the property to increment.
+         * 
+	 * @return  boolean  True if successful; false otherwise and internal error set.
+	 */
+	public function like($pk = 0, $value = 1)
+	{            
+                $user = JFactory::getUser();
+                if (!$user->authorise('hwdmediashare.like', 'com_hwdmediashare'))
+                {
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
+                }
+                
+                $pk = (!empty($pk)) ? $pk : (int) $this->getState('filter.playlist_id');
+
+                $table = $this->getTable();
+                $table->load($pk);
+                $table->like($pk, $value);
+
+                return true;
+	}
+
+	/**
+	 * Method to change the published state of one or more records.
+	 *
+	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function publish($pks, $value = 0)
+	{
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Access checks.
+		foreach ($pks as $i => $id)
+		{
+			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.playlist.'. (int) $id))
+			{
+				// Prune items that the user can't change.
+				unset($pks[$i]);
+				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			}
+		}
+                
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__hwdms_playlists'))
+                                    ->set('published = ' . $db->quote((int) $value))
+                                    ->where('id IN (' . implode(',', $pks) . ')');
+                        $db->setQuery($query);
+			$db->execute();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		// Clear the component's cache
+		$this->cleanCache();
+
+		return true;
+	}
+
+	/**
+	 * Method to report an object
+	 * @return  void
+	 */
+	public function report()
+	{
+		// Initialiase variables.
+		$user = JFactory::getUser();
+                $date = JFactory::getDate();                
+		$input = JFactory::getApplication()->input;
+
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+		$table = $this->getTable('Report', 'hwdMediaShareTable');    
+
+                if ($user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;                    
+                }
+                                        
+                // Create an object to bind to the database.
+                $object = new StdClass;
+                $object->element_type = 4;
+                $object->element_id = $input->get('id', 0, 'int');
+                $object->user_id = $user->id;
+                $object->report_id = $input->get('report_id', 0, 'int');
+                $object->description = $input->get('description', '', 'string');
+                $object->created = $date->format('Y-m-d H:i:s');
+                
+                // Attempt to save the report details to the database.
+                if (!$table->save($object))
+                {
+                        $this->setError($table->getError());
+                        return false;
+                }
+
+		return true;
+	}  
 }
