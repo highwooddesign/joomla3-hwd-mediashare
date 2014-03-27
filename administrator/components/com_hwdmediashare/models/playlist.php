@@ -29,11 +29,20 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	{
                 if ($item = parent::getItem($pk))
                 {
+                        // Add the tags.
+                        $item->tags = new JHelperTags;
+                        $item->tags->getTagIds($item->id, 'com_hwdmediashare.playlist');
+                        
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 4;
                         $item->customfields = $cf->get($item);
+                        
+                        // Add the number of media in the playlist.
                         $item->nummedia = $this->getMediaCount($item);
+                        
+                        // Add the playlist thumbnail.
                         $item->thumbnail = $this->getThumbnail($item);
                 }
 
