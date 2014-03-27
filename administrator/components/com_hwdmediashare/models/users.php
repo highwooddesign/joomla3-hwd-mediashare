@@ -58,22 +58,6 @@ class hwdMediaShareModelUsers extends JModelList
 	}
         
 	/**
-	 * Method to get a list of items.
-	 *
-	 * @return  mixed  An array of data items on success, false on failure.
-	 */
-	public function getItems()
-	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                }
-
-		return $items;
-	}
-        
-	/**
 	 * Method to get the database query.
 	 *
 	 * @return  JDatabaseQuery  database query
@@ -92,7 +76,7 @@ class hwdMediaShareModelUsers extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.description, a.alias, a.checked_out, a.checked_out_time,' .
+				'a.id, a.title, a.description, a.alias, a.checked_out, a.checked_out_time,' .
 				'a.created_user_id, a.hits, a.published, a.featured,' .
 				'a.status, a.publish_up, a.publish_down, a.ordering, a.created, a.created_user_id_alias, a.access,'.
 				'a.language'
@@ -115,9 +99,9 @@ class hwdMediaShareModelUsers extends JModelList
 		$query->join('LEFT', '#__users AS u ON u.id=a.id');
 
                 // Join over the users for the author, with value based on configuration.
-                $config->get('author') == 0 ? $query->select('ua.name AS title') : $query->select('ua.username AS title');
+                $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.username END AS title');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.id');
-                                
+
 		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
@@ -167,7 +151,7 @@ class hwdMediaShareModelUsers extends JModelList
                         else
                         {
 				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('(u.username LIKE '.$search.' OR u.name LIKE '.$search.')');
+				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.' OR u.username LIKE '.$search.' OR u.name LIKE '.$search.')');
 			}
 		}
 
