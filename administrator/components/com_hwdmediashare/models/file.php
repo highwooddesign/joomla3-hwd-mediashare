@@ -13,20 +13,6 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelFile extends JModelAdmin
 {
 	/**
-	 * Method to get a single record.
-	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
-	 */
-	public function getItem($pk = null)
-	{
-		$result = parent::getItem($pk);
-
-		return $result;
-	}
-
-	/**
 	 * Method to get a table object, load it if necessary.
 	 *
 	 * @param   string  $name     The table name. Optional.
