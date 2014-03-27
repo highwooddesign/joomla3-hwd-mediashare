@@ -76,6 +76,9 @@ class hwdMediaShareModelFile extends JModelAdmin
 	public function delete($pks)
 	{
 		// Initialiase variables.
+                $user = JFactory::getUser();
+                            
+		// Initialiase variables.
 		$db = JFactory::getDBO();
         
                 // Load the file system library
