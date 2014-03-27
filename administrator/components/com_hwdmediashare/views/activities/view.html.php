@@ -64,41 +64,6 @@ class hwdMediaShareViewActivities extends JViewLegacy
                 
                 JToolBarHelper::title(JText::_('COM_HWDMS_ACTIVITIES'), 'grid');
 
-		if ($canDo->get('core.edit.state'))
-                {
-			JToolBarHelper::divider();
-			JToolBarHelper::publish('activities.publish', 'JTOOLBAR_PUBLISH', true);
-			JToolBarHelper::unpublish('activities.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::custom('activities.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
-                        JToolBarHelper::custom('activities.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
-                        JToolBarHelper::divider();
-			JToolBarHelper::archiveList('activities.archive');
-			JToolBarHelper::checkin('activities.checkin');
-		}
-		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
-                {
-			JToolBarHelper::divider();
-                        JToolBarHelper::deleteList('', 'activities.delete', 'JTOOLBAR_EMPTY_TRASH');
-                        JToolBarHelper::divider();
-                }
-		else if ($canDo->get('core.edit.state'))
-                {
-			JToolBarHelper::divider();
-                        JToolBarHelper::trash('activities.trash');
-                        JToolBarHelper::divider();
-		}
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
-		{
-			JHtml::_('bootstrap.modal', 'collapseModal');
-			$title = JText::_('JTOOLBAR_BATCH');
-
-			// Instantiate a new JLayoutFile instance and render the batch button
-			$layout = new JLayoutFile('joomla.toolbar.batch');
-
-			$dhtml = $layout->render(array('title' => $title));
-			$bar->appendButton('Custom', $dhtml, 'batch');
-		}
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}       
 }
