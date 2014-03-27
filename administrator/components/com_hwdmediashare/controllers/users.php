@@ -57,7 +57,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 		$values	= array('approve' => 1, 'unapprove' => 0);
 		$task	= $this->getTask();
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
-
+                
 		if (!is_array($cid) || count($cid) < 1)
 		{
 			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
@@ -101,7 +101,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 		$values	= array('feature' => 1, 'unfeature' => 0);
 		$task	= $this->getTask();
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
-
+                
 		if (!is_array($cid) || count($cid) < 1)
 		{
 			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
