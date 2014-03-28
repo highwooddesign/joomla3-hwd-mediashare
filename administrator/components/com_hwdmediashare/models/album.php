@@ -165,7 +165,7 @@ class hwdMediaShareModelAlbum extends JModelAdmin
                 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
 			return false;
 		}
 
@@ -221,7 +221,7 @@ class hwdMediaShareModelAlbum extends JModelAdmin
                 
 		if (empty($pks))
 		{
-			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
 			return false;
 		}
 
