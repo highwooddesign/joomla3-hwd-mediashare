@@ -105,7 +105,7 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 *
 	 * @return  boolean  True if access level checks pass, false otherwise.
 	 */
-	public function cancel($key = 'a_id')
+	public function cancel($key = 'id')
 	{
 		parent::cancel($key);
 
