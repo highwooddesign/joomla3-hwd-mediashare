@@ -124,9 +124,9 @@ class hwdMediaShareModelCategories extends JModelList
 		$this->setState('filter.language', $app->getLanguageFilter());
 
 		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.category-display', 'display', $config->get('category_list_default_display', 'tree'), 'word', false);
+		$display = $this->getUserStateFromRequest('media.display_categories', 'display', $config->get('category_list_default_display', 'tree'), 'word', false);
                 if (!in_array(strtolower($display), array('details', 'tree'))) $display = 'tree';
-		$this->setState('media.category-display', $display);
+		$this->setState('media.display_categories', $display);
       
 		// List state information.
 		parent::populateState($ordering, $direction);
