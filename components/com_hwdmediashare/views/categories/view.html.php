@@ -150,14 +150,4 @@ class hwdMediaShareViewCategories extends JViewLegacy
 			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
                 }   
 	}
-
-	/**
-	 * Gets a list of media for a category
-         * 
-	 * @return  void
-	 */
-	public function getCategoryMedia($item)
-	{
-                return $this->get('Media');
-	}
 }
