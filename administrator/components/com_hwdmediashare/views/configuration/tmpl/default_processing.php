@@ -193,8 +193,8 @@ JHtml::_('HwdPopup.alert');
                                 <div class="controls"><?php echo $this->form->getInput('process_ogg_480'); ?></div>
                         </div> 
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('process_ogg_480'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('process_ogg_480'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('process_ogg_720'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('process_ogg_720'); ?></div>
                         </div> 
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('process_ogg_1080'); ?></div>
