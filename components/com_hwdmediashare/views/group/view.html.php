@@ -74,7 +74,7 @@ class hwdMediaShareViewGroup extends JViewLegacy
 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
-                $this->columns = (int) $this->params->get('list_columns', 3) - 1;
+                $this->columns = (int) $this->params->get('list_columns', 3) - 1; // This view has columns, so we reduce the number of columns
                 $this->return = base64_encode(JFactory::getURI()->toString());
                 $this->display = $this->state->get('media.display', 'details');
 
