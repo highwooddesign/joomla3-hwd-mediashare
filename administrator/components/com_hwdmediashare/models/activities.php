@@ -85,6 +85,13 @@ class hwdMediaShareModelActivities extends JModelList
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
 
+		// Filter by activity type
+                $activityType = $this->getState('filter.activity_type');
+		if (is_numeric($activityType))
+                {
+			$query->where('a.activity_type = '.(int) $activityType);
+		}
+                
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
