@@ -281,7 +281,7 @@ class hwdMediaShareModelPlaylists extends JModelList
 		if ($mediaId = $this->getState('media.id'))
                 {
                         $query->select('pmap.ordering AS playlist_order');
-                        $query->join('LEFT', '`#__hwdms_playlist_map` AS pmap ON pmap.playlist_id = a.id AND pmap.media_id = '.$mediaId);
+                        $query->join('LEFT', '#__hwdms_playlist_map AS pmap ON pmap.playlist_id = a.id AND pmap.media_id = '.$mediaId);
                         $query->where('pmap.media_id = ' . $db->quote($mediaId));
 		}
                 
