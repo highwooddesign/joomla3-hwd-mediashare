@@ -123,8 +123,11 @@ class hwdMediaShareModelAlbumForm extends hwdMediaShareModelAlbum
 
 		if ($itemId)
 		{
-			//$value->tags = new JHelperTags;
-			//$value->tags->getTagIds($value->id, 'com_content.article');
+                        // Add the tags.
+                        $value->tags = new JHelperTags;
+                        $value->tags->getTagIds($value->id, 'com_hwdmediashare.album');
+
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 2;
