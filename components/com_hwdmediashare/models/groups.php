@@ -280,7 +280,7 @@ class hwdMediaShareModelGroups extends JModelList
                 // Filter by media.
 		if ($mediaId = $this->getState('media.id'))
                 {
-                        $query->join('LEFT', '`#__hwdms_group_map` AS gmap ON gmap.group_id = a.id AND gmap.media_id = '.$mediaId);
+                        $query->join('LEFT', '#__hwdms_group_map AS gmap ON gmap.group_id = a.id AND gmap.media_id = '.$mediaId);
                         $query->where('gmap.media_id = ' . $db->quote($mediaId));
 		}
 
