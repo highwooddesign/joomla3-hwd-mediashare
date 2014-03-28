@@ -98,7 +98,7 @@ class hwdMediaShareModelUsers extends JModelList
 		$query->select('u.name, u.username, u.block, u.activation');
 		$query->join('LEFT', '#__users AS u ON u.id=a.id');
 
-                // Join over the users for the author, with value based on configuration.
+                // Join over the users for the title (if empty), with value based on configuration.
                 $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.username END AS title');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.id');
 
