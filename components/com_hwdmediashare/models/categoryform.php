@@ -16,6 +16,20 @@ require_once JPATH_ADMINISTRATOR.'/components/com_categories/models/category.php
 class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 {
 	/**
+	 * Method to get a table object, load it if necessary.
+	 *
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
+	 */
+	public function getTable($name = 'Category', $prefix = 'JTable', $config = array())
+	{
+		return JTable::getInstance($name, $prefix, $config);
+	}
+        
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -123,13 +137,15 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 
 		if ($itemId)
 		{
-			//$value->tags = new JHelperTags;
-			//$value->tags->getTagIds($value->id, 'com_content.article');
+                        // Add the tags.
+                        $value->tags = new JHelperTags;
+                        $value->tags->getTagIds($value->id, 'com_hwdmediashare.category');
+
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 6;
                         $value->customfields = $cf->get($value);
-                        $value->thumbnail = $this->getThumbnail($value);
 		}
 
 		return $value;
