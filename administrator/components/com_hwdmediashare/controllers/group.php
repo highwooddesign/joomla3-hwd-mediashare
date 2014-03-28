@@ -17,10 +17,24 @@ class hwdMediaShareControllerGroup extends JControllerForm
 	 * @var    string
 	 */
     	protected $view_list = "groups";
-        
+
 	/**
-	 * The ID of this element type.
-	 * @var    string
-	 */
-    	protected $elementType = 3;
+	 * Method to run batch operations.
+	 *
+	 * @param   object      $model  The model.
+	 *
+	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 */    
+	public function batch($model = null)
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		// Set the model
+		$model = $this->getModel('Group', '', array());
+
+		// Preset the redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
+
+		return parent::batch($model);
+	}     
 }
