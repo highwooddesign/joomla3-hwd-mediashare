@@ -31,7 +31,6 @@ class hwdMediaShareViewCategories extends JViewLegacy
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
-                $this->pagination = $this->get('Pagination');
                 $this->parent = $this->get('Parent');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
@@ -51,7 +50,7 @@ class hwdMediaShareViewCategories extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
                 $this->return = base64_encode(JFactory::getURI()->toString());
-                $this->display = $this->state->get('media.display', 'details');
+                $this->display = $this->state->get('media.display_categories', 'tree');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
@@ -60,7 +59,7 @@ class hwdMediaShareViewCategories extends JViewLegacy
                         return false;
                 }
 
-                if ($parent == false)
+                if ($this->parent == false)
 		{
                         JError::raiseError(500, JText::_('COM_HWDMS_ERROR_CATEGORY_NOT_FOUND'));
                         return false;
