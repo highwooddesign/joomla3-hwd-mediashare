@@ -132,6 +132,8 @@ class hwdMediaShareModelAlbumForm extends hwdMediaShareModelAlbum
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 2;
                         $value->customfields = $cf->get($value);
+                        
+                        // Add thumbnail.
                         $value->thumbnail = $this->getThumbnail($value);
 		}
 
