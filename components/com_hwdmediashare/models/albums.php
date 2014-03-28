@@ -280,7 +280,7 @@ class hwdMediaShareModelAlbums extends JModelList
                 // Filter by media.
 		if ($mediaId = $this->getState('media.id'))
                 {
-                        $query->join('LEFT', '`#__hwdms_album_map` AS amap ON amap.album_id = a.id AND amap.media_id = '.$mediaId);
+                        $query->join('LEFT', '#__hwdms_album_map AS amap ON amap.album_id = a.id AND amap.media_id = '.$mediaId);
                         $query->where('amap.media_id = ' . $db->quote($mediaId));
 		}
 
@@ -328,9 +328,9 @@ class hwdMediaShareModelAlbums extends JModelList
 		$this->setState('filter.language', $app->getLanguageFilter());
 
 		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
-                if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
-		$this->setState('media.display', $display);
+		$display = $this->getUserStateFromRequest('media.display_albums', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
+		$this->setState('media.display_albums', $display);
 
                 $ordering = $config->get('list_order_album', 'a.created');
                 $direction = (in_array($ordering, array('a.title', 'author', 'a.ordering')) ? 'ASC' : 'DESC');
