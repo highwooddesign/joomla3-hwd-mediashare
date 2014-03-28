@@ -119,7 +119,7 @@ class hwdMediaShareModelAlbum extends JModelList
                         $this->_album->customfields = $cf->get($this->_album);
                         
                         // Add the number of media in the album.
-                        $item->_album->nummedia = $this->_numMedia;
+                        $this->_album->nummedia = $this->_numMedia;
 
                         // Add the author.
                         if ($this->_album->created_user_id > 0)
