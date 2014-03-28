@@ -74,6 +74,11 @@ class hwdMediaShareModelAlbumMedia extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		// Load the parameters.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                $this->setState('params', $config);
+                            
 		// Initialise variables.
                 $jinput = JFactory::getApplication()->input;
  
