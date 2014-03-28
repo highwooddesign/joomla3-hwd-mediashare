@@ -4,6 +4,7 @@
                 name="details"
                 label="COM_HWDMS_DETAILS"
                 addfieldpath="/administrator/components/com_content/models/fields/"
+                addrulepath="/administrator/components/com_hwdmediashare/models/rules"
         >               
 		<field
 			name="offline"
