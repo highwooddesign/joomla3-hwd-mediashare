@@ -123,12 +123,17 @@ class hwdMediaShareModelPlaylistForm extends hwdMediaShareModelPlaylist
 
 		if ($itemId)
 		{
-			//$value->tags = new JHelperTags;
-			//$value->tags->getTagIds($value->id, 'com_content.article');
+                        // Add the tags.
+                        $value->tags = new JHelperTags;
+                        $value->tags->getTagIds($value->id, 'com_hwdmediashare.playlist');
+
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 4;
                         $value->customfields = $cf->get($value);
+                        
+                        // Add thumbnail.
                         $value->thumbnail = $this->getThumbnail($value);
 		}
 
