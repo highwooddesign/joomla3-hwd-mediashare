@@ -108,30 +108,29 @@ class hwdMediaShareModelPlaylist extends JModelList
 
 		if ($pk)
 		{
-                        //@TODO: FINISH
-			//$value->tags = new JHelperTags;
-			//$value->tags->getTagIds($value->id, 'com_content.article');
+                        // Add the tags.
+                        $this->_playlist->tags = new JHelperTags;
+                        $this->_playlist->tags->getTagIds($this->_playlist->id, 'com_hwdmediashare.playlist');
+                        
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 4;
                         $this->_playlist->customfields = $cf->get($this->_playlist);
-                        $this->_playlist->nummedia = $this->_numMedia;
+                        
+                        // Add the number of media in the playlist.
+                        $item->_playlist->nummedia = $this->_numMedia;
+
+                        // Add the author.
                         if ($this->_playlist->created_user_id > 0)
                         {   
-                                if (!empty($this->_playlist->created_user_id_alias))
-                                { 
-                                        $this->_playlist->author = $this->_playlist->created_user_id_alias;
-                                }
-                                else
-                                {
-                                        $user = & JFactory::getUser($this->_playlist->created_user_id);
-                                        $config->get('author') == 0 ? $this->_playlist->author = $user->name : $this->_playlist->author = $user->username;
-                                }
+                                $user = JFactory::getUser($this->_playlist->created_user_id);
+                                $this->_playlist->author = (!empty($this->_playlist->created_user_id_alias) ? $this->_playlist->created_user_id_alias : ($config->get('author') == 0 ? $user->name : $user->username));
                         }
                         else
                         {
                                 $this->_playlist->author = JText::_('COM_HWDMS_GUEST');
-                        }                       
+                        }                    
 		}
 
 		return $this->_playlist;
@@ -144,7 +143,7 @@ class hwdMediaShareModelPlaylist extends JModelList
 	 */
 	public function getItems()
 	{
-                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
                 $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->_model->populateState();
                 $this->_model->setState('filter.playlist_id', $this->getState('filter.playlist_id'));
@@ -199,15 +198,6 @@ class hwdMediaShareModelPlaylist extends JModelList
 
 		parent::populateState();           
 	}
-
-	/**
-	 * Method to get the number of media.
-	 * @return  void.
-	 */
-	public function getNumMedia()
-	{
-		return $this->_numMedia;
-        }
         
 	/**
 	 * Increment the hit counter for the record.
