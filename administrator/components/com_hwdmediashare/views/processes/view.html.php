@@ -89,18 +89,6 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 {
                         JToolBarHelper::custom('processes.deleteunnecessary', 'delete','delete', JText::sprintf('COM_HWDMS_DELETE_X_UNNECESSARY', $this->unnecessary), false);
                 }
-		// Add a batch button
-		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
-		{
-			JHtml::_('bootstrap.modal', 'collapseModal');
-			$title = JText::_('JTOOLBAR_BATCH');
-
-			// Instantiate a new JLayoutFile instance and render the batch button
-			$layout = new JLayoutFile('joomla.toolbar.batch');
-
-			$dhtml = $layout->render(array('title' => $title));
-			$bar->appendButton('Custom', $dhtml, 'batch');
-		}
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
         
