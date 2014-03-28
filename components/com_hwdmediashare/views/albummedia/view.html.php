@@ -76,4 +76,27 @@ class hwdMediaShareViewAlbumMedia extends JViewLegacy
                 
 		$this->document->setTitle($title);  
 	}
+
+	/**
+	 * Display appropriate button to either link or unlink the media from the album.
+	 * @return  void
+	 */
+	public function getButton($row, $i)
+	{
+                $task = $row->connection ? 'unlink' : 'link';
+                $buttonClass = $row->connection ? 'btn btn-danger' : 'btn';
+
+                // Start output
+                ob_start();
+                ?>
+                <div class="btn-wrapper pull-right">
+                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('mb<?php echo $i; ?>','albummedia.<?php echo $task; ?>')">
+                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_FROM_ALBUM') : JText::_('COM_HWDMS_BTN_ADD_TO_ALBUM')); ?>
+                        </a>
+                </div>
+                <?php
+                $html = ob_get_contents();
+                ob_end_clean();
+                return $html;
+	}        
 }
