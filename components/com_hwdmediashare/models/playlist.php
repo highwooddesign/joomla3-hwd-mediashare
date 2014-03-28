@@ -119,7 +119,7 @@ class hwdMediaShareModelPlaylist extends JModelList
                         $this->_playlist->customfields = $cf->get($this->_playlist);
                         
                         // Add the number of media in the playlist.
-                        $item->_playlist->nummedia = $this->_numMedia;
+                        $this->_playlist->nummedia = $this->_numMedia;
 
                         // Add the author.
                         if ($this->_playlist->created_user_id > 0)
