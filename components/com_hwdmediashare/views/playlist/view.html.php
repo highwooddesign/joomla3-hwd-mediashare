@@ -36,6 +36,7 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
                 $this->playlist = $this->get('Playlist');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
+                $this->filterForm = $this->get('FilterForm');
 
                 // Load libraries.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
@@ -50,7 +51,7 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
                 $this->return = base64_encode(JFactory::getURI()->toString());
-                $this->display = $this->state->get('media.display', 'details');
+                $this->display = $this->state->get('media.display', 'list');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
