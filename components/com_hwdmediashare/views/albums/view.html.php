@@ -47,7 +47,7 @@ class hwdMediaShareViewAlbums extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
                 $this->return = base64_encode(JFactory::getURI()->toString());
-                $this->display = $this->state->get('media.display', 'details');
+                $this->display = $this->state->get('media.display_albums', 'details');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
