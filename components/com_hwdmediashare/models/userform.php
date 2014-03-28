@@ -123,12 +123,17 @@ class hwdMediaShareModelUserForm extends hwdMediaShareModelUser
 
 		if ($itemId)
 		{
-			//$value->tags = new JHelperTags;
-			//$value->tags->getTagIds($value->id, 'com_content.article');
+                        // Add the tags.
+                        $value->tags = new JHelperTags;
+                        $value->tags->getTagIds($value->id, 'com_hwdmediashare.user');
+
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
                         $cf = hwdMediaShareCustomFields::getInstance();
                         $cf->elementType = 5;
                         $value->customfields = $cf->get($value);
+                        
+                        // Add thumbnail.
                         $value->thumbnail = $this->getThumbnail($value);
 		}
 
