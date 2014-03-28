@@ -1,92 +1,159 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 1699 2013-10-17 13:39:07Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      14-Nov-2011 21:02:42
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
+class hwdMediaShareViewAccount extends JViewLegacy 
+{
+	public $user;
 
-/**
- * HTML View class for the hwdMediaShare Component
- */
-class hwdMediaShareViewAccount extends JViewLegacy {
-	// Overwriting JView display method
+	public $items;        
+
+	public $albums;
+
+	public $favourites;
+
+	public $groups;
+
+	public $memberships;
+        
+	public $media;
+
+	public $playlists;
+
+	public $subscriptions;
+
+	public $activities;
+        
+	public $state;
+        
+	public $params;
+        
+	/**
+	 * Display the view
+	 *
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 *
+	 * @return  void
+	 */
 	function display($tpl = null)
 	{
-                $app = & JFactory::getApplication();
-                $layout = JRequest::getWord('layout', '');
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                $this->layout = $app->input->get('layout', 'media', 'word');
 
-                if (!empty($layout))
-                {
-                        $items = $this->get('Items');
-                        $pagination = $this->get('Pagination');
-                        $form = $this->get('Form');
-                        $batch = $this->get('BatchForm');
-                }
-                else
-                {
-                         $item = $this->get('Item');               
-                }
-                
-		$state	= $this->get('State');
+                // Get data from the model.
+                // User is called afterwards so we have data from the items.
+                $this->albums = $this->get('Albums');
+                $this->favourites = $this->get('Favourites');
+                $this->groups = $this->get('Groups');
+                $this->media = $this->get('Media');
+                $this->memberships = $this->get('Memberships');
+                $this->playlists = $this->get('Playlists');
+                $this->subscriptions = $this->get('Subscriptions');
+                $this->activities = $this->get('Activities');
 
-                // Download links
+                switch ($this->layout)
+                {
+                    case 'albums':
+                        $this->items = $this->get('Albums');
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_ALBUMS');;
+                        break;
+                    case 'favourites':
+                        $this->items = $this->get('Favourites');
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_FAVOURITES');;
+                        break;
+                    case 'groups':
+                        $this->items = $this->get('Groups');
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_GROUPS');;
+                        break;
+                    case 'memberships':
+                        $this->items = $this->get('Memberships'); 
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_MEMBERSHIPS');;
+                        break;
+                    case 'playlists':
+                        $this->items = $this->get('Playlists');
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_PLAYLISTS');;
+                        break;
+                    case 'subscriptions':
+                        $this->items = $this->get('Subscriptions'); 
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_SUBSCRIPTIONS');;
+                        break;
+                    default:
+                        $this->items = $this->get('Media');
+                        $this->pagination = $this->get('Pagination');
+                        $this->page_title = JText::_('COM_HWDMS_MY_MEDIA');;
+                        break;
+                }
+
+                $this->user = $this->get('User');
+		$this->state = $this->get('State');
+		$this->params = $this->state->params;
+                $this->filterForm = $this->get('FilterForm');
+
+                // Load libraries.
+                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
+                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+		hwdMediaShareFactory::load('utilities');
+                hwdMediaShareFactory::load('activities');
+                hwdMediaShareHelperNavigation::setJavascriptVars();
 
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+                $this->columns = $this->params->get('list_columns', 3);
+                $this->return = base64_encode(JFactory::getURI()->toString());
+                $this->display = $this->state->get('media.display', 'details');
 
-		$params = &$state->params;
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
+                {
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
 
-		//Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
+                $model = $this->getModel();
+		$model->hit();
 
-                $this->assign('columns',	        $params->get('list_columns', 3));
-                $this->assign('display',		$state->get('media.display'));                
-                $this->assign('return',                 base64_encode(JFactory::getURI()->toString()));
-                
-                $this->assignRef('item',		$item);
-
-                $this->assignRef('items',		$items);
-                $this->assignRef('pagination',		$pagination);
-                $this->assignRef('form',		$form);
-                $this->assignRef('batch',		$batch);
-                
-                $this->assignRef('state',		$state);
-                $this->assignRef('params',		$params);
-                
 		$this->_prepareDocument();
-
-                // Display the view
-                parent::display($tpl);
+                
+		// Display the template.
+		parent::display($tpl);
 	}
+        
 	/**
 	 * Prepares the document
+	 *
+	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app	= JFactory::getApplication();
-                $menus	= $app->getMenu();
-		$title	= null;
+		$app = JFactory::getApplication();
+		$menus = $app->getMenu();
+		$pathway = $app->getPathway();
+		$title = null;
 
+                // Add page assets.
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->state->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
 		// Because the application sets a default page title,
 		// we need to get it from the menu item itself
@@ -95,14 +162,38 @@ class hwdMediaShareViewAccount extends JViewLegacy {
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 		}
-                else
-                {
+		else
+		{
 			$this->params->def('page_heading', JText::_('COM_HWDMS_MY_ACCOUNT'));
 		}
+
 		$title = $this->params->get('page_title', '');
+
+		$id = (int) @$menu->query['id'];
+                
+		// If the menu item does not concern this item
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'account' || $id != $this->user->id))
+		{
+			// If this is not a single item menu item, set the page title to the item title
+			if ($this->user->title) 
+                        {
+				$title = $this->user->title;
+			}      
+                        
+                        // Breadcrumb support
+			$path = array(array('title' => $this->user->title, 'link' => ''));
+                                                
+			$path = array_reverse($path);
+			foreach($path as $item)
+			{
+				$pathway->addItem($item['title'], $item['link']);
+			}                    
+		}
+
+		// Check for empty title and add site name if param is set
 		if (empty($title))
                 {
-			$title = JText::_('COM_HWDMS_MY_ACCOUNT');
+			$title = $app->getCfg('sitename');
 		}
 		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
                 {
@@ -112,21 +203,64 @@ class hwdMediaShareViewAccount extends JViewLegacy {
                 {
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
-                $this->document->setTitle($title);
-
-		if ($this->params->get('meta_desc'))
+                
+		if (empty($title))
 		{
+			$title = $this->item->title;
+		}
+		$this->document->setTitle($title);
+
+                if ($this->user->params->get('meta_desc'))
+		{
+			$this->document->setDescription($this->user->params->get('meta_desc'));
+		}
+                elseif ($this->user->description)
+                {                        
+			$this->document->setDescription($this->escape(JHtmlString::truncate($this->user->description, 160, true, false)));   
+                }                 
+                elseif ($this->params->get('meta_desc'))
+                {
 			$this->document->setDescription($this->params->get('meta_desc'));
-		}
+                }                
 
-		if ($this->params->get('meta_keys'))
+		if ($this->user->params->get('meta_keys'))
 		{
+			$this->document->setMetadata('keywords', $this->user->params->get('meta_keys'));
+		}
+                elseif ($this->params->get('meta_keys'))
+                {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
-		}
+                }
 
-		if ($this->params->get('meta_rights'))
+		if ($this->user->params->get('meta_rights'))
 		{
+			$this->document->setMetadata('keywords', $this->user->params->get('meta_rights'));
+		}
+                elseif ($this->params->get('meta_rights'))
+                {
 			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
-		}  
-	}    
+                }             
+                
+		if ($this->user->params->get('meta_author') == 1)
+		{
+			$this->document->setMetadata('author', $this->user->title);
+		}
+                elseif ($this->params->get('meta_author') == 1)
+                {
+			$this->document->setMetadata('author', $this->user->title);
+                }      
+	}
+        
+	/**
+	 * Prepares the category list
+	 *
+	 * @return  void
+	 */
+	public function getCategories($item)
+	{            
+                hwdMediaShareFactory::load('category');
+                $cat = hwdMediaShareCategory::getInstance();
+                $cat->elementType = 1;
+                return $cat->getCategories($item);
+	}       
 }
