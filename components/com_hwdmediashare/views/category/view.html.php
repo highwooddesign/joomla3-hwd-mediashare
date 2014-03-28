@@ -17,6 +17,8 @@ class hwdMediaShareViewCategory extends JViewLegacy
         public $subcategories;
 
 	public $items;
+
+	public $feature;
         
 	public $state;
         
@@ -37,8 +39,10 @@ class hwdMediaShareViewCategory extends JViewLegacy
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
                 $this->category = $this->get('Category');
+                $this->feature = $this->get('Feature');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
+                $this->filterForm = $this->get('FilterForm');
 
                 // Load libraries.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
@@ -164,12 +168,7 @@ class hwdMediaShareViewCategory extends JViewLegacy
                 elseif ($this->params->get('meta_keys'))
                 {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
-                }
-
-		if ($this->params->get('meta_author') == 1)
-                {
-			$this->document->setMetadata('author', $this->category->author);
-                }      
+                }     
 	}
         
 	/**
