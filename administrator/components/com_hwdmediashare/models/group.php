@@ -43,7 +43,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
                         $item->nummedia = $this->getMediaCount($item);
                         
                         // Add the number of members in the group.
-                        $item->nummedia = $this->getMediaCount($item);
+                        $item->nummembers = $this->getMemberCount($item);
                         
                         // Add the group thumbnail.
                         $item->thumbnail = $this->getThumbnail($item);
