@@ -96,7 +96,7 @@ class hwdMediaShareViewCategoryForm extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
                 
-		$this->params->set('page_heading', JText::sprintf( 'COM_HWDMS_EDIT_CATEGORYX', $this->escape($this->item->title)));
+		$this->params->set('page_heading', JText::sprintf('COM_HWDMS_EDIT_CATEGORYX', $this->escape($this->item->title)));
 		$this->document->setTitle($this->params->get('page_heading'));  
 	}
 
