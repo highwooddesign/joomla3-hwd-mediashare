@@ -102,7 +102,7 @@ class hwdMediaShareViewGroupForm extends JViewLegacy
 		}
 		else
 		{
-			$this->params->set('page_heading', JText::sprintf( 'COM_HWDMS_EDIT_GROUPX', $this->escape($this->item->title)));
+			$this->params->set('page_heading', JText::sprintf('COM_HWDMS_EDIT_GROUPX', $this->escape($this->item->title)));
 		}
                 
 		$this->document->setTitle($this->params->get('page_heading'));  
