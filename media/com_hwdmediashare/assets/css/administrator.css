@@ -1,139 +1,17 @@
 @charset "utf-8";
-@import url("ajax.css");
 /* CSS Document © Copyright 2011, All rights reserved
-   This sheet loads custom admin styles for the upload limit form field */
+   This sheet loads FancyUpload2 styles */
 /**********************************************************************************************/
-/* Upload limits */
-#limits-sliders ul#rules,
-#limits-sliders ul#rules ul {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: solid 0 #ccc;
-    background: #fff;
-    list-style-type: none;
+@import url("ajax.css");
+/* The directory import iframe */
+#folderframe { 
+	border: 0;
+        margin-left:20px;
 }
-
-#limits-sliders ul#rules li {
-	margin: 0;
-	padding: 0;
-}
-
-ul#rules li .pane-sliders .panel h3.title {
-	border: solid 0 #ccc;
-}
-
-#limits-sliders ul#rules .pane-slider {
-	border:solid 1px #ccc;
-}
-
-#limits-sliders ul#rules .pane-slider.pane-hide {
-	display:none;
-}
-
-#limits-sliders ul#rules li h3 {
-	background:#fafafa;
-	font-size:1.10em;
-}
-
-#limits-sliders ul#rules li h3 {
-	border: solid 1px #ccc;
-}
-
-#limits-sliders ul#rules li h3.pane-toggler-down a {
-	border: solid 0;
-}
-
-#limits-sliders ul#rules li h3.pane-toggler-down {
-	color:#000;
-	/*background:#146295;*/
-}
-
-#limits-sliders ul#rules .group-kind {
-	color:#025A8D;
-}
-
-#limits-sliders ul#rules table.group-rules {
-    border-collapse:collapse;
-    width:100%;
-}
-
-#limits-sliders ul#rules table.group-rules td {
-    border:solid 1px #ccc;
-    padding:4px;
-    vertical-align:middle;
-    text-align:left;
-    overflow:hidden;
-}
-
-#limits-sliders ul#rules table.group-rules th {
-    background:#ddd;
-    border:solid 1px #ddd;
-    font-size:0.9em;
-    color:#025A8D;
-    overflow:hidden;
-}
-
-#limits-sliders .panel {
-    margin-bottom: 3px;
-    margin-left:0;
-    border:0;
-}
-
-#limits-sliders p.rule-desc {
-	font-size: 1.091em;
-	margin-left: 0;
-}
-
-#limits-sliders div.rule-notes {
-	font-size: 1.091em;
-}
-
-ul#rules table.aclmodify-table {
-	border:solid 1px #000;
-}
-
-ul#rules table.group-rules td label {
-	border:solid 0 #000;
-	margin:0 !important;
-}
-
-ul#rules table.group-rules td span {
-	padding-bottom: 4px;
-}
-
-table.group-rules td select {
-	margin:0 !important;
-}
-
-#limits-sliders ul#rules .mypanel {
-	background:#ffffff;
-	padding:0;
-}
-
-#limits-sliders .mypanel table.group-rules {
-	margin: 5px;
-}
-
-#limits-sliders ul#rules {
-	padding:5px;
-}
-
-#limits-sliders  ul#rules  table.group-rules th {
-    text-align:left;
-    padding:4px;
-}
-
-#limits-sliders .pane-toggler span {
-	padding-left:20px;
-}
-
-#limits-sliders .pane-toggler-down span {
-	padding-left:20px;
-}
-
-#limits-sliders .pane-toggler-down span.level,
-#limits-sliders .pane-toggler span.level {
-	color:#aaa;
-	background-image:none;
-	padding: 0;
+/* The thumbnail wrapper for floats */
+.thumb-wrapper { 
+        margin-bottom: 5px;
+        margin-left: 0;
+        margin-right: 5px;
+        margin-top: 0;
 }
