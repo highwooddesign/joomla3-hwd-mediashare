@@ -104,7 +104,9 @@ class hwdMediaShareViewCategory extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('COM_HWDMS_CATEGORY'));
 		}
-
+                // Due to the nature of this view, we are going to override the page heading
+                $this->params->set('page_heading', $this->category->title);
+                
 		$title = $this->params->get('page_title', '');
 
 		$id = (int) @$menu->query['id'];
