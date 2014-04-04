@@ -44,7 +44,7 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <a title="<?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getUserRoute($user->id)); ?>" class="btn"><i class="icon-user"></i> <?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?></a>
-        <a title="<?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=userform.edit&id='.$user->id.'&return='.base64_encode($uri)); ?>" class="btn"><i class="icon-edit"></i> <?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?></a> 
+        <a title="<?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=userform.edit&id='.$user->id.'&return=' . $this->return); ?>" class="btn"><i class="icon-edit"></i> <?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?></a> 
         <?php if ($canAddMedia) : ?>
         <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getUploadRoute()); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
