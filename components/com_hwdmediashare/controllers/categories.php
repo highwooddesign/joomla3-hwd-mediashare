@@ -96,7 +96,7 @@ class hwdMediaShareControllerCategories extends JControllerForm
 			}
 		}
                 
-                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+                $return = base64_decode($this->input->get('return', null, 'base64'));
 		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
 
@@ -132,7 +132,7 @@ class hwdMediaShareControllerCategories extends JControllerForm
 			}
 		}
                 
-                $return = base64_decode(JFactory::getApplication()->input->get('return'));                        
+                $return = base64_decode($this->input->get('return', null, 'base64'));
 		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}          
 }
