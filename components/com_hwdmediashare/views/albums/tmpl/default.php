@@ -25,7 +25,7 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <?php if ($canAdd): ?>
-          <a title="<?php echo JText::_('COM_HWDMS_ADD_ALBUM'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albumform&layout=edit&return=' . $this->return); ?>" class="btn"><i class="icon-book"></i> <?php echo JText::_('COM_HWDMS_ADD_ALBUM'); ?></a>
+          <a title="<?php echo JText::_('COM_HWDMS_ADD_ALBUM'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albumform&layout=edit&return=' . $this->return); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_ALBUM'); ?></a>
         <?php endif; ?>  
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
