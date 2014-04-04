@@ -17,14 +17,14 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.album.'.$this->
 $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || $user->authorise('hwdmediashare.import','com_hwdmediashare'));
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
-  <div id="hwd-container"> <a name="top" id="top"></a>
+  <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <!-- Media Navigation -->
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <?php if ($this->params->get('item_meta_title') != 'hide') :?>
-        <h2 class="media-album-title"><?php echo $this->escape($this->album->title); ?></h2>
-      <?php endif; ?>        
+      <?php if ($this->params->get('item_meta_title') != 'hide' && $this->params->get('show_page_heading', 1)) :?>
+        <h2 class="media-album-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php endif; ?>     
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <?php if ($canAddMedia): ?>
