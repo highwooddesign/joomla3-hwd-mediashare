@@ -132,7 +132,7 @@ class hwdMediaShareViewAccount extends JViewLegacy
 		$model->hit();
 
 		$this->_prepareDocument();
-                
+  
 		// Display the template.
 		parent::display($tpl);
 	}
@@ -166,6 +166,8 @@ class hwdMediaShareViewAccount extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('COM_HWDMS_MY_ACCOUNT'));
 		}
+                // Due to the nature of this view, we are going to override the page heading
+                $this->params->set('page_heading', $this->page_title);
 
 		$title = $this->params->get('page_title', '');
 
@@ -248,7 +250,7 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 elseif ($this->params->get('meta_author') == 1)
                 {
 			$this->document->setMetadata('author', $this->user->title);
-                }      
+                } 
 	}
         
 	/**
