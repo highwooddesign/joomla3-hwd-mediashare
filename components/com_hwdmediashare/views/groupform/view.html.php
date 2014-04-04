@@ -96,7 +96,16 @@ class hwdMediaShareViewGroupForm extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
                 
-		$this->document->setTitle($title);  
+		if ($this->isNew)
+		{
+			$this->params->set('page_heading', JText::_('COM_HWDMS_NEW_GROUP'));
+		}
+		else
+		{
+			$this->params->set('page_heading', JText::sprintf( 'COM_HWDMS_EDIT_GROUPX', $this->escape($this->item->title)));
+		}
+                
+		$this->document->setTitle($this->params->get('page_heading'));  
 	}
 
 	/**
