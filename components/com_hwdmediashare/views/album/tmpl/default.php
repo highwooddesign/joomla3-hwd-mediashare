@@ -10,6 +10,10 @@
 
 defined('_JEXEC') or die;
 
+// Include the component HTML helpers.
+JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
+JHtml::_('HwdPopup.page');
+
 $user = JFactory::getUser();
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.album.'.$this->album->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.album.'.$this->album->id) && ($this->album->created_user_id == $user->id)));
 $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.album.'.$this->album->id);
@@ -28,10 +32,10 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <?php if ($canAddMedia): ?>
-          <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&tmpl=component&album_id='.(int)$this->album->id); ?>" class="btn modal" rel="{handler: 'iframe', size: {<?php echo $this->utilities->modalSize('large'); ?>}}"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
+          <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&album_id='.(int)$this->album->id.'&return=' . $this->return); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
-        <?php if ($this->params->get('item_meta_report') != 'hide' && $this->album->created_user_id != $user->id): ?>  
-          <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albumform.report&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
+        <?php if ($this->params->get('item_meta_report') != 'hide' && $this->album->created_user_id != $user->id): ?>                  
+          <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albumform.report&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-page"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>    
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
@@ -49,12 +53,12 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
           JHtml::_('hwddropdown.edit', $this->album->id, 'albumform'); 
         endif;    
         if ($canEditState) :
-          $action = $this->album->published ? 'unpublish' : 'publish';
+          $action = $this->album->published == 1 ? 'unpublish' : 'publish';
           JHtml::_('hwddropdown.' . $action, $this->album->id, 'albums'); 
         endif; 
-        if ($canEdit) : 
+        if ($canDelete && $this->album->published != -2) : 
           JHtml::_('hwddropdown.delete', $this->album->id, 'albums'); 
-        endif;         
+        endif;       
         // Render dropdown list       
         echo JHtml::_('hwddropdown.render', $this->escape($this->album->title));
         ?>
