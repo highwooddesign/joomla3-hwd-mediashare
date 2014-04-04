@@ -96,7 +96,16 @@ class hwdMediaShareViewAlbumForm extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
                 
-		$this->document->setTitle($title);  
+		if ($this->isNew)
+		{
+			$this->params->set('page_heading', JText::_('COM_HWDMS_NEW_ALBUM'));
+		}
+		else
+		{
+			$this->params->set('page_heading', JText::sprintf('COM_HWDMS_EDIT_ALBUMX', $this->escape($this->item->title)));
+		}
+                
+		$this->document->setTitle($this->params->get('page_heading'));  
 	}
 
 	/**
@@ -110,7 +119,7 @@ class hwdMediaShareViewAlbumForm extends JViewLegacy
 	{
 		// Initialise variables.
 		$user = JFactory::getUser();
-                            
+
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
                 {
                         hwdMediaShareFactory::load('utilities');
