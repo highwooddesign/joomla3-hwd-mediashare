@@ -98,7 +98,9 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		{
 			$this->params->def('page_heading', JText::_('COM_HWDMS_ALBUM'));
 		}
-
+                // Due to the nature of this view, we are going to override the page heading
+                $this->params->set('page_heading', $this->album->title);
+                
 		$title = $this->params->get('page_title', '');
 
 		$id = (int) @$menu->query['id'];
