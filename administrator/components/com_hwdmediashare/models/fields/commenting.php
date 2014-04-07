@@ -19,7 +19,7 @@ class JFormFieldCommenting extends JFormFieldList
 	 *
 	 * @var  string
 	 */
-	protected $type = 'CDN';
+	protected $type = 'Commenting';
 
 	/**
 	 * Method to get the field options.
