@@ -1,43 +1,39 @@
 <?php
 /**
- * @version    SVN $Id: process.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      07-Dec-2011 17:09:12
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
- /**
-  * Process field class
-  */
 class JFormFieldProcess extends JFormFieldList
 {
 	/**
-	 * The field type.
+	 * The form field type.
 	 *
-	 * @var		string
+	 * @var  string
 	 */
 	protected $type = 'Process';
 
 	/**
-	 * Method to get a list of options for a list input.
+	 * Method to get the field options.
 	 *
-	 * @return	array		An array of JHtml options.
+	 * @return  array  The field option objects.
 	 */
-	public function getOptions()
+	protected function getOptions()
 	{
-		// Initialise variables.
-		$options	= array();
-
-                $options[] = JHtml::_('select.option', '', JText::_('COM_HWDMS_LIST_SELECT_PROCESS'));
+                // Get HWD config
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Initialise variables.
+		$options = array();
                 $options[] = JHtml::_('select.option', '1', JText::_('COM_HWDMS_GENERATE_JPG_75_LABEL'));
                 $options[] = JHtml::_('select.option', '2', JText::_('COM_HWDMS_GENERATE_JPG_100_LABEL'));
                 $options[] = JHtml::_('select.option', '3', JText::_('COM_HWDMS_GENERATE_JPG_240_LABEL'));
@@ -65,6 +61,9 @@ class JFormFieldProcess extends JFormFieldList
                 $options[] = JHtml::_('select.option', '21', JText::_('COM_HWDMS_MOVE_MOOV_ATOM_LABEL'));
                 $options[] = JHtml::_('select.option', '22', JText::_('COM_HWDMS_GET_DURATION_LABEL'));
                 $options[] = JHtml::_('select.option', '23', JText::_('COM_HWDMS_GET_TITLE_LABEL'));
+                
+                // Merge any additional options in the XML definition.
+		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
