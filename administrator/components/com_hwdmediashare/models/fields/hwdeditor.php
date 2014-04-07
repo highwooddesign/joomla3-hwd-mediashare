@@ -14,6 +14,13 @@ JFormHelper::loadFieldClass('editor');
 
 class JFormFieldHwdEditor extends JFormFieldEditor
 {
+    	/**
+	 * The form field type.
+	 *
+	 * @var  string
+	 */
+	protected $type = 'HwdEditor';
+        
 	/**
 	 * Method to get a JEditor object based on the form field.
 	 *
