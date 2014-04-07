@@ -31,6 +31,7 @@ class hwdMediaShareModelMedia extends JModelList
 				'id', 'a.id',
 				'title', 'a.title',
 				'alias', 'a.alias',
+				'viewed', 'a.viewed',
 				'private', 'a.private',
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
@@ -129,6 +130,11 @@ class hwdMediaShareModelMedia extends JModelList
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
 
+                // Join over the file extensions.
+                $query->select("CASE WHEN a.ext_id > 0 THEN ext.media_type ELSE a.media_type END AS media_type");
+                $query->select('ext.ext');
+		$query->join('LEFT', '#__hwdms_ext AS ext ON ext.id = a.ext_id');
+
 		// Filter by a single or group of categories.
 		$categoryId = $this->getState('filter.category_id');
                 if (is_numeric($categoryId) && $categoryId > 0) 
@@ -148,7 +154,8 @@ class hwdMediaShareModelMedia extends JModelList
 				$subQuery->from('#__categories as sub');
 				$subQuery->join('INNER', '#__categories as this ON sub.lft > this.lft AND sub.rgt < this.rgt');
 				$subQuery->where('this.id = '.(int) $categoryId);
-				if ($levels >= 0) {
+				if ($levels >= 0)
+                                {
 					$subQuery->where('sub.level <= this.level + '.$levels);
 				}
 
@@ -159,11 +166,10 @@ class hwdMediaShareModelMedia extends JModelList
                         {
 				$query->where($categoryEquals);
 			}
-                        $query->where('cmap.element_type = 1');
-                        
+                       
                         $query->join('LEFT', '#__hwdms_category_map AS cmap ON cmap.element_id = a.id');
                         $query->join('LEFT', '#__categories AS c ON c.id = cmap.category_id');
-
+                        $query->where('cmap.element_type = 1');
                         $query->where('c.access IN ('.$groups.')');
 
                         // Filter by published category
@@ -266,11 +272,6 @@ class hwdMediaShareModelMedia extends JModelList
                  * 
                  * 
                  */
-
-                // Join over the file extensions.
-                $query->select("CASE WHEN a.ext_id > 0 THEN ext.media_type ELSE a.media_type END AS media_type");
-                $query->select('ext.ext');
-		$query->join('LEFT', '#__hwdms_ext AS ext ON ext.id = a.ext_id');
 
                 // Filter by media type.
 		$mediaType = $this->getState('filter.media_type');
