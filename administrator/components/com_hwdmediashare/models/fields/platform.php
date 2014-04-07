@@ -1,87 +1,72 @@
 <?php
 /**
- * @version    SVN $Id: platform.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-May-2012 10:28:51
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import the list field type
-jimport('joomla.form.helper');
 JFormHelper::loadFieldClass('list');
 
- /**
-  * Process field class
-  */
 class JFormFieldPlatform extends JFormFieldList
 {
 	/**
-	 * The field type.
+	 * The form field type.
 	 *
-	 * @var		string
+	 * @var  string
 	 */
 	protected $type = 'Platform';
 
 	/**
-	 * Method to get a list of options for a list input.
+	 * Method to get the field options.
 	 *
-	 * @return	array		An array of JHtml options.
+	 * @return  array  The field option objects.
 	 */
 	protected function getOptions()
 	{
-                // Initialise variables.
-		$options	= array();    
-                $options[]      = JHtml::_('select.option', '', JText::_('COM_HWDMS_LIST_SELECT_HOSTING_PLATFORM'));
-
-                // Load all hwdMediaShare plugins
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('*');
-                $query->from('#__extensions AS a');
-                $query->where('a.type = '.$db->quote('plugin'));
-                $query->where('a.folder = '.$db->quote('hwdmediashare'));
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('*')
+                        ->from('#__extensions')
+                        ->where('type = ' . $db->quote('plugin'))
+                        ->where('folder = ' . $db->quote('hwdmediashare'));
                 $db->setQuery($query);
-                $rows = $db->loadObjectList();            
+                try
+                {
+                        $db->query(); 
+                        $rows = $db->loadObjectList();                        
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
 
-                // Loop all plugins and check if a commenting plugin
-		for( $i = 0; $i < count($rows); $i++ )
+                // Loop all plugins and check if a cdn plugin
+		for($i = 0; $i < count($rows); $i++)
 		{
 			$row = $rows[$i];
 
-                        if( substr($row->element, 0, 9) == 'platform_' )
+                        if(substr($row->element, 0, 9) == 'platform_')
 			{
-                                // Load the HWDMediaShare language file
-                                $lang =& JFactory::getLanguage();
-                                $lang->load($row->name, JPATH_SITE.'/administrator', $lang->getTag());
+                                // Load the plugin language file
+                                $lang = JFactory::getLanguage();
+                                $lang->load($row->name, JPATH_SITE . '/administrator', $lang->getTag());
 
-                                $pluginClass = 'plgHwdmediashare'.$row->element;
-                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$row->element.'/'.$row->element.'.php';
-
-                                $insert = true;
-
-                                // Import hwdMediaShare plugins
-                                if (file_exists($pluginPath))
+                                // Add option
+                                if (file_exists(JPATH_ROOT.'/plugins/hwdmediashare/' . $row->element . '/' . $row->element . '.php'))
                                 {
-                                        JLoader::register($pluginClass, $pluginPath);
-                                        
-                                        $player = call_user_func(array($pluginClass, 'getInstance'));
-                                        if (method_exists($player,'checkInstalled'))
-                                        {
-                                                $insert = call_user_func(array($pluginClass, 'checkInstalled'));
-                                        }
+                                        $options[] = JHtml::_('select.option', $row->element, JText::_($row->name));  
                                 }
-                                
-                                if ($insert)
-                                {
-                                        $options[] = JHtml::_('select.option', $row->element, JText::_($row->name));     
-                                }                              
 			}
 		}
+
+                // Merge any additional options in the XML definition.
+		$options = array_merge(parent::getOptions(), $options);
 
 		return $options;
 	}
