@@ -12,14 +12,14 @@ defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('list');
 
-class JFormFieldActivityType extends JFormFieldList
+class JFormFieldActivity extends JFormFieldList
 {
 	/**
 	 * The form field type.
 	 *
 	 * @var  string
 	 */
-	protected $type = 'ActivityType';
+	protected $type = 'Activity';
 
 	/**
 	 * Method to get the field options.
