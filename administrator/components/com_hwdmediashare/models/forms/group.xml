@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: group.xml 1432 2013-04-30 10:13:44Z dhorsfall $ -->
 <form
 	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
 >
@@ -13,11 +12,8 @@
 		/>
                 <field
 			name="key"
-			type="text"
-			label="COM_HWDMS_KEY_LABEL"
-			description="COM_HWDMS_KEY_DESC"
-			size="40"
-			class="readonly"
+                        readonly="true"                        
+			type="hidden"
 		/>
                 <field 
                         name="asset_id" 
@@ -29,24 +25,18 @@
 			type="text"
 			label="COM_HWDMS_TITLE_LABEL"
 			description="COM_HWDMS_TITLE_DESC"
-			size="40"
-			class="inputbox"
+			class="input-xxlarge input-large-text"
 			required="true"
-			default=""
 		/>
                 <field
 			name="alias"
 			type="text"
 			label="COM_HWDMS_ALIAS_LABEL"
 			description="COM_HWDMS_ALIAS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
 		/>
 		<field 
                         name="description" 
-                        type="editorhwd" 
-                        class="inputbox"
+                        type="hwdeditor" 
 			label="COM_HWDMS_DESCRIPTION_LABEL" 
                         description="COM_HWDMS_DESCRIPTION_DESC"
 			filter="safehtml" 
@@ -54,19 +44,20 @@
                 />
                 <field
 			name="tags"
-			type="text"
+			type="tag"
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
-		/>                
+                        multiple="true"
+		>
+		</field>               
 		<field 
                         name="featured" 
                         type="list"
 			label="JFEATURED"
 			description="COM_HWDMS_FEATURED_DESC"
 			default="0"
+                        validate="integer"
+                        filter="integer"
 		>
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -76,21 +67,21 @@
                         type="list"
 			label="JSTATUS"
 			description="COM_HWDMS_STATUS_DESC"
-			default="0"
-                        readonly="true"
+			default="1"
+                        validate="integer"
+                        filter="integer"
 		>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
+			<option value="0">COM_HWDMS_UNAPPROVED</option>
+			<option value="1">COM_HWDMS_APPROVED</option>
+			<option value="2">COM_HWDMS_PENDING</option>
+			<option value="3">COM_HWDMS_REPORTED</option>
 		</field>
 		<field 
                         name="published" 
                         type="list" 
                         label="JPUBLISHED"
 			description="JFIELD_PUBLISHED_DESC" 
-                        class="inputbox"
-			filter="intval" 
-                        size="1" 
-                        default="1"
+			default="1"
 		>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
@@ -102,19 +93,18 @@
                         type="accesslevel" 
                         label="JFIELD_ACCESS_LABEL"
 			description="JFIELD_ACCESS_DESC" 
-                        class="inputbox" 
-                        size="1" 
+			default="1"
+                        validate="integer"
+                        filter="integer"
                 />
                 <field
 			name="private"
-			type="radio"
+                        type="list" 
 			label="COM_HWDMS_PRIVATE_LABEL"
 			description="COM_HWDMS_PRIVATE_DESC"
-			filter="intval"
-                        size="40"
-			class="inputbox validate-integer"
 			default="0"
                         validate="integer"
+                        filter="integer"
 		>
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
@@ -124,40 +114,33 @@
 			type="text"
 			label="COM_HWDMS_HITS_LABEL"
 			description="COM_HWDMS_HITS_DESC"
-			filter="intval"
-                        size="40"
-			class="inputbox validate-integer"
-			default=""
+			default="0"
                         validate="integer"
+                        filter="integer"
 		/>
                 <field
 			name="likes"
 			type="text"
 			label="COM_HWDMS_LIKES_LABEL"
 			description="COM_HWDMS_LIKES_DESC"
-			filter="intval"
-                        size="40"
-			class="inputbox validate-integer"
-			default=""
+			default="0"
                         validate="integer"
+                        filter="integer"
 		/>
                 <field
 			name="dislikes"
 			type="text"
 			label="COM_HWDMS_DISLIKES_LABEL"
 			description="COM_HWDMS_DISLIKES_DESC"
-			filter="intval"
-                        size="40"
-			class="inputbox validate-integer"
-			default=""
+			default="0"
                         validate="integer"
+                        filter="integer"
 		/>
 		<field 
                         name="language" 
                         type="contentlanguage" 
                         label="JFIELD_LANGUAGE_LABEL"
 			description="COM_HWDMS_LANGUAGE_DESC" 
-                        class="inputbox"
 		>
 			<option value="*">JALL</option>
 		</field>
@@ -195,8 +178,6 @@
                         type="calendar" 
                         label="COM_HWDMS_CREATED_LABEL"
 			description="COM_HWDMS_CREATED_DESC" 
-                        class="inputbox" 
-                        size="22"
 			format="%Y-%m-%d %H:%M:%S" 
                         filter="user_utc"
                 />
@@ -205,9 +186,7 @@
                         type="calendar"
 			label="COM_HWDMS_PUBLISH_UP_LABEL" 
                         description="COM_HWDMS_PUBLISH_UP_DESC"
-			class="inputbox" 
                         format="%Y-%m-%d %H:%M:%S" 
-                        size="22"
 			filter="user_utc" 
                 />
 		<field 
@@ -215,18 +194,14 @@
                         type="calendar"
 			label="COM_HWDMS_PUBLISH_DOWN_LABEL" 
                         description="COM_HWDMS_PUBLISH_DOWN_DESC"
-			class="inputbox" 
                         format="%Y-%m-%d %H:%M:%S" 
-                        size="22"
 			filter="user_utc" 
                 />
 		<field 
                         name="modified" 
                         type="calendar" 
-                        class="readonly"
 			label="JGLOBAL_FIELD_MODIFIED_LABEL" 
                         description="COM_HWDMS_MODIFIED_DESC"
-			size="22" 
                         readonly="true" 
                         format="%Y-%m-%d %H:%M:%S" 
                         filter="user_utc"
@@ -235,12 +210,25 @@
                         name="modified_user_id" 
                         type="user"
                         label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"
-                        class="readonly"
                         readonly="true"
                         filter="unset" 
                 />
        </fieldset>
        <fields name="params">
+                <fieldset
+                        name="ordering"
+                        label="COM_HWDMS_MEDIA_ORDERING"
+                >
+                        <field 
+                                name="list_order_media" 
+                                type="mediafullordering"
+                                label="COM_HWDMS_MEDIA_ORDERING_LABEL"
+                                description="COM_HWDMS_MEDIA_ORDERING_DESC"
+                                default=""
+                        >
+                                <option value="">COM_HWDMS_GLOBAL</option>
+                        </field>
+                </fieldset>
                 <fieldset
                         name="metadata"
                         label="COM_HWDMS_METADATA"
@@ -275,9 +263,10 @@
                         <field
                                 name="meta_author"
                                 type="radio"
-                                default="1"
                                 label="COM_HWDMS_METAAUTHOR_LABEL"
                                 description="COM_HWDMS_METAAUTHOR_DESC"
+                                default="1"
+                                validate="integer"
                                 filter="integer"
                         >
                                 <option value="1">JYES</option>
@@ -294,10 +283,9 @@
                         type="rules"
                         label="JFIELD_RULES_LABEL"
 			translate_label="false"
-                        class="inputbox"
                         filter="rules"
 			component="com_hwdmediashare"
-                        section="user"
+                        section="group"
                         validate="rules"
 		/>
        </fieldset> 
