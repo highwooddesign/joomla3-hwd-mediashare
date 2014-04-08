@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+        <fields name="params">
+                <fieldset 
+                        name="feature" 
+                        label="COM_HWDMS_FEATURED_MEDIA"
+                        addfieldpath="/administrator/components/com_hwdmediashare/models/fields"
+                >
+			<field 
+                                name="feature" 
+                                type="mediaitempicker" 
+				label="COM_HWDMS_SHOW_CATEGORY_FEATURE_LABEL"
+                                description="COM_HWDMS_SHOW_CATEGORY_FEATURE_DESC"
+			>
+				<option value="0">JHIDE</option>
+			</field>
+			<field 
+                                name="featuremedia" 
+                                type="mediaitem" 
+				label="COM_HWDMS_CATEGORY_FEATURED_MEDIA_LABEL"
+                                description="COM_HWDMS_CATEGORY_FEATURED_MEDIA_DESC"
+			/>
+                </fieldset>
+                <fieldset
+                        name="ordering"
+                        label="COM_HWDMS_MEDIA_ORDERING"
+                        addfieldpath="/administrator/components/com_hwdmediashare/models/fields"
+                >
+                        <field 
+                                name="list_order_media" 
+                                type="mediafullordering"
+                                default=""
+                                label="COM_HWDMS_MEDIA_ORDERING_LABEL"
+                                description="COM_HWDMS_MEDIA_ORDERING_DESC"
+                        >
+                                <option value="">COM_HWDMS_GLOBAL</option>
+                        </field>
+                </fieldset>                
+        </fields>
+</form>
