@@ -69,14 +69,15 @@
                 >
 			<option	value="1">COM_HWDMS_USERNAME</option>
 			<option	value="0">COM_HWDMS_NAME</option>
-		</field>  
+		</field> 
 		<field
 			name="editor"
-			type="editors"
+			type="plugins"
+			folder="editors"
 			default="tinymce"
 			label="COM_HWDMS_DEFAULT_EDITOR_LABEL"
 			description="COM_HWDMS_DEFAULT_EDITOR_DESC"
-			filter="cmd" 
+			filter="cmd"
                 />
 		<field
 			name="default_access"
@@ -790,7 +791,9 @@
 			label="COM_HWDMS_MEDIA_PLAYER_LABEL"
 			description="COM_HWDMS_MEDIA_PLAYER_LABEL"
 			default="player_mejs"
-                />
+                >
+                        <option value="">COM_HWDMS_LIST_SELECT_PLAYER</option>
+                </field>  
 		<field
 			name="media_autoplay"
 			type="radio"
@@ -1961,88 +1964,39 @@
                 </field>
                 <field
 			name="list_order_media"
-			type="list"
+			type="mediafullordering"
 			label="COM_HWDMS_MEDIA_ORDERING_LABEL"
 			description="COM_HWDMS_MEDIA_ORDERING_DESC"
-			default="a.created"
-                >
-                        <option value="a.created">COM_HWDMS_OPTION_MOST_RECENT</option>
-                        <option value="a.hits">COM_HWDMS_OPTION_MOST_HITS</option>
-                        <option value="a.likes">COM_HWDMS_OPTION_MOST_LIKES</option>
-                        <option value="a.dislikes">COM_HWDMS_OPTION_MOST_DISLIKES</option>
-                        <option value="a.modified">COM_HWDMS_OPTION_RECENTLY_MODIFIED</option>
-                        <option value="a.viewed">COM_HWDMS_OPTION_RECENTLY_VIEWED</option>
-                        <option value="a.title">COM_HWDMS_OPTION_TITLE_ALPHABETICAL</option>
-                        <option value="author">COM_HWDMS_OPTION_AUTHOR_ALPHABETICAL</option>
-                        <option value="a.ordering">COM_HWDMS_OPTION_MANAGER_ORDER</option>
-                        <option value="random">COM_HWDMS_OPTION_RANDOM</option>
-                </field>
+			default="a.created DESC"
+                />
                 <field
 			name="list_order_album"
-			type="list"
+			type="albumfullordering"
 			label="COM_HWDMS_ALBUM_ORDERING_LABEL"
 			description="COM_HWDMS_ALBUM_ORDERING_DESC"
-			default="a.created"
-                >
-                        <option value="a.created">COM_HWDMS_OPTION_MOST_RECENT</option>
-                        <option value="a.hits">COM_HWDMS_OPTION_MOST_HITS</option>
-                        <option value="a.likes">COM_HWDMS_OPTION_MOST_LIKES</option>
-                        <option value="a.dislikes">COM_HWDMS_OPTION_MOST_DISLIKES</option>
-                        <option value="a.modified">COM_HWDMS_OPTION_RECENTLY_MODIFIED</option>
-                        <option value="a.title">COM_HWDMS_OPTION_TITLE_ALPHABETICAL</option>
-                        <option value="author">COM_HWDMS_OPTION_AUTHOR_ALPHABETICAL</option>
-                        <option value="a.ordering">COM_HWDMS_OPTION_MANAGER_ORDER</option>
-                        <option value="random">COM_HWDMS_OPTION_RANDOM</option>
-                </field>
+			default="a.created DESC"
+                />
                 <field
 			name="list_order_group"
-			type="list"
+			type="groupfullordering"
 			label="COM_HWDMS_GROUP_ORDERING_LABEL"
 			description="COM_HWDMS_GROUP_ORDERING_DESC"
-			default="a.created"
-                >
-                        <option value="a.created">COM_HWDMS_OPTION_MOST_RECENT</option>
-                        <option value="a.hits">COM_HWDMS_OPTION_MOST_HITS</option>
-                        <option value="a.likes">COM_HWDMS_OPTION_MOST_LIKES</option>
-                        <option value="a.dislikes">COM_HWDMS_OPTION_MOST_DISLIKES</option>
-                        <option value="a.modified">COM_HWDMS_OPTION_RECENTLY_MODIFIED</option>
-                        <option value="a.title">COM_HWDMS_OPTION_TITLE_ALPHABETICAL</option>
-                        <option value="author">COM_HWDMS_OPTION_AUTHOR_ALPHABETICAL</option>
-                        <option value="a.ordering">COM_HWDMS_OPTION_MANAGER_ORDER</option>
-                        <option value="random">COM_HWDMS_OPTION_RANDOM</option>
-                </field>
+			default="a.created DESC"
+                />
                 <field
 			name="list_order_playlist"
-			type="list"
+			type="playlistfullordering"
 			label="COM_HWDMS_PLAYLIST_ORDERING_LABEL"
 			description="COM_HWDMS_PLAYLIST_ORDERING_DESC"
-			default="a.created"
-                >
-                        <option value="a.created">COM_HWDMS_OPTION_MOST_RECENT</option>
-                        <option value="a.hits">COM_HWDMS_OPTION_MOST_HITS</option>
-                        <option value="a.likes">COM_HWDMS_OPTION_MOST_LIKES</option>
-                        <option value="a.dislikes">COM_HWDMS_OPTION_MOST_DISLIKES</option>
-                        <option value="a.modified">COM_HWDMS_OPTION_RECENTLY_MODIFIED</option>
-                        <option value="a.title">COM_HWDMS_OPTION_TITLE_ALPHABETICAL</option>
-                        <option value="author">COM_HWDMS_OPTION_AUTHOR_ALPHABETICAL</option>
-                        <option value="a.ordering">COM_HWDMS_OPTION_MANAGER_ORDER</option>
-                        <option value="random">COM_HWDMS_OPTION_RANDOM</option>
-                </field>                
+			default="a.created DESC"
+                />             
                 <field
 			name="list_order_channel"
-			type="list"
+			type="userchannelfullordering"
 			label="COM_HWDMS_CHANNEL_ORDERING_LABEL"
 			description="COM_HWDMS_CHANNEL_ORDERING_DESC"
-			default="a.created"
-                >
-                        <option value="a.created">COM_HWDMS_OPTION_MOST_RECENT</option>
-                        <option value="a.hits">COM_HWDMS_OPTION_MOST_HITS</option>
-                        <option value="a.likes">COM_HWDMS_OPTION_MOST_LIKES</option>
-                        <option value="a.dislikes">COM_HWDMS_OPTION_MOST_DISLIKES</option>
-                        <option value="a.modified">COM_HWDMS_OPTION_RECENTLY_MODIFIED</option>
-                        <option value="title">COM_HWDMS_OPTION_TITLE_ALPHABETICAL</option>
-                        <option value="random">COM_HWDMS_OPTION_RANDOM</option>
-                </field>
+			default="a.created DESC"
+                />
                 <field
 			name="item_meta_title"
 			type="radio"
@@ -2579,21 +2533,27 @@
 			label="COM_HWDMS_COMMENTING_LABEL"
 			description="COM_HWDMS_COMMENTING_DESC"
 			default=""
-                />   
+                >
+                        <option value="">COM_HWDMS_LIST_SELECT_COMMENTING</option>
+                </field> 
                 <field
 			name="platform"
 			type="platform"
 			label="COM_HWDMS_HOSTING_PLATFORM_LABEL"
 			description="COM_HWDMS_HOSTING_PLATFORM_DESC"
 			default=""
-                />  
+                >
+                        <option value="">COM_HWDMS_LIST_SELECT_HOSTING_PLATFORM</option>
+                </field>  
                 <field
 			name="cdn"
 			type="cdn"
 			label="COM_HWDMS_CDN_LABEL"
 			description="COM_HWDMS_CDN_DESC"
 			default=""
-                />                  
+                >
+                        <option value="">COM_HWDMS_LIST_SELECT_CDN</option>
+                </field>          
                 <field
 			name="google_maps_api_v3_key"
 			type="text"
