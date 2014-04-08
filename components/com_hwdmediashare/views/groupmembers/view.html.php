@@ -69,6 +69,7 @@ class hwdMediaShareViewGroupMembers extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
+                JHtml::_('bootstrap.framework');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
                 if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
