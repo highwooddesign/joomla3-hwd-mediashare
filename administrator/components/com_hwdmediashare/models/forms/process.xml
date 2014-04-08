@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: process.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
 <form
 	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
 >
