@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="filter">
+		<field
+			name="search"
+			type="text"
+			label="JSEARCH_FILTER_LABEL"
+			hint="JSEARCH_FILTER"
+		/>
+		<field
+			name="published"
+			type="status"
+			label="COM_HWDMS_FILTER_PUBLISHED"
+			description="COM_HWDMS_FILTER_PUBLISHED_DESC"
+			onchange="this.form.submit();"
+			>
+			<option value="">JOPTION_SELECT_PUBLISHED</option>
+		</field>
+		<field
+			name="media_type"
+			type="mediatype"
+			label="COM_HWDMS_ELEMENT_TYPE_LABEL"
+                        description="COM_HWDMS_ELEMENT_TYPE_DESC"
+			onchange="this.form.submit();"
+			>
+			<option value="">COM_HWDMS_LIST_SELECT_MEDIA_TYPE</option>
+		</field>                
+		<field
+			name="access"
+			type="accesslevel"
+			label="JOPTION_FILTER_ACCESS"
+			description="JOPTION_FILTER_ACCESS_DESC"
+			onchange="this.form.submit();"
+			>
+			<option value="">JOPTION_SELECT_ACCESS</option>
+		</field>
+	</fields>
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="list"
+			label="COM_HWDMS_LIST_FULL_ORDERING"
+			description="COM_HWDMS_LIST_FULL_ORDERING_DESC"
+			onchange="this.form.submit();"
+			default="a.created DESC"
+			>
+			<option value="">JGLOBAL_SORT_BY</option>
+			<option value="a.published ASC">JSTATUS_ASC</option>
+			<option value="a.published DESC">JSTATUS_DESC</option>
+			<option value="a.ext ASC">COM_HWDMS_OPTION_EXT_ASC</option>
+			<option value="a.ext DESC">COM_HWDMS_OPTION_EXT_DESC</option>
+			<option value="a.access ASC">JGRID_HEADING_ACCESS_ASC</option>
+			<option value="a.access DESC">JGRID_HEADING_ACCESS_DESC</option>
+			<option value="author ASC">JAUTHOR_ASC</option>
+			<option value="author DESC">JAUTHOR_DESC</option>
+			<option value="a.created ASC">JDATE_ASC</option>
+			<option value="a.created DESC">JDATE_DESC</option>
+                        <option value="a.id ASC">JGRID_HEADING_ID_ASC</option>
+			<option value="a.id DESC">JGRID_HEADING_ID_DESC</option>
+		</field>
+		<field
+			name="limit"
+			type="limitbox"
+			class="inputbox input-mini"
+			default="25"
+			label="COM_HWDMS_LIST_LIMIT"
+			description="COM_HWDMS_LIST_LIMIT_DESC"
+			onchange="this.form.submit();"
+		/>
+	</fields>
+</form>
