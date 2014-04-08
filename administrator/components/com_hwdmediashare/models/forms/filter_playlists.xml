@@ -28,7 +28,7 @@
 			<option value="1">COM_HWDMS_APPROVED</option>
 			<option value="2">COM_HWDMS_PENDING</option>
 			<option value="3">COM_HWDMS_REPORTED</option>
-                </field>
+		</field>                
 		<field
 			name="access"
 			type="accesslevel"
