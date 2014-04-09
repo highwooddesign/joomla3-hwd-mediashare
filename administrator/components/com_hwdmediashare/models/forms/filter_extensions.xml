@@ -19,8 +19,8 @@
 		<field
 			name="media_type"
 			type="mediatype"
-			label="COM_HWDMS_ELEMENT_TYPE_LABEL"
-                        description="COM_HWDMS_ELEMENT_TYPE_DESC"
+			label="COM_HWDMS_FILTER_MEDIA_TYPE"
+                        description="COM_HWDMS_FILTER_MEDIA_TYPE_DESC"
 			onchange="this.form.submit();"
 			>
 			<option value="">COM_HWDMS_LIST_SELECT_MEDIA_TYPE</option>
