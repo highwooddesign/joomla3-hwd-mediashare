@@ -73,9 +73,9 @@ class hwdMediaShareModelMedia extends JModelList
                         
                         // Load categories
                         hwdMediaShareFactory::load('category');
-                        $c = hwdMediaShareCategory::getInstance();
-                        $c->elementType = 1;
-                        $items[$x]->categories = $c->get($items[$x]);
+                        $HWDcategory = hwdMediaShareCategory::getInstance();
+                        $HWDcategory->elementType = 1;
+                        $items[$x]->categories = $HWDcategory->get($items[$x]);
                 }
                                 
 		return $items;
