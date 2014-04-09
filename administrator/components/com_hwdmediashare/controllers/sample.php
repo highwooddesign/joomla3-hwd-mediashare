@@ -429,7 +429,8 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
                 
-                JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_SUCCESS') );
-                JFactory::getApplication()->redirect( 'index.php?option=com_hwdmediashare' );
+                // Redirect
+		$this->setMessage(JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_SUCCESS'));
+		$this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=dashboard', false));
         }
 }
