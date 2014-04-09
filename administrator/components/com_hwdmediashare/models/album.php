@@ -29,9 +29,9 @@ class hwdMediaShareModelAlbum extends JModelAdmin
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 2;
-                        $item->customfields = $cf->get($item);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 2;
+                        $item->customfields = $HWDcustomfields->get($item);
                         
                         // Add the number of media in the album.
                         $item->nummedia = $this->getMediaCount($item);
