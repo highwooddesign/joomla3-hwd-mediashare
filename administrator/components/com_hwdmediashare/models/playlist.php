@@ -29,9 +29,9 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 4;
-                        $item->customfields = $cf->get($item);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 4;
+                        $item->customfields = $HWDcustomfields->get($item);
                         
                         // Add the number of media in the playlist.
                         $item->nummedia = $this->getMediaCount($item);
