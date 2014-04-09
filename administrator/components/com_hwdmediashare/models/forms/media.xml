@@ -85,9 +85,10 @@
 		</field>
 		<field 
                         name="featured" 
-                        type="list"
+                        type="radio"
 			label="JFEATURED"
 			description="COM_HWDMS_FEATURED_DESC"
+			class="btn-group btn-group-yesno"
 			default="0"
                         validate="integer"
                         filter="integer"
@@ -113,7 +114,8 @@
                         name="published" 
                         type="list" 
                         label="JPUBLISHED"
-			description="JFIELD_PUBLISHED_DESC" 
+			description="JFIELD_PUBLISHED_DESC"
+                        class="chzn-color-state"                        
 			default="1"
 		>
 			<option value="1">JPUBLISHED</option>
@@ -133,17 +135,18 @@
 		<field 
                         name="download" 
                         type="accesslevel" 
-                        label="JFIELD_ACCESS_LABEL"
-			description="JFIELD_ACCESS_DESC" 
+                        label="COM_HWDMS_DOWNLOAD_ACCESS_LABEL"
+			description="COM_HWDMS_DOWNLOAD_ACCESS_DESC" 
 			default="1"
                         validate="integer"
                         filter="integer"
-                />
+                />          
                 <field
 			name="private"
-                        type="list" 
+                        type="radio" 
 			label="COM_HWDMS_PRIVATE_LABEL"
 			description="COM_HWDMS_PRIVATE_DESC"
+                        class="btn-group btn-group-yesno"
 			default="0"
                         validate="integer"
                         filter="integer"
@@ -314,10 +317,11 @@
                                 rows="2" 
                         />
                         <field
-                                name="meta_author"
+                                name="meta_author" 
                                 type="radio"
                                 label="COM_HWDMS_METAAUTHOR_LABEL"
                                 description="COM_HWDMS_METAAUTHOR_DESC"
+                                class="btn-group btn-group-yesno"
                                 default="1"
                                 validate="integer"
                                 filter="integer"
@@ -341,7 +345,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL</option>
+                                <option value="2">COM_HWDMS_GLOBAL</option>
                         </field>
                         <field
                                 name="password_protect"
@@ -373,7 +377,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL</option>
+                                <option value="2">COM_HWDMS_GLOBAL</option>
                         </field>
                         <field
                                 name="age"
