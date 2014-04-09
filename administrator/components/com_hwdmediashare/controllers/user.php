@@ -17,12 +17,6 @@ class hwdMediaShareControllerUser extends JControllerForm
 	 * @var    string
 	 */
     	protected $view_list = "users";
-        
-	/**
-	 * The ID of this element type.
-	 * @var    string
-	 */
-    	protected $elementType = 5;
 
         /**
 	 * Proxy for edit, to generate the channel row in the database.
