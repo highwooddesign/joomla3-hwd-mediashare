@@ -179,14 +179,6 @@ $doc->addScriptDeclaration($ajax);
                                                 <?php echo $this->form->getInput('tooltip'); ?>
                                         </div>
                                 </div>
-                                <div class="control-group">
-                                        <div class="control-label">
-                                                <?php echo $this->form->getLabel('options'); ?>
-                                        </div>
-                                        <div class="controls">
-                                                <?php echo $this->form->getInput('options'); ?>
-                                        </div>
-                                </div>
                         </div>
                         <div class="span6" id="jform_fieldparams">
 
