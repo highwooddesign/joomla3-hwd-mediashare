@@ -83,7 +83,15 @@ class hwdMediaShareModelCustomFields extends JModelList
 		if (is_numeric($elementType))
                 {
 			$query->where('a.element_type = '.(int) $elementType);
-		}   
+		} 
+                
+		// Filter by field type.
+		$fieldType = $this->getState('filter.field_type');
+		if (!empty($fieldType))
+                {
+			$fieldType = preg_replace("/[^a-z]+/", "", $fieldType);
+                        $query->where('a.type = '. $db->quote($fieldType));
+		}
                 
 		// Filter by search in title.
 		$search = $this->getState('filter.search');
