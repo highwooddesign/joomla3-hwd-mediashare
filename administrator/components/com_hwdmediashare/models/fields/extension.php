@@ -48,7 +48,7 @@ class JFormFieldExtension extends JFormFieldList
                 // Loop all plugins and check if a cdn plugin
 		for($i = 0; $i < count($rows); $i++)
 		{
-                        $options[] = JHtml::_('select.option', $rows[$i]->id, $row->ext);     
+                        $options[] = JHtml::_('select.option', $rows[$i]->id, $rows[$i]->ext);     
 		}
 
                 // Merge any additional options in the XML definition.
