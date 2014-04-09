@@ -19,8 +19,8 @@
 		<field
 			name="element_type"
 			type="element"
-			label="COM_HWDMS_ELEMENT_TYPE_LABEL"
-                        description="COM_HWDMS_ELEMENT_TYPE_DESC"
+			label="COM_HWDMS_FILTER_ELEMENT_TYPE"
+                        description="COM_HWDMS_FILTER_ELEMENT_TYPE_DESC"
 			onchange="this.form.submit();"
 			>
 			<option value="">COM_HWDMS_LIST_SELECT_ELEMENT_TYPE</option>
@@ -28,8 +28,8 @@
 		<field
 			name="field_type"
 			type="field"
-			label="COM_HWDMS_FIELD_TYPE_LABEL"
-                        description="COM_HWDMS_FIELD_TYPE_DESC"
+			label="COM_HWDMS_FILTER_FIELD_TYPE"
+                        description="COM_HWDMS_FILTER_FIELD_TYPE_DESC"
 			onchange="this.form.submit();"
 			>
 			<option value="">COM_HWDMS_LIST_SELECT_FIELD_TYPE</option>
