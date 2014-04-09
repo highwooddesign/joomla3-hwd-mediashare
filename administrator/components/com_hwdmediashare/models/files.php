@@ -153,6 +153,13 @@ class hwdMediaShareModelFiles extends JModelList
 			$query->where('(a.published IN (0, 1))');
 		}
                 
+		// Filter by element type.
+		$elementType = $this->getState('filter.element_type');
+		if (is_numeric($elementType))
+                {
+			$query->where('a.element_type = '.(int) $elementType);
+		} 
+                
 		// Filter by search in title
 		$search = $this->getState('filter.search');
 		if (!empty($search))
