@@ -23,9 +23,6 @@
 		<field
 			name="type"
 			type="hidden"
-			default="1"
-                        validate="integer"
-                        filter="integer"
 		/>
 		<field 
                         name="media_type" 
@@ -33,8 +30,6 @@
 			label="COM_HWDMS_MEDIA_TYPE_LABEL"
 			description="COM_HWDMS_MEDIA_TYPE_DESC"
 			default=""
-                        validate="integer"
-                        filter="integer"
 		>
 			<option value="">COM_HWDMS_UNKNOWNN</option>
 			<option value="1">COM_HWDMS_AUDIO</option>
