@@ -11,13 +11,7 @@
 defined('_JEXEC') or die;
 
 class hwdMediaShareModelPlaylist extends JModelAdmin
-{
-	/**
-	 * The element type to use with model methods.
-	 * @var    integer
-	 */    
-	public $elementType = 4;
-        
+{        
 	/**
 	 * Method to get a single record.
 	 *
