@@ -13,12 +13,6 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelUsers extends JModelList
 {
     	/**
-	 * The element type to use with model methods.
-	 * @var    integer
-	 */    
-	public $elementType = 5;
-
-    	/**
 	 * Constructor override, defines a white list of column filters.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
