@@ -29,10 +29,10 @@ class hwdMediaShareModelUser extends JModelAdmin
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 5;
-                        $item->customfields = $cf->get($item);
-                        
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 5;
+                        $item->customfields = $HWDcustomfields->get($item);
+
                         // Add the user thumbnail (avatar).
                         $item->thumbnail = $this->getThumbnail($item);
 
