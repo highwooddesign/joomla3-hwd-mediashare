@@ -200,4 +200,25 @@ class hwdMediaShareModelFiles extends JModelList
 		// List state information.
 		parent::populateState('a.created', 'desc');
 	}
+
+	/**
+	 * Get the batch form.
+	 *
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
+	 */
+	public function getBatchForm($data = array(), $loadData = true)
+	{
+		// Get the form.
+		$form = $this->loadForm('com_hwdmediashare.batch', 'batch', array('control' => 'batch', 'load_data' => $loadData));
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		return $form;
+	}         
 }
