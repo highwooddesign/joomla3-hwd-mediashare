@@ -21,19 +21,22 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 		<div class="row-fluid">
 			<div class="control-group span6">
 				<div class="controls">
-					<?php echo JHtml::_('hwdbatch.searchable'); ?>
+                                        <?php echo $this->batchForm->getLabel('searchable'); ?>
+                                        <?php echo $this->batchForm->getInput('searchable'); ?>  
 				</div>
 			</div>
 			<div class="control-group span6">
 				<div class="controls">
-					<?php echo JHtml::_('hwdbatch.visible'); ?>
+                                        <?php echo $this->batchForm->getLabel('visible'); ?>
+                                        <?php echo $this->batchForm->getInput('visible'); ?>                                      
 				</div>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="control-group span6">
 				<div class="controls">
-					<?php echo JHtml::_('hwdbatch.required'); ?>
+                                        <?php echo $this->batchForm->getLabel('required'); ?>
+                                        <?php echo $this->batchForm->getInput('required'); ?>         
 				</div>
 			</div>
 		</div>
