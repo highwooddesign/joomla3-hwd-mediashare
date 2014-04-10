@@ -19,7 +19,8 @@ defined('_JEXEC') or die;
 		<div class="row-fluid">
 			<div class="control-group">
 				<div class="controls">
-					<?php echo JHtml::_('hwdbatch.downloadaccess'); ?>
+                                        <?php echo $this->batchForm->getLabel('downloadaccess'); ?>
+                                        <?php echo $this->batchForm->getInput('downloadaccess'); ?> 
 				</div>
 			</div>
 		</div>
