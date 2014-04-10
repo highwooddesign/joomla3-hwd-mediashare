@@ -26,6 +26,7 @@ class hwdMediaShareViewFiles extends JViewLegacy
                 $this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
                 $this->filterForm = $this->get('FilterForm');
+                $this->batchForm = $this->get('BatchForm');
 
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
