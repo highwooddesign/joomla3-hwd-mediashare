@@ -26,6 +26,7 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
                 $this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
                 $this->filterForm = $this->get('FilterForm');
+                $this->batchForm = $this->get('BatchForm');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
