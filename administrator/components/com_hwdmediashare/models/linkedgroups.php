@@ -231,19 +231,31 @@ class hwdMediaShareModelLinkedGroups extends JModelList
                                 }
                         }
                         
-                        // Create an object to bind to the database
-                        $object = new StdClass;
-                        $object->group_id = (int) $pk;
-                        $object->media_id = (int) $mediaId;
-                        $object->created_user_id = (int) $user->id;
-                        $object->created = $date->format('Y-m-d H:i:s');
+                        // Check if association already exists
+                        $db = JFactory::getDbo();
+                        $query = $db->getQuery(true)->select('id')->from('#__hwdms_group_map')
+                                 ->where($db->quoteName('group_id') . ' = ' . $db->quote($pk))
+                                 ->where($db->quoteName('media_id') . ' = ' . $db->quote($mediaId));
+                        $db->setQuery($query);
+                        $exists = $db->loadResult();
 
-                        // Attempt to change the state of the records.
-                        if (!$table->save($object))
+                        // Create an object to bind to the database
+                        if (!$exists)
                         {
-                                $this->setError($table->getError());
-                                return false;
-                        }
+                                $object = new StdClass;
+                                $object->id = '';
+                                $object->group_id = (int) $pk;
+                                $object->media_id = (int) $mediaId;
+                                $object->created_user_id = (int) $user->id;
+                                $object->created = $date->format('Y-m-d H:i:s');
+
+                                // Attempt to save the data.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                        } 
 		}
 
 		// Clear the component's cache
