@@ -174,6 +174,9 @@ class hwdMediaShareModelGroups extends JModelList
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
 
+   		// Group over the ID to prevent duplicates.
+                $query->group('a.id');
+                
                 // Additional filters
 		$mediaId = $this->getState('filter.media_id');
                 if ($mediaId > 0)
