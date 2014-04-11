@@ -50,15 +50,14 @@ class hwdMediaShareViewLinkedResponses extends JViewLegacy
 	public function getButton($row, $i)
 	{
                 $task = $row->connection ? 'unlink' : 'link';
-                $buttonClass = $row->connection ? 'btn btn-danger' : 'btn';
+                $class = $row->connection ? 'btn btn-danger' : 'btn';
+                $text = $row->connection ? 'COM_HWDMS_BTN_REMOVE_RESPONSE' : 'COM_HWDMS_BTN_ADD_RESPONSE';
 
                 // Start output
                 ob_start();
                 ?>
                 <div class="btn-wrapper pull-right">
-                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','linkedresponses.<?php echo $task; ?>')">
-                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_RESPONSE_FROM_MEDIA') : JText::_('COM_HWDMS_BTN_ADD_RESPONSE_TO_MEDIA')); ?>
-                        </a>
+                        <a class="<?php echo $class; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','linkedresponses.<?php echo $task; ?>')"><?php echo JText::_($text); ?></a>
                 </div>
                 <?php
                 $html = ob_get_contents();
