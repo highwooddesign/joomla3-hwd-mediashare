@@ -88,7 +88,10 @@ class hwdMediaShareModelSubscriptions extends JModelList
                 $listDirn = $this->state->get('list.direction');
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
-
+                
+   		// Group over the ID to prevent duplicates.
+                $query->group('a.id');
+                
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
