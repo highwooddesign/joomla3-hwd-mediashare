@@ -231,18 +231,30 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                                 }
                         }
                         
-                        // Create an object to bind to the database
-                        $object = new StdClass;
-                        $object->media_id_1 = (int) $pk;
-                        $object->media_id_2 = (int) $mediaId;
-                        $object->created_user_id = (int) $user->id;
-                        $object->created = $date->format('Y-m-d H:i:s');
+                        // Check if association already exists
+                        $db = JFactory::getDbo();
+                        $query = $db->getQuery(true)->select('id')->from('#__hwdms_media_map')
+                                 ->where('((' . $db->quoteName('media_id_1') . ' = ' . $db->quote($pk) . ' AND ' . $db->quoteName('media_id_2') . ' = ' . $db->quote($mediaId) . ') OR '
+                                        . '(' . $db->quoteName('media_id_1') . ' = ' . $db->quote($mediaId) . ' AND ' . $db->quoteName('media_id_2') . ' = ' . $db->quote($pk) . '))');
+                        $db->setQuery($query);
+                        $exists = $db->loadResult();
 
-                        // Attempt to change the state of the records.
-                        if (!$table->save($object))
+                        // Create an object to bind to the database
+                        if (!$exists)
                         {
-                                $this->setError($table->getError());
-                                return false;
+                                $object = new StdClass;
+                                $object->id = '';
+                                $object->media_id_1 = (int) $pk;
+                                $object->media_id_2 = (int) $mediaId;
+                                $object->created_user_id = (int) $user->id;
+                                $object->created = $date->format('Y-m-d H:i:s');
+
+                                // Attempt to save the data.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
                         }
 		}
 
