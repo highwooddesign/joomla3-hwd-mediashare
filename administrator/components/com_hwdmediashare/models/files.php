@@ -181,6 +181,9 @@ class hwdMediaShareModelFiles extends JModelList
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
 
+   		// Group over the ID to prevent duplicates.
+                $query->group('a.id');
+                
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
