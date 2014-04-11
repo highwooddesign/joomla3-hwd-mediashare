@@ -50,15 +50,14 @@ class hwdMediaShareViewLinkedPlaylists extends JViewLegacy
 	public function getButton($row, $i)
 	{
                 $task = $row->connection ? 'unlink' : 'link';
-                $buttonClass = $row->connection ? 'btn btn-danger' : 'btn';
+                $class = $row->connection ? 'btn btn-danger' : 'btn';
+                $text = $row->connection ? 'COM_HWDMS_BTN_REMOVE_FROM_PLAYLIST' : 'COM_HWDMS_BTN_ADD_TO_PLAYLIST';
 
                 // Start output
                 ob_start();
                 ?>
                 <div class="btn-wrapper pull-right">
-                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','linkedplaylists.<?php echo $task; ?>')">
-                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_MEDIA_FROM_PLAYLIST') : JText::_('COM_HWDMS_BTN_ADD_MEDIA_TO_PLAYLIST')); ?>
-                        </a>
+                        <a class="<?php echo $class; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','linkedplaylists.<?php echo $task; ?>')"><?php echo JText::_($text); ?></a>
                 </div>
                 <?php
                 $html = ob_get_contents();
