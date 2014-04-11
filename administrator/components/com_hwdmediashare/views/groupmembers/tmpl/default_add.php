@@ -21,7 +21,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <fieldset class="filter clearfix">
 		<div class="btn-toolbar">
 			<div class="btn-group pull-left">
-				<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
+				<input type="text" name="filter[search]" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
 			</div>
 			<div class="btn-group pull-left">
 				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>" data-placement="bottom">
@@ -30,9 +30,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 					<span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 			</div>                
 			<div class="btn-group pull-left">
-                                <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.$this->groupId.'&add=0'); ?>">
-                                        <?php //echo JText::_('COM_HWDMS_ADD_SELECTED_TO_PLAYLIST') ?>Organise members
-                                </a>                           
+                                <a class="btn btn-info" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.$this->groupId.'&add=0'); ?>">
+					<i class="icon-menu"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ORGANISE_MEMBERS'); ?></a>                       
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -45,7 +44,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 </th>
                                 <th>
                                         <a class="label" href="javascript:void(0);" onclick="Joomla.submitbutton('groupmembers.link')">
-                                                <strong><?php echo JText::_('COM_HWDMS_BTN_ADD_SELECTED_TO_PLAYLIST') ?></strong>
+                                                <strong><?php echo JText::_('COM_HWDMS_BTN_ADD_SELECTED_TO_GROUP') ?></strong>
                                         </a>                                  
                                 </th>
 			</tr>

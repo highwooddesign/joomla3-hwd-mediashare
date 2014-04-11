@@ -29,7 +29,7 @@ if ($saveOrder)
         <fieldset class="filter clearfix">
 		<div class="btn-toolbar">
 			<div class="btn-group pull-left">
-				<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
+				<input type="text" name="filter[search]" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
 			</div>
 			<div class="btn-group pull-left">
 				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>" data-placement="bottom">
@@ -38,9 +38,8 @@ if ($saveOrder)
 					<span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 			</div>
 			<div class="btn-group pull-left">
-                                <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.$this->groupId.'&add=1'); ?>">
-                                Add New Members
-                                </a>
+                                <a class="btn btn-info" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.$this->groupId.'&add=1'); ?>">
+					<i class="icon-plus-2"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ADD_MORE_MEMBERS'); ?></a>
 			</div>
 			<div class="clearfix"></div>
 		</div>
