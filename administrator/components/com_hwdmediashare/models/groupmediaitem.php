@@ -184,24 +184,36 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                 }
                         }
                         
+                        // Check if association already exists
+                        $db = JFactory::getDbo();
+                        $query = $db->getQuery(true)->select('id')->from('#__hwdms_group_map')
+                                 ->where($db->quoteName('group_id') . ' = ' . $db->quote($groupId))
+                                 ->where($db->quoteName('media_id') . ' = ' . $db->quote($pk));
+                        $db->setQuery($query);
+                        $exists = $db->loadResult();
+
                         // Create an object to bind to the database
-                        $object = new StdClass;
-                        $object->group_id = (int) $groupId;
-                        $object->media_id = (int) $pk;
-                        $object->created_user_id = (int) $user->id;
-                        $object->created = $date->format('Y-m-d H:i:s');
-
-                        // Attempt to change the state of the records.
-                        if (!$table->save($object))
+                        if (!$exists)
                         {
-                                $this->setError($table->getError());
-                                return false;
-                        }
+                                $object = new StdClass;
+                                $object->id = '';
+                                $object->group_id = (int) $groupId;
+                                $object->media_id = (int) $pk;
+                                $object->created_user_id = (int) $user->id;
+                                $object->created = $date->format('Y-m-d H:i:s');
 
-                        // Reorder this group
-                        $table->reorder(' group_id = '.$groupId.' ');                        
+                                // Attempt to save the data.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                        }
 		}
 
+                // Reorder this group
+                $table->reorder(' group_id = '.$groupId.' ');  
+                
 		// Clear the component's cache
 		$this->cleanCache();
 
