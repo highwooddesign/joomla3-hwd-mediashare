@@ -21,7 +21,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <fieldset class="filter clearfix">
 		<div class="btn-toolbar">
 			<div class="btn-group pull-left">
-				<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
+				<input type="text" name="filter[search]" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
 			</div>
 			<div class="btn-group pull-left">
 				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>" data-placement="bottom">
@@ -30,9 +30,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 					<span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 			</div>                
 			<div class="btn-group pull-left">
-                                <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albummedia&tmpl=component&album_id='.$this->albumId.'&add=0'); ?>">
-                                        <?php //echo JText::_('COM_HWDMS_ADD_SELECTED_TO_PLAYLIST') ?>Organise playlist media
-                                </a>                           
+                                <a class="btn btn-info" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albummedia&tmpl=component&album_id='.$this->albumId.'&add=0'); ?>">
+					<i class="icon-menu"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ORGANISE_MEDIA'); ?></a>                         
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -45,7 +44,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 </th>
                                 <th>
                                         <a class="label" href="javascript:void(0);" onclick="Joomla.submitbutton('albummedia.link')">
-                                                <strong><?php echo JText::_('COM_HWDMS_BTN_ADD_SELECTED_TO_PLAYLIST') ?></strong>
+                                                <strong><?php echo JText::_('COM_HWDMS_BTN_ADD_SELECTED_TO_ALBUM') ?></strong>
                                         </a>                                  
                                 </th>
 			</tr>
@@ -68,8 +67,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                         <div class="pull-left thumb-wrapper">
                                                 <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item)); ?>" width="75" />
                                         </div>
-                                        <p><strong><?php echo $this->escape($item->title); ?></strong></p>
-                                        <?php echo $item->description; ?>
+                                        <p><strong><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>" target="_blank">
+                                                <?php echo $this->escape($item->title); ?></a></strong></p>
+                                        <p><?php echo $this->escape(JHtmlString::truncate($item->description, 160, true, false)); ?></p>
 				</td>
 			</tr>
 		<?php endforeach; ?>
