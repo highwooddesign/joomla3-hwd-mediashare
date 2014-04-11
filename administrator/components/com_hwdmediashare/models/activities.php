@@ -85,6 +85,9 @@ class hwdMediaShareModelActivities extends JModelList
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
 
+   		// Group over the ID to prevent duplicates.
+                $query->group('a.id');
+                
 		// Filter by activity type
                 $activityType = $this->getState('filter.activity_type');
 		if (is_numeric($activityType))
