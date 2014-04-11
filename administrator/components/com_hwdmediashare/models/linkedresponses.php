@@ -236,19 +236,31 @@ class hwdMediaShareModelLinkedResponses extends JModelList
                                 }
                         }
                         
+                        // Check if association already exists
+                        $db = JFactory::getDbo();
+                        $query = $db->getQuery(true)->select('id')->from('#__hwdms_response_map')
+                                 ->where($db->quoteName('response_id') . ' = ' . $db->quote($pk))
+                                 ->where($db->quoteName('media_id') . ' = ' . $db->quote($mediaId));
+                        $db->setQuery($query);
+                        $exists = $db->loadResult();
+
                         // Create an object to bind to the database
-                        $object = new StdClass;
-                        $object->response_id = (int) $pk;
-                        $object->media_id = (int) $mediaId;
-                        $object->created_user_id = (int) $user->id;
-                        $object->created = $date->format('Y-m-d H:i:s');
-                        
-                        // Attempt to change the state of the records.
-                        if (!$table->save($object))
+                        if (!$exists)
                         {
-                                $this->setError($table->getError());
-                                return false;
-                        }
+                                $object = new StdClass;
+                                $object->id = '';
+                                $object->response_id = (int) $pk;
+                                $object->media_id = (int) $mediaId;
+                                $object->created_user_id = (int) $user->id;
+                                $object->created = $date->format('Y-m-d H:i:s');
+
+                                // Attempt to save the data.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                        } 
 		}
 
 		// Clear the component's cache
