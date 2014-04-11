@@ -264,7 +264,7 @@ class hwdMediaShareModelMedia extends JModelList
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
                 
-   		// Group over the media ID to prevent duplicates.
+   		// Group over the ID to prevent duplicates.
                 $query->group('a.id');
 
                 /**
