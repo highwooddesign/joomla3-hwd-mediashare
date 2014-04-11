@@ -232,18 +232,30 @@ class hwdMediaShareModelGroupMembers extends JModelList
                                 }
                         }
                         
+                        // Check if association already exists
+                        $db = JFactory::getDbo();
+                        $query = $db->getQuery(true)->select('id')->from('#__hwdms_group_members')
+                                 ->where($db->quoteName('group_id') . ' = ' . $db->quote($groupId))
+                                 ->where($db->quoteName('member_id') . ' = ' . $db->quote($pk));
+                        $db->setQuery($query);
+                        $exists = $db->loadResult();
+
                         // Create an object to bind to the database
-                        $object = new StdClass;
-                        $object->group_id = (int) $groupId;
-                        $object->member_id = (int) $pk;
-                        $object->approved = (int) 1;
-                        $object->created = $date->format('Y-m-d H:i:s');
- 
-                        // Attempt to change the state of the records.
-                        if (!$table->save($object))
+                        if (!$exists)
                         {
-                                $this->setError($table->getError());
-                                return false;
+                                $object = new StdClass;
+                                $object->id = '';
+                                $object->group_id = (int) $groupId;
+                                $object->member_id = (int) $pk;
+                                $object->approved = (int) 1;
+                                $object->created = $date->format('Y-m-d H:i:s');
+
+                                // Attempt to save the data.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
                         }
 		}
 
