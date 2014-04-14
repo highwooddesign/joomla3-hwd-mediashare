@@ -40,9 +40,9 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 		// Get items to remove from the request.
                 // We select the mid array which contains the media ID integers. The cid array will 
                 // contain the original checkbox values which relate to the mapping table
-		$cid = JFactory::getApplication()->input->get('mid', array(), 'array');
-		$playlistId = JFactory::getApplication()->input->get('playlist_id', '', 'int');
-		$add = JFactory::getApplication()->input->get('add', '', 'int');
+		$cid = $this->input->get('mid', array(), 'array');
+		$playlistId = $this->input->get('playlist_id', '', 'int');
+		$add = $this->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
@@ -83,9 +83,9 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 		// Get items to remove from the request.
                 // We select the mid array which contains the media ID integers. The cid array will 
                 // contain the original checkbox values which relate to the mapping table
-		$cid = JFactory::getApplication()->input->get('mid', array(), 'array');
-		$playlistId = JFactory::getApplication()->input->get('playlist_id', '', 'int');
-		$add = JFactory::getApplication()->input->get('add', '', 'int');
+		$cid = $this->input->get('mid', array(), 'array');
+		$playlistId = $this->input->get('playlist_id', '', 'int');
+		$add = $this->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
