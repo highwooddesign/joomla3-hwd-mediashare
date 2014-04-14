@@ -28,7 +28,7 @@ Joomla.submitbutton = function(task)
                                 }
 
                                 try {
-                                        if (object['success'] == 1)
+                                        if (object['status'] == 'success')
                                         {
                                                 $('ajax-container-' + task).empty();
                                                 $('ajax-container-' + task).removeClass('ajax-loading');
