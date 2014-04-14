@@ -38,9 +38,9 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$groupId = JFactory::getApplication()->input->get('group_id', '', 'int');
-		$add = JFactory::getApplication()->input->get('add', '', 'int');
+		$cid = $this->input->get('cid', array(), 'array');
+		$groupId = $this->input->get('group_id', '', 'int');
+		$add = $this->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
@@ -79,9 +79,9 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
-		$groupId = JFactory::getApplication()->input->get('group_id', '', 'int');
-		$add = JFactory::getApplication()->input->get('add', '', 'int');
+		$cid = $this->input->get('cid', array(), 'array');
+		$groupId = $this->input->get('group_id', '', 'int');
+		$add = $this->input->get('add', '', 'int');
 
                 if (!is_array($cid) || count($cid) < 1)
 		{
