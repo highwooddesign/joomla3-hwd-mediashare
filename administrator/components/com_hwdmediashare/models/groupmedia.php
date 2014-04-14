@@ -39,15 +39,16 @@ class hwdMediaShareModelGroupMedia extends JModelList
 	 */
 	public function getItems()
 	{
-                $jinput = JFactory::getApplication()->input;
-
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+                
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
                 $this->model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->model->populateState();
-                $this->model->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
-                $this->model->setState('filter.group_id',  $jinput->get('group_id', '', 'int'));
-                $this->model->setState('list.ordering', ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
-                $this->model->setState('list.direction', ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
+                $this->model->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
+                $this->model->setState('filter.group_id',  $app->input->get('group_id', '', 'int'));
+                $this->model->setState('list.ordering', ($app->input->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
+                $this->model->setState('list.direction', ($app->input->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
                 
                 return $this->model->getItems(); 
 	}
@@ -74,14 +75,14 @@ class hwdMediaShareModelGroupMedia extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-                $jinput = JFactory::getApplication()->input;
- 
-                $this->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
-                $this->setState('filter.group_id', $jinput->get('group_id', '', 'int'));
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+               
+                $this->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
+                $this->setState('filter.group_id', $app->input->get('group_id', '', 'int'));
 
-                $ordering = ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
-                $direction = ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
+                $ordering = ($app->input->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
+                $direction = ($app->input->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
                 
 		// List state information.
 		parent::populateState($ordering, $direction);
