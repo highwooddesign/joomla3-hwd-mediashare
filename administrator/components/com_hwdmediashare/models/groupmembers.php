@@ -53,13 +53,14 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
 	public function getItems()
 	{
-                $jinput = JFactory::getApplication()->input;
-
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+                
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
                 $this->model = JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->model->populateState();
-                $this->model->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
-                $this->model->setState('filter.group_id',  $jinput->get('group_id', '', 'int'));
+                $this->model->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
+                $this->model->setState('filter.group_id',  $app->input->get('group_id', '', 'int'));
                 $this->model->setState('list.ordering', 'u.registerDate');
                 $this->model->setState('list.direction', 'ASC');
                 
@@ -88,11 +89,11 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-                $jinput = JFactory::getApplication()->input;
- 
-                $this->setState('filter.add_to_group', $jinput->get('add', '0', 'int'));
-                $this->setState('filter.group_id', $jinput->get('group_id', '', 'int'));
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+                
+                $this->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
+                $this->setState('filter.group_id', $app->input->get('group_id', '', 'int'));
 
 		// List state information.
 		parent::populateState('u.registerDate', 'asc');
