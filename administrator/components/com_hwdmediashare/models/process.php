@@ -49,7 +49,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 */
         public function getItem($pk = null)
         {
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 $processId = $app->input->get('id');
@@ -82,7 +82,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 */
         public function getItems()
         {
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 $processId = $app->input->get('id');

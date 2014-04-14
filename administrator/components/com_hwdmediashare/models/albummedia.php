@@ -39,7 +39,7 @@ class hwdMediaShareModelAlbumMedia extends JModelList
 	 */
 	public function getItems()
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
@@ -80,7 +80,7 @@ class hwdMediaShareModelAlbumMedia extends JModelList
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
                             
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 $this->setState('filter.add_to_album', $app->input->get('add', '0', 'int'));

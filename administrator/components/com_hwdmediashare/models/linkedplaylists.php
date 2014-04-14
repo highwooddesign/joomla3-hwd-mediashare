@@ -52,7 +52,7 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 */
 	public function getItems()
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
@@ -88,7 +88,7 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 $this->setState('filter.add_to_media', $app->input->get('add', '0', 'int'));
@@ -108,7 +108,7 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 */
         public function unlink($pks, $mediaId = null)
         {
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 
                 hwdMediaShareFactory::load('utilities');
@@ -195,7 +195,7 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 */
 	public function link($pks, $mediaId = null)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 		$user = JFactory::getUser();
                 $date = JFactory::getDate();                

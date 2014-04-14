@@ -39,7 +39,7 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 	 */
 	public function getItems()
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
@@ -75,7 +75,7 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
  
                 $this->setState('filter.add_to_playlist', $app->input->get('add', '0', 'int'));

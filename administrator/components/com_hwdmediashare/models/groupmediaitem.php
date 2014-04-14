@@ -57,7 +57,7 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	 */
         public function unlink($pks, $groupId = null)
         {
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 
                 hwdMediaShareFactory::load('utilities');
@@ -147,7 +147,7 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	 */
 	public function link($pks, $groupId = null)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 		$user = JFactory::getUser();
                 $date = JFactory::getDate();                

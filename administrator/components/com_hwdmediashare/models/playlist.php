@@ -139,7 +139,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 */
 	public function approve($pks, $value = 0)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $user = JFactory::getUser();
                             
 		// Sanitize the ids.
@@ -195,7 +195,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 */
 	public function feature($pks, $value = 0)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $user = JFactory::getUser();
        
 		// Sanitize the ids.

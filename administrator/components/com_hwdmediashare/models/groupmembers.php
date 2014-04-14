@@ -53,7 +53,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
 	public function getItems()
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
@@ -89,7 +89,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-                // Initialiase variables.
+                // Initialise variables.
                 $app = JFactory::getApplication();
                 
                 $this->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
@@ -109,7 +109,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
         public function unlink($pks, $groupId = null)
         {
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 
                 hwdMediaShareFactory::load('utilities');
@@ -196,7 +196,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 */
 	public function link($pks, $groupId = null)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 		$user = JFactory::getUser();
                 $date = JFactory::getDate();                
