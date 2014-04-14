@@ -7,58 +7,71 @@
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
  */
-/**
- * UNFINISHED
- */
+
 defined('_JEXEC') or die;
 
 class HwdMediaShareControllerMaintenance extends JControllerLegacy
 {
+        
         /**
-	 * Method to run the mainenance
+	 * Proxy for getModel.
+	 * @return	void
+	 */
+	public function getModel($name = 'Maintenance', $prefix = 'hwdMediaShareModel')
+	{
+                $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+                return $model;
+	}
+        
+        /**
+	 * Method to run the maintenance.
 	 * @return	void
 	 */
         function run()
         {
-		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		/*
+		 * Note: we don't do a token check as we're fetching information
+		 * asynchronously. This means that between requests the token might
+		 * change, making it impossible for AJAX to work.
+		 */
 
 		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-                $maintenance = JRequest::getWord('maintenance');
+                $document = JFactory::getDocument();
+                $maintenance = $this->input->get('maintenance', '', 'word');
 
-                // Load the embed library
-                hwdMediaShareFactory::load('maintenance');
-                $model = hwdMediaShareMaintenance::getInstance();
-                
-                // Add embed code
+                // Get the model.
+                $model = $this->getModel();
+
+                // Perform maintenance task.
                 if (!$model->$maintenance())
                 {
-                        $retval = array("success" => "0",
-                                        "errors" => "1",
-                                        "data" => array("task" => $maintenance, "error_msg" => $model->getError()));
+                        // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                        $return = array(
+                                'status' => 'fail',
+                                'data' => array(
+                                        'task' => $maintenance
+                                ),
+                                'message' => $model->getError()
+                        );
                 }
                 else
                 {
-                        $retval = array("success" => "1",
-                                        "errors" => "0",
-                                        "data" => array("task" => $maintenance));
-                }
-
-                // Get the document object.
-                $document = JFactory::getDocument();
-
+                        // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                        $return = array(
+                                'status' => 'success',
+                                'data' => array(
+                                        'task' => $maintenance
+                                ),
+                                'message' => null
+                        );
+                } 
+                
                 // Set the MIME type for JSON output.
                 $document->setMimeEncoding( 'application/json' );
 
-                // Change the suggested filename.
-                JResponse::setHeader( 'Content-Disposition', 'attachment; filename="'.$maintenance.'.json"' );
-
-                // Output the JSON data.
-                echo json_encode( $retval );
-
-                // Exit the application.
-                return;
+                // Output the JSON data.      
+                echo json_encode($return);
+                
+		JFactory::getApplication()->close();
         }
 }
