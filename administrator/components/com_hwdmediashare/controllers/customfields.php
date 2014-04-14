@@ -52,7 +52,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cid = $this->input->get('cid', array(), 'array');
 
 		// Initialise variables.
 		$values	= array('searchable' => 1, 'unsearchable' => 0);
@@ -96,7 +96,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cid = $this->input->get('cid', array(), 'array');
 
 		// Initialise variables.
 		$values	= array('visible' => 1, 'unvisible' => 0);
@@ -140,7 +140,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cid = $this->input->get('cid', array(), 'array');
 
 		// Initialise variables.
 		$values	= array('required' => 1, 'unrequired' => 0);
