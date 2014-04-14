@@ -59,7 +59,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cid = $this->input->get('cid', array(), 'array');
 
 		// Initialise variables.
 		$values	= array('resetall' => 1, 'reset' => 0);
