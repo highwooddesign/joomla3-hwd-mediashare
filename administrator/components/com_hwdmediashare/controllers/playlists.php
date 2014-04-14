@@ -51,7 +51,7 @@ class hwdMediaShareControllerPlaylists extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cid = $this->input->get('cid', array(), 'array');
 
 		// Initialise variables.
 		$values	= array('approve' => 1, 'unapprove' => 0);
@@ -95,7 +95,7 @@ class hwdMediaShareControllerPlaylists extends JControllerAdmin
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+		$cid = $this->input->get('cid', array(), 'array');
 
 		// Initialise variables.
 		$values	= array('feature' => 1, 'unfeature' => 0);
