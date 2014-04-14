@@ -39,15 +39,16 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 	 */
 	public function getItems()
 	{
-                $jinput = JFactory::getApplication()->input;
+                // Initialiase variables.
+                $app = JFactory::getApplication();
 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
                 $this->model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->model->populateState();
-                $this->model->setState('filter.add_to_playlist', $jinput->get('add', '0', 'int'));
-                $this->model->setState('filter.playlist_id',  $jinput->get('playlist_id', '', 'int'));
-                $this->model->setState('list.ordering', ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
-                $this->model->setState('list.direction', ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
+                $this->model->setState('filter.add_to_playlist', $app->input->get('add', '0', 'int'));
+                $this->model->setState('filter.playlist_id', $app->input->get('playlist_id', '', 'int'));
+                $this->model->setState('list.ordering', ($app->input->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
+                $this->model->setState('list.direction', ($app->input->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
                 
                 return $this->model->getItems(); 
 	}
@@ -74,14 +75,14 @@ class hwdMediaShareModelPlaylistMedia extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-                $jinput = JFactory::getApplication()->input;
+                // Initialiase variables.
+                $app = JFactory::getApplication();
  
-                $this->setState('filter.add_to_playlist', $jinput->get('add', '0', 'int'));
-                $this->setState('filter.playlist_id', $jinput->get('playlist_id', '', 'int'));
+                $this->setState('filter.add_to_playlist', $app->input->get('add', '0', 'int'));
+                $this->setState('filter.playlist_id', $app->input->get('playlist_id', '', 'int'));
 
-                $ordering = ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
-                $direction = ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
+                $ordering = ($app->input->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
+                $direction = ($app->input->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
 
 		// List state information.
 		parent::populateState($ordering, $direction);
