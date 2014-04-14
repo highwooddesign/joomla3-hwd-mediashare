@@ -39,15 +39,16 @@ class hwdMediaShareModelAlbumMedia extends JModelList
 	 */
 	public function getItems()
 	{
-                $jinput = JFactory::getApplication()->input;
-
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+                
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
                 $this->model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->model->populateState();
-                $this->model->setState('filter.add_to_album', $jinput->get('add', '0', 'int'));
-                $this->model->setState('filter.album_id',  $jinput->get('album_id', '', 'int'));
-                $this->model->setState('list.ordering', ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
-                $this->model->setState('list.direction', ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
+                $this->model->setState('filter.add_to_album', $app->input->get('add', '0', 'int'));
+                $this->model->setState('filter.album_id',  $app->input->get('album_id', '', 'int'));
+                $this->model->setState('list.ordering', ($app->input->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created'));
+                $this->model->setState('list.direction', ($app->input->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC'));
                 
                 return $this->model->getItems(); 
 	}
@@ -79,14 +80,14 @@ class hwdMediaShareModelAlbumMedia extends JModelList
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
                             
-		// Initialise variables.
-                $jinput = JFactory::getApplication()->input;
- 
-                $this->setState('filter.add_to_album', $jinput->get('add', '0', 'int'));
-                $this->setState('filter.album_id', $jinput->get('album_id', '', 'int'));
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+                
+                $this->setState('filter.add_to_album', $app->input->get('add', '0', 'int'));
+                $this->setState('filter.album_id', $app->input->get('album_id', '', 'int'));
 
-                $ordering = ($jinput->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
-                $direction = ($jinput->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
+                $ordering = ($app->input->get('add', '0', 'int') == 0 ? 'map.ordering' : 'a.created');
+                $direction = ($app->input->get('add', '0', 'int') == 0 ? 'ASC' : 'DESC');
 
 		// List state information.
 		parent::populateState($ordering, $direction);
