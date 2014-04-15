@@ -1,45 +1,30 @@
 <?php
 /**
- * @version    SVN $Id: remote.php 1458 2013-04-30 10:50:24Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      18-Feb-2012 12:10:10
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework upload class
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareRemote extends JObject
 {        
-        /**
-	 * @since	0.1
-	 */
-        public $elementType = 1;
-        
-        var $_id;
-	var $_url;
-        var $_host;
-        var $_buffer;
-        var $_title;
-        var $_description;
-        var $_source;
-        var $_duration;
-        var $_count = 0;
-
 	/**
-	 * Class constructor.
+	 * Library data
+	 * @var array
+	 */
+	public $_item;
+	public $_url;
+        public $_host;
+        public $_count = 0;
+
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -49,9 +34,8 @@ class hwdMediaShareRemote extends JObject
 	 * Returns the hwdMediaShareRemote object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareMedia A hwdMediaShareRemote object.
-	 * @since   0.1
-	 */
+	 * @return  hwdMediaShareRemote Object.
+	 */  
 	public static function getInstance()
 	{
 		static $instance;
@@ -66,42 +50,60 @@ class hwdMediaShareRemote extends JObject
 	}
         
 	/**
-	 * Method to process a remote media
-         *
-	 * @since   0.1
+	 * Method to process a remote media.
+         * @return	void
 	 */
 	public function addRemote()
 	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
 
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                hwdMediaShareFactory::load('upload');
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
                 
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
-                $urls = explode("\n", $data['remote']);
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.import', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                }   
+                
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+                
+                // Check if we are processing a single upload, and redefine.
+                if (!isset($data['remotes']) && isset($data['remote'])) 
+                {
+                        $data['remotes'] = $data['remote'];
+                }
 
-                // Add remote urls
+                // Get urls to import.
+                $urls = explode("\n", $data['remotes']); 
+                
+                // Loop over urls and add attempt to import.
                 foreach($urls as $url)
                 {
-                        // Reset
-                        $this->url = null;
-                        $this->_id = null;
+                        // Reset library data.
                         $this->_url = null;
                         $this->_host = null;
-                        $this->_title = null;
 
-                        // Set url
-                        $this->url = $url;
+                        // Set current url.
+                        $this->_url = trim($url);
                         
-                        $error = false;
-                        $host = null;
-
-                        $key = hwdMediaShareUpload::generateKey();
+                        // Skip empty lines.
+                        if (empty($this->_url) || !$utilities->validateUrl($this->_url))
+                        {
+                                continue;
+                        }
 
                         if (!$this->getHost())
                         {
@@ -109,46 +111,46 @@ class hwdMediaShareRemote extends JObject
                                 return false; 
                         }
 
-                        if (!$this->getUrl())
-                        {
-                                $this->setError(JText::_('COM_HWDMS_ERROR_NO_REMOTE_URL'));
-                                return false; 
-                        }
-
-                        if (hwdMediaShareUpload::keyExists($key))
-                        {
-                                $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                                return false; 
-                        }
-
                         $remotePluginClass = $this->getRemotePluginClass($this->_host);
                         $remotePluginPath = $this->getRemotePluginPath($this->_host);
 
-                        // Import hwdMediaShare plugins
+                        // Import HWD remote plugin.
                         JLoader::register($remotePluginClass, $remotePluginPath);
                         if (class_exists($remotePluginClass))
                         {
-                                //$importer = $remotePluginClass::getInstance();
                                 $importer = call_user_func(array($remotePluginClass, 'getInstance'));
-                                $importer->url = $url;  
+                                $importer->_url = $url;  
                         }
                         else
                         {
-                                $this->setError(JText::_('COM_HWDMS_UNABLE_TO_IMPORT_FROM_'.$this->_host));
-                                $this->setError(JText::sprintf('COM_HWDMS_UNABLE_TO_IMPORT_FROM_X', $this->_host));
-                                return false; 
+                                // If we can't find a suitable plugin, then look for top level domain plugin
+                                $remotePluginClass = $this->getRemotePluginClass($this->getDomain());
+                                $remotePluginPath = $this->getRemotePluginPath($this->getDomain());
+
+                                JLoader::register($remotePluginClass, $remotePluginPath);
+                                if (class_exists($remotePluginClass))
+                                {    
+                                        $importer = call_user_func(array($remotePluginClass, 'getInstance'));
+                                        $importer->_url = $url;  
+                                }
+                                else
+                                {
+                                        $this->setError(JText::_('COM_HWDMS_UNABLE_TO_IMPORT_FROM_'.$this->_host));
+                                        $this->setError(JText::sprintf('COM_HWDMS_UNABLE_TO_IMPORT_FROM_X', $this->_host));
+                                        return false; 
+                                }
                         }
                         
-                        // Set approved/pending
+                        // Set approved/pending.
                         (!$app->isAdmin() && $config->get('approve_new_media')) == 1 ? $status = 2 : $status = 1; 
                         $config->get('approve_new_media') == 1 ? $status = 2 : $status = 1; 
        
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $row =& JTable::getInstance('Media', 'hwdMediaShareTable');
+                        $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                        $post                          = array();
-
-                        // Check if we need to replace an existing media item
+                        $post = array();
+                
+                        // Check if we need to replace an existing media item.
                         if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                         {
                                 $post['id']                     = $data['id'];
@@ -159,7 +161,7 @@ class hwdMediaShareRemote extends JObject
                                 //$post['title']                = '';
                                 //$post['alias']                = '';
                                 //$post['description']          = '';
-                                $post['type']                   = 2; // Rtmp
+                                $post['type']                   = 2; // Remote
                                 $post['source']                 = $importer->getSource();
                                 $post['storage']                = '';
                                 $post['duration']               = $importer->getDuration();
@@ -198,9 +200,9 @@ class hwdMediaShareRemote extends JObject
                                 //$post['asset_id']             = '';
                                 //$post['ext_id']               = '';
                                 $post['media_type']             = $importer->mediaType;
-                                $post['key']                    = $key;
+                                //$post['key']                  = '';
                                 $post['title']                  = $importer->getTitle();
-                                $post['alias']                  = JFilterOutput::stringURLSafe($post['title']);
+                                $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
                                 $post['description']            = $importer->getDescription();
                                 $post['type']                   = 2; // Remote
                                 $post['source']                 = $importer->getSource();
@@ -217,11 +219,11 @@ class hwdMediaShareRemote extends JObject
                                 //$post['likes']                = '';
                                 //$post['dislikes']             = '';
                                 $post['status']                 = $status;
-                                $post['published']              = 1;
-                                $post['featured']               = 0;
+                                $post['published']              = (isset($data['published']) ? $data['published'] : 1);
+                                $post['featured']               = (isset($data['featured']) ? $data['featured'] : 0);
                                 //$post['checked_out']          = '';
                                 //$post['checked_out_time']     = '';
-                                $post['access']                 = 1;
+                                $post['access']                 = (isset($data['access']) ? $data['access'] : 1);
                                 //$post['download']             = '';
                                 //$post['params']               = '';
                                 //$post['ordering']             = '';
@@ -233,78 +235,33 @@ class hwdMediaShareRemote extends JObject
                                 $post['modified_user_id']       = $user->id;
                                 $post['modified']               = $date->format('Y-m-d H:i:s');
                                 $post['hits']                   = 0;
-                                $post['language']               = '*';
+                                $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                         }
 
-                        // Bind it to the table
-                        if (!$row->bind( $post ))
+                        // Save the data to the database.
+                        if (!$table->save($post))
                         {
-                                $this->setError($row->getError());
+                                $this->setError($table->getError());
                                 return false; 
                         }
-
-                        // Store it in the db
-                        if (!$row->store())
-                        {
-                                $this->setError($row->getError());
-                                return false; 
-                        }
-
-                        $this->_id = $row->id;
-                        $this->_title = $row->title;
-                        $this->_count++;
-
-                        hwdMediaShareUpload::assignAssociations($row);
-
-                        // Trigger onAfterMediaAdd
-                        if ($config->get('approve_new_media') == 0)
-                        {
-                                hwdMediaShareFactory::load('events');
-                                $events = hwdMediaShareEvents::getInstance();
-                                $events->triggerEvent('onAfterMediaAdd', $row); 
-                        }
-
-                        // Send system notifications
-                        if ($config->get('notify_new_media') == 1) 
-                        {
-                                if($row->status == 2){
-                                        ob_start();
-                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia_pending.php');
-                                        $body = ob_get_contents();
-                                        ob_end_clean();
-                                }
-                                else{
-                                        ob_start();
-                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia.php');
-                                        $body = ob_get_contents();
-                                        ob_end_clean();
-                                }
-                                hwdMediaShareFactory::load('utilities');
-                                $utilities = hwdMediaShareUtilities::getInstance();
-                                $utilities->sendSystemEmail(JText::_('COM_HWDMS_EMAIL_SUBJECT_NEW_MEDIA'), $body);
-                        }                         
+                        
+                        $properties = $table->getProperties(1);
+                        $this->_item = JArrayHelper::toObject($properties, 'JObject');
+                        $this->_count++;   
                 }     
                         
                 return true;
         } 
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Method to obtain the host from the url.
+         * @return	void
 	 **/
 	public function getHost()
 	{
-                if (empty($this->url))
-                {
-                        $data = JRequest::getVar('jform', array(), 'post', 'array');
-                        $this->url = $data['remote']; 
-                }
-
                 $pattern = '`.*?((http|https|ftp)://[\w#$&+,\/:;=?@.-]+)[^\w#$&+,\/:;=?@.-]*?`i';
-                if (preg_match($pattern, $this->url, $matches)) 
+                if (preg_match($pattern, $this->_url, $matches)) 
                 {
-                        $this->_url = $matches[1];
                         $this->_host = parse_url($this->_url, PHP_URL_HOST);
                         $this->_host = preg_replace('#^www\.(.+\.)#i', '$1', $this->_host);
                 }
@@ -313,22 +270,48 @@ class hwdMediaShareRemote extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Method to obtain the top level domain from the url.
+         * @return	void
+	 **/
+	public function getDomain()
+	{
+                $pieces = parse_url($this->_url);
+                $domain = isset($pieces['host']) ? $pieces['host'] : '';
+                if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs))
+                {
+                        return $regs['domain'];
+                }
+                return false;
+	} 
+        
+        /**
+	 * Method to obtain the url from the request.
+         * @return	void
 	 **/
 	public function getUrl()
 	{
+                // Initialise variables.
+                $app = JFactory::getApplication();    
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
                 if (!$this->_url)
                 {
-                        $data = JRequest::getVar('jform', array(), 'post', 'array');
+                        // Retrieve fitlered jform data
+                        $jform = $app->input->getArray(array(
+                            'jform' => array(
+                                'remote' => 'string'
+                            )
+                        ));
 
-                        $pattern = '`.*?((http|ftp)://[\w#$&+,\/:;=?@.-]+)[^\w#$&+,\/:;=?@.-]*?`i';
-                        if (preg_match($pattern, $data['remote'], $matches)) 
+                        $data = $jform['jform'];
+           
+                        // Validate url
+                        if (!empty($data['remote']) && $utilities->validateUrl($data['remote']))
                         {
-                                $this->_url = $matches[1];
-                                $this->_host = parse_url($this->_url, PHP_URL_HOST);
-                                $this->_host = preg_replace('#^www\.(.+\.)#i', '$1', $this->_host);
+                                $this->_url = $data['remote'];
                         }
                 }
 
@@ -336,15 +319,16 @@ class hwdMediaShareRemote extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Method to request the contents of the url
+         * @return	void
 	 **/
 	public function getBuffer($url, $ssl=false)
 	{  
-                // A large number of CURL installations will not support SSL, so switch back to http
-                if (!$ssl) $url = str_replace("https", "http", $url);
-                
+                // Check if curl supports ssl connections 
+                $version = curl_version();
+                $ssl_supported = ($version['features'] && CURL_VERSION_SSL);
+                if (!$ssl || !$ssl_supported) $url = str_replace("https", "http", $url);
+
                 if ($url)
                 {
                         if (function_exists('curl_init'))
@@ -360,11 +344,19 @@ class hwdMediaShareRemote extends JObject
                                 //curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, 1);
                                 //curl_setopt($curl_handle, CURLOPT_MAXREDIRS, 5);
                                 //curl_setopt($curl_handle, CURLOPT_HEADER, 1);
+                                curl_setopt($curl_handle, CURLOPT_SSL_VERIFYPEER, false);
                                 curl_setopt($curl_handle, CURLOPT_REFERER, $this->_host);
                                 curl_setopt($curl_handle, CURLOPT_USERAGENT, $useragent);
                                 $buffer = curl_exec($curl_handle);
                                 curl_close($curl_handle);
-
+                                
+                                // Display curl error
+                                if ($buffer === false) 
+                                {
+                                        $this->setError('Curl error #'.curl_errno($curl_handle).': ' . curl_error($curl_handle));
+                                        return false;
+                                }
+                                
                                 if (!empty($buffer))
                                 {
                                         return $buffer;
@@ -379,12 +371,11 @@ class hwdMediaShareRemote extends JObject
 		return false;
 	}
         
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getTitle( $buffer )
+	/**
+	 * Method to extract the title from the request buffer.
+         * @return	void
+	 */
+	public function getTitle($buffer)
 	{
                 jimport( 'joomla.filter.filterinput' );
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
@@ -401,7 +392,7 @@ class hwdMediaShareRemote extends JObject
                         $title = $match[1];
                         $title = (string)str_replace(array("\r", "\r\n", "\n"), '', $title);
 			$title = $noHtmlFilter->clean($title);
-                        $title = JHtmlString::truncate($title, 5120);
+                        $title = JHtmlString::truncate($title, 255);
                         $title = trim($title);
                         
                         if ($title)
@@ -424,12 +415,11 @@ class hwdMediaShareRemote extends JObject
                 return $title;
 	}
         
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getDescription( $buffer )
+	/**
+	 * Method to extract the description from the request buffer.
+         * @return	void
+	 */
+	public function getDescription($buffer)
 	{
                 jimport( 'joomla.filter.filterinput' );
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
@@ -455,7 +445,7 @@ class hwdMediaShareRemote extends JObject
                         }
                 }
                 
-                // Check standard description meta tag
+                // Check standard description meta tag.
 		preg_match('/<meta name="description" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
@@ -469,24 +459,20 @@ class hwdMediaShareRemote extends JObject
                 return $description;
 	}
        
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getThumbnail( $buffer )
+	/**
+	 * Method to extract the thumbnail location from the request buffer.
+         * @return	void
+	 */
+	public function getThumbnail($buffer)
 	{
                 jimport( 'joomla.filter.filterinput' );
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // We will apply the most strict filter to the variable
                 $noHtmlFilter = JFilterInput::getInstance();
-
-                $thumbnail = false;
-                                
+          
 		// Check Open Graph tag
                 preg_match('/<meta property="og:image" content="([^"]+)/', $buffer, $match);
-
                 if (!empty($match[1]))
                 {
                         $thumbnail = $match[1];
@@ -497,52 +483,42 @@ class hwdMediaShareRemote extends JObject
 
                         hwdMediaShareFactory::load('utilities');
                         $utilities = hwdMediaShareUtilities::getInstance();
-                        $isValid = $utilities->validateUrl( $thumbnail );
                         
-                        if ($isValid)
+                        if ($utilities->validateUrl($thumbnail))
                         {
                                 return $thumbnail;
                         }
-                        else
-                        {
-                                return false;
-                        }
                 }
                 
-                return $thumbnail;
+                return false;
 	}
         
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getDuration( $buffer )
+	/**
+	 * Method to extract the duration from the request buffer.
+         * @return	void
+	 */
+	public function getDuration($buffer)
 	{
                 jimport( 'joomla.filter.filterinput' );
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // We will apply the most strict filter to the variable
                 $noHtmlFilter = JFilterInput::getInstance();
-
-                $duration = false;
-                                
+             
 		// Check Open Graph tag
                 preg_match('/<meta property="video:duration" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $duration = $match[1];
-                        $duration = (int)$duration;
+                        $duration = (int)$match[1];
                 }
                 
-                return $duration;
+                return false;
 	}
 
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	/**
+	 * Method to process a remote media.
+         * @return	void
+	 */
 	public function getSource( )
 	{
                 jimport( 'joomla.filter.filterinput' );
@@ -560,82 +536,104 @@ class hwdMediaShareRemote extends JObject
                 return $source;
 	}
         
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	/**
+	 * Method to construct the plugin class name.
+         * @return	void
+	 */
 	public function getRemotePluginClass($host)
 	{
                 return 'plgHwdmediashareRemote_'.preg_replace("/[^a-zA-Z0-9\s]/", "", $host);
 	}
         
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	/**
+	 * Method to construct the full path to the plugin file.
+         * @return	void
+	 */
 	public function getRemotePluginPath($host)
 	{
                 return JPATH_PLUGINS . '/hwdmediashare/remote_'.preg_replace("/[^a-zA-Z0-9\s]/", "", $host).'/remote_'.preg_replace("/[^a-zA-Z0-9\s]/", "", $host).'.php';
 	}
         
 	/**
-	 * Method to process a remote media
-         *
-	 * @since   0.1
+	 * Method to import media files from a server directory.
+         * @return	void
 	 */
 	public function addImport()
 	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
 
-                // Load HWDMediaShare config
+                // Load HWD config
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Load HWD utiltiies
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Load HWD libraries
                 hwdMediaShareFactory::load('upload');
                 hwdMediaShareFactory::load('files');
 
-                $error = false;
-
-                $folder = JRequest::getVar('folder', '', '', 'path');
-
-		// Get some paths from the request
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.import', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                } 
+                
+                // Get folder to import from request
+                $folder = $app->input->get('folder', '', 'path');
 		$base = JPATH_SITE.'/media/'.$folder;
 
+                if (!file_exists($base))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                } 
+                
 		// Get the list of folders
 		jimport('joomla.filesystem.folder');
                 jimport( 'joomla.filesystem.file' );
 		$files = JFolder::files($base, '.', false, true);
-                
-		$count = 0;
 
 		foreach ($files as $file)
 		{
-                        //Import filesystem libraries. Perhaps not necessary, but does not hurt
-                        jimport('joomla.filesystem.file');
-                        
-                        //Retrieve file details
+                        // Retrieve file details
                         $ext = strtolower(JFile::getExt($file));
 
-                        //First check if the file has the right extension, we need jpg only
-                        $db = JFactory::getDBO();
-                        $query = $db->getQuery(true);
-                        $query->select('id');
-                        $query->from('#__hwdms_ext');
-                        $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-
+                        // First check if the file has an allowed extension
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_ext')
+                                ->where($db->quoteName('ext') . ' = ' . $db->quote($ext))
+                                ->where($db->quoteName('published') . ' = ' . $db->quote(1));
                         $db->setQuery($query);
-                        $ext_id = $db->loadResult();
-                        if ( $ext_id > 0 )
+                        try
                         {
-                                //Retrieve file details from uploaded file, sent from upload form
-                                $ext = strtolower(JFile::getExt($file));
-                                $key = hwdMediaShareUpload::generateKey();
+                                $db->query(); 
+                                $ext_id = $db->loadResult();                   
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;                            
+                        }
 
+                        if ($ext_id > 0)
+                        {
+                                // Define a key so we can copy the file into the storage directory
+                                $key = $utilities->generateKey();
+
+                                if ($utilities->keyExists($key))
+                                {
+                                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
+                                        return false;
+                                }
+                                        
                                 if (empty($file) || empty($ext) || !file_exists($file))
                                 {
                                         $this->setError(JText::_('COM_HWDMS_ERROR_PHP_UPLOAD_ERROR'));
@@ -645,49 +643,17 @@ class hwdMediaShareRemote extends JObject
                                 {
                                         hwdMediaShareFiles::getLocalStoragePath();
 
-                                        //Import filesystem libraries. Perhaps not necessary, but does not hurt
-                                        jimport('joomla.filesystem.file');
-
                                         $folders = hwdMediaShareFiles::getFolders($key);
                                         hwdMediaShareFiles::setupFolders($folders);
 
-                                        //Clean up filename to get rid of strange characters like spaces etc
+                                        // Get the necessary filename
                                         $filename = hwdMediaShareFiles::getFilename($key, '1');
 
                                         //Set up the source and destination of the file
-                                        $src = $file;
                                         $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
-                                        //First check if the file has the right extension, we need jpg only
-                                        $db = JFactory::getDBO();
-                                        $query = $db->getQuery(true);
-                                        $query->select('id');
-                                        $query->from('#__hwdms_ext');
-                                        $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-
-                                        $db->setQuery($query);
-                                        $ext_id = $db->loadResult();
-                                        if ( $ext_id > 0 )
+                                        if (!JFile::copy($file, $dest))
                                         {
-                                                if ( JFile::copy($src, $dest) )
-                                                {
-                                                        //Redirect to a page of your choice
-                                                }
-                                                else
-                                                {
-                                                        $this->setError(JText::_('COM_HWDMS_ERROR_FILE_COULD_NOT_BE_COPIED_TO_UPLOAD_DIRECTORY'));
-                                                        return false;
-                                                }
-                                        }
-                                        else
-                                        {
-                                                $this->setError(JText::_('COM_HWDMS_ERROR_EXTENSION_NOT_ALLOWED'));
-                                                return false;
-                                        }
-
-                                        if (hwdMediaShareUpload::keyExists($key))
-                                        {
-                                                $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
+                                                $this->setError(JText::_('COM_HWDMS_ERROR_FILE_COULD_NOT_BE_COPIED_TO_UPLOAD_DIRECTORY'));
                                                 return false;
                                         }
 
@@ -696,12 +662,12 @@ class hwdMediaShareRemote extends JObject
                                         $config->get('approve_new_media') == 1 ? $status = 2 : $status = 1; 
 
                                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                        $row =& JTable::getInstance('media', 'hwdMediaShareTable');
+                                        $table = JTable::getInstance('media', 'hwdMediaShareTable');
  
                                         $post                          = array();
                                         $post['key']                   = $key;
                                         $post['media_type']            = '';
-                                        // Check encoding of filename to prevent problems in the title
+                                        // Check encoding of original filename to prevent problems in the title
                                         if(mb_detect_encoding($file, 'iso-8859-1', true))
                                         {
                                                 $post['title'] = hwdMediaShareUpload::removeExtension(basename(utf8_encode($file)));
@@ -713,7 +679,7 @@ class hwdMediaShareRemote extends JObject
                                         $post['alias']                 = JFilterOutput::stringURLSafe($post['title']);
                                         $post['ext_id']                = $ext_id;
                                         $post['description']           = '';
-                                        $post['type']                  = 1;
+                                        $post['type']                  = 1; // Local
                                         $post['status']                = $status;
                                         $post['published']             = 1;
                                         $post['featured']              = 0;
@@ -727,118 +693,99 @@ class hwdMediaShareRemote extends JObject
                                         $post['hits']                  = 0;
                                         $post['language']              = '*';
 
-                                        // Bind it to the table
-                                        if (!$row->bind( $post ))
+                                        // Save data to the database
+                                        if (!$table->save($post))
                                         {
                                                 $this->setError($row->getError());
                                                 return false;
-                                        }
-
-                                        // Store it in the db
-                                        if (!$row->store())
-                                        {
-                                                $this->setError($row->getError());
-                                                return false;
-                                        }
+                                        }                                         
                                 }
-
-                                $this->_id = $row->id;
-                                $this->_title = $row->title;
-
-                                hwdMediaShareUpload::assignAssociations($row);
-
+                                     
+                                $properties = $table->getProperties(1);
+                                $this->_item = JArrayHelper::toObject($properties, 'JObject');
+                                        
                                 hwdMediaShareFactory::load('files');
-                                hwdMediaShareFiles::add($row,'1');
+                                hwdMediaShareFiles::add($this->_item, 1);
 
-                                hwdMediaShareUpload::addProcesses($row);
+                                hwdMediaShareUpload::addProcesses($this->_item);
 
-                                hwdMediaShareFactory::load('events');
-                                $events = hwdMediaShareEvents::getInstance();
-                                $events->triggerEvent('onAfterMediaAdd', $row);
-
-                                $count++;
+                                $this->_count++; 
                         }
+                        else
+                        {
+                                continue; // We just want to skip files that can't be imported.
+                                //$this->setError(JText::_('COM_HWDMS_ERROR_EXTENSION_NOT_ALLOWED'));
+                                //return false;
+                        }                        
 		}   
                 return true;      
         } 
         
 	/**
-	 * Method to process a remote media
-         *
-	 * @since   0.1
+	 * Method to process a remote link.
+         * @return	void
 	 */
 	public function addLink()
 	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
-
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
+                $jinput = JFactory::getApplication()->input;
+                
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                hwdMediaShareFactory::load('upload');
-                hwdMediaShareFactory::load('files');
-
-                //Retrieve file details from uploaded file, sent from upload form
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
-                $type = $data['link_type'];
-                $url = $data['link_url'];
-                $title = basename($url);
-
+ 
+                // Load HWD utiltiies.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-		$isValid = $utilities->validateUrl( $url );
-                if (!$isValid)
+                // Load HWD libraries.
+                hwdMediaShareFactory::load('upload');
+                hwdMediaShareFactory::load('files');
+                
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.import', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                }   
+                
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+                
+                if (!$utilities->validateUrl($data['link_url']))
                 {
                         $this->setError(JText::_('COM_HWDMS_ERROR_NO_REMOTE_HOST'));
                         return false; 
                 }
-
-                $key = hwdMediaShareUpload::generateKey();
-
-                if (hwdMediaShareUpload::keyExists($key))
-                {
-                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                        return false; 
-                }
-
-                switch ($type) {
-                    case 8:
-                        $media_type = 1;
-                        break;
-                    case 5:
-                        $media_type = 3;
-                        break;
-                    default:
-                        $media_type = 4;
-                        break;
-                }
                 
-                // Set approved/pending
+                // Set approved/pending.
                 (!$app->isAdmin() && $config->get('approve_new_media')) == 1 ? $status = 2 : $status = 1; 
                 $config->get('approve_new_media') == 1 ? $status = 2 : $status = 1; 
                 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $row =& JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                $post                          = array();
+                $post = array();
               
-                // Check if we need to replace an existing media item
+                // Check if we need to replace an existing media item.
                 if ($data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                 {
                         $post['id']                     = $data['id'];
                         //$post['asset_id']             = '';
-                        //$post['ext_id']               = '';
-                        $post['media_type']             = $media_type;
+                        $post['ext_id']                 = ((isset($data['link_ext']) && $data['link_ext'] > 0) ? $data['link_ext'] : '');
+                        $post['media_type']             = $data['link_type'];
                         //$post['key']                  = '';
                         //$post['title']                = '';
                         //$post['alias']                = '';
                         //$post['description']          = '';
                         $post['type']                   = 7; // Remote file
-                        $post['source']                 = $url;
-                        $post['storage']                = $type;
+                        $post['source']                 = $data['link_url'];
+                        $post['storage']                = '';
                         //$post['duration']             = '';
                         $post['streamer']               = '';
                         $post['file']                   = '';
@@ -873,15 +820,15 @@ class hwdMediaShareRemote extends JObject
                 {
                         //$post['id']                   = '';
                         //$post['asset_id']             = '';
-                        //$post['ext_id']               = '';
-                        $post['media_type']             = $media_type;
-                        $post['key']                    = $key;
-                        $post['title']                  = (empty($title) ? 'New media' :$title);
-                        $post['alias']                  = JFilterOutput::stringURLSafe($post['title']);
-                        //$post['description']          = '';
+                        $post['ext_id']                 = ((isset($data['link_ext']) && $data['link_ext'] > 0) ? $data['link_ext'] : '');
+                        $post['media_type']             = $data['link_type'];
+                        //$post['key']                  = '';
+                        $post['title']                  = (isset($data['title']) ? $data['title'] : basename($data['link_url']));
+                        $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
+                        $post['description']            = (isset($data['description']) ? $data['description'] : '');
                         $post['type']                   = 7; // Remote file
-                        $post['source']                 = $url;
-                        $post['storage']                = $type;
+                        $post['source']                 = $data['link_url'];
+                        $post['storage']                = '';
                         //$post['duration']             = '';
                         $post['streamer']               = '';
                         $post['file']                   = '';
@@ -894,11 +841,11 @@ class hwdMediaShareRemote extends JObject
                         //$post['likes']                = '';
                         //$post['dislikes']             = '';
                         $post['status']                 = $status;
-                        $post['published']              = 0;
-                        $post['featured']               = 0;
+                        $post['published']              = (isset($data['published']) ? $data['published'] : 1);
+                        $post['featured']               = (isset($data['featured']) ? $data['featured'] : 0);
                         //$post['checked_out']          = '';
                         //$post['checked_out_time']     = '';
-                        $post['access']                 = 1;
+                        $post['access']                 = (isset($data['access']) ? $data['access'] : 1);
                         //$post['download']             = '';
                         //$post['params']               = '';
                         //$post['ordering']             = '';
@@ -910,90 +857,62 @@ class hwdMediaShareRemote extends JObject
                         $post['modified_user_id']       = $user->id;
                         $post['modified']               = $date->format('Y-m-d H:i:s');
                         $post['hits']                   = 0;
-                        $post['language']               = '*';
+                        $post['language']               = (isset($jform['language']) ? $jform['language'] : '*');                              
                 }
 
-                // Bind it to the table
-                if (!$row->bind( $post ))
+                // Save the data to the database.
+                if (!$table->save($post))
                 {
-                        $this->setError($row->getError());
+                        $this->setError($table->getError());
                         return false; 
                 }
 
-                // Store it in the db
-                if (!$row->store())
-                {
-                        $this->setError($row->getError());
-                        return false; 
-                }
-
-                $this->_id = $row->id;
-                $this->_title = $row->title;
-
-                hwdMediaShareUpload::assignAssociations($row);
-
-                // Trigger onAfterMediaAdd
-                if ($config->get('approve_new_media') == 0)
-                {
-                        hwdMediaShareFactory::load('events');
-                        $events = hwdMediaShareEvents::getInstance();
-                        $events->triggerEvent('onAfterMediaAdd', $row); 
-                }
-
-                // Send system notifications
-                if ($config->get('notify_new_media') == 1) 
-                {
-                        if($row->status == 2){
-                                ob_start();
-                                require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia_pending.php');
-                                $body = ob_get_contents();
-                                ob_end_clean();
-                        }
-                        else{
-                                ob_start();
-                                require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia.php');
-                                $body = ob_get_contents();
-                                ob_end_clean();
-                        }
-                        hwdMediaShareFactory::load('utilities');
-                        $utilities = hwdMediaShareUtilities::getInstance();
-                        $utilities->sendSystemEmail(JText::_('COM_HWDMS_EMAIL_SUBJECT_NEW_MEDIA'), $body);
-                } 
+                $properties = $table->getProperties(1);
+                $this->_item = JArrayHelper::toObject($properties, 'JObject');
 
                 return true;
         } 
         
 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
+	 * Method to render a list of allowed remote websites.
+         * @return	void
 	 */
 	public function getReadableAllowedRemotes()
 	{
                 $sites = array();
                 
-                // Load all hwdMediaShare plugins
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('*');
-                $query->from('#__extensions AS a');
-                $query->where('a.type = '.$db->quote('plugin'));
-                $query->where('a.folder = '.$db->quote('hwdmediashare'));
+                // Load all HWD remote plugins
+                $db = JFactory::getDBO();
+                $query = $db->getQuery(true)
+                        ->select('*')
+                        ->from('#__extensions')
+                        ->where('type = '.$db->quote('plugin'))
+                        ->where('folder = '.$db->quote('hwdmediashare'))
+                        ->where('enabled = '.$db->quote(1));
                 $db->setQuery($query);
-                $rows = $db->loadObjectList();            
+                try
+                {
+                        $db->query(); 
+                        $rows = $db->loadObjectList();                   
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }                
 
                 // Loop all plugins and check if a remote plugin
-		for( $i = 0; $i < count($rows); $i++ )
+		for($i = 0; $i < count($rows); $i++)
 		{
 			$row = $rows[$i];
 
-                        if( substr($row->element, 0, 7) == 'remote_' )
+                        if(substr($row->element, 0, 7) == 'remote_')
 			{
-                                // Get the url
+                                // Get the supported url from the xml manifest
                                 $file= JPATH_SITE.'/plugins/hwdmediashare/'.$row->element.'/'.$row->element.'.xml';
                                 if (file_exists($file))
                                 {
-                                        $xml =& JFactory::getXML($file);                                        
+                                        $xml = JFactory::getXML($file);                                        
                                         if ($xml->url)
                                         {
                                                 $sites[] = $xml->url;                                    
@@ -1002,16 +921,14 @@ class hwdMediaShareRemote extends JObject
 			}
 		}
                 
-                $return = '';  
-                $last = end($sites);                
-                foreach ($sites as $site) {
-                    $return.= '<a href="'.$site.'" target="_blank">'.str_replace("http://", "", $site).'</a>';
-                    if ($site != $last) 
-                    {
-                        $return.= ', ';
-                    }                    
+                $return = array();  
+                foreach ($sites as $site) 
+                {
+                    $return[] = '<a href="'.$site.'" target="_blank">'.str_replace("http://", "", $site).'</a>';
+                
                 }
-		return $return;
+                
+		return implode(", ", $return);
 	}        
 }
                 
