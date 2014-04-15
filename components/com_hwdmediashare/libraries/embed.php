@@ -1,45 +1,39 @@
 <?php
 /**
- * @version    SVN $Id: embed.php 779 2012-12-10 16:14:56Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      18-Feb-2012 14:40:37
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework embed class
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareEmbed extends JObject
 {        
-	var $_host;
-        var $_id;
+	/**
+	 * Library data
+	 * @var array
+	 */
+	public $_item;
+        public $_host;
     
-        /**
-	 * Class constructor.
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
 	}
 
 	/**
-	 * Returns the hwdMediaShareRemote object, only creating it if it
+	 * Returns the hwdMediaShareEmbed object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareMedia A hwdMediaShareRemote object.
-	 * @since   0.1
-	 */
+	 * @return  hwdMediaShareEmbed Object.
+	 */ 
 	public static function getInstance()
 	{
 		static $instance;
@@ -53,52 +47,60 @@ class hwdMediaShareEmbed extends JObject
 		return $instance;
 	}
     
-        /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	/**
+	 * Method to process an embed code.
+         * @return	void
 	 */
 	public function addEmbed()
 	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
 
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+ 
+                // Load HWD utiltiies.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();               
                 
-                hwdMediaShareFactory::load('upload');
-                $key = hwdMediaShareUpload::generateKey();
-
-                jimport( 'joomla.filter.filterinput' );
-
-                // We will apply the safeHtml filter to the variable, and define additional allowed tags
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.import', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                }   
+                
+                // We will apply the safeHtml filter to the variable, but define additional allowed tags
+                jimport('joomla.filter.filterinput');
                 $safeHtmlFilter = JFilterInput::getInstance(null, null, 1, 1);
                 $safeHtmlFilter->tagBlacklist = array ('applet', 'body', 'bgsound', 'base', 'basefont', 'frame', 'frameset', 'head', 'html', 'id', 'ilayer', 'layer', 'link', 'meta', 'name', 'script', 'style', 'title', 'xml');
-                $embed_code = $safeHtmlFilter->clean($data['embed_code']);
 
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+
+                // Clean the raw embed code
+                $embed_code = $safeHtmlFilter->clean($data['embed_code']);
                 if (empty($embed_code))
                 {
                         $this->setError(JText::_('COM_HWDMS_ERROR_NO_EMBED_CODE'));
                         return false; 
                 }
-                
-                $pattern = '`.*?((http|ftp)://[\w#$&+,\/:;=?@.-]+)[^\w#$&+,\/:;=?@.-]*?`i';
-                if (preg_match($pattern,$data['embed_code'],$matches)) 
-                {
-                        $this->_host = parse_url($matches[1], PHP_URL_HOST);
-                }
-                
-                if (hwdMediaShareUpload::keyExists($key))
-                {
-                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                        return false; 
+
+                if (preg_match('#\bhttps?://[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|/))#', $embed_code, $matches))
+                {                    
+                        $this->_host = parse_url($matches[0], PHP_URL_HOST);
+                        $this->_host = preg_replace('#^www\.(.+\.)#i', '$1', $this->_host);
                 }
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $row =& JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                $post                          = array();
+                $post = array();
 
                 // Check if we need to replace an existing media item
                 if ($data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
@@ -151,9 +153,9 @@ class hwdMediaShareEmbed extends JObject
                         //$post['ext_id']               = '';
                         //$post['media_type']           = '';
                         $post['key']                    = $key;
-                        $post['title']                  = (empty($this->_host) ? 'New media' : $this->_host);
-                        $post['alias']                  = JFilterOutput::stringURLSafe($post['title']);
-                        //$post['description']          = '';
+                        $post['title']                  = (isset($data['title']) ? $data['title'] : $this->_host);
+                        $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
+                        $post['description']            = (isset($data['description']) ? $data['description'] : '');
                         $post['type']                   = 3; // Embed code
                         $post['source']                 = '';
                         $post['storage']                = '';
@@ -169,11 +171,11 @@ class hwdMediaShareEmbed extends JObject
                         //$post['likes']                = '';
                         //$post['dislikes']             = '';
                         $post['status']                 = 1;
-                        $post['published']              = 0;
-                        $post['featured']               = 0;
+                        $post['published']              = (isset($data['published']) ? $data['published'] : 1);
+                        $post['featured']               = (isset($data['featured']) ? $data['featured'] : 0);
                         //$post['checked_out']          = '';
                         //$post['checked_out_time']     = '';
-                        $post['access']                 = 1;
+                        $post['access']                 = (isset($data['access']) ? $data['access'] : 1);
                         //$post['download']             = '';
                         //$post['params']               = '';
                         //$post['ordering']             = '';
@@ -185,29 +187,18 @@ class hwdMediaShareEmbed extends JObject
                         $post['modified_user_id']       = $user->id;
                         $post['modified']               = $date->format('Y-m-d H:i:s');
                         $post['hits']                   = 0;
-                        $post['language']               = '*';
+                        $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                 }
                     
-                // Bind it to the table
-                if (!$row->bind( $post ))
+                // Save the data to the database.
+                if (!$table->save($post))
                 {
-                        $this->setError($row->getError());
+                        $this->setError($table->getError());
                         return false; 
                 }
 
-                // Store it in the db
-                if (!$row->store())
-                {
-                        $this->setError($row->getError());
-                        return false; 
-                }
-                
-                $this->_id = $row->id;
-
-                hwdMediaShareUpload::assignAssociations($row);
-                hwdMediaShareFactory::load('events');
-                $events = hwdMediaShareEvents::getInstance();
-                $events->triggerEvent('onAfterMediaAdd', $row);
+                $properties = $table->getProperties(1);
+                $this->_item = JArrayHelper::toObject($properties, 'JObject');
 
                 return true;
         }
