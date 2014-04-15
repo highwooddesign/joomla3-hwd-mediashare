@@ -259,7 +259,7 @@ class hwdMediaShareRemote extends JObject
 	 **/
 	public function getHost()
 	{
-                $pattern = '`.*?((http|https|ftp)://[\w#$&+,\/:;=?@.-]+)[^\w#$&+,\/:;=?@.-]*?`i';
+                $pattern = "/(http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/";
                 if (preg_match($pattern, $this->_url, $matches)) 
                 {
                         $this->_host = parse_url($this->_url, PHP_URL_HOST);
@@ -275,9 +275,8 @@ class hwdMediaShareRemote extends JObject
 	 **/
 	public function getDomain()
 	{
-                $pieces = parse_url($this->_url);
-                $domain = isset($pieces['host']) ? $pieces['host'] : '';
-                if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs))
+                $host = parse_url($this->_url, PHP_URL_HOST);
+                if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $host, $regs))
                 {
                         return $regs['domain'];
                 }
