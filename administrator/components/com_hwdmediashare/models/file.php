@@ -80,7 +80,7 @@ class hwdMediaShareModelFile extends JModelAdmin
 		$db = JFactory::getDBO();
         
                 // Load the file system library
-                jimport( 'joomla.filesystem.file' );
+                jimport('joomla.filesystem.file');
                 
 		// Sanitize the ids.
 		$pks = (array) $pks;
