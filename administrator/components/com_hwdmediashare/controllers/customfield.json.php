@@ -7,9 +7,7 @@
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
  */
-/**
- * UNFINISHED
- */ 
+
 defined('_JEXEC') or die;
 
 class hwdMediaShareControllerCustomField extends JControllerForm
