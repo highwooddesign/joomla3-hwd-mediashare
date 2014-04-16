@@ -7,9 +7,7 @@
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
  */
-/**
- * UNFINISHED
- */
+
 defined('_JEXEC') or die;
 
 class HwdMediaShareControllerProcess extends JControllerLegacy 
@@ -20,52 +18,55 @@ class HwdMediaShareControllerProcess extends JControllerLegacy
 	 */
         public function run()
         {
-		// Check for request forgeries
-		// JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		/*
+		 * Note: we don't do a token check as we're fetching information
+		 * asynchronously. This means that between requests the token might
+		 * change, making it impossible for AJAX to work.
+		 */
 
 		// Initialise variables.
-		$user	= JFactory::getUser();
-		$task	= $this->getTask();
-		$cids	= JRequest::getVar('cid', array(), '', 'array');
-
-                // Load the embed library
+                $document = JFactory::getDocument();
+                
+		// Get items to process from the request.
+		$cid = $this->input->get('cid', array(), 'array');
+                
+                // Get the processes library.
                 hwdMediaShareFactory::load('processes');
                 $model = hwdMediaShareProcesses::getInstance();
 
-                // Add embed code
-                if (!$model->run($cids))
+                // Perform maintenance task.
+                if (!$model->run($cid))
                 {
-                        $retval = array("success" => "0",
-                                        "errors" => "1",
-                                        "data" => array("total" => $model->_total, "error_msg" => $model->getError()));
+                        // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                        $return = array(
+                                'status' => 'fail',
+                                'data' => array(
+                                        'complete' => $model->_complete,
+                                        'total' => $model->_total
+                                ),
+                                'message' => $model->getError()
+                        );
                 }
                 else
                 {
-                        if ($model->_complete)
-                        {
-                                $retval = array("complete" => "1");
-                        }
-                        else
-                        {
-                                $retval = array("success" => "1",
-                                                "errors" => "0",
-                                                "data" => array("total" => $model->_total));
-                        }
-                }
-
-                // Get the document object.
-                $document =& JFactory::getDocument();
-
+                        // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                        $return = array(
+                                'status' => 'success',
+                                'data' => array(
+                                        'complete' => $model->_complete,
+                                        'total' => $model->_total
+                                ),
+                                'message' => null
+                        );
+                } 
+                
                 // Set the MIME type for JSON output.
                 $document->setMimeEncoding( 'application/json' );
 
-                // Change the suggested filename.
-                JResponse::setHeader( 'Content-Disposition', 'attachment; filename="process.json"' );
-
-                // Output the JSON data.
-                echo json_encode( $retval );
-
-                // Exit the application.
-                return;
+                // Output the JSON data.      
+                echo json_encode($return);
+                
+		JFactory::getApplication()->close();
         }
 }
+
