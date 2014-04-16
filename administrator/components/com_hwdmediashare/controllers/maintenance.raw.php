@@ -37,6 +37,8 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy
 
 		// Initialise variables.
                 $document = JFactory::getDocument();
+                
+		// Get maintenance to run from the request.
                 $maintenance = $this->input->get('maintenance', '', 'word');
 
                 // Get the model.
