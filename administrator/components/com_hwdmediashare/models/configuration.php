@@ -93,7 +93,7 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
 		$data = JFactory::getApplication()->input->post->get('jform', array(), 'array');
                 $date = JFactory::getDate();
 
-                jimport( 'joomla.filesystem.file');
+                jimport('joomla.filesystem.file');
                 $ini = JPATH_ROOT.'/administrator/components/com_hwdmediashare/config.ini';
                 $defaultConfig = JFile::read($ini);
 
