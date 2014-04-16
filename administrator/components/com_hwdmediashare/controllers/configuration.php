@@ -30,7 +30,7 @@ class hwdMediaShareControllerConfiguration extends JControllerForm
                 $result = false;
                 
                 // Delete test file is already exists
-                jimport( 'joomla.filesystem.file' );
+                jimport('joomla.filesystem.file' );
                 $filename = JPATH_SITE.'/tmp/hwdms.background';
 		if (JFile::exists($filename)) JFile::delete($filename);
 
