@@ -9,7 +9,7 @@
  */
 /**
  * UNFINISHED
- */
+ */ 
 defined('_JEXEC') or die;
 
 class hwdMediaShareControllerCustomField extends JControllerForm
@@ -26,17 +26,17 @@ class hwdMediaShareControllerCustomField extends JControllerForm
 		 * change, making it impossible for AJAX to work.
 		 */
             
-                // Get the document object
+                // Get the document object.
                 $document = JFactory::getDocument();
                 
                 $return = array();
                 
-                // Load field xml file
+                // Load field xml file.
                 $type = $this->input->get('type', '', 'cmd');
                 $field = $this->input->get('field', '', 'int');
                 $xmlPath = JPATH_ROOT.'/components/com_hwdmediashare/libraries/fields/'.$type.'.xml';
                 
-                jimport( 'joomla.filesystem.file' );
+                jimport('joomla.filesystem.file');
                 if(JFile::exists($xmlPath))
 		{   
                         $form = JForm::getInstance($type, $xmlPath, array('control' => 'params'));
@@ -63,7 +63,7 @@ class hwdMediaShareControllerCustomField extends JControllerForm
 		}
 
 
-                // Set the MIME type for JSON output
+                // Set the MIME type for JSON output.
                 $document->setMimeEncoding( 'application/json' );
 
                 // Output the JSON data.      
