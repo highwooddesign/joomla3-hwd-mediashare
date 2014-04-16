@@ -205,7 +205,7 @@ class hwdMediaShareModelDashboard extends JModelLegacy
 	 */
 	public function getVersion()
 	{
-                jimport( 'joomla.application.component.helper' );
+                jimport('joomla.application.component.helper');
                 $params = JComponentHelper::getComponent('com_hwdmediashare');
                 JTable::addIncludePath(JPATH_LIBRARIES.'/joomla/database/table');
                 $table = JTable::getInstance('Extension');
