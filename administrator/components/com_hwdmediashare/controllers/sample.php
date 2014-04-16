@@ -28,8 +28,8 @@ class hwdMediaShareControllerSample extends JControllerLegacy
                 
                 if ($nummedia > 0 || $numcategories > 0 || $numalbums > 0 || $numgroups > 0 || $numchannels > 0 || $numplaylists > 0)
                 {
-                        JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_EXISTS') );
-                        JFactory::getApplication()->redirect( 'index.php?option=com_hwdmediashare' );
+                        $this->setMessage(JText::_('COM_HWDMS_NOTICE_SAMPLE_DATA_EXISTS'));
+                        $this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=dashboard', false));
                 }
                 
                 $db = JFactory::getDBO();
@@ -127,7 +127,7 @@ SQL;
                 fclose($fp);
 
                 // Now we extract the sample data
-                jimport( 'joomla.filesystem.archive' );
+                jimport('joomla.filesystem.archive');
                 JArchive::extract($path, $dest);
                 
                 // If successfull, we inject the rest of the sample data
