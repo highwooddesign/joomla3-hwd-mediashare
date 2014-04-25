@@ -23,7 +23,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 * Proxy for getModel.
 	 * @return	void
 	 */
-	public function getModel($name = 'AddMedia', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'AddMedia', $prefix = 'hwdMediaShareModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
