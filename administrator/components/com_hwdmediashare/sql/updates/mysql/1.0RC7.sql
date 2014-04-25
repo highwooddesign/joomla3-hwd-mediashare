@@ -1,4 +1,6 @@
--- $Id: 1.0RC7.sql 408 2012-06-08 17:17:43Z dhorsfall $
+#
+# Database updates for 1.0RC7
+#
 
 CREATE TABLE IF NOT EXISTS `#__hwdms_mailq` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
