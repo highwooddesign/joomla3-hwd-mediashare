@@ -1,15 +1,6 @@
-/**
- * @version    SVN $Id: submitbutton.js 481 2012-08-21 16:28:14Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
 Joomla.submitbutton = function(task)
-{
-        if (task == 'maintenace.run')
+{      
+        if (task == 'maintenance.run')
 	{
                 var tasks = new Array();
                 tasks[0]="videoitems";
@@ -40,22 +31,38 @@ Joomla.submitbutton = function(task)
                         },
                         onComplete: function( response )
                         {
-                                var object = JSON.decode(response);
-                                if (object['success'] == 1)
-                                {
-                                        var html = '<div class="jgrid"><span class="state publish"><span class="text">Success</span></span></div>';
+                                try {
+                                        var object = JSON.decode(response);
+                                } catch(e) {
+                                        $('ajax-container-' + task).empty();
+                                        $('ajax-container-' + task).removeClass('ajax-loading');
+                                        $('ajax-container-' + task).set('html', '<span class="label label-danger">Failed</span>');
                                 }
-                                else
-                                {
-                                        $('ajax-container-' + task).addClass('hasResult').set('title', object['data']['error_msg']);
-                                        var html = '<div class="jgrid"><span class="state unpublish"><span class="text">Fail</span></span></div>';
-                                        var JTooltips = new Tips($$('.hasResult'));
-                                }                
-                                $('ajax-container-' + object['data']['task']).removeClass('ajax-loading').set('html', html);
+
+                                try {
+                                        if (object['status'] == 'success')
+                                        {
+                                                $('ajax-container-' + task).empty();
+                                                $('ajax-container-' + task).removeClass('ajax-loading');
+                                                $('ajax-container-' + task).set('html', '<span class="label label-success">Success</span>');                                    
+                                        }
+                                        else
+                                        {
+                                                $('ajax-container-' + task).empty();
+                                                $('ajax-container-' + task).removeClass('ajax-loading');
+                                                $('ajax-container-' + task).set('html', '<span class="label label-danger">Failed</span>'); 
+                                        }
+                                } catch(e) {
+                                        $('ajax-container-' + task).empty();
+                                        $('ajax-container-' + task).removeClass('ajax-loading');
+                                        $('ajax-container-' + task).set('html', '<span class="label label-danger">Failed</span>');
+                                }                                    
                         },
                         onFailure: function()
                         {
-                                var html = '<div class="jgrid"><span class="state unpublish"><span class="text">Fail</span></span></div>';
+                                $('ajax-container-' + task).empty();
+                                $('ajax-container-' + task).removeClass('ajax-loading');
+                                $('ajax-container-' + task).set('html', '<span class="label label-danger">Failed</span>');
                         }
                 });
 
@@ -64,16 +71,16 @@ Joomla.submitbutton = function(task)
                         var task = tasks[i];
                         maintenanceRequest.send('option=com_hwdmigrator&task=migrate.run&format=raw&migrate=' + task);
                 }
-                return false;                
+                
 	}
-	if (task == 'maintenace.refresh')
+	else if (task == 'maintenace.refresh')
 	{
 		window.location = "index.php?option=com_hwdmigrator&view=dashboard";
                 return false;
 	}
 	else if (task == 'help')
 	{
-                window.open ("http://hwdmediashare.co.uk/learn/docs", "helpWindow","status=1,toolbar=1");
+                window.open("http://hwdmediashare.co.uk/learn/docs/59-getting-started/migration/115-migrating-from-hwdvideoshare-to-hwdmediashare", "helpWindow", "status=1,toolbar=0");
                 return false;
 	}
         else
@@ -81,6 +88,6 @@ Joomla.submitbutton = function(task)
                 Joomla.submitform(task);
                 return true;
         }
-
-
+        
+        return false;
 }
