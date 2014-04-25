@@ -163,7 +163,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 *
 	 * @return  boolean  True if successful, false if an error occurs.
 	 */        
-	public function delete($pks)
+	public function delete(&$pks)
 	{
                 if (!parent::delete($pks))
                 {
