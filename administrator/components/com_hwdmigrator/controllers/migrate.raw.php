@@ -16,7 +16,7 @@ class HwdMigratorControllerMigrate extends JControllerAdmin
 	 * Proxy for getModel.
 	 * @return	void
 	 */ 
-	public function getModel($name = 'Migrate', $prefix = 'hwdMigratorModel')
+	public function getModel($name = 'Migrate', $prefix = 'hwdMigratorModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
