@@ -73,7 +73,7 @@ Joomla.submitbutton = function(task)
                 }
                 
 	}
-	else if (task == 'maintenace.refresh')
+	else if (task == 'maintenance.refresh')
 	{
 		window.location = "index.php?option=com_hwdmigrator&view=dashboard";
                 return false;
