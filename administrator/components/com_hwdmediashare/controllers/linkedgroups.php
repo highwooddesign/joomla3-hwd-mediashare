@@ -22,7 +22,7 @@ class hwdMediaShareControllerLinkedGroups extends JControllerAdmin
 	 * Proxy for getModel.
 	 * @return	void
 	 */
-	public function getModel($name = 'LinkedGroups', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'LinkedGroups', $prefix = 'hwdMediaShareModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
