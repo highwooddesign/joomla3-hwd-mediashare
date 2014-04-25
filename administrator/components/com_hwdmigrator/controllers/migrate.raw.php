@@ -1,25 +1,21 @@
 <?php
 /**
- * @version    SVN $Id: migrate.raw.php 319 2012-04-16 17:16:34Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmigrator
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import Joomla controlleradmin library
-jimport('joomla.application.component.controlleradmin');
+defined('_JEXEC') or die;
 
 class HwdMigratorControllerMigrate extends JControllerAdmin
 {
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
-	 */
+	 * @return	void
+	 */ 
 	public function getModel($name = 'Migrate', $prefix = 'hwdMigratorModel')
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
@@ -27,45 +23,56 @@ class HwdMigratorControllerMigrate extends JControllerAdmin
 	}
         
         /**
-	 * Method to run the mainenance
-	 * @since	0.1
+	 * Method to run the maintenance.
+	 * @return	void
 	 */
         function run()
         {
-		// Initialise variables.
-		$user	 = JFactory::getUser();
-		$task	 = $this->getTask();
-                $migrate = JRequest::getWord('migrate');
+		/*
+		 * Note: we don't do a token check as we're fetching information
+		 * asynchronously. This means that between requests the token might
+		 * change, making it impossible for AJAX to work.
+		 */
 
+		// Initialise variables.
+                $document = JFactory::getDocument();
+                
+		// Get maintenance to run from the request.
+                $maintenance = $this->input->get('migrate', '', 'word');
+
+                // Get the model.
                 $model = $this->getModel();
 
-                // Add embed code
-                if (!$model->$migrate())
+                // Perform maintenance task.
+                if (!$model->$maintenance())
                 {
-                        $retval = array("success" => "0",
-                                        "errors" => "1",
-                                        "data" => array("task" => $migrate, "error_msg" => $model->getError()));
+                        // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                        $return = array(
+                                'status' => 'fail',
+                                'data' => array(
+                                        'task' => $maintenance
+                                ),
+                                'message' => $model->getError()
+                        );
                 }
                 else
                 {
-                        $retval = array("success" => "1",
-                                        "errors" => "0",
-                                        "data" => array("task" => $migrate));
-                }
-
-                // Get the document object.
-                $document =& JFactory::getDocument();
-
+                        // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                        $return = array(
+                                'status' => 'success',
+                                'data' => array(
+                                        'task' => $maintenance
+                                ),
+                                'message' => null
+                        );
+                } 
+                
                 // Set the MIME type for JSON output.
                 $document->setMimeEncoding( 'application/json' );
 
-                // Change the suggested filename.
-                JResponse::setHeader( 'Content-Disposition', 'attachment; filename="'.$migrate.'.json"' );
-
-                // Output the JSON data.
-                echo json_encode( $retval );
-
-                // Exit the application.
-                return;
+                // Output the JSON data.      
+                echo json_encode($return);
+                
+		JFactory::getApplication()->close();
         }
 }
