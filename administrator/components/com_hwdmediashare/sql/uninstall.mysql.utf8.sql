@@ -1,6 +1,5 @@
--- $Id: uninstall.mysql.utf8.sql 292 2012-04-02 10:01:39Z dhorsfall $
-
 DROP TABLE IF EXISTS `#__hwdms_activities`;
+DROP TABLE IF EXISTS `#__hwdms_activity`;
 DROP TABLE IF EXISTS `#__hwdms_albums`;
 DROP TABLE IF EXISTS `#__hwdms_album_map`;
 DROP TABLE IF EXISTS `#__hwdms_category_map`;
@@ -16,6 +15,7 @@ DROP TABLE IF EXISTS `#__hwdms_group_invite`;
 DROP TABLE IF EXISTS `#__hwdms_group_map`;
 DROP TABLE IF EXISTS `#__hwdms_group_members`;
 DROP TABLE IF EXISTS `#__hwdms_likes`;
+DROP TABLE IF EXISTS `#__hwdms_mailq`;
 DROP TABLE IF EXISTS `#__hwdms_media`;
 DROP TABLE IF EXISTS `#__hwdms_media_map`;
 DROP TABLE IF EXISTS `#__hwdms_playlists`;
