@@ -78,11 +78,6 @@ Joomla.submitbutton = function(task)
 		window.location = "index.php?option=com_hwdmigrator&view=dashboard";
                 return false;
 	}
-	else if (task == 'help')
-	{
-                window.open("http://hwdmediashare.co.uk/learn/docs/59-getting-started/migration/115-migrating-from-hwdvideoshare-to-hwdmediashare", "helpWindow", "status=1,toolbar=0");
-                return false;
-	}
         else
         {
                 Joomla.submitform(task);
