@@ -22,7 +22,7 @@ class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 	 * Proxy for getModel.
 	 * @return	void
 	 */
-	public function getModel($name = 'GroupMediaItem', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'GroupMediaItem', $prefix = 'hwdMediaShareModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
