@@ -38,11 +38,12 @@ class hwdMediaShareModelActivities extends JModelList
 	 */
 	public function getItems()
 	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                        if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+		if ($items = parent::getItems())
+		{            
+                        for ($x = 0, $count = count($items); $x < $count; $x++)
+                        {
+                                if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+                        }
                 }
 
 		return $items;
