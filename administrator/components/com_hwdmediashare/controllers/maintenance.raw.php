@@ -16,8 +16,8 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy
         /**
 	 * Proxy for getModel.
 	 * @return	void
-	 */
-	public function getModel($name = 'Maintenance', $prefix = 'hwdMediaShareModel')
+	 */                
+	public function getModel($name = 'Maintenance', $prefix = 'hwdMediaShareModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
