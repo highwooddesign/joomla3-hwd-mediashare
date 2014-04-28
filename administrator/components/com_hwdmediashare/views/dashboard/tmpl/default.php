@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.modal');
 ?>
+<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare'); ?>" method="post" name="adminForm" id="adminForm">
 <div class="row-fluid">
 <?php if (!empty( $this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
@@ -28,23 +29,24 @@ JHtml::_('behavior.modal');
                 <div class="well well-small">
                         <div class="module-title nav-header"><?php echo JText::_('COM_HWDMS_RECENT_ACTIVITY'); ?></div>
                         <div class="row-striped">
-                                <?php if (count($this->activity) == 0) : ?>
+                                <?php if (!$this->activity): ?>
                                 <div class="row-fluid">
                                         <div class="span12">
                                                 <div class="alert"><?php echo JText::_('COM_HWDMS_MSG_NO_RECENT_ACTIVITY'); ?></div>
                                         </div>
                                 </div>
-                                <?php endif;?>  
-                                <?php foreach ($this->activity as $activity) : ?>
-                                <div class="row-fluid">
-                                        <div class="span9">
-                                                <strong class="row-title"><?php echo hwdMediaShareActivities::renderActivityHtml($activity); ?> </strong>
+                                <?php else: ?>  
+                                        <?php foreach ($this->activity as $activity) : ?>
+                                        <div class="row-fluid">
+                                                <div class="span9">
+                                                        <strong class="row-title"><?php echo hwdMediaShareActivities::renderActivityHtml($activity); ?> </strong>
+                                                </div>
+                                                <div class="span3">
+                                                        <span title="" class="small"><i class="icon-calendar"></i> <?php echo JHtml::_('date.relative', $activity->created); ?></span>
+                                                </div>
                                         </div>
-                                        <div class="span3">
-                                                <span title="" class="small"><i class="icon-calendar"></i> <?php echo JHtml::_('date.relative', $activity->created); ?></span>
-                                        </div>
-                                </div>
-                                <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                <?php endif; ?>                            
                         </div>
                 </div>  
                 <div class="well well-small">
@@ -191,3 +193,5 @@ JHtml::_('behavior.modal');
                 </div>
 	</div>
 </div>
+<input type="hidden" name="task" value="" />
+</form>
