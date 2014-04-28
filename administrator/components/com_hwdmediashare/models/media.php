@@ -65,19 +65,20 @@ class hwdMediaShareModelMedia extends JModelList
 	 */
 	public function getItems()
 	{
-		$items = parent::getItems();
+		if ($items = parent::getItems())
+		{            
+                        for ($x = 0, $count = count($items); $x < $count; $x++)
+                        {
+                                if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
 
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                        if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
-                        
-                        // Load categories
-                        hwdMediaShareFactory::load('category');
-                        $HWDcategory = hwdMediaShareCategory::getInstance();
-                        $HWDcategory->elementType = 1;
-                        $items[$x]->categories = $HWDcategory->get($items[$x]);
+                                // Load categories
+                                hwdMediaShareFactory::load('category');
+                                $HWDcategory = hwdMediaShareCategory::getInstance();
+                                $HWDcategory->elementType = 1;
+                                $items[$x]->categories = $HWDcategory->get($items[$x]);
+                        }
                 }
-                                
+
 		return $items;
 	}
         
