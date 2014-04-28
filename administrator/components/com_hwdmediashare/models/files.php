@@ -59,47 +59,48 @@ class hwdMediaShareModelFiles extends JModelList
 	 */
 	public function getItems()
 	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        switch ($items[$x]->element_type)
+		if ($items = parent::getItems())
+		{            
+                        for ($x = 0, $count = count($items); $x < $count; $x++)
                         {
-                                case 1:
-                                    // Media
-                                    $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                    break;
-                                case 2:
-                                    // Album
-                                    $table = JTable::getInstance('Album', 'hwdMediaShareTable');
-                                    break;
-                                case 3:
-                                    // Group
-                                    $table = JTable::getInstance('Group', 'hwdMediaShareTable');
-                                    break;
-                                case 4:
-                                    // Playlist
-                                    $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                                    break;
-                                case 5:
-                                    // Channel
-                                    $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                                    break;
-                                case 6:
-                                    // Category
-                                    $table = JTable::getInstance('Category', 'hwdMediaShareTable');
-                                    break;
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                                switch ($items[$x]->element_type)
+                                {
+                                        case 1:
+                                            // Media
+                                            $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                            break;
+                                        case 2:
+                                            // Album
+                                            $table = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                            break;
+                                        case 3:
+                                            // Group
+                                            $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                            break;
+                                        case 4:
+                                            // Playlist
+                                            $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                            break;
+                                        case 5:
+                                            // Channel
+                                            $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                            break;
+                                        case 6:
+                                            // Category
+                                            $table = JTable::getInstance('Category', 'hwdMediaShareTable');
+                                            break;
+                                }
+
+                                $table->load($items[$x]->element_id);
+                                $properties = $table->getProperties(1);
+                                $row = JArrayHelper::toObject($properties, 'JObject');
+
+                                $items[$x]->title = (isset($row->title) ? $row->title : '');
+                                $items[$x]->ext_id = (isset($row->ext_id) ? $row->ext_id : '');
+                                $items[$x]->thumbnail_ext_id = (isset($row->thumbnail_ext_id) ? $row->thumbnail_ext_id : '');
+                                $items[$x]->key = (isset($row->key) ? $row->key : '');
                         }
-
-                        $table->load($items[$x]->element_id);
-                        $properties = $table->getProperties(1);
-                        $row = JArrayHelper::toObject($properties, 'JObject');
-
-                        $items[$x]->title = (isset($row->title) ? $row->title : '');
-                        $items[$x]->ext_id = (isset($row->ext_id) ? $row->ext_id : '');
-                        $items[$x]->thumbnail_ext_id = (isset($row->thumbnail_ext_id) ? $row->thumbnail_ext_id : '');
-                        $items[$x]->key = (isset($row->key) ? $row->key : '');
                 }
 
 		return $items;
