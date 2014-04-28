@@ -71,9 +71,7 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 // Sample data install option
                 if ($this->nummedia == 0 && $this->numcategories == 0 && $this->numalbums == 0 && $this->numgroups == 0 && $this->numchannels == 0 && $this->numplaylists == 0) 
                 {
-                        $document = JFactory::getDocument();
-                        $document->addStyleDeclaration('.icon-32-sample {background-image: url(../media/com_hwdmediashare/assets/images/icons/32/sample-data.png);width:98px!important;}');
-                        JToolBarHelper::custom('sample.install', 'sample.png', 'sample_f2.png', JText::_('COM_HWDMS_INSTALL_SAMPLE_DATA'), true);
+                        JToolBarHelper::custom('sample.install', 'database', 'database', JText::_('COM_HWDMS_INSTALL_SAMPLE_DATA'), false);
                 }
                 JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
