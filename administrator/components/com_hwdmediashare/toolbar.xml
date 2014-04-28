@@ -8,7 +8,7 @@
 		</item>
                 <item>
 			<name>Media</name>
-			<alias>media-gallery</alias>
+			<alias>gallery</alias>
 			<link><![CDATA[index.php?option=com_hwdmediashare&view=media]]></link>
 		</item>
 		<item>
