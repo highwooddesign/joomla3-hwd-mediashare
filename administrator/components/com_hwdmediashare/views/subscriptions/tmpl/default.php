@@ -44,11 +44,17 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif;?>
-		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>            
-		<table class="table table-striped" id="subscriptionsList">
-                        <thead><?php echo $this->loadTemplate('head');?></thead>
-                        <tbody><?php echo $this->loadTemplate('body');?></tbody>
-		</table>
+		<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this)); ?>  
+		<?php if (empty($this->items)) : ?>
+			<div class="alert alert-no-items">
+				<?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+			</div>
+		<?php else : ?>
+                        <table class="table table-striped" id="subscriptionsList">
+                                <thead><?php echo $this->loadTemplate('head');?></thead>
+                                <tbody><?php echo $this->loadTemplate('body');?></tbody>
+                        </table>
+                <?php endif; ?>
 		<?php echo $this->pagination->getListFooter(); ?>
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
