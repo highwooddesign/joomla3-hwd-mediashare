@@ -253,7 +253,7 @@ class hwdMediaShareModelLinkedResponses extends JModelList
                                 $object->response_id = (int) $pk;
                                 $object->media_id = (int) $mediaId;
                                 $object->created_user_id = (int) $user->id;
-                                $object->created = $date->format('Y-m-d H:i:s');
+                                $object->created = $date->toSql();
 
                                 // Attempt to save the data.
                                 if (!$table->save($object))
