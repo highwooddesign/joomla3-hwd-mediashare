@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -74,4 +74,6 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
     <!-- Pagination -->
     <div class="pagination"> <?php echo $this->pagination->getPagesLinks(); ?> </div>
   </div>
+  <input type="hidden" name="return" value="<?php echo $this->return;?>" />
+  <?php echo JHtml::_( 'form.token' ); ?>   
 </form>
