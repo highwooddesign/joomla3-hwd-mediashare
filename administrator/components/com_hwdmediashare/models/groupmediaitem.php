@@ -200,7 +200,7 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                 $object->group_id = (int) $groupId;
                                 $object->media_id = (int) $pk;
                                 $object->created_user_id = (int) $user->id;
-                                $object->created = $date->format('Y-m-d H:i:s');
+                                $object->created = $date->toSql();
 
                                 // Attempt to save the data.
                                 if (!$table->save($object))
