@@ -1,16 +1,14 @@
 <?php
 /**
- * @version    SVN $Id: default_list.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      06-Dec-2011 17:13:47
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
+defined('_JEXEC') or die;
 ?>
 <ul>
 <?php foreach($this->items[$this->parent->id] as $id => $item) : ?>
