@@ -26,7 +26,7 @@ class hwdMediaShareControllerUber extends JControllerForm
                 $config = $hwdms->getConfig();
 
                 // Set the MIME type for output
-                $document->setMimeEncoding( 'text/javascript' );
+                $document->setMimeEncoding('text/javascript');
     
                 hwdMediaShareFactory::load('uber.ubr_link_upload');
                 
@@ -47,7 +47,7 @@ class hwdMediaShareControllerUber extends JControllerForm
                 $config = $hwdms->getConfig();
 
                 // Set the MIME type for output
-                $document->setMimeEncoding( 'text/javascript' );
+                $document->setMimeEncoding('text/javascript');
     
                 hwdMediaShareFactory::load('uber.ubr_set_progress');
                 
@@ -68,7 +68,7 @@ class hwdMediaShareControllerUber extends JControllerForm
                 $config = $hwdms->getConfig();
 
                 // Set the MIME type for output
-                $document->setMimeEncoding( 'text/javascript' );
+                $document->setMimeEncoding('text/javascript');
     
                 hwdMediaShareFactory::load('uber.ubr_get_progress');
                 
