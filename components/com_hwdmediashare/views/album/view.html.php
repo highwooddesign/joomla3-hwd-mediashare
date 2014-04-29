@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -30,10 +30,9 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 	function display($tpl = null)
 	{
                 // Get data from the model.
-                // Album is called afterwards so we have data from the items.
+                $this->album = $this->get('Album');
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
-                $this->album = $this->get('Album');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
@@ -47,6 +46,7 @@ class hwdMediaShareViewAlbum extends JViewLegacy
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
                 
+                $this->album->nummedia = $this->get('numMedia');
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
