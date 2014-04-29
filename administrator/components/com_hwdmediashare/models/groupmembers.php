@@ -249,7 +249,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
                                 $object->group_id = (int) $groupId;
                                 $object->member_id = (int) $pk;
                                 $object->approved = (int) 1;
-                                $object->created = $date->format('Y-m-d H:i:s');
+                                $object->created = $date->toSql();
 
                                 // Attempt to save the data.
                                 if (!$table->save($object))
