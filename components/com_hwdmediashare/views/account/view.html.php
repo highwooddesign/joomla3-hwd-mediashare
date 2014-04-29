@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -65,40 +65,43 @@ class hwdMediaShareViewAccount extends JViewLegacy
                     case 'albums':
                         $this->items = $this->get('Albums');
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_ALBUMS');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_ALBUMS');
                         break;
                     case 'favourites':
                         $this->items = $this->get('Favourites');
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_FAVOURITES');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_FAVOURITES');
                         break;
                     case 'groups':
                         $this->items = $this->get('Groups');
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_GROUPS');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_GROUPS');
                         break;
                     case 'memberships':
                         $this->items = $this->get('Memberships'); 
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_MEMBERSHIPS');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_MEMBERSHIPS');
                         break;
                     case 'playlists':
                         $this->items = $this->get('Playlists');
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_PLAYLISTS');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_PLAYLISTS');
                         break;
                     case 'subscriptions':
                         $this->items = $this->get('Subscriptions'); 
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_SUBSCRIPTIONS');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_SUBSCRIPTIONS');
                         break;
                     default:
                         $this->items = $this->get('Media');
                         $this->pagination = $this->get('Pagination');
-                        $this->page_title = JText::_('COM_HWDMS_MY_MEDIA');;
+                        $this->page_title = JText::_('COM_HWDMS_MY_MEDIA');
                         break;
                 }
 
+                // Update the filterForm name from the layout data
+                $this->get('FilterFormName');
+                
                 $this->user = $this->get('User');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
@@ -265,5 +268,28 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 $cat = hwdMediaShareCategory::getInstance();
                 $cat->elementType = 1;
                 return $cat->getCategories($item);
-	}       
+	}    
+
+	/**
+	 * Get a human readable status
+	 *
+	 * @return  void
+	 */
+	public function getStatus($item)
+	{
+                switch ($item->status) {
+                    case 0:
+                        return JText::_('COM_HWDMS_UNAPPROVED');
+                        break;
+                    case 1:
+                        return JText::_('COM_HWDMS_APPROVED');
+                        break;
+                    case 2:
+                        return JText::_('COM_HWDMS_PENDING');
+                        break;
+                    case 3:
+                        return JText::_('COM_HWDMS_REPORTED');
+                        break;
+                }
+	}          
 }
