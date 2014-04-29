@@ -22,7 +22,7 @@ class hwdMediaShareModelActivities extends JModelList
 		if (empty($config['filter_fields']))
 		{
 			$config['filter_fields'] = array(
-				'activity_type', 'a.activity_type',
+				'verb', 'a.verb',
 				'created', 'a.created',
 				'id', 'a.id',
 			);
@@ -68,17 +68,16 @@ class hwdMediaShareModelActivities extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.activity_type, a.element_type, a.element_id, a.reply_id,' .
-                                'a.target_element_id, a.target_element_id, a.description, a.created_user_id, a.created'
+				'a.id, a.actor, a.action, a.target, a.verb, a.created, a.access, a.params'
 			)
 		);
 
                 // From the activities table.
-		$query->from($db->quoteName('#__hwdms_activities') . ' AS a');
+		$query->from($db->quoteName('#__hwdms_activity') . ' AS a');
 
                 // Join over the users for the author, with value based on configuration.
                 $config->get('author') == 0 ? $query->select('ua.name AS author') : $query->select('ua.username AS author');
-		$query->join('LEFT', '#__users AS ua ON ua.id=a.created_user_id');
+		$query->join('LEFT', '#__users AS ua ON ua.id=a.actor');
                                 
 		// Add the list ordering clause.
                 $listOrder = $this->state->get('list.ordering');
@@ -90,10 +89,10 @@ class hwdMediaShareModelActivities extends JModelList
                 $query->group('a.id');
                 
 		// Filter by activity type
-                $activityType = $this->getState('filter.activity_type');
-		if (is_numeric($activityType))
+                $activityVerb = $this->getState('filter.activity_verb');
+		if (is_numeric($activityVerb))
                 {
-			$query->where('a.activity_type = '.(int) $activityType);
+			$query->where('a.verb = '.(int) $activityVerb);
 		}
                 
 		//echo nl2br(str_replace('#__','jos_',$query));
