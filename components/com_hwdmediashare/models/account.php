@@ -15,4 +15,15 @@ require_once JPATH_SITE.'/components/com_hwdmediashare/models/user.php';
 
 class hwdMediaShareModelAccount extends hwdMediaShareModelUser
 {
+	/**
+	 * Method to set the filterFormName variable.
+	 * @return  void
+	 */
+	public function getFilterFormName()
+	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                $layout = $app->input->get('layout', 'media', 'word');
+		$this->filterFormName = 'filter_account_' . $layout;
+	}    
 }
