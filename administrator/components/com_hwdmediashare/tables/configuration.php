@@ -25,7 +25,7 @@ class hwdMediaShareTableConfiguration extends JTable
 	 * Constructor.
 	 * @return	void
 	 */
-	function __construct(&$db)
+	function __construct($db)
 	{
 		parent::__construct('#__hwdms_config', 'id', $db);
                 
@@ -53,12 +53,12 @@ class hwdMediaShareTableConfiguration extends JTable
 		if (isset($array['rules']) && is_array($array['rules']))
                 {
                         // Unset empty (inherited) rules to avoid them being set to Denied
-                        foreach( $array['rules'] as $action=>$identity )
+                        foreach($array['rules'] as $action=>$identity)
                         {
-                            foreach( $identity as $rule=>$value )
-                            {
-                                if( $value == "" ) unset( $array['rules'][$action][$rule] );
-                            }
+                                foreach($identity as $rule=>$value)
+                                {
+                                        if($value == "") unset($array['rules'][$action][$rule]);
+                                }
                         }
 
                         $this->setRules($array['rules']);
