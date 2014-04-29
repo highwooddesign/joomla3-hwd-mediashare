@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -25,7 +25,7 @@ class hwdMediaShareModelCategories extends JModelList
 	public $extension = 'com_hwdmediashare';
         
 	/**
-	 * Modal data
+	 * Model data
 	 * @var array
 	 */
 	protected $_items = null;
@@ -116,9 +116,9 @@ class hwdMediaShareModelCategories extends JModelList
 		}
                 else
                 {
-			// Limit to published for people who can't edit or edit.state.
+			// Allow access to unpublished and unapproved items.
 			$this->setState('filter.published',	array(0,1));
-			$this->setState('filter.status',	1);
+			$this->setState('filter.status',	array(0,1,2,3));
                 }
 
 		$this->setState('filter.language', $app->getLanguageFilter());
