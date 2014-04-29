@@ -421,7 +421,7 @@ class hwdMediaShareModelPlaylist extends JModelList
                 
 		$table = $this->getTable('Report', 'hwdMediaShareTable');    
 
-                if ($user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
+                if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
                 {
                         $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
                         return false;                    
