@@ -8,7 +8,7 @@
 			hint="JSEARCH_FILTER"
 		/>
 		<field
-			name="activity_type"
+			name="activity_verb"
 			type="activity"
 			label="COM_HWDMS_FILTER_ACTIVITY_TYPE"
 			description="COM_HWDMS_FILTER_ACTIVITY_TYPE_DESC"
