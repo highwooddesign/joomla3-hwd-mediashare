@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -18,7 +18,7 @@ $user = JFactory::getUser();
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.album.'.$this->album->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.album.'.$this->album->id) && ($this->album->created_user_id == $user->id)));
 $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.album.'.$this->album->id);
 $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.album.'.$this->album->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.album.'.$this->album->id) && ($this->album->created_user_id == $user->id)));
-$canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || $user->authorise('hwdmediashare.import','com_hwdmediashare'));
+$canAddMedia = (($user->authorise('hwdmediashare.upload','com_hwdmediashare') || $user->authorise('hwdmediashare.import','com_hwdmediashare')) && ($this->album->created_user_id == $user->id));
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
   <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
@@ -76,34 +76,41 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
     <div class="pagination"> <?php echo $this->pagination->getPagesLinks(); ?> </div>
     <div class="clear"></div>
     <!-- Description -->
-    <div class="media-album-description">
+    <div class="well media-album-description">
+      <?php if ($this->params->get('item_meta_description') != 'hide') :?>
+        <?php echo JHtml::_('content.prepare', $this->album->description); ?>
+      <?php endif; ?> 
       <?php if ($this->params->get('item_meta_media_count') != 'hide' || $this->params->get('item_meta_author') != 'hide' || $this->params->get('item_meta_created') != 'hide' || $this->params->get('item_meta_hits') != 'hide' || $this->params->get('item_meta_likes') != 'hide' || $this->params->get('item_meta_report') != 'hide') : ?>
-      <dl class="article-info">
-        <dt class="article-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?> </dt>
+      <dl class="media-info">
+        <dt class="media-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?> </dt>
+        <?php if ($this->params->get('list_meta_author') != 'hide' || $this->params->get('list_meta_created') != 'hide') : ?>
+          <dd class="media-info-createdby">
+            <?php if ($this->params->get('list_meta_author') != 'hide') : ?><?php echo JText::sprintf('COM_HWDMS_CREATED_BY', '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($this->album->created_user_id)).'">'.htmlspecialchars($this->album->author, ENT_COMPAT, 'UTF-8').'</a>'); ?><?php endif; ?><?php if ($this->params->get('list_meta_created') != 'hide') : ?>, <?php echo JHtml::_('date.relative', $this->album->created); ?><?php endif; ?>
+          </dd>
+        <?php endif; ?>
         <?php if ($this->params->get('item_meta_media_count') != 'hide') :?>
-          <dd class="media-info-count"> <?php echo JText::_('COM_HWDMS_MEDIA'); ?> (<?php echo (int) $this->album->nummedia; ?>)</dd>
+          <dd class="media-info-count"><?php echo JText::_('COM_HWDMS_MEDIA'); ?> (<?php echo (int) $this->album->nummedia; ?>)</dd>
         <?php endif; ?>
-        <?php if ($this->params->get('item_meta_author') != 'hide') :?>
-          <dd class="media-info-createdby"> <?php echo JText::sprintf('COM_HWDMS_CREATED_BY', '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($this->album->created_user_id)).'">'.htmlspecialchars($this->album->author, ENT_COMPAT, 'UTF-8').'</a>'); ?></dd>
-        <?php endif; ?>
-        <?php if ($this->params->get('item_meta_created') != 'hide') :?>
-          <dd class="media-info-created"> <?php echo JText::sprintf('COM_HWDMS_CREATED_ON', JHtml::_('date', $this->album->created, $this->params->get('list_date_format'))); ?></dd>
-        <?php endif; ?>            
         <?php if ($this->params->get('item_meta_hits') != 'hide') :?>
-          <dd class="media-info-hits"> <?php echo JText::_('COM_HWDMS_VIEWS'); ?> (<?php echo (int) $this->album->hits; ?>)</dd>
+          <dd class="media-info-hits"><?php echo JText::_('COM_HWDMS_VIEWS'); ?> (<?php echo (int) $this->album->hits; ?>)</dd>
         <?php endif; ?>           
         <?php if ($this->params->get('item_meta_likes') != 'hide') :?>
-          <dd class="media-info-like"> <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albums.like&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component&'.JSession::getFormToken().'=1'); ?>"><?php echo JText::_('COM_HWDMS_LIKE'); ?></a> (<?php echo $this->escape($this->album->likes); ?>) <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albums.dislike&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component&'.JSession::getFormToken().'=1'); ?>"><?php echo JText::_('COM_HWDMS_DISLIKE'); ?></a> (<?php echo $this->escape($this->album->dislikes); ?>) </dd>
+          <dd class="media-info-like"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albums.like&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component&'.JSession::getFormToken().'=1'); ?>"><?php echo JText::_('COM_HWDMS_LIKE'); ?></a> (<?php echo $this->escape($this->album->likes); ?>) <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albums.dislike&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component&'.JSession::getFormToken().'=1'); ?>"><?php echo JText::_('COM_HWDMS_DISLIKE'); ?></a> (<?php echo $this->escape($this->album->dislikes); ?>) </dd>
         <?php endif; ?>   
         <?php if ($this->params->get('item_meta_report') != 'hide') :?>
-          <dd class="media-info-report"> <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albumform.report&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="modal" rel="{handler: 'iframe', size: {<?php echo $this->utilities->modalSize(); ?>}}"><?php echo JText::_('COM_HWDMS_REPORT'); ?> </a> </dd>
+          <dd class="media-info-report"><a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albumform.report&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="media-popup-page"><?php echo JText::_('COM_HWDMS_REPORT'); ?> </a> </dd>
         <?php endif; ?>              
       </dl>
       <?php endif; ?>  
+      <!-- Tags -->
+      <?php if ($this->params->get('show_tags', 1) && !empty($this->album->tags)) : ?>
+	<?php $this->album->tagLayout = new JLayoutFile('joomla.content.tags'); ?>
+	<?php echo $this->album->tagLayout->render($this->album->tags->itemTags); ?>
+      <?php endif; ?>
       <!-- Custom fields -->
-      <dl class="media-article-info">
+      <dl class="media-media-info">
       <?php foreach ($this->album->customfields['fields'] as $group => $groupFields) : ?>
-        <dt class="media-article-info-term"><?php echo JText::_( $group ); ?></dt>
+        <dt class="media-media-info-term"><?php echo JText::_( $group ); ?></dt>
         <?php foreach ($groupFields as $field) :
         $field	= JArrayHelper::toObject ( $field );
         $field->value = $this->escape( $field->value );
@@ -114,10 +121,6 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
         <?php endforeach; ?>
       <?php endforeach; ?>
       </dl>
-      <?php if ($this->params->get('item_meta_description') != 'hide') :?>
-      <div class="clear"></div> 
-      <?php echo JHtml::_('content.prepare', $this->album->description); ?>
-      <?php endif; ?> 
       <div class="clear"></div>        
     </div>
   </div>
