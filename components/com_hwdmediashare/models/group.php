@@ -1,80 +1,54 @@
 <?php
 /**
- * @version    SVN $Id: group.php 1595 2013-06-14 13:34:42Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      16-Nov-2011 20:29:26
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla modelitem library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelGroup extends JModelList
 {
-        /**
-	 * @since	0.1
-	 */
-        public $elementType = 3;
-
-        /**
+	/**
 	 * Model context string.
-	 *
-	 * @var		string
+	 * @var string
 	 */
-	public $_context = 'com_hwdmediashare.group';
+	public $context = 'com_hwdmediashare.group';
 
 	/**
-	 * The category context (allows other extensions to derived from this model).
-	 *
-	 * @var		string
+	 * Model data
+	 * @var array
 	 */
-	protected $_extension = 'com_hwdmediashare';
-
-        /**
-	 * The category context (allows other extensions to derived from this model).
-	 *
-	 * @var		string
-	 */
-	protected $_numMedia = null;
-	protected $_numMembers = null;
-
-        /**
-	 * The category context (allows other extensions to derived from this model).
-	 *
-	 * @var		string
-	 */
+	protected $_group = null;
+	protected $_items = null;
+	protected $_media = null;
+	protected $_members = null;
+	protected $_activities = null;
 	protected $_model = null;
-        
-        /**
-	 * Constructor.
+        protected $_numMedia = null;
+        protected $_numMembers = null;
+
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param	array	An optional associative array of configuration settings.
-	 * @see		JController
-	 * @since	0.1
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
 			$config['filter_fields'] = array(
-				'created', 'a.created',
-				'hits', 'a.hits',
 				'title', 'a.title',
+				'viewed', 'a.viewed',                            
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
-				'modified', 'a.modified',
-				'viewed', 'a.viewed',
-				'title', 'a.title',
-                                'author', 'author',
+				'ordering', 'a.ordering', 'map.ordering', 'pmap.ordering',
+				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
                                 'created', 'a.created',
-                                'ordering', 'a.ordering',
+				'modified', 'a.modified',
+				'hits', 'a.hits',
                                 'random', 'random',
 			);
 		}
@@ -82,889 +56,652 @@ class hwdMediaShareModelGroup extends JModelList
 		parent::__construct($config);
 	}
         
-        /**
-	 * Returns a reference to the a Table object, always creating it.
+	/**
+	 * Method to get a table object, load it if necessary.
 	 *
-	 * @param	type	The table type to instantiate
-	 * @param	string	A prefix for the table class name. Optional.
-	 * @param	array	Configuration array for model. Optional.
-	 * @return	JTable	A database object
-	 * @since	0.1
+	 * @param   string  $name     The table name. Optional.
+	 * @param   string  $prefix   The class prefix. Optional.
+	 * @param   array   $options  Configuration array for model. Optional.
+	 *
+	 * @return  JTable  A JTable object
 	 */
-	public function getTable($type = 'Group', $prefix = 'hwdMediaShareTable', $config = array())
+	public function getTable($name = 'Group', $prefix = 'hwdMediaShareTable', $config = array())
 	{
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                return JTable::getInstance($type, $prefix, $config);
+		return JTable::getInstance($name, $prefix, $config);
 	}
-        
-        /**
-	 * Method to get a single record.
+
+	/**
+	 * Method to get a single group.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+	 * @param   integer	The id of the primary key.
+         * 
+	 * @return  mixed  Object on success, false on failure.
 	 */
 	public function getGroup($pk = null)
 	{
-                // Get hwdMediaShare config
+		// Initialise variables.
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('filter.group_id');
+
+                // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // First check for item id in the state
-                if (empty($pk)) {
-                        $pk = $this->getState('filter.group_id');
-                }
+		// Get a row instance.
+		$table = $this->getTable();
 
-                // Then check in the url parameters
-                if (empty($pk)) {
-                        $pk = JRequest::getInt( 'id', '0' );
+		// Attempt to load the row.
+		$return = $table->load($pk);
+
+		// Check for a table object error.
+		if ($return === false && $table->getError())
+                {
+			$this->setError($table->getError());
+			return false;
+		}
+       
+                // Check published state and access permissions.
+                if ($published = $this->getState('filter.published'))
+                {
+                        if (is_array($published) && !in_array($table->published, $published)) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNPUBLISHED'));
+                                return false;
+                        }
+                        else if (is_int($published) && $table->published != $published) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNPUBLISHED'));
+                                return false;
+                        }
+                }
+                                
+                // Check approval status and access permissions.
+                if ($status = $this->getState('filter.status'))
+                {
+                        if (is_array($status) && !in_array($table->status, $status)) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
+                                return false;
+                        }
+                        else if (is_int($status) && $table->status != $status) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
+                                return false;
+                        }
                 }
                 
-                if ($pk > 0)
-                {   
-                        // Load group
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table =& JTable::getInstance('Group', 'hwdMediaShareTable');
-                        $table->load( $pk );
+                // Check group access level and access permissions.
+                $user = JFactory::getUser();
+                $groups = $user->getAuthorisedViewLevels();
+                if (!in_array($table->access, $groups)) 
+                {                                    
+                        $option = JFactory::getApplication()->input->get('option');
+                        $view = JFactory::getApplication()->input->get('view');
+                        if ($option == 'com_hwdmediashare' && $view == 'group') 
+                        {
+                                JFactory::getApplication()->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
+                                JFactory::getApplication()->redirect( $config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($config->get('no_access_redirect')) : 'index.php' );
+                        }
+                        
+                        $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_NOAUTHORISED'));
+                        return false;
+                }
+                
+		$properties = $table->getProperties(1);
+		$this->_group = JArrayHelper::toObject($properties, 'JObject');
 
-                        $properties = $table->getProperties(1);
-                        $row = JArrayHelper::toObject($properties, 'JObject');
+		// Convert params field to registry.
+		if (property_exists($this->_group, 'params'))
+		{
+			$registry = new JRegistry;
+			$registry->loadString($this->_group->params);
+			$this->_group->params = $registry;
 
-                        hwdMediaShareFactory::load('tags');
-                        $row->tags = hwdMediaShareTags::getInput($row);
+                        // Check if this album has a custom ordering.
+                        if ($ordering = $this->_group->params->get('list_order_media')) 
+                        {
+                                // Force this new ordering
+                                $orderingParts = explode(' ', $ordering); 
+                                $app = JFactory::getApplication();
+                                $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
+                                $list['fullordering'] = $ordering;
+                                $app->setUserState($this->context . '.list', $list);
+                                $this->setState('list.ordering', $orderingParts[0]);
+                                $this->setState('list.direction', $orderingParts[1]);     
+                        } 
+		}
+
+		if ($pk)
+		{
+                        // Add the tags.
+                        $this->_group->tags = new JHelperTags;
+                        $this->_group->tags->getItemTags('com_hwdmediashare.group', $this->_group->id);
+                        
+                        // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $row->customfields = hwdMediaShareCustomFields::get($row);
+                        $cf = hwdMediaShareCustomFields::getInstance();
+                        $cf->elementType = 3;
+                        $this->_group->customfields = $cf->get($this->_group);
+                        
+                        // Add the number of media and members in the group.
+                        $this->_group->nummedia = $this->_numMedia;
+                        $this->_group->nummembers = $this->_numMembers;
 
-                        // Add data to object
-                        if ($row->created_user_id > 0)
+                        // Add the author.
+                        if ($this->_group->created_user_id > 0)
                         {   
-                                if (!empty($row->created_user_id_alias))
-                                { 
-                                        $row->author = $row->created_user_id_alias;
-                                }
-                                else
-                                {
-                                        $user = & JFactory::getUser($row->created_user_id);
-                                        $config->get('author') == 0 ? $row->author = $user->name : $row->author = $user->username;
-                                }
+                                $user = JFactory::getUser($this->_group->created_user_id);
+                                $this->_group->author = (!empty($this->_group->created_user_id_alias) ? $this->_group->created_user_id_alias : ($config->get('author') == 0 ? $user->name : $user->username));
                         }
                         else
                         {
-                                $row->author = JText::_('COM_HWDMS_GUEST');
-                        }
+                                $this->_group->author = JText::_('COM_HWDMS_GUEST');
+                        }  
                         
-                        $row->nummedia = $this->_numMedia;
-                        $row->nummembers = $this->_numMembers;
-    
+                        // Add map.
                         hwdMediaShareFactory::load('googlemaps.GoogleMap');
                         hwdMediaShareFactory::load('googlemaps.JSMin');
                         hwdMediaShareFactory::load('googlemaps.map');
                         $map = new hwdMediaShareMap();
-                        $map->addKMLOverlay(JURI::root().'index.php?option=com_hwdmediashare&view=media&format=feed&type=rssgeo&filter_group_id='.$row->id);
+                        $map->addKMLOverlay(JURI::root().'index.php?option=com_hwdmediashare&view=media&format=feed&type=rssgeo&filter_group_id='.$this->_group->id);
                         $map->getJavascriptHeader();
                         $map->getJavascriptMap();
                         $map->setWidth('100%');
                         $map->setHeight('100%');
                         $map->setMapType('map');
-                        $row->map = $map->getOnLoad().$map->getMap().$map->getSidebar();
-                        $row->map = $map->getOnLoad().$map->getMap();
+                        $this->_group->map = $map->getOnLoad().$map->getMap().$map->getSidebar();
+                        $this->_group->map = $map->getOnLoad().$map->getMap();
 
-                        $params = new StdClass;
-                        $params->elementType = 3;
-                        $params->elementId = $row->id;
+                        // Add member status.
+                        $this->_group->isMember = $this->isMember($this->_group);   
+		}
 
-                        $row->activities = $this->getActivities();
-
-                        $row->ismember = hwdMediaShareModelGroup::isMember();
-
-                        return $row;
-                }
-                else
-                {
-			$this->setError(JText::_('COM_HWDMS_ERROR_ITEM_DOES_NOT_EXIST'));
-			return false;
-                }
+		return $this->_group;
 	}
 
+	/**
+	 * Method to get a list of media associated with the group.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getMedia()
+	{
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model->populateState();
+                $this->_model->setState('list.ordering', $this->getState('list.ordering'));
+                $this->_model->setState('list.direction', $this->getState('list.direction'));                
+                $this->_model->setState('filter.group_id', $this->getState('filter.group_id'));
+
+                if ($this->_items = $this->_model->getItems())
+                {
+                        $this->_numMedia = $this->_model->getTotal();
+                }
+
+                return $this->_items; 
+	}
+
+	/**
+	 * Method to get a list of members associated with the group.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getMembers()
+	{
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model->populateState();
+                $this->_model->setState('filter.group_id', $this->getState('filter.group_id'));
+
+                if ($this->_members = $this->_model->getItems())
+                {
+                        $this->_numMembers = $this->_model->getTotal();
+                }
+
+                return $this->_members; 
+	}
+
+	/**
+	 * Method to get a list of activities associated with this group.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getActivities()
+	{
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Activities', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model->populateState();
+                $this->_model->setState('group.id', $this->getState('filter.group_id'));
+		$this->_model->setState('filter.verb', array(4,7,8,9,14,15));
+		$this->_model->setState('filter.action', (int) $this->getState('filter.group_id'));                 
+		$this->_model->setState('filter.target', (int) $this->getState('filter.group_id'));                 
+		$this->_model->setState('list.ordering', 'a.created');
+		$this->_model->setState('list.direction', 'desc');
+                
+                $this->_activities = $this->_model->getItems();
+
+                return $this->_activities; 
+	}
+        
+	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getPagination()
+	{
+                return $this->_model->getPagination(); 
+	}
+
+	/**
+	 * Method to number of media in the group.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getNumMedia()
+	{
+                return (int) $this->_numMedia; 
+	}
+
+	/**
+	 * Method to number of members in the group.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getNumMembers()
+	{
+                return (int) $this->_numMembers; 
+	}
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
-		$app	= JFactory::getApplication();
+		$app = JFactory::getApplication();
                 $user = JFactory::getUser();
-
+                
 		// Load the parameters.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
-                                
-                // Load the object state.
-		$id = JRequest::getInt('id');
+
+		// Load state from the request.
+		$id = $app->input->getInt('id');
 		$this->setState('filter.group_id', $id);
-                
-		$return = JRequest::getVar('return', null, 'default', 'base64');
+
+		$return = $app->input->get('return', null, 'base64');
 		$this->setState('return_page', base64_decode($return));
-                
-		// Load the parameters.
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                $this->setState('params', $config);
-                
-		$listOrder = JRequest::getCmd('filter_order', $config->get('list_order_media', 'a.created'));
-                if (!in_array($listOrder, $this->filter_fields))
-                {
-			$listOrder = 'a.created';
-		}
-		$this->setState($this->_context.'.list.ordering', $listOrder);
 
-		$listDirn = JRequest::getCmd('filter_order_Dir', 'DESC');
-                if (in_array(strtolower($listOrder), array('a.title', 'author', 'a.ordering')))
-                {
-                        $listDirn = 'ASC';
-                }
-                else if (!in_array(strtoupper($listDirn), array('ASC', 'DESC', '')))
-                {
-                        $listDirn = 'DESC';
-		}
-                $this->setState($this->_context.'.list.direction', $listDirn);
+		$this->setState('layout', $app->input->getString('layout'));                
 
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest('filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-                $mediaType = $this->getUserStateFromRequest($this->context.'.filter.mediaType', 'filter_mediaType', $config->get('list_default_media_type', '' ), 'integer', false);
-                // If we are viewing a menu item that has a media type filter applied, then we need to show that instead of the user state.
-                if ($config->get('list_default_media_type')) $mediaType = $config->get('list_default_media_type');
-                $this->setState('filter.mediaType', $mediaType);
-
-		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.media-display', 'display', $config->get('list_default_display', 'details' ), 'none', false);
-                if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
-                $this->setState('media.media-display', $display);
-
-                // Load the display state.
-		$display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'none', false);
-                if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
-		$this->setState('media.display', $display);
-                
-                $catids = $config->get('catid');
-                $this->setState('filter.category_id.include', (bool) $config->get('category_filtering_type', 1));
-
-		// Category filter
-		if ($catids) {                    
-			if ($config->get('show_child_category_articles', 0) && (int) $config->get('levels', 0) > 0) {
-				// Get an instance of the generic categories model
-				$categories = JModelLegacy::getInstance('Categories', 'hwdMediaShareModel', array('ignore_request' => true));
-				$categories->setState('params', $appParams);
-				$levels = $config->get('levels', 1) ? $config->get('levels', 1) : 9999;
-				$categories->setState('filter.get_children', $levels);
-				$categories->setState('filter.published', 1);
-				$additional_catids = array();
-
-				foreach($catids as $catid)
-				{
-					$categories->setState('filter.parentId', $catid);
-					$recursive = true;
-					$items = $categories->getItems($recursive);
-
-					if ($items)
-					{
-						foreach($items as $category)
-						{
-							$condition = (($category->level - $categories->getParent()->level) <= $levels);
-                                                        if ($condition) {
-								$additional_catids[] = $category->id;
-							}
-
-						}
-					}
-				}
-
-				$catids = array_unique(array_merge($catids, $additional_catids));
-			}
-
-			$this->setState('filter.category_id', $catids);
-		}
-
-		// New Parameters
-		$this->setState('filter.featured', $config->get('show_featured', 'show'));
-		$this->setState('filter.author_id', $config->get('created_by', ""));
-		$this->setState('filter.author_id.include', $config->get('author_filtering_type', 1));
-		$this->setState('filter.author_alias', $config->get('created_by_alias', ""));
-		$this->setState('filter.author_alias.include', $config->get('author_alias_filtering_type', 1));
-		$excluded_articles = $config->get('excluded_articles', '');
-
-                // API filter parameters, not stored in the state
-		JRequest::getInt('filter_group_id') > 0 ? $this->setState('filter.group_id', JRequest::getInt('filter_group_id')) : null;
-		JRequest::getInt('filter_album_id') > 0 ? $this->setState('filter.album_id', JRequest::getInt('filter_album_id')) : null;
-		JRequest::getInt('filter_playlist_id') > 0 ? $this->setState('filter.playlist_id', JRequest::getInt('filter_playlist_id')) : null;
-		JRequest::getInt('filter_category_id') > 0 ? $this->setState('filter.category_id', JRequest::getInt('filter_category_id')) : null;
-		JRequest::getInt('filter_favourites_id') > 0 ? $this->setState('filter.favourites_id', JRequest::getInt('filter_favourites_id')) : null;
-		JRequest::getInt('filter_author_id') > 0 ? $this->setState('filter.author_id', JRequest::getInt('filter_author_id')) : null;
-		JRequest::getWord('filter_featured') != '' ? $this->setState('filter.featured', JRequest::getWord('filter_featured')) : null;
-		JRequest::getWord('filter_author_filtering_type') != '' ? $this->setState('filter.author_id.include', JRequest::getWord('filter_author_filtering_type')) : null;
-		JRequest::getVar('filter_tag') != '' ? $this->setState('filter.tag', JRequest::getVar('filter_tag')) : null;
-
-                // List state information.
-		parent::populateState($listOrder, $listDirn);
-                
-                // Set HWD listing states
-                $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $config->get('list_limit', $app->getCfg('list_limit') )); // Get global list limit from request, with default value read from HWD configuration and fallback to global Joomla value
-                $this->setState('list.limit', $limit);
-
-                if (JRequest::getVar('limitstart', 0, '', 'int') == 0) JRequest::setVar('limitstart', 0); // We want to go to page one, unless a different page has been specifically selected
-                $value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
-
-                $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-                $this->setState('list.start', $limitstart);
-	}
-        
-      	/**
-	 * Method to get a store id based on model configuration state.
-	 *
-	 * This is necessary because the model is used by the component and
-	 * different modules that might need different sets of data or different
-	 * ordering requirements.
-	 *
-	 * @param	string		$id	A prefix for the store id.
-	 *
-	 * @return	string		A store id.
-	 */
-	protected function getStoreId($id = '')
-	{
-		// Compile the store id.
-		$id	.= ':'.$this->getState('filter.extension');
-		$id	.= ':'.$this->getState('filter.published');
-		$id	.= ':'.$this->getState('filter.access');
-		$id	.= ':'.$this->getState('filter.parentId');
-
-		return parent::getStoreId($id);
-        }
-        
-        /**
-	 * Method to get a JPagination object for the data set.
-	 *
-	 * @return  JPagination  A JPagination object for the data set.
-	 *
-	 * @since   11.1
-	 */
-	public function getPagination()
-	{
-		return $this->_model->getPagination();
-	}
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getMedia($pk = null)
-	{
-                if (!isset($this->params)) $this->params = new JRegistry();
-
-                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $model =& JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
-                
-                // Set application parameters in model
-		$app = JFactory::getApplication();
-		$appParams = $app->getParams();
-		$model->setState('params', $appParams);
-
-		// Set list filter based on parameters and views
-		if ($this->params->get('count'))
-                {
-                        $model->setState('list.start', 0);
-                        $model->setState('list.limit', (int) $this->params->get('count', 6));
-                }
-                else
-                {
-                        // Get hwdMediaShare config
-                        $hwdms = hwdMediaShareFactory::getInstance();
-                        $config = $hwdms->getConfig();
-
-                        // Set HWD listing states
-                        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $config->get('list_limit', $app->getCfg('list_limit') )); // Get global list limit from request, with default value read from HWD configuration and fallback to global Joomla value
-                        $this->setState('list.limit', $limit);
-
-                        if (JRequest::getVar('limitstart', 0, '', 'int') == 0) JRequest::setVar('limitstart', 0); // We want to go to page one, unless a different page has been specifically selected
-                        $value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
-
-                        $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-                        $this->setState('list.start', $limitstart);
-                }
-                
-                // Set other filters
-                $model->setState('filter.group_id', $this->getState('filter.group_id'));
-                
-		// Ordering
-		$model->setState('com_hwdmediashare.media.list.ordering', $this->params->get('ordering', 'a.created'));
-		$model->setState('com_hwdmediashare.media.list.direction', $this->params->get('ordering_direction', 'DESC'));
-
-                $model->setState('filter.mediaType', $this->params->get('list_default_media_type', ''));
-                
-                $user = JFactory::getUser();
-		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) &&  (!$user->authorise('core.edit', 'com_hwdmediashare')))
+		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
 			// Limit to published for people who can't edit or edit.state.
-			$model->setState('filter.published',	1);
-			$model->setState('filter.status',	1);
+			$this->setState('filter.published',	1);
+			$this->setState('filter.status',	1);
 
 			// Filter by start and end dates.
-			$model->setState('filter.publish_date', true);
+			$this->setState('filter.publish_date', true);
 		}
                 else
                 {
-			// Limit to published for people who can't edit or edit.state.
-			$model->setState('filter.published',	array(0,1));
-			$model->setState('filter.status',	1);
+			// Allow access to unpublished and unapproved items.
+			$this->setState('filter.published',	array(0,1));
+			$this->setState('filter.status',	array(0,1,2,3));
                 }
-                
-		// Filter by language
-		$model->setState('filter.language', $app->getLanguageFilter());
-    
-                if ($items = $model->getItems())
-                {
-                        for ($i=0, $n=count($items); $i < $n; $i++)
-                        {
-                                if (empty($items[$i]->author))
-                                {
-                                        $items[$i]->author = JText::_('COM_HWDMS_GUEST');
-                                }
-                                hwdMediaShareFactory::load('category');
-                                $items[$i]->categories = hwdMediaShareCategory::get($items[$i]);
-                        }
-                }
-                
-		$this->_numMedia = $model->getTotal();
-		$this->_model = $model;
 
-                return $items; 
+                // Check for list inputs and set default values if none exist
+                // This is required as the fullordering input will not take default value unless set
+                $ordering = $config->get('list_order_media', 'a.created DESC');
+                $orderingParts = explode(' ', $ordering); 
+                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                {
+                        $list['fullordering'] = $ordering;
+                        $list['limit'] = $config->get('list_limit', 6);
+                        $app->setUserState($this->context . '.list', $list);
+                }
+
+		// List state information.
+		parent::populateState($orderingParts[0], $orderingParts[1]);          
 	}
         
-       /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getMembers($pk = null)
-	{
-                if (!isset($this->params)) $this->params = new JRegistry();
-
-                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $model =& JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
-                                
-		// Set application parameters in model
-		$app = JFactory::getApplication();
-		$appParams = $app->getParams();
-		$model->setState('params', $appParams);
-
-		// Set list filter based on parameters and views
-		if ($this->params->get('count'))
-                {
-                        $model->setState('list.start', 0);
-                        $model->setState('list.limit', (int) $this->params->get('count', 6));
-                }
-                else
-                {
-                        // Get hwdMediaShare config
-                        $hwdms = hwdMediaShareFactory::getInstance();
-                        $config = $hwdms->getConfig();
-
-                        // Set HWD listing states
-                        $limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $config->get('list_limit', $app->getCfg('list_limit') )); // Get global list limit from request, with default value read from HWD configuration and fallback to global Joomla value
-                        $this->setState('list.limit', $limit);
-
-                        if (JRequest::getVar('limitstart', 0, '', 'int') == 0) JRequest::setVar('limitstart', 0); // We want to go to page one, unless a different page has been specifically selected
-                        $value = $app->getUserStateFromRequest($this->context . '.limitstart', 'limitstart', 0);
-
-                        $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-                        $this->setState('list.start', $limitstart);
-                }
-                
-                // Set other filters
-                $model->setState('filter.group_id', $this->getState('filter.group_id'));
-
-		// Ordering
-		$model->setState('com_hwdmediashare.user.list.ordering', $this->params->get('ordering', 'a.created'));
-		$model->setState('com_hwdmediashare.user.list.direction', $this->params->get('ordering_direction', 'DESC'));
-
-		// Filter by language
-		$model->setState('filter.language', $app->getLanguageFilter());
-
-                if ($items = $model->getItems())
-                {
-                        for ($i=0, $n=count($items); $i < $n; $i++)
-                        {
-                        }
-                }
-
-		$this->_numMembers = $model->getTotal();
-		$this->_model = $model;
-
-		return $items;
-	}
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getActivities($pk = null)
-	{
-		// Get an instance of the generic articles model
-                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $model =& JModelLegacy::getInstance('Activities', 'hwdMediaShareModel', array('ignore_request' => true));
-                
-		// Set application parameters in model
-		$app = JFactory::getApplication();
-		$appParams = $app->getParams();
-		$model->setState('params', $appParams);
-
-		// Set the filters based on the module params
-		$model->setState('list.start', 0);
-		$model->setState('list.limit', 6);
-
-		// Ordering
-		$model->setState('com_hwdmediashare.activities.list.ordering', 'a.created');
-		$model->setState('com_hwdmediashare.activities.list.direction', 'DESC');
-
-                // For activity query to load recursively
-                $model->setState('reply.id', '0');
-		$model->setState('element.type', '3');
-		$model->setState('element.id', JRequest::getInt('id'));  
-                
-                $user = JFactory::getUser();
-		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) &&  (!$user->authorise('core.edit', 'com_hwdmediashare')))
-                {
-			// Limit to published for people who can't edit or edit.state.
-			$model->setState('filter.published',	1);
-			$model->setState('filter.status',	1);
-
-			// Filter by start and end dates.
-			$model->setState('filter.publish_date', true);
-		}
-                else
-                {
-			// Limit to published for people who can't edit or edit.state.
-			$model->setState('filter.published',	array(0,1));
-			$model->setState('filter.status',	1);
-                }
-                
-		// Filter by language
-		$model->setState('filter.language', $app->getLanguageFilter());
-
-                if ($items = $model->getItems())
-                {
-                        hwdMediaShareModelActivities::getChildren($items);                        
-                        return $items;
-                }
-
-		return false;
-	}
-
 	/**
-	 * Increment the hit counter for the media.
+	 * Increment the hit counter for the record.
 	 *
-	 * @param	int		Optional primary key of the article to increment.
+	 * @param   integer  $pk  Optional primary key of the record to increment.
 	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
 	{
-            $hitcount = JRequest::getInt('hitcount', 1);
+		$input = JFactory::getApplication()->input;
+		$hitcount = $input->getInt('hitcount', 1);
 
-            if ($hitcount)
-            {
-                // Initialise variables.
-                $pk = (!empty($pk)) ? $pk : (int) $this->getState('filter.group_id');
-                $db = $this->getDbo();
+		if ($hitcount)
+		{
+			$pk = (!empty($pk)) ? $pk : (int) $this->getState('filter.group_id');
 
-                $db->setQuery(
-                        'UPDATE #__hwdms_groups' .
-                        ' SET hits = hits + 1' .
-                        ' WHERE id = '.(int) $pk
-                );
+			$table = $this->getTable();
+			$table->load($pk);
+			$table->hit($pk);
+		}
 
-                if (!$db->query()) {
-                        $this->setError($db->getErrorMsg());
-                        return false;
+		return true;
+	}
+
+	/**
+	 * Increment the like counter for the record.
+	 *
+	 * @param   integer  $pk     Optional primary key of the record to increment.
+	 * @param   integer  $value  The value of the property to increment.
+         * 
+	 * @return  boolean  True if successful; false otherwise and internal error set.
+	 */
+	public function like($pk = 0, $value = 1)
+	{            
+                $user = JFactory::getUser();
+                if (!$user->authorise('hwdmediashare.like', 'com_hwdmediashare'))
+                {
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
                 }
-            }
-
-            return true;
-	}
-        
-	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
-	 */
-	public function like()
-	{
-            $app = JFactory::getApplication();
                 
-            if (!JFactory::getUser()->authorise('hwdmediashare.like','com_hwdmediashare'))
-            {
-                    return JError::raiseWarning(404, JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-            }
-            
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
-            $db = $this->getDbo();
+                $pk = (!empty($pk)) ? $pk : (int) $this->getState('filter.group_id');
 
-            $db->setQuery(
-                    'UPDATE #__hwdms_groups' .
-                    ' SET likes = likes + 1' .
-                    ' WHERE id = '.(int) $pk
-            );
+                $table = $this->getTable();
+                $table->load($pk);
+                $table->like($pk, $value);
 
-            if (!$db->query()) {
-                    $this->setError($db->getErrorMsg());
-                    return false;
-            }
-
-            JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_GROUP_LIKED') );
-            return true;
+                return true;
 	}
-        
+
 	/**
-	 * Increment the hit counter for the media.
+	 * Method to change the published state of one or more records.
 	 *
-	 * @param	int		Optional primary key of the article to increment.
+	 * @param   array    $pks    A list of the primary keys to change.
+	 * @param   integer  $value  The value of the published state.
 	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
-	 */
-	public function dislike()
-	{
-            $app = JFactory::getApplication();
-                
-            if (!JFactory::getUser()->authorise('hwdmediashare.like','com_hwdmediashare'))
-            {
-                    return JError::raiseWarning(404, JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-            }
-            
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
-            $db = $this->getDbo();
-
-            $db->setQuery(
-                    'UPDATE #__hwdms_groups' .
-                    ' SET dislikes = dislikes + 1' .
-                    ' WHERE id = '.(int) $pk
-            );
-
-            if (!$db->query()) {
-                    $this->setError($db->getErrorMsg());
-                    return false;
-            }
-
-            JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_GROUP_DISLIKED') );
-            return true;
-	}
-        
-        /**
-	 * Method to toggle the featured setting of articles.
-	 *
-	 * @param	array	The ids of the items to toggle.
-	 * @param	int		The value to toggle to.
-	 *
-	 * @return	boolean	True on success.
+	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
 	{
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$table		= $this->getTable();
-		$pks		= (array) $pks;
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
 
-                $db =& JFactory::getDBO();
-                $query = "
-                  UPDATE ".$db->quoteName('#__hwdms_groups')."
-                    SET ".$db->quoteName('published')." = ".$db->quote($value)."
-                    WHERE ".$db->quoteName('id')." = ".implode(" OR ".$db->quoteName('id')." = ", $pks)."
-                  ";
-                $db->setQuery($query);
-
-                // Check for a database error.
-		if (!$db->query())
-                {
-			$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_PUBLISH_FAILED', get_class($this), $this->_db->getErrorMsg()));
-			$this->setError($e);
-
+		// Access checks.
+		foreach ($pks as $i => $id)
+		{
+			if (!$user->authorise('core.edit.state', 'com_hwdmediashare.group.'. (int) $id))
+			{
+				// Prune items that the user can't change.
+				unset($pks[$i]);
+				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			}
+		}
+                
+		if (empty($pks))
+		{
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
 			return false;
 		}
 
-                // Clear the component's cache
+		try
+		{
+			$db = $this->getDbo();
+			$query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__hwdms_groups'))
+                                    ->set('published = ' . $db->quote((int) $value))
+                                    ->where('id IN (' . implode(',', $pks) . ')');
+                        $db->setQuery($query);
+			$db->execute();
+		}
+		catch (Exception $e)
+		{
+			$this->setError($e->getMessage());
+			return false;
+		}
+
+		// Clear the component's cache
 		$this->cleanCache();
 
 		return true;
 	}
-        
+
 	/**
-	 * Method to toggle the featured setting of articles.
-	 *
-	 * @param	array	The ids of the items to toggle.
-	 * @param	int		The value to toggle to.
-	 *
-	 * @return	boolean	True on success.
-	 */
-	public function delete($pks)
-	{
-		// Initialise variables.
-		$user		= JFactory::getUser();
-		$table		= $this->getTable();
-		$pks		= (array) $pks;
-
-                $db =& JFactory::getDBO();
-                $query = "
-                  UPDATE ".$db->quoteName('#__hwdms_groups')."
-                    SET ".$db->quoteName('published')." = ".$db->quote('-2')."
-                    WHERE ".$db->quoteName('id')." = ".implode(" OR ".$db->quoteName('id')." = ", $pks)."
-                  ";
-                $db->setQuery($query);
-
-                // Check for a database error.
-		if (!$db->query())
-                {
-			$e = new JException(JText::sprintf('JLIB_DATABASE_ERROR_PUBLISH_FAILED', get_class($this), $this->_db->getErrorMsg()));
-			$this->setError($e);
-
-			return false;
-		}
-
-                // Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-	}
-
-        /**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+	 * Method to report an object
+	 * @return  void
 	 */
 	public function report()
 	{
-                $app = JFactory::getApplication();
-                
-                if (!JFactory::getUser()->authorise('hwdmediashare.report','com_hwdmediashare'))
-                {
-                        return JError::raiseWarning(404, JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-                }
-                
-                $array = JRequest::get( 'post' );
-                $user = JFactory::getUser();
-
-                $params = new StdClass;
-                $params->elementType = 3;
-                $params->elementId = JRequest::getInt('id');
-                $params->reportId = JRequest::getInt('report_id');
-                $params->description = JRequest::getVar('description');
-                $params->userId = $user->id;
-
-                hwdMediaShareFactory::load('reports');
-                hwdMediaShareReports::add($params);
+		// Initialiase variables.
+		$user = JFactory::getUser();
+                $date = JFactory::getDate();                
+		$input = JFactory::getApplication()->input;
 
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                $utilities->printModalNotice('COM_HWDMS_NOTICE_GROUP_REPORTED', 'COM_HWDMS_NOTICE_GROUP_REPORTED_DESC'); 
-                return;
-	}
+                
+		$table = $this->getTable('Report', 'hwdMediaShareTable');    
 
+                if ($user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;                    
+                }
+                                        
+                // Create an object to bind to the database
+                $object = new StdClass;
+                $object->element_type = 3;
+                $object->element_id = $input->get('id', 0, 'int');
+                $object->user_id = $user->id;
+                $object->report_id = $input->get('report_id', 0, 'int');
+                $object->description = $input->get('description', '', 'string');
+                $object->created = $date->toSql();
+                
+                // Attempt to change the state of the records.
+                if (!$table->save($object))
+                {
+                        $this->setError($table->getError());
+                        return false;
+                }
+
+		return true;
+	} 
+        
 	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+	 * Method to report an object
+	 * @return  void
 	 */
 	public function join()
 	{
-            $date =& JFactory::getDate();
-            $app = JFactory::getApplication();
-            $user = JFactory::getUser();
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+                
+                if (empty($user->id))
+                {
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
+                }
+                
+		foreach ($pks as $i => $pk)
+		{
+                        if (empty($pk))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                                return false;
+                        }
 
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
+                        try
+                        {                
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdms_group_members')
+                                        ->where('group_id = ' . $db->quote($pk))
+                                        ->where('member_id = ' . $db->quote($user->id))
+                                        ->group('member_id');
+                                $db->setQuery($query);
+                                $db->query(); 
+                                $member = $db->getResult();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
 
-            // Check user is logged
-            if (!$user->id)
-            {
-                    JFactory::getApplication()->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
-                    return false;
-            }
-                                
-            $db =& JFactory::getDBO();
+                        if(!$member)
+                        {
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                                $table = JTable::getInstance('GroupMembers', 'hwdMediaShareTable');    
 
-            $query = "
-                    SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_group_members')."
-                    WHERE ".$db->quoteName('group_id')." = ".$db->quote($pk)."
-                    AND ".$db->quoteName('member_id')." = ".$db->quote($user->id)."
-                    ";
+                                // Create an object to bind to the database
+                                $object = new StdClass;
+                                $object->group_id = $pk;
+                                $object->member_id = $user->id;
+                                $object->approved = 1;
+                                $object->created = $date->toSql();
 
-            $db->setQuery($query);
-            $result = $db->loadResult();
+                                // Attempt to change the state of the records.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                        }
+                        
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                        $table->load($pk);
+                        $properties = $table->getProperties(1);
+                        $group = JArrayHelper::toObject($properties, 'JObject');
 
-            // Loop over categories assigned to elementid
-            if($result == 0)
-            {
-                    JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                    $row =& JTable::getInstance('GroupMembers', 'hwdMediaShareTable');
+                        hwdMediaShareFactory::load('events');
+                        $HWDevents = hwdMediaShareEvents::getInstance();
+                        $HWDevents->triggerEvent('onAfterJoinGroup', $group);
+		}
 
-                    // Create an object to bind to the database
-                    $object = new StdClass;
-                    $object->id = null;
-                    $object->group_id = $pk;
-                    $object->member_id = $user->id;
-                    $object->approved = 1;
-                    $object->created = $date->format('Y-m-d H:i:s');
-
-                    if (!$row->bind($object))
-                    {
-                            return JError::raiseWarning( 500, $row->getError() );
-                    }
-
-                    if (!$row->store())
-                    {
-                            JError::raiseError(500, $row->getError() );
-                    }
-                    
-                    JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                    $table =& JTable::getInstance('Group', 'hwdMediaShareTable');
-                    $table->load( $pk );
-                    $properties = $table->getProperties(1);
-                    $row = JArrayHelper::toObject($properties, 'JObject');
-
-                    hwdMediaShareFactory::load('events');
-                    $events = hwdMediaShareEvents::getInstance();
-                    $events->triggerEvent('onAfterJoinGroup', $row);
-            }
-
-            JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_JOINED_GROUP') );
-            return true;
+		return true;
 	}
 
 	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+	 * Method to remove a user from a group.
+	 * @return  void
 	 */
-	public function leave()
+	public function leave($pks)
 	{
-            $date =& JFactory::getDate();
-            $app = JFactory::getApplication();
-            $user = JFactory::getUser();
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
 
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
 
-            // Check user is logged
-            if (!$user->id)
-            {
-                    JFactory::getApplication()->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
-                    return false;
-            }
-            
-            $db =& JFactory::getDBO();
+                if (empty($user->id))
+                {
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
+                }
+                
+		foreach ($pks as $i => $pk)
+		{
+                        if (empty($pk))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                                return false;
+                        }
 
-			$query = "
-				  DELETE
-                    FROM ".$db->quoteName('#__hwdms_group_members')."
-                    WHERE ".$db->quoteName('group_id')." = ".$db->quote($pk)."
-                    AND ".$db->quoteName('member_id')." = ".$db->quote($user->id)."
-                    ";
+                        try
+                        {
+                                $query = $db->getQuery(true);
 
-            $db->setQuery($query);
-            $result = $db->loadResult();
+                                // delete all custom keys for user 1001.
+                                $conditions = array(
+                                    $db->quoteName('group_id') . ' = ' . $db->quote($pk), 
+                                    $db->quoteName('member_id') . ' = ' . $db->quote($user->id)
+                                );
 
-            JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-            $table =& JTable::getInstance('Group', 'hwdMediaShareTable');
-            $table->load( $pk );
-            $properties = $table->getProperties(1);
-            $row = JArrayHelper::toObject($properties, 'JObject');
+                                $query->delete($db->quoteName('#__hwdms_group_members'));
+                                $query->where($conditions);
 
-            hwdMediaShareFactory::load('events');
-            $events = hwdMediaShareEvents::getInstance();
-            $events->triggerEvent('onAfterLeaveGroup', $row);
-                    
-            JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_LEFT_GROUP') );
-            return true;
+                                $db->setQuery($query);
+
+                                $result = $db->query();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+                        
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                        $table->load($pk);
+                        $properties = $table->getProperties(1);
+                        $group = JArrayHelper::toObject($properties, 'JObject');
+
+                        hwdMediaShareFactory::load('events');
+                        $HWDevents = hwdMediaShareEvents::getInstance();
+                        $HWDevents->triggerEvent('onAfterLeaveGroup', $group);
+		}
+
+		return true; 
 	}
 
 	/**
-	 * Increment the hit counter for the media.
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+	 * Method to check if a user is a member of a group
+	 * @return  void
 	 */
-	public function isMember()
-	{
-            $date =& JFactory::getDate();
-            $app = JFactory::getApplication();
-            $user = JFactory::getUser();
+	public function isMember($group)
+	{            
+                // Initialise variables
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                
+                try
+                {                
+                        $query = $db->getQuery(true)
+                                ->select('COUNT(*)')
+                                ->from('#__hwdms_group_members')
+                                ->where('group_id = ' . $db->quote($group->id))
+                                ->where('member_id = ' . $db->quote($user->id))
+                                ->group('member_id');
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $member = $db->loadResult();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
 
-            // Initialise variables.
-            $pk = (!empty($pk)) ? $pk : (int) JRequest::getInt('id');
-
-            $db =& JFactory::getDBO();
-
-            $query = "
-                    SELECT COUNT(*)
-                    FROM ".$db->quoteName('#__hwdms_group_members')."
-                    WHERE ".$db->quoteName('group_id')." = ".$db->quote($pk)."
-                    AND ".$db->quoteName('member_id')." = ".$db->quote($user->id)."
-                    ";
-
-            $db->setQuery($query);
-            $result = $db->loadResult();
-
-            // Loop over categories assigned to elementid
-            if($result == 0)
-            {
-                    return false;
-            }
-            
-            return true;
+                if ($member)
+                {
+                        return true;
+                }
+                else
+                {
+                        return false;
+                }
 	}
-        
-      	/**
-	 * Method to get the item count.
-	 *
-	 * @return	int		The number of media in the album.
-	 */
-	public function getNumMedia()
-	{
-		return $this->_numMedia;
-        } 
-        
-      	/**
-	 * Method to get the item count.
-	 *
-	 * @return	int		The number of media in the album.
-	 */
-	public function getNumMembers()
-	{
-		return $this->_numMembers;
-        } 
 }
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -19,7 +19,7 @@ class hwdMediaShareModelAlbum extends JModelList
 	public $context = 'com_hwdmediashare.album';
 
 	/**
-	 * Modal data
+	 * Model data
 	 * @var array
 	 */
 	protected $_album = null;
@@ -40,7 +40,7 @@ class hwdMediaShareModelAlbum extends JModelList
 				'viewed', 'a.viewed',                            
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
-				'ordering', 'a.ordering', 'map.ordering',
+				'ordering', 'a.ordering', 'map.ordering', 'pmap.ordering',
 				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
                                 'created', 'a.created',
 				'modified', 'a.modified',
@@ -94,23 +94,83 @@ class hwdMediaShareModelAlbum extends JModelList
 			$this->setError($table->getError());
 			return false;
 		}
+                    
+                // Check published state and access permissions.
+                if ($published = $this->getState('filter.published'))
+                {
+                        if (is_array($published) && !in_array($table->published, $published)) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNPUBLISHED'));
+                                return false;
+                        }
+                        else if (is_int($published) && $table->published != $published) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNPUBLISHED'));
+                                return false;
+                        }
+                }
+         
+                // Check approval status and access permissions.
+                if ($status = $this->getState('filter.status'))
+                {
+                        if (is_array($status) && !in_array($table->status, $status)) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
+                                return false;
+                        }
+                        else if (is_int($status) && $table->status != $status) 
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
+                                return false;
+                        }
+                }
 
+                // Check group access level and access permissions.
+                $user = JFactory::getUser();
+                $groups = $user->getAuthorisedViewLevels();
+                if (!in_array($table->access, $groups)) 
+                {                                    
+                        $option = JFactory::getApplication()->input->get('option');
+                        $view = JFactory::getApplication()->input->get('view');
+                        if ($option == 'com_hwdmediashare' && $view == 'album') 
+                        {
+                                JFactory::getApplication()->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
+                                JFactory::getApplication()->redirect( $config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($config->get('no_access_redirect')) : 'index.php' );
+                        }
+                        
+                        $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_NOAUTHORISED'));
+                        return false;
+                }
+                
 		$properties = $table->getProperties(1);
 		$this->_album = JArrayHelper::toObject($properties, 'JObject');
-
+              
 		// Convert params field to registry.
 		if (property_exists($this->_album, 'params'))
 		{
 			$registry = new JRegistry;
 			$registry->loadString($this->_album->params);
 			$this->_album->params = $registry;
+
+                        // Check if this album has a custom ordering.
+                        if ($ordering = $this->_album->params->get('list_order_media')) 
+                        {
+                                // Force this new ordering
+                                $orderingParts = explode(' ', $ordering); 
+                                $app = JFactory::getApplication();
+                                $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
+                                $list['fullordering'] = $ordering;
+                                $app->setUserState($this->context . '.list', $list);
+                                $this->setState('list.ordering', $orderingParts[0]);
+                                $this->setState('list.direction', $orderingParts[1]);     
+                        }     
 		}
 
 		if ($pk)
 		{
                         // Add the tags.
                         $this->_album->tags = new JHelperTags;
-                        $this->_album->tags->getTagIds($this->_album->id, 'com_hwdmediashare.album');
+                        $this->_album->tags->getItemTags('com_hwdmediashare.album', $this->_album->id);
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
@@ -130,7 +190,7 @@ class hwdMediaShareModelAlbum extends JModelList
                         else
                         {
                                 $this->_album->author = JText::_('COM_HWDMS_GUEST');
-                        }                       
+                        }
 		}
 
 		return $this->_album;
@@ -146,6 +206,8 @@ class hwdMediaShareModelAlbum extends JModelList
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
                 $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->_model->populateState();
+                $this->_model->setState('list.ordering', $this->getState('list.ordering'));
+                $this->_model->setState('list.direction', $this->getState('list.direction'));
                 $this->_model->setState('filter.album_id', $this->getState('filter.album_id'));
 
                 if ($this->_items = $this->_model->getItems())
@@ -165,6 +227,16 @@ class hwdMediaShareModelAlbum extends JModelList
 	{
                 return $this->_model->getPagination(); 
 	}
+
+	/**
+	 * Method to number of media in the album.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getNumMedia()
+	{
+                return (int) $this->_numMedia; 
+	}
         
 	/**
 	 * Method to auto-populate the model state.
@@ -176,7 +248,7 @@ class hwdMediaShareModelAlbum extends JModelList
 	 *
 	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -196,12 +268,40 @@ class hwdMediaShareModelAlbum extends JModelList
 
 		$this->setState('layout', $app->input->getString('layout'));                
 
+		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
+                {
+			// Limit to published for people who can't edit or edit.state.
+			$this->setState('filter.published',	1);
+			$this->setState('filter.status',	1);
+
+			// Filter by start and end dates.
+			$this->setState('filter.publish_date', true);
+		}
+                else
+                {
+			// Allow access to unpublished and unapproved items.
+			$this->setState('filter.published',	array(0,1));
+			$this->setState('filter.status',	array(0,1,2,3));
+                }
+                
 		// Load the display state.
 		$display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
                 if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
 		$this->setState('media.display', $display);
 
-		parent::populateState();           
+                // Check for list inputs and set default values if none exist
+                // This is required as the fullordering input will not take default value unless set
+                $ordering = $config->get('list_order_media', 'a.created DESC');
+                $orderingParts = explode(' ', $ordering); 
+                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                {
+                        $list['fullordering'] = $ordering;
+                        $list['limit'] = $config->get('list_limit', 6);
+                        $app->setUserState($this->context . '.list', $list);
+                }
+
+		// List state information.
+		parent::populateState($orderingParts[0], $orderingParts[1]); 
 	}
         
 	/**
@@ -339,7 +439,7 @@ class hwdMediaShareModelAlbum extends JModelList
                 $object->user_id = $user->id;
                 $object->report_id = $input->get('report_id', 0, 'int');
                 $object->description = $input->get('description', '', 'string');
-                $object->created = $date->format('Y-m-d H:i:s');
+                $object->created = $date->toSql();
                 
                 // Attempt to save the report details to the database.
                 if (!$table->save($object))

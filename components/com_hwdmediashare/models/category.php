@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -19,7 +19,7 @@ class hwdMediaShareModelCategory extends JModelList
 	public $context = 'com_hwdmediashare.category';
 
 	/**
-	 * Modal data
+	 * Model data
 	 * @var array
 	 */
 	protected $_category = null;
@@ -60,7 +60,34 @@ class hwdMediaShareModelCategory extends JModelList
                         $categories = JCategories::getInstance('hwdMediaShare');
                         if ($this->_category = $categories->get($pk))
                         {
+                                // Convert params field to registry.
+                                if (property_exists($this->_category, 'params'))
+                                {
+                                        $registry = new JRegistry;
+                                        $registry->loadString($this->_category->params);
+                                        $this->_category->params = $registry;  
+
+                                        // Check if this category has a custom ordering.
+                                        if ($ordering = $this->_category->params->get('list_order_media')) 
+                                        {
+                                                // Force this new ordering
+                                                $orderingParts = explode(' ', $ordering); 
+                                                $app = JFactory::getApplication();
+                                                $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
+                                                $list['fullordering'] = $ordering;
+                                                $app->setUserState($this->context . '.list', $list);
+                                                $this->setState('list.ordering', $orderingParts[0]);
+                                                $this->setState('list.direction', $orderingParts[1]);   
+                                        }  
+                                }    
+                                
+                                // Add the number of media
                                 $this->_category->nummedia = $this->_numMedia;
+                                
+                                // Add the tags.
+                                $this->_category->tags = new JHelperTags;
+                                $this->_category->tags->getItemTags('com_hwdmediashare.category', $this->_category->id);
+                        
                                 return $this->_category;
                         }
                         else
@@ -105,13 +132,36 @@ class hwdMediaShareModelCategory extends JModelList
 	public function getFeature()
 	{
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
-                $this->_model->populateState();
-                $this->_model->setState('filter.category_id', $this->getState('filter.category_id'));
+                if ($this->_category->params->get('feature') == 1)
+                {
+                        $this->_model = JModelLegacy::getInstance('MediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        $this->_model->populateState();
+                        $this->_model->setState('media.id', (int) $this->_category->params->get('featuremedia', 0));
 
-                $this->_feature = $this->_model->getItem();
-
-                return $this->_feature; 
+                        if ($this->_feature = $this->_model->getItem()) return $this->_feature; 
+                }
+                else if ($this->_category->params->get('feature') > 1)
+                {
+                        $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                        $this->_model->populateState();
+                        $this->_model->setState('filter.category_id', $this->getState('filter.category_id'));
+                        switch ($this->_category->params->get('feature')) 
+                        {
+                            case 2:
+                                $this->_model->setState('list.ordering', 'a.created');
+                                $this->_model->setState('list.direction', 'desc');
+                                break;
+                            case 3:
+                                $this->_model->setState('list.ordering', 'a.created');
+                                $this->_model->setState('list.direction', 'desc');
+                                $this->_model->setState('filter.featured', 'only');
+                                break;
+                        }
+                        
+                        if ($this->_feature = $this->_model->getItem()) return $this->_feature;                        
+                }
+                
+                return false;
 	}        
         
 	/**
@@ -124,6 +174,8 @@ class hwdMediaShareModelCategory extends JModelList
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
                 $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->_model->populateState();
+                $this->_model->setState('list.ordering', $this->getState('list.ordering'));
+                $this->_model->setState('list.direction', $this->getState('list.direction'));
                 $this->_model->setState('filter.category_id', $this->getState('filter.category_id'));
 
                 if ($this->_items = $this->_model->getItems())
@@ -143,6 +195,16 @@ class hwdMediaShareModelCategory extends JModelList
 	{
                 return $this->_model->getPagination(); 
 	}
+
+	/**
+	 * Method to number of media in the category.
+	 *
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getNumMedia()
+	{
+                return (int) $this->_numMedia; 
+	}
         
 	/**
 	 * Method to auto-populate the model state.
@@ -154,7 +216,7 @@ class hwdMediaShareModelCategory extends JModelList
 	 *
 	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -173,13 +235,25 @@ class hwdMediaShareModelCategory extends JModelList
 		$this->setState('return_page', base64_decode($return));
 
 		$this->setState('layout', $app->input->getString('layout'));                
-
+                
 		// Load the display state.
 		$display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
                 if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
 		$this->setState('media.display', $display);
-                
-		parent::populateState();           
+
+                // Check for list inputs and set default values if none exist
+                // This is required as the fullordering input will not take default value unless set
+                $ordering = $config->get('list_order_media', 'a.created DESC');
+                $orderingParts = explode(' ', $ordering); 
+                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                {
+                        $list['fullordering'] = $ordering;
+                        $list['limit'] = $config->get('list_limit', 6);
+                        $app->setUserState($this->context . '.list', $list);
+                }
+
+		// List state information.
+		parent::populateState($orderingParts[0], $orderingParts[1]);          
 	}
         
 	/**
@@ -317,7 +391,7 @@ class hwdMediaShareModelCategory extends JModelList
                 $object->user_id = $user->id;
                 $object->report_id = $input->get('report_id', 0, 'int');
                 $object->description = $input->get('description', '', 'string');
-                $object->created = $date->format('Y-m-d H:i:s');
+                $object->created = $date->toSql();
                 
                 // Attempt to save the report details to the database.
                 if (!$table->save($object))
