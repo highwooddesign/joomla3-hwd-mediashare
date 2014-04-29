@@ -49,7 +49,7 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 	 * Proxy for getModel.
 	 * @return	void
 	 */
-	public function getModel($name = 'Playlist', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'Playlist', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
