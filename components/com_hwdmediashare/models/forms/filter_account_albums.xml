@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form
+        addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        addrulepath="/administrator/components/com_hwdmediashare/models/rules"  
+>
+	<fields name="filter">
+		<field
+			name="search"
+			type="text"
+			label="JSEARCH_FILTER_LABEL"
+			hint="JSEARCH_FILTER_SUBMIT"
+		/>
+	</fields>
+	<fields name="list">
+		<field
+			name="fullordering"
+			type="albumfullordering"
+			label="COM_HWDMS_LIST_FULL_ORDERING"
+			description="COM_HWDMS_LIST_FULL_ORDERING_DESC"
+			onchange="this.form.submit();"
+			default="a.created DESC"
+		/>
+		<field
+			name="limit"
+			type="limitbox"
+			class="inputbox input-mini"
+			default="25"
+			label="COM_HWDMS_LIST_LIMIT"
+			description="COM_HWDMS_LIST_LIMIT_DESC"
+			onchange="this.form.submit();"
+			showall="false"
+		/>
+	</fields>
+</form>
