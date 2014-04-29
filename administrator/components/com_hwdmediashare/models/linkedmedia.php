@@ -248,7 +248,7 @@ class hwdMediaShareModelLinkedMedia extends JModelList
                                 $object->media_id_1 = (int) $pk;
                                 $object->media_id_2 = (int) $mediaId;
                                 $object->created_user_id = (int) $user->id;
-                                $object->created = $date->format('Y-m-d H:i:s');
+                                $object->created = $date->toSql();
 
                                 // Attempt to save the data.
                                 if (!$table->save($object))
