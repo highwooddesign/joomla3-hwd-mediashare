@@ -49,7 +49,7 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	 * Proxy for getModel.
 	 * @return	void
 	 */
-	public function getModel($name = 'Album', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'Album', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
