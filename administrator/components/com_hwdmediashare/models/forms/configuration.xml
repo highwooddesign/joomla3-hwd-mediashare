@@ -2508,6 +2508,7 @@
                         <option value="">COM_HWDMS_LIST_SELECT_COMMUNITY_AVATAR</option>
                         <option value="hwd">COM_HWDMS_MEDIA_AVATAR</option>
                         <option value="cb">COM_HWDMS_CB_AVATAR</option>
+                        <option value="easysocial">COM_HWDMS_EASYSOCIAL_AVATAR</option>
                         <option value="gravatar">COM_HWDMS_GRAVATAR</option>
                         <option value="jomsocial">COM_HWDMS_JOMSOCIAL_AVATAR</option>
                         <option value="jomwall">COM_HWDMS_JOMWALL_AVATAR</option>
@@ -2524,6 +2525,7 @@
                         <option value="">COM_HWDMS_LIST_SELECT_COMMUNITY_LINK</option>
                         <option value="hwd">COM_HWDMS_MEDIA_CHANNEL</option>
                         <option value="cb">COM_HWDMS_CB_LINK</option>
+                        <option value="easysocial">COM_HWDMS_EASYSOCIAL_LINK</option>
                         <option value="jomsocial">COM_HWDMS_JOMSOCIAL_LINK</option>
                         <option value="jomwall">COM_HWDMS_JOMWALL_LINK</option>
                 </field>  
