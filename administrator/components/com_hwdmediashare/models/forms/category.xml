@@ -8,11 +8,14 @@
                 >
 			<field 
                                 name="feature" 
-                                type="mediaitempicker" 
+                                type="list" 
 				label="COM_HWDMS_SHOW_CATEGORY_FEATURE_LABEL"
                                 description="COM_HWDMS_SHOW_CATEGORY_FEATURE_DESC"
 			>
 				<option value="0">JHIDE</option>
+				<option value="1">COM_HWDMS_OPTION_SELECTED_MEDIA</option>
+				<option value="2">COM_HWDMS_OPTION_MOST_RECENT_MEDIA</option>
+				<option value="3">COM_HWDMS_OPTION_MOST_RECENT_FEATURED_MEDIA</option>
 			</field>
 			<field 
                                 name="featuremedia" 
