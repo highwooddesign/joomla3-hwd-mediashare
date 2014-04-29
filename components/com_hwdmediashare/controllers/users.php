@@ -49,7 +49,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 	 * Proxy for getModel.
 	 * @return	void
 	 */
-	public function getModel($name = 'User', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'User', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
