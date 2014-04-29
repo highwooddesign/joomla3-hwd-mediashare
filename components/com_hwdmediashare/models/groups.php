@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -19,7 +19,7 @@ class hwdMediaShareModelGroups extends JModelList
 	public $context = 'com_hwdmediashare.groups';
 
 	/**
-	 * Modal data
+	 * Model data
 	 * @var array
 	 */
 	protected $_items = null;
@@ -36,7 +36,7 @@ class hwdMediaShareModelGroups extends JModelList
 				'title', 'a.title',
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
-				'ordering', 'a.ordering', 'map.ordering',
+				'ordering', 'a.ordering', 'map.ordering', 'pmap.ordering',
 				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
                                 'created', 'a.created',
 				'modified', 'a.modified',
@@ -55,11 +55,12 @@ class hwdMediaShareModelGroups extends JModelList
 	 */
 	public function getItems()
 	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                        if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+		if ($items = parent::getItems())
+		{            
+                        for ($x = 0, $count = count($items); $x < $count; $x++)
+                        {
+                                if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+                        }
                 }
 
 		return $items;
@@ -129,7 +130,16 @@ class hwdMediaShareModelGroups extends JModelList
 
                 // Filter by status state.
 		$status = $this->getState('filter.status');
-		if (is_numeric($status))
+		if (is_array($status)) 
+                {
+			JArrayHelper::toInteger($status);
+			$status = implode(',', $status);
+			if ($status) 
+                        {
+                                $query->where('a.status IN ('.$status.')');
+			}
+		}
+                else if (is_numeric($status))
                 {
 			$query->where('a.status = '.(int) $status);
 		}
@@ -298,7 +308,7 @@ class hwdMediaShareModelGroups extends JModelList
 	 *
 	 * @return  void
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	public function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -320,9 +330,9 @@ class hwdMediaShareModelGroups extends JModelList
 		}
                 else
                 {
-			// Limit to published for people who can't edit or edit.state.
+			// Allow access to unpublished and unapproved items.
 			$this->setState('filter.published',	array(0,1));
-			$this->setState('filter.status',	1);
+			$this->setState('filter.status',	array(0,1,2,3));
                 }
 
 		$this->setState('filter.language', $app->getLanguageFilter());
@@ -332,10 +342,17 @@ class hwdMediaShareModelGroups extends JModelList
                 if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
 		$this->setState('media.display_groups', $display);
 
-                $ordering = $config->get('list_order_group', 'a.created');
-                $direction = (in_array($ordering, array('a.title', 'author', 'a.ordering')) ? 'ASC' : 'DESC');
-                        
+                // Check for list inputs and set default values
+                $ordering = $config->get('list_order_group', 'a.created DESC');
+                $orderingParts = explode(' ', $ordering); 
+                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                {
+                        $list['fullordering'] = $ordering;
+                        $list['limit'] = $config->get('list_limit', 6);
+                        $app->setUserState($this->context . '.list', $list);
+                }
+
 		// List state information.
-		parent::populateState($ordering, $direction);
+		parent::populateState($orderingParts[0], $orderingParts[1]);  
 	}
 }
