@@ -200,7 +200,7 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
                                 $object->album_id = (int) $albumId;
                                 $object->media_id = (int) $pk;
                                 $object->created_user_id = (int) $user->id;
-                                $object->created = $date->format('Y-m-d H:i:s');
+                                $object->created = $date->toSql();
 
                                 // Attempt to save the data.
                                 if (!$table->save($object))
