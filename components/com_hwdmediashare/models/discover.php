@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -22,7 +22,7 @@ class hwdMediaShareModelDiscover extends JModelList
 	 *
 	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Load the parameters.
                 $hwdms = hwdMediaShareFactory::getInstance();
