@@ -252,7 +252,7 @@ class hwdMediaShareModelUser extends JModelAdmin
                         try
                         {
                                 $db->setQuery($query);
-                                $db->query();
+                                $db->execute();
                         }
                         catch (RuntimeException $e)
                         {
