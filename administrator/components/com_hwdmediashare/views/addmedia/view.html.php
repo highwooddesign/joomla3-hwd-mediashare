@@ -27,7 +27,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	 */
 	function display($tpl = null)
 	{
-                // Load HWD config
+                // Initialise variables
                 $hwdms = hwdMediaShareFactory::getInstance();
 		$app = JFactory::getApplication();
                 $lang = JFactory::getLanguage();
@@ -37,7 +37,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		$this->config = $hwdms->getConfig();
                 $this->state = $this->get('State');
 		$this->form = $this->get('Form');
-                $this->replace = (JFactory::getApplication()->input->get('id', '', 'int') > 0 ? true: false);
+                $this->replace = ($app->input->get('id', '', 'int') > 0 ? $app->input->get('id', '0', 'int'): false);
 
 		// Determine if we need to show the form
 		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace) 
@@ -109,8 +109,11 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template.
+		// Display the template
 		parent::display($tpl);
+                
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");
 	}
 
 	/**
@@ -209,6 +212,8 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	 */
 	function scan($tpl = null)
 	{
+                // Initialise variables.
+                $app = JFactory::getApplication();            
                 $document = JFactory::getDocument();
 
 		// Required to initiate the MooTree functionality
@@ -217,7 +222,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 			window.parent.document.updateUploader();
 		});");
                 
-                $folder = JFactory::getApplication()->input->get('folder', '', 'path');
+                $folder = $app->input->get('folder', '', 'path');
                         
 		// Get some paths from the request
 		$base = JPATH_SITE.'/media/'.$folder;
