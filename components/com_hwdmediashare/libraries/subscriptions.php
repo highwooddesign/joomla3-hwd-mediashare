@@ -1,30 +1,27 @@
 <?php
 /**
- * @version    SVN $Id: subscriptions.php 503 2012-09-05 13:13:26Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      18-Nov-2011 14:10:03
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework subscriptions class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareSubscriptions extends JObject
 {
-	/**
-	 * Class constructor.
+    	/**
+	 * Library variabled.
+	 * @var int
+	 */
+	public $elementType = 5;
+
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -35,7 +32,6 @@ class hwdMediaShareSubscriptions extends JObject
 	 * doesn't already exist.
 	 *
 	 * @return  hwdMediaShareSubscriptions A hwdMediaShareSubscriptions object.
-	 * @since   0.1
 	 */
 	public static function getInstance()
 	{
@@ -51,106 +47,175 @@ class hwdMediaShareSubscriptions extends JObject
 	}
         
 	/**
-	 * Method to subscribe
-         * 
-	 * @since   0.1
-	 **/
-	public function subscribe($params)
+	 * Method to subscribe a user to an item
+         * @return	void
+	 */
+	public function subscribe($pks)
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $row =& JTable::getInstance('Subscription', 'hwdMediaShareTable');
-
-                // Create an object to bind to the database
-                $object = new StdClass;
-                $object->element_type = $params->elementType;
-                $object->element_id = $params->elementId;
-                $object->user_id = $params->userId;
-                $object->created = $date->format('Y-m-d H:i:s');
-
-                if (!$row->bind($object))
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+                
+                if (empty($user->id))
                 {
-                        $this->setError(JError::raiseWarning(500, $row->getError()));
-                        return false;
-                }
-
-                if (!$row->store())
-                {
-                        $this->setError(JError::raiseError(500, $row->getError()));
-                        return false;
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
                 }
                 
-                return true;
-	}
-
-        /**
-	 * Method to unsubscribe
-         * 
-	 * @since   0.1
-	 **/
-	public function unsubscribe($params)
-	{
-                $db =& JFactory::getDBO();
-                $query = "
-                      DELETE
-                        FROM ".$db->quoteName('#__hwdms_subscriptions')."
-                        WHERE ".$db->quoteName('element_id')." = ".$db->quote($params->elementId)."
-                        AND ".$db->quoteName('element_type')." = ".$db->quote($params->elementType)."
-                        AND ".$db->quoteName('user_id')." = ".$db->quote($params->userId)."
-                      ";
-
-                $db->setQuery($query);
-               
-                if (!$db->query())
+                if (!$user->authorise('hwdmediashare.subscribe', 'com_hwdmediashare'))
                 {
-                        $this->setError(JError::raiseError(500, $db->getErrorMsg()));
-                        return false;
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;                    
                 }
                 
-                return true;
+		foreach ($pks as $i => $pk)
+		{
+                        if (empty($pk))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                                return false;
+                        }
+
+                        $query = $db->getQuery(true)
+                                ->select('COUNT(*)')
+                                ->from('#__hwdms_subscriptions')
+                                ->where('element_type = ' . $db->quote($this->elementType))
+                                ->where('element_id = ' . $db->quote($pk))
+                                ->where('user_id = ' . $db->quote($user->id));
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $db->query(); 
+                                $subscribed = $db->getResult();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+
+                        if(!$subscribed)
+                        {
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                                $table = JTable::getInstance('Subscription', 'hwdMediaShareTable');    
+
+                                // Create an object to bind to the database
+                                $object = new StdClass;
+                                $object->element_type = $this->elementType;
+                                $object->element_id = $pk;
+                                $object->user_id = $user->id;
+                                $object->created = $date->toSql();
+
+                                // Attempt to save the details to the database.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                        }
+		}
+
+		return true;
 	}
 
 	/**
-	 * Method to get subscription state
-         * 
-	 * @since   0.1
-	 **/
-	public function get($params)
+	 * Method to unsubscribe a user to an item
+         * @return	void
+	 */
+	public function unsubscribe($pks)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
-
+		// Initialiase variables.
                 $user = JFactory::getUser();
-                $array = array();
+                $db = JFactory::getDBO();
 
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'COUNT(*)'
-			)
-		);
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
 
-                // From the albums table
-                $query->from('#__hwdms_subscriptions AS a');
-
-                $query->where($db->quoteName('element_type').' = '.$params->elementType);
-                $query->where($db->quoteName('element_id').' = '.$params->elementId);
-                $query->where($db->quoteName('user_id').' = '.$user->id);
-
-                $db->setQuery($query);
-                $subscribed = $db->loadResult();
-
-                if ($subscribed)
+                if (empty($user->id))
                 {
-                        return true;
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
                 }
-                else
+
+                if (!$user->authorise('hwdmediashare.subscribe', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;                    
+                }
+                
+		foreach ($pks as $i => $pk)
+		{
+                        if (empty($pk))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                                return false;
+                        }
+                        
+                        $query = $db->getQuery(true);
+
+                        $conditions = array(
+                            $db->quoteName('element_type') . ' = ' . $db->quote($this->elementType), 
+                            $db->quoteName('element_id') . ' = ' . $db->quote($pk), 
+                            $db->quoteName('user_id') . ' = ' . $db->quote($user->id), 
+                        );
+
+                        $query->delete($db->quoteName('#__hwdms_subscriptions'));
+                        $query->where($conditions);
+                        try
+                        {
+                                $db->setQuery($query);
+                                $result = $db->query();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+		}
+
+		return $result;
+	}
+
+ 	/**
+	 * Method to check if a user is subscribed to an item
+         * @return	void
+	 */
+	public function isSubscribed($pk)
+	{
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
+                $pk = (int) $pk;
+                
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_subscriptions')
+                        ->where('element_type = ' . $db->quote($this->elementType))
+                        ->where('element_id = ' . $db->quote($pk))
+                        ->where('user_id = ' . $db->quote($user->id));
+                try
+                {                
+                        $db->setQuery($query);
+                        $db->query(); 
+                        $subscribed = $db->loadResult();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+
+                if (!$subscribed)
                 {
                         return false;
                 }
+                
+                return true;
 	}
 }
