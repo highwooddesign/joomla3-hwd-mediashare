@@ -91,7 +91,7 @@ class hwdMediaShareSubscriptions extends JObject
                         {                
                                 $db->setQuery($query);
                                 $db->query(); 
-                                $subscribed = $db->getResult();
+                                $subscribed = $db->loadResult();
                         }
                         catch (Exception $e)
                         {
