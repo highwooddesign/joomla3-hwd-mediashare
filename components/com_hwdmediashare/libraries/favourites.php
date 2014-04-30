@@ -1,30 +1,21 @@
 <?php
 /**
- * @version    SVN $Id: favourites.php 503 2012-09-05 13:13:26Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      16-Jan-2012 10:31:44
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework favourites class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareFavourites extends JObject
 {
-	/**
-	 * Class constructor.
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 */
 	public function __construct($config = array())
 	{
@@ -35,7 +26,6 @@ class hwdMediaShareFavourites extends JObject
 	 * doesn't already exist.
 	 *
 	 * @return  hwdMediaShareFavourites A hwdMediaShareFavourites object.
-	 * @since   0.1
 	 */
 	public static function getInstance()
 	{
@@ -50,151 +40,166 @@ class hwdMediaShareFavourites extends JObject
 		return $instance;
 	}
         
-        /**
-	 * Method to favour an item
-         * 
-	 * @since   0.1
-	 **/
-	public function favour($params)
+	/**
+	 * Method to add an item to a user's favourites
+         * @return	void
+	 */
+	public function addFavourite($pks)
 	{
-                $db =& JFactory::getDBO();
+		// Initialiase variables.
                 $user = JFactory::getUser();
-                $date =& JFactory::getDate();
-                                
-                if (!$user->id)
-                {
-                        if (JRequest::getVar('task') == 'mediaitem.favour')
-                        {
-                                $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-                        }
-                        else
-                        {
-                                $this->setError(JText::_('COM_HWDMS_ERROR_LOGIN'));
-                        }
-                        return false;
-                }
-                
-                $query = "
-                      SELECT COUNT(*)
-                        FROM ".$db->quoteName('#__hwdms_favourites')."
-                        WHERE ".$db->quoteName('element_id')." = ".$db->quote($params->elementId)."
-                        AND ".$db->quoteName('element_type')." = ".$db->quote($params->elementType)."
-                        AND ".$db->quoteName('user_id')." = ".$db->quote($user->id)."
-                      ";
-
-                $db->setQuery($query);
-                $result = $db->loadResult();
-
-                // Loop over categories assigned to elementid
-                if($result == 0)
-                {
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $row =& JTable::getInstance('Favourite', 'hwdMediaShareTable');
-
-                        // Create an object to bind to the database
-                        $object = new StdClass;
-                        $object->id = null;
-                        $object->element_type = $params->elementType;
-                        $object->element_id = $params->elementId;
-                        $object->user_id = $user->id;
-                        $object->created = $date->format('Y-m-d H:i:s');
-
-                        if (!$row->bind($object))
-                        {
-                                $this->setError(JError::raiseWarning(500, $row->getError()));
-                                return false;
-                        }
-
-                        if (!$row->store())
-                        {
-                                $this->setError(JError::raiseError(500, $row->getError()));
-                                return false;
-                        }
-                }
-                return true;
-	}
-        
-        /**
-	 * Method to unfavour an item
-         * 
-	 * @since   0.1
-	 **/
-	public function unfavour($params)
-	{
-                $db =& JFactory::getDBO();
-                $user = JFactory::getUser();
-                
-                if (!$user->id)
-                {
-                        if (JRequest::getVar('task') == 'mediaitem.unfavour')
-                        {
-                                $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-                        }
-                        else
-                        {
-                                $this->setError(JText::_('COM_HWDMS_ERROR_LOGIN'));
-                        }
-                        return false;
-                }
-                
-                $query = "
-                      DELETE
-                        FROM ".$db->quoteName('#__hwdms_favourites')."
-                        WHERE ".$db->quoteName('element_id')." = ".$db->quote($params->elementId)."
-                        AND ".$db->quoteName('element_type')." = ".$db->quote($params->elementType)."
-                        AND ".$db->quoteName('user_id')." = ".$db->quote($user->id)."
-                      ";
-
-                $db->setQuery($query);
-               
-                if (!$db->query())
-                {
-                        $this->setError(JError::raiseError(500, $db->getErrorMsg()));
-                        return false;
-                }
-                
-                return true;                
-	}
-        
-        /**
-	 * Method to check the favourited status of an item
-         * 
-	 * @since   0.1
-	 **/
-	public function get($params)
-	{
-                // Create a new query object.
                 $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
-
-                $user = JFactory::getUser();
-                $array = array();
-
-		// Select the required fields from the table.
-		$query->select(
-			$this->getState(
-				'list.select',
-				'COUNT(*)'
-			)
-		);
-
-                // From the albums table
-                $query->from('#__hwdms_favourites AS a');
-
-                $query->where($db->quoteName('a.element_type').' = '.$params->elementType);
-                $query->where($db->quoteName('a.element_id').' = '.$params->elementId);
-                $query->where($db->quoteName('a.user_id').' = '.$user->id);
-
-                $db->setQuery($query);
-                $favoured = $db->loadResult();
-
-                if ($favoured)
+                $date = JFactory::getDate();
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+                
+                if (empty($user->id))
                 {
-                        return true;
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
                 }
-                else
+                
+		foreach ($pks as $i => $pk)
+		{
+                        if (empty($pk))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                                return false;
+                        }
+
+                        $query = $db->getQuery(true)
+                                ->select('COUNT(*)')
+                                ->from('#__hwdms_favourites')
+                                ->where('element_type = ' . $db->quote($this->elementType))
+                                ->where('element_id = ' . $db->quote($pk))
+                                ->where('user_id = ' . $db->quote($user->id))
+                                ->group('element_id');
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $db->query(); 
+                                $favourite = $db->getResult();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+
+                        if(!$favourite)
+                        {
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                                $table = JTable::getInstance('Favourite', 'hwdMediaShareTable');    
+
+                                // Create an object to bind to the database
+                                $object = new StdClass;
+                                $object->element_type = $this->elementType;
+                                $object->element_id = $pk;
+                                $object->user_id = $user->id;
+                                $object->created = $date->toSql();
+
+                                // Attempt to save the details to the database.
+                                if (!$table->save($object))
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                        }
+		}
+
+		return true;
+	}
+        
+	/**
+	 * Method to remove an item to a user's favourites
+         * @return	void
+	 */
+	public function removeFavourite($pks)
+	{
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
+
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+                if (empty($user->id))
+                {
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
+                }
+                
+		foreach ($pks as $i => $pk)
+		{
+                        if (empty($pk))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                                return false;
+                        }
+                        
+                        $query = $db->getQuery(true);
+
+                        $conditions = array(
+                            $db->quoteName('element_type') . ' = ' . $db->quote($this->elementType), 
+                            $db->quoteName('element_id') . ' = ' . $db->quote($pk), 
+                            $db->quoteName('user_id') . ' = ' . $db->quote($user->id), 
+                        );
+
+                        $query->delete($db->quoteName('#__hwdms_favourites'));
+                        $query->where($conditions);
+                        try
+                        {
+                                $db->setQuery($query);
+                                $result = $db->query();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+		}
+
+		return $result;            
+	}
+        
+ 	/**
+	 * Method to check if an item is in a user's favourites
+         * @return	void
+	 */
+	public static function isFavourite($pk, $elementType = 1)
+	{
+		// Initialiase variables.
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
+                $pk = (int) $pk;
+                
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_favourites')
+                        ->where('element_type = ' . $db->quote($elementType))
+                        ->where('element_id = ' . $db->quote($pk))
+                        ->where('user_id = ' . $db->quote($user->id))
+                        ->group('element_id');
+                try
+                {                
+                        $db->setQuery($query);
+                        $db->query(); 
+                        $favourite = $db->getResult();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+
+                if (!$favourite)
                 {
                         return false;
                 }
+                
+                return true;
 	}
 } 
