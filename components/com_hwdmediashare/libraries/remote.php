@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -190,7 +190,7 @@ class hwdMediaShareRemote extends JObject
                                 //$post['publish_up']           = '';
                                 //$post['publish_down']         = '';
                                 $post['modified_user_id']       = $user->id;
-                                $post['modified']               = $date->format('Y-m-d H:i:s');
+                                $post['modified']               = $date->toSql();
                                 //$post['hits']                 = '';
                                 //$post['language']             = '';              
                         }
@@ -229,11 +229,11 @@ class hwdMediaShareRemote extends JObject
                                 //$post['ordering']             = '';
                                 $post['created_user_id']        = $user->id;
                                 //$post['created_user_id_alias']= '';
-                                $post['created']                = $date->format('Y-m-d H:i:s');
-                                $post['publish_up']             = $date->format('Y-m-d H:i:s');
+                                $post['created']                = $date->toSql();
+                                $post['publish_up']             = $date->toSql();
                                 $post['publish_down']           = '0000-00-00 00:00:00';
                                 $post['modified_user_id']       = $user->id;
-                                $post['modified']               = $date->format('Y-m-d H:i:s');
+                                $post['modified']               = $date->toSql();
                                 $post['hits']                   = 0;
                                 $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                         }
@@ -604,15 +604,15 @@ class hwdMediaShareRemote extends JObject
                         // Retrieve file details
                         $ext = strtolower(JFile::getExt($file));
 
-                        // First check if the file has an allowed extension
+                        // Check if the file has an allowed extension
                         $query = $db->getQuery(true)
                                 ->select('id')
                                 ->from('#__hwdms_ext')
                                 ->where($db->quoteName('ext') . ' = ' . $db->quote($ext))
                                 ->where($db->quoteName('published') . ' = ' . $db->quote(1));
-                        $db->setQuery($query);
                         try
                         {
+                                $db->setQuery($query);
                                 $db->query(); 
                                 $ext_id = $db->loadResult();                   
                         }
@@ -621,9 +621,16 @@ class hwdMediaShareRemote extends JObject
                                 $this->setError($e->getMessage());
                                 return false;                            
                         }
-
+                        
                         if ($ext_id > 0)
                         {
+                                $maxUploadFileSize = $config->get('max_upload_filesize', 30) * 1024 * 1024;                       
+                                if (filesize($file) > $maxUploadFileSize)
+                                {
+                                        $app->enqueueMessage(JText::sprintf('COM_HWDMS_FILE_N_EXCEEDS_THE_MAX_UPLOAD_LIMIT', basename($file)));
+                                        continue; // We just want to skip files that can't be imported.
+                                }
+                            
                                 // Define a key so we can copy the file into the storage directory
                                 $key = $utilities->generateKey();
 
@@ -645,10 +652,10 @@ class hwdMediaShareRemote extends JObject
                                         $folders = hwdMediaShareFiles::getFolders($key);
                                         hwdMediaShareFiles::setupFolders($folders);
 
-                                        // Get the necessary filename
-                                        $filename = hwdMediaShareFiles::getFilename($key, '1');
+                                        // Get the filename.
+                                        $filename = hwdMediaShareFiles::getFilename($key, 1);
 
-                                        //Set up the source and destination of the file
+                                        // Get the destination location, and copy the uploaded file.
                                         $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                                         if (!JFile::copy($file, $dest))
                                         {
@@ -686,8 +693,8 @@ class hwdMediaShareRemote extends JObject
                                         $post['download']              = 1;
                                         $post['created_user_id']       = $user->id;
                                         $post['created_user_id_alias'] = '';
-                                        $post['created']               = $date->format('Y-m-d H:i:s');
-                                        $post['publish_up']            = $date->format('Y-m-d H:i:s');
+                                        $post['created']               = $date->toSql();
+                                        $post['publish_up']            = $date->toSql();
                                         $post['publish_down']          = '0000-00-00 00:00:00';
                                         $post['hits']                  = 0;
                                         $post['language']              = '*';
@@ -713,8 +720,6 @@ class hwdMediaShareRemote extends JObject
                         else
                         {
                                 continue; // We just want to skip files that can't be imported.
-                                //$this->setError(JText::_('COM_HWDMS_ERROR_EXTENSION_NOT_ALLOWED'));
-                                //return false;
                         }                        
 		}   
                 return true;      
@@ -811,7 +816,7 @@ class hwdMediaShareRemote extends JObject
                         //$post['publish_up']           = '';
                         //$post['publish_down']         = '';
                         $post['modified_user_id']       = $user->id;
-                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                        $post['modified']               = $date->toSql();
                         //$post['hits']                 = '';
                         //$post['language']             = '';              
                 }
@@ -850,11 +855,11 @@ class hwdMediaShareRemote extends JObject
                         //$post['ordering']             = '';
                         $post['created_user_id']        = $user->id;
                         //$post['created_user_id_alias']= '';
-                        $post['created']                = $date->format('Y-m-d H:i:s');
-                        $post['publish_up']             = $date->format('Y-m-d H:i:s');
+                        $post['created']                = $date->toSql();
+                        $post['publish_up']             = $date->toSql();
                         $post['publish_down']           = '0000-00-00 00:00:00';
                         $post['modified_user_id']       = $user->id;
-                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                        $post['modified']               = $date->toSql();
                         $post['hits']                   = 0;
                         $post['language']               = (isset($jform['language']) ? $jform['language'] : '*');                              
                 }
@@ -888,9 +893,9 @@ class hwdMediaShareRemote extends JObject
                         ->where('type = '.$db->quote('plugin'))
                         ->where('folder = '.$db->quote('hwdmediashare'))
                         ->where('enabled = '.$db->quote(1));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $db->query(); 
                         $rows = $db->loadObjectList();                   
                 }
