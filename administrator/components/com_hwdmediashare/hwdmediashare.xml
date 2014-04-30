@@ -42,7 +42,7 @@
 		<folder>assets</folder>
 	</media>
 	<administration>
-		<menu img="../media/com_hwdmediashare/assets/images/icons/16/icon-16-hwdms.png">COM_HWDMEDIASHARE_MENU</menu>
+		<menu>COM_HWDMEDIASHARE_MENU</menu>
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>cli.php</filename>
