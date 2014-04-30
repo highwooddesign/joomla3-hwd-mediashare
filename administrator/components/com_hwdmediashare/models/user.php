@@ -106,7 +106,18 @@ class hwdMediaShareModelUser extends JModelAdmin
 	 */
 	public function getThumbnail($item)
 	{
-                return hwdMediaShareFactory::getElementThumbnail($item);
+                // Load the HWD downloads library.
+                hwdMediaShareFactory::load('downloads');
+                $HWDdownloads = hwdMediaShareDownloads::getInstance();
+                $HWDdownloads->elementType = 5;
+                if ($thumbnail = $HWDdownloads->getElementThumbnail($item))
+                {
+                        return $thumbnail;
+                }
+                else
+                {
+                        return false;
+                }
 	}
         
         /**
