@@ -175,7 +175,7 @@ class hwdMediaShareFavourites extends JObject
 	 * Method to check if an item is in a user's favourites
          * @return	void
 	 */
-	public static function isFavourite($pk)
+	public function isFavourite($pk)
 	{
 		// Initialiase variables.
                 $user = JFactory::getUser();
