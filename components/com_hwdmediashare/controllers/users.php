@@ -187,9 +187,9 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to subscribe from the request.
-		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-		if (!is_numeric($cid) || $cid < 1)
+		if (!is_array($cid) || count($cid) < 1)
 		{
 			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
@@ -197,6 +197,10 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		{
 			// Get the model.
 			$model = $this->getModel();
+
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
 
 			// Subscribe to the user.
 			if ($model->subscribe($cid))
@@ -223,9 +227,9 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to unsubscribe from the request.
-		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
-		if (!is_numeric($cid) || $cid < 1)
+		if (!is_array($cid) || count($cid) < 1)
 		{
 			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
@@ -233,6 +237,10 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		{
 			// Get the model.
 			$model = $this->getModel();
+
+			// Make sure the item ids are integers
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
 
 			// Subscribe to the user.
 			if ($model->unsubscribe($cid))
