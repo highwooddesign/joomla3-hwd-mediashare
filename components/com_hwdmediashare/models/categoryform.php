@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -39,7 +39,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 	 *
 	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -100,7 +100,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 		}
                 
 		// Define access registry.
- 		$value->access = new JRegistry;
+ 		$value->attributes = new JRegistry;
 
 		// Compute selected asset permissions.
 		$user	= JFactory::getUser();
@@ -110,7 +110,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 		// Check general edit permission first.
 		if ($user->authorise('core.edit', $asset))
 		{
-			$value->access->set('access-edit', true);
+			$value->attributes->set('access-edit', true);
 		}
 
 		// Now check if edit.own is available.
@@ -119,7 +119,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 			// Check for a valid user and that they are the owner.
 			if ($userId == $value->created_user_id)
 			{
-				$value->access->set('access-edit', true);
+				$value->attributes->set('access-edit', true);
 			}
 		}
 
@@ -127,12 +127,12 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 		if ($itemId)
 		{
 			// Existing item
-			$value->access->set('access-change', $user->authorise('core.edit.state', $asset));
+			$value->attributes->set('access-change', $user->authorise('core.edit.state', $asset));
 		}
 		else
 		{
 			// New item.
-			$value->access->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
+			$value->attributes->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
 		}
 
 		if ($itemId)
