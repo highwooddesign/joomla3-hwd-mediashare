@@ -187,13 +187,12 @@ class hwdMediaShareFavourites extends JObject
                         ->from('#__hwdms_favourites')
                         ->where('element_type = ' . $db->quote($this->elementType))
                         ->where('element_id = ' . $db->quote($pk))
-                        ->where('user_id = ' . $db->quote($user->id))
-                        ->group('element_id');
+                        ->where('user_id = ' . $db->quote($user->id));
                 try
                 {                
                         $db->setQuery($query);
                         $db->query(); 
-                        $favourite = $db->getResult();
+                        $favourite = $db->loadResult();
                 }
                 catch (Exception $e)
                 {
