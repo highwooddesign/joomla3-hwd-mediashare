@@ -82,8 +82,17 @@ class hwdMediaShareTableGroup extends JTable
                         $isNew = true;
                         
                         // Set a unique key
-                        $this->key = hwdMediaShareFactory::generateKey();
-
+                        if (empty($this->key))
+                        {
+                                hwdMediaShareFactory::load('utilities');
+                                $this->key = hwdMediaShareUtilities::generateKey();
+                                if (hwdMediaShareUtilities::keyExists($this->key))
+                                {
+                                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
+                                        return false;
+                                }
+                        }
+                        
                         // Set approval status
                         $this->status = (!$app->isAdmin() && $config->get('approve_new_groups') == 1) ? 2 : 1;
 
@@ -93,7 +102,7 @@ class hwdMediaShareTableGroup extends JTable
 			{
 				$this->created = $date->toSql();
 			}
-			if (empty($this->created_by))
+			if (empty($this->created_user_id))
 			{
 				$this->created_user_id = $user->get('id');
 			}                      
