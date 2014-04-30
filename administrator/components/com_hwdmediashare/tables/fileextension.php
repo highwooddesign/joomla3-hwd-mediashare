@@ -51,7 +51,7 @@ class hwdMediaShareTableFileExtension extends JTable
 			{
 				$this->created = $date->toSql();
 			}
-			if (empty($this->created_by))
+			if (empty($this->created_user_id))
 			{
 				$this->created_user_id = $user->get('id');
 			}  
