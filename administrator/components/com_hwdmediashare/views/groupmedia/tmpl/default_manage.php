@@ -39,7 +39,7 @@ if ($saveOrder)
 			</div>
 			<div class="btn-group pull-left">
                                 <a class="btn btn-info" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.$this->groupId.'&add=1'); ?>">
-					<i class="icon-plus-2"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ADD_MORE_MEDIA'); ?></a>
+					<i class="icon-plus"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ADD_MORE_MEDIA'); ?></a>
 			</div>
 			<div class="clearfix"></div>
 		</div>
