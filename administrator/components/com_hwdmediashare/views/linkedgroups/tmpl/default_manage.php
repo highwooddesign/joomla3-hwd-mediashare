@@ -33,7 +33,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 			</div>
 			<div class="btn-group pull-left">
                                 <a class="btn btn-info" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedgroups&tmpl=component&media_id='.$this->mediaId.'&add=1'); ?>">
-					<i class="icon-plus-2"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ADD_TO_MORE_GROUPS'); ?></a>
+					<i class="icon-plus"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ADD_TO_MORE_GROUPS'); ?></a>
 			</div>
 			<div class="clearfix"></div>
 		</div>
