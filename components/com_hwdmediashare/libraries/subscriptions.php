@@ -12,9 +12,9 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareSubscriptions extends JObject
 {
-    	/**
-	 * Library variabled.
-	 * @var int
+	/**
+	 * Library data
+	 * @var
 	 */
 	public $elementType = 5;
 
@@ -31,7 +31,7 @@ class hwdMediaShareSubscriptions extends JObject
 	 * Returns the hwdMediaShareSubscriptions object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareSubscriptions A hwdMediaShareSubscriptions object.
+	 * @return  hwdMediaShareSubscriptions Object.
 	 */
 	public static function getInstance()
 	{

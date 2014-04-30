@@ -14,7 +14,7 @@ class hwdMediaShareRemote extends JObject
 {        
 	/**
 	 * Library data
-	 * @var array
+	 * @var
 	 */
 	public $_item;
 	public $_url;
