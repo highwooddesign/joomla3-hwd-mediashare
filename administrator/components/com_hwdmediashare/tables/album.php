@@ -174,7 +174,7 @@ class hwdMediaShareTableAlbum extends JTable
                         $HWDupload = hwdMediaShareUpload::getInstance();
                         $HWDupload->processThumbnail($object);
                         
-                        // If new and approved, trigger event.
+                        // If new and approved then trigger event.
                         if ($isNew && $this->status == 1)
                         {                            
                                 $properties = $this->getProperties(1);
