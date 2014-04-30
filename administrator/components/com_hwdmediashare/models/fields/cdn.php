@@ -34,10 +34,10 @@ class JFormFieldCdn extends JFormFieldList
                         ->from('#__extensions')
                         ->where('type = ' . $db->quote('plugin'))
                         ->where('folder = ' . $db->quote('hwdmediashare'));
-                $db->setQuery($query);
                 try
                 {
-                        $db->query(); 
+                        $db->setQuery($query);
+                        $db->execute(); 
                         $rows = $db->loadObjectList();                        
                 }
                 catch (RuntimeException $e)

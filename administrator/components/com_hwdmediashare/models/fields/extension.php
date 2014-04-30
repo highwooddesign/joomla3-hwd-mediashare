@@ -33,10 +33,10 @@ class JFormFieldExtension extends JFormFieldList
                         ->select('*')
                         ->from('#__hwdms_ext')
                         ->where('published = ' . $db->quote(1));
-                $db->setQuery($query);
                 try
                 {
-                        $db->query(); 
+                        $db->setQuery($query);
+                        $db->execute(); 
                         $rows = $db->loadObjectList();                        
                 }
                 catch (RuntimeException $e)
