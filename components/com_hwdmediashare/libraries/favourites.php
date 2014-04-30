@@ -13,6 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareFavourites extends JObject
 {
     	/**
+	 * Library variabled.
+	 * @var int
+	 */
+	public $elementType = 1;
+        
+    	/**
 	 * Constructor override, defines a white list of column filters.
 	 *
 	 * @param   array  $config  An optional associative array of configuration settings.
@@ -169,7 +175,7 @@ class hwdMediaShareFavourites extends JObject
 	 * Method to check if an item is in a user's favourites
          * @return	void
 	 */
-	public static function isFavourite($pk, $elementType = 1)
+	public static function isFavourite($pk)
 	{
 		// Initialiase variables.
                 $user = JFactory::getUser();
@@ -179,7 +185,7 @@ class hwdMediaShareFavourites extends JObject
                 $query = $db->getQuery(true)
                         ->select('COUNT(*)')
                         ->from('#__hwdms_favourites')
-                        ->where('element_type = ' . $db->quote($elementType))
+                        ->where('element_type = ' . $db->quote($this->elementType))
                         ->where('element_id = ' . $db->quote($pk))
                         ->where('user_id = ' . $db->quote($user->id))
                         ->group('element_id');
