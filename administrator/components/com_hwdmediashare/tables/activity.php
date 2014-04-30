@@ -21,6 +21,6 @@ class hwdMediaShareTableActivity extends JTable
 	 */
 	function __construct($db)
 	{
-		parent::__construct('#__hwdms_activities', 'id', $db);
+		parent::__construct('#__hwdms_activity', 'id', $db);
 	}
 }
