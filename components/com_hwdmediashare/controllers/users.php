@@ -196,7 +196,9 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		else
 		{
 			// Get the model.
-			$model = $this->getModel();
+                        hwdMediaShareFactory::load('subscriptions');
+                        $model = hwdMediaShareSubscriptions::getInstance();                     
+                        $model->elementType = 5;
 
 			// Make sure the item ids are integers
 			jimport('joomla.utilities.arrayhelper');
@@ -236,7 +238,9 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		else
 		{
 			// Get the model.
-			$model = $this->getModel();
+                        hwdMediaShareFactory::load('subscriptions');
+                        $model = hwdMediaShareSubscriptions::getInstance();                     
+                        $model->elementType = 5;
 
 			// Make sure the item ids are integers
 			jimport('joomla.utilities.arrayhelper');
