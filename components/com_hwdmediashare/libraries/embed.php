@@ -14,7 +14,7 @@ class hwdMediaShareEmbed extends JObject
 {        
 	/**
 	 * Library data
-	 * @var array
+	 * @var
 	 */
 	public $_item;
         public $_host;
@@ -142,7 +142,7 @@ class hwdMediaShareEmbed extends JObject
                         //$post['publish_up']           = '';
                         //$post['publish_down']         = '';
                         $post['modified_user_id']       = $user->id;
-                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                        $post['modified']               = $date->toSql();
                         //$post['hits']                 = '';
                         //$post['language']             = '';              
                 }
@@ -181,11 +181,11 @@ class hwdMediaShareEmbed extends JObject
                         //$post['ordering']             = '';
                         $post['created_user_id']        = $user->id;
                         //$post['created_user_id_alias']= '';
-                        $post['created']                = $date->format('Y-m-d H:i:s');
-                        $post['publish_up']             = $date->format('Y-m-d H:i:s');
+                        $post['created']                = $date->toSql();
+                        $post['publish_up']             = $date->toSql();
                         $post['publish_down']           = '0000-00-00 00:00:00';
                         $post['modified_user_id']       = $user->id;
-                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                        $post['modified']               = $date->toSql();
                         $post['hits']                   = 0;
                         $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                 }
