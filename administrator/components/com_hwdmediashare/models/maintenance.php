@@ -22,7 +22,6 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 
                 $query = $db->getQuery(true);
 
-                // Delete zero entries
                 $conditions = array(
                     $db->quoteName('element_type') . ' = ' . $db->quote(0),
                     $db->quoteName('element_id') . ' = ' . $db->quote(0),
@@ -32,16 +31,17 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
                 $query->delete($db->quoteName('#__hwdms_category_map'));
                 $query->where($conditions, 'OR');
 
-                $db->setQuery($query);
                 try
                 {
-                        $result = $db->query();                 
+                        $db->setQuery($query);
+                        $result = $db->execute();                 
                 }
                 catch (RuntimeException $e)
                 {
                         $this->setError($e->getMessage());
                         return false;                            
                 }
+                
                 return $result;
         }
                 
@@ -55,7 +55,6 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 
                 $query = $db->getQuery(true);
 
-                // Delete zero entries
                 $conditions = array(
                     $db->quoteName('datetime') . ' < (NOW() - INTERVAL 10 MINUTE)'
                 );
@@ -63,16 +62,17 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
                 $query->delete($db->quoteName('#__hwdms_upload_tokens'));
                 $query->where($conditions);
 
-                $db->setQuery($query);
                 try
                 {
-                        $result = $db->query();                 
+                        $db->setQuery($query);
+                        $result = $db->execute();                 
                 }
                 catch (RuntimeException $e)
                 {
                         $this->setError($e->getMessage());
                         return false;                            
                 }
+                
                 return $result;
         }    
         
@@ -86,7 +86,6 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 
                 $query = $db->getQuery(true);
 
-                // Delete zero entries
                 $conditions = array(
                     $db->quoteName('created') . ' < (NOW() - INTERVAL 90 DAY)'
                 );
@@ -94,16 +93,17 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
                 $query->delete($db->quoteName('#__hwdms_process_log'));
                 $query->where($conditions);
 
-                $db->setQuery($query);
                 try
                 {
-                        $result = $db->query();                 
+                        $db->setQuery($query);
+                        $result = $db->execute();                 
                 }
                 catch (RuntimeException $e)
                 {
                         $this->setError($e->getMessage());
                         return false;                            
                 }
+                
                 return $result;
         }    
 }
