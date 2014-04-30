@@ -96,7 +96,7 @@ JHtml::_('behavior.modal');
                     </div>
                     <div class="row-fluid">
                       <div class="span12">
-                        <a href="index.php?option=com_hwdmediashare&view=addmedia"><i class="icon-upload"></i> <span><?php echo JText::_('COM_HWDMS_ADD_NEW_MEDIA'); ?></span></a>
+                        <a href="index.php?option=com_hwdmediashare&view=addmedia"><i class="icon-plus"></i> <span><?php echo JText::_('COM_HWDMS_ADD_NEW_MEDIA'); ?></span></a>
                       </div>
                     </div>
                     <div class="row-fluid">
