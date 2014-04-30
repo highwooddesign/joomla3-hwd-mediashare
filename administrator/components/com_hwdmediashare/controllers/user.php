@@ -24,16 +24,23 @@ class hwdMediaShareControllerUser extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
-                // Get the model.
-                $hwdms = hwdMediaShareFactory::getInstance();
+                // Get the HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Get the ID.
+                $recordId = $this->input->getInt('id');
 
-                // Autocreate channel
-                if (!$hwdms->autoCreateChannel(JRequest::getInt('id')))
+                // Autocreate channel.
+                if ($utilities->autoCreateChannel($recordId))
                 {
-                        JError::raiseWarning(500, $model->getError());
+                        return parent::edit($key, $urlVar);                                             
                 }
-
-                return parent::edit($key, $urlVar);
+                else
+                {
+                        $this->setMessage($utilities->getError());
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+                }   
 	}
         
 	/**
