@@ -19,9 +19,10 @@ class hwdMediaShareTableGroup extends JTable
 	 * Constructor.
 	 * @return	void
 	 */
-	function __construct(&$db)
+	function __construct($db)
 	{
 		parent::__construct('#__hwdms_groups', 'id', $db);
+                JObserverMapper::addObserverClassToClass('JTableObserverTags', 'hwdMediaShareTableGroup', array('typeAlias' => 'com_hwdmediashare.group'));
 	}
 
 	/**
@@ -48,6 +49,151 @@ class hwdMediaShareTableGroup extends JTable
 			$this->setRules($rules); 
 		}
 		return parent::bind($array, $ignore);
+	}
+
+	/**
+	 * Overload store method
+	 *
+	 * @param   boolean   $updateNulls   Toggle whether null values should be updated.
+         * 
+	 * @return  boolean   True on success, false on failure.
+	 */
+	public function store($updateNulls = false)
+	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
+                $user = JFactory::getUser();
+                $isNew = false;
+
+                // Load HWD config
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+		if ($this->id)
+		{
+			// Existing item, so set modified details.
+			$this->modified		= $date->toSql();
+			$this->modified_user_id	= $user->get('id');  
+		}
+		else
+		{
+			// New item
+                        $isNew = true;
+                        
+                        // Set a unique key
+                        $this->key = hwdMediaShareFactory::generateKey();
+
+                        // Set approval status
+                        $this->status = (!$app->isAdmin() && $config->get('approve_new_groups') == 1) ? 2 : 1;
+
+                        // The created and created_by fields can be set by the user,
+			// so we don't touch either of these if they are set.
+			if (!(int) $this->created)
+			{
+				$this->created = $date->toSql();
+			}
+			if (empty($this->created_by))
+			{
+				$this->created_user_id = $user->get('id');
+			}                      
+		}
+
+		// Set publish_up to null date if not set
+		if (!$this->publish_up)
+		{
+			$this->publish_up = $this->_db->getNullDate();
+		}
+
+		// Set publish_down to null date if not set
+		if (!$this->publish_down)
+		{
+			$this->publish_down = $this->_db->getNullDate();
+		}
+
+		// Verify that the alias is unique
+		$table = JTable::getInstance('Group', 'hwdMediaShareTable');
+
+		if ($table->load(array('alias' => $this->alias)) && ($table->id != $this->id || $this->id == 0))
+		{
+			$this->setError(JText::_('COM_HWDMS_ERROR_UNIQUE_ALIAS'));
+			return false;
+		}
+
+                $return = parent::store($updateNulls);
+		if ($return) 
+                {
+                        /** Perform a few post-store tasks **/
+
+                        // Get data from the request.
+                        hwdMediaShareFactory::load('upload');
+                        $data = hwdMediaShareUpload::getProcessedUploadData(); 
+                        
+                        // Add custom field data.
+                        hwdMediaShareFactory::load('customfields');                
+                        $object = new StdClass;
+                        $object->elementId = $this->id;
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 3;
+                        $HWDcustomfields->save($object);
+                        
+                        // Add thumbnail.
+                        hwdMediaShareFactory::load('upload');
+                        $object = new StdClass;
+                        $object->elementType = 3;
+                        $object->elementId = $this->id;
+                        $object->remove = (isset($data['remove_thumbnail']) ? true : false);
+                        $object->thumbnail_remote = (isset($data['thumbnail_remote']) ? $data['thumbnail_remote'] : null);
+                        $HWDupload = hwdMediaShareUpload::getInstance();
+                        $HWDupload->processThumbnail($object);
+
+                        // If new and approved then trigger event.
+                        if ($isNew && $this->status == 1)
+                        {                            
+                                $properties = $this->getProperties(1);
+                                $group = JArrayHelper::toObject($properties, 'JObject');                                
+                                hwdMediaShareFactory::load('events');
+                                $events = hwdMediaShareEvents::getInstance();
+                                $events->triggerEvent('onAfterGroupAdd', $group);
+                        }                        
+                }        
+                
+		return $return;
+	}
+        
+	/**
+	 * Overloaded check method to ensure data integrity.
+	 *
+	 * @return  boolean  True on success.
+	 */
+	public function check()
+	{
+		// Check for valid name
+		if (trim($this->title) == '')
+		{
+			$this->setError(JText::_('COM_HWDMS_ERROR_SAVE_NO_TITLE'));
+			return false;
+		}
+                
+		// Check for valid alias
+		if (empty($this->alias))
+		{
+			$this->alias = $this->title;
+		}
+		$this->alias = JApplication::stringURLSafe($this->alias);
+		if (trim(str_replace('-', '', $this->alias)) == '')
+		{
+			$this->alias = JFactory::getDate()->format("Y-m-d-H-i-s");
+		}
+
+		// Check the publish down date is not earlier than publish up.
+		if ($this->publish_down > $this->_db->getNullDate() && $this->publish_down < $this->publish_up)
+		{
+			$this->setError(JText::_('JGLOBAL_START_PUBLISH_AFTER_FINISH'));
+			return false;
+		}
+
+		return true;
 	}
         
 	/**
@@ -78,10 +224,67 @@ class hwdMediaShareTableGroup extends JTable
 	 *
 	 * @return	int
 	 */
-	protected function _getAssetParentId($table = null, $id = null)
+	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
 		$asset = JTable::getInstance('Asset');
 		$asset->loadByName('com_hwdmediashare');
 		return $asset->id;
 	}
+        
+	/**
+	 * Method to increment the likes/dislikes for a row if the necessary property/field exists.
+	 *
+	 * @param   mixed    $pk     An optional primary key value to increment. If not set the instance property value is used.
+	 * @param   integer  $value  The value of the property to increment.
+         * 
+	 * @return  boolean  True on success.
+	 */
+	public function like($pk = null, $value = 1)
+	{
+		$values	= array(1 => 'likes', 0 => 'dislikes');
+		$property = JArrayHelper::getValue($values, $value, 'like', 'word');
+
+		// If there is no hits field, just return true.
+		if (!property_exists($this, $property))
+		{
+			return true;
+		}
+
+		if (is_null($pk))
+		{
+			$pk = array();
+
+			foreach ($this->_tbl_keys AS $key)
+			{
+				$pk[$key] = $this->$key;
+			}
+		}
+		elseif (!is_array($pk))
+		{
+			$pk = array($this->_tbl_key => $pk);
+		}
+
+		foreach ($this->_tbl_keys AS $key)
+		{
+			$pk[$key] = is_null($pk[$key]) ? $this->$key : $pk[$key];
+
+			if ($pk[$key] === null)
+			{
+				throw new UnexpectedValueException('Null primary key not allowed.');
+			}
+		}
+
+		// Check the row in by primary key.
+		$query = $this->_db->getQuery(true)
+			->update($this->_tbl)
+			->set($this->_db->quoteName($property) . ' = (' . $this->_db->quoteName($property) . ' + 1)');
+		$this->appendPrimaryKeys($query, $pk);
+		$this->_db->setQuery($query);
+		$this->_db->execute();
+
+		// Set table values in the object.
+		$this->hits++;
+
+		return true;
+	} 
 }
