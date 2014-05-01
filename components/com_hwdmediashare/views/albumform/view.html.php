@@ -57,7 +57,7 @@ class hwdMediaShareViewAlbumForm extends JViewLegacy
 		}
 		else
 		{
-			$authorised = $this->item->access->get('access-edit');
+			$authorised = $this->item->attributes->get('access-edit');
 		}
 		if ($authorised !== true)
 		{
