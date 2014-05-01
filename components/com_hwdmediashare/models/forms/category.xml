@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: category.xml 431 2012-07-12 09:55:56Z dhorsfall $ -->
 <form
-	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+        addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        addrulepath="/administrator/components/com_hwdmediashare/models/rules"  
 >
-	<fieldset>
+	<fieldset 
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
 		<field
 			name="id"
 			type="hidden"
@@ -11,31 +14,24 @@
                 <field 
                         name="asset_id" 
                         type="hidden" 
-                        filter="unset"
+                        filter="unset" 
                 />
                 <field
 			name="title"
 			type="text"
 			label="COM_HWDMS_TITLE_LABEL"
 			description="COM_HWDMS_TITLE_DESC"
-			size="40"
-			class="inputbox"
 			required="true"
-			default=""
 		/>
                 <field
 			name="alias"
 			type="text"
 			label="COM_HWDMS_ALIAS_LABEL"
 			description="COM_HWDMS_ALIAS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
 		/>
 		<field 
                         name="description" 
-                        type="editorhwd" 
-                        class="inputbox"
+                        type="hwdeditor" 
 			label="COM_HWDMS_DESCRIPTION_LABEL" 
                         description="COM_HWDMS_DESCRIPTION_DESC"
 			filter="safehtml" 
@@ -43,76 +39,33 @@
                 />
                 <field
 			name="tags"
-			type="text"
+			type="tag"
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
-		/>
-		<field 
-                        name="status" 
-                        type="list"
-			label="JSTATUS"
-			description="COM_HWDMS_STATUS_DESC"
-			default="0"
-                        readonly="true"
+                        multiple="true"
 		>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
 		</field>
 		<field 
                         name="published" 
-                        type="list" 
+                        type="radio"
                         label="JPUBLISHED"
 			description="JFIELD_PUBLISHED_DESC" 
-                        class="inputbox"
-			filter="intval" 
-                        size="1" 
-                        default="1"
+                        class="btn-group btn-group-yesno"
+			default="1"
+                        validate="integer"
+                        filter="integer"
 		>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
-			<option value="2">JARCHIVED</option>
-			<option value="-2">JTRASHED</option>
 		</field>
-		<field 
-                        name="featured" 
-                        type="list"
-			label="JFEATURED"
-			description="COM_HWDMS_FEATURED_DESC"
-			default="0"
-		>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field 
-                        name="publish_up" 
-                        type="calendar"
-			label="COM_HWDMS_PUBLISH_UP_LABEL" 
-                        description="COM_HWDMS_PUBLISH_UP_DESC"
-			class="inputbox" 
-                        format="%Y-%m-%d %H:%M:%S" 
-                        size="22"
-			filter="user_utc" 
-                />
-		<field 
-                        name="publish_down" 
-                        type="calendar"
-			label="COM_HWDMS_PUBLISH_DOWN_LABEL" 
-                        description="COM_HWDMS_PUBLISH_DOWN_DESC"
-			class="inputbox" 
-                        format="%Y-%m-%d %H:%M:%S" 
-                        size="22"
-			filter="user_utc" 
-                />
 		<field 
                         name="access" 
                         type="accesslevel" 
                         label="JFIELD_ACCESS_LABEL"
 			description="JFIELD_ACCESS_DESC" 
-                        class="inputbox" 
-                        size="1" 
+			default="1"
+                        validate="integer"
+                        filter="integer"
                 />
 		<field 
                         name="language" 
@@ -122,12 +75,12 @@
                         class="inputbox"
 		>
 			<option value="*">JALL</option>
-		</field>
+		</field>   
                 <field 
                         name="metadesc" 
                         type="textarea"
-                        label="JFIELD_META_DESCRIPTION_LABEL" 
-                        description="JFIELD_META_DESCRIPTION_DESC"
+                        label="COM_HWDMS_METADESC_LABEL"
+                        description="COM_HWDMS_METADESC_DESC"
                         class="inputbox" 
                         rows="3" 
                         cols="30" 
@@ -135,8 +88,8 @@
                 <field 
                         name="metakey" 
                         type="textarea"
-                        label="JFIELD_META_KEYWORDS_LABEL" 
-                        description="JFIELD_META_KEYWORDS_DESC"
+                        label="COM_HWDMS_METAKEYS_LABEL"
+                        description="COM_HWDMS_METAKEYS_DESC"
                         class="inputbox" 
                         rows="3" 
                         cols="30" 

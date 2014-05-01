@@ -155,8 +155,8 @@
                         <field
                                 name="meta_desc"
                                 type="textarea"
-                                label="JFIELD_META_DESCRIPTION_LABEL"
-                                description="JFIELD_META_DESCRIPTION_DESC"
+                                label="COM_HWDMS_METADESC_LABEL"
+                                description="COM_HWDMS_METADESC_DESC"
                                 filter="string"
                                 cols="55"
                                 rows="3" 
@@ -164,8 +164,8 @@
                         <field
                                 name="meta_keys"
                                 type="textarea"
-                                label="JFIELD_META_KEYWORDS_LABEL"
-                                description="JFIELD_META_KEYWORDS_DESC"
+                                label="COM_HWDMS_METAKEYS_LABEL"
+                                description="COM_HWDMS_METAKEYS_DESC"
                                 filter="string"
                                 cols="55"
                                 rows="3"
