@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: upload.xml 1530 2013-05-30 10:43:05Z dhorsfall $ -->
 <form>
 	<fieldset
+                name="local"
+        >
+		<field 
+                        name="Filedata" 
+                        type="file" 
+			label="COM_HWDMS_UPLOAD_A_FILE" 
+                        description="COM_HWDMS_UPLOAD_A_FILE"
+                />
+        </fieldset>    
+	<fieldset
                 name="remote"
-                label="COM_HWDMS_DETAILS"
         >
 		<field 
                         name="remote" 
-                        type="textarea" 
-                        class="inputbox"
+                        type="text" 
 			label="COM_HWDMS_REMOTE_MEDIA_LINK_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINK_DESC"
+                />
+		<field 
+                        name="remotes" 
+                        type="textarea" 
+			label="COM_HWDMS_REMOTE_MEDIA_LINKS_LABEL" 
+                        description="COM_HWDMS_REMOTE_MEDIA_LINKS_DESC"
                 />
         </fieldset>
 	<fieldset
                 name="link"
-                label="COM_HWDMS_DETAILS"
         >
                 <field
                         name="link_type"
@@ -25,11 +37,19 @@
                         label="COM_HWDMS_REMOTE_FILE_TYPE_LABEL"
                         description="COM_HWDMS_REMOTE_FILE_TYPE_DESC"
                 >
-                        <option value="8">COM_HWDMS_FILE_MP3_AUDIO</option>
-                        <option value="11">COM_HWDMS_FILE_FLV_VIDEO</option>
-                        <option value="14">COM_HWDMS_FILE_MP4_VIDEO</option>
-                        <option value="5">COM_HWDMS_FILE_WEB_IMAGE</option> 
+                        <option value="1">COM_HWDMS_AUDIO</option>
+                        <option value="2">COM_HWDMS_DOCUMENT</option>
+                        <option value="3">COM_HWDMS_IMAGE</option>
+                        <option value="4">COM_HWDMS_VIDEO</option> 
                 </field>
+                <field
+                        name="link_ext"
+                        type="extension"
+                        class="inputbox"
+                        default=""
+                        label="COM_HWDMS_REMOTE_FILE_EXTENSION_LABEL"
+                        description="COM_HWDMS_REMOTE_FILE_EXTENSION_DESC"
+                />
 		<field 
                         name="link_url" 
                         type="text" 
@@ -41,7 +61,6 @@
         </fieldset>
         <fieldset
                 name="embed"
-                label="COM_HWDMS_DETAILS"
         >
 		<field 
                         name="embed_code" 
@@ -53,7 +72,6 @@
         </fieldset>
         <fieldset
                 name="rtmp"
-                label="COM_HWDMS_DETAILS"
         >
 		<field 
                         name="media_type" 
@@ -86,53 +104,119 @@
 			required="true"
 			default=""
 		/>                
-        </fieldset>        
-        <fieldset
-                name="server"
-                label="COM_HWDMS_DETAILS"
-        >
-        </fieldset> 
-        <fieldset
+        </fieldset>
+	<fieldset 
                 name="details"
-                label="COM_HWDMS_DETAILS"
         >
+                <field
+			name="title"
+			type="text"
+			label="COM_HWDMS_TITLE_LABEL"
+			description="COM_HWDMS_TITLE_DESC"
+			size="40"
+			class="inputbox input-xxlarge input-large-text"
+			required="true"
+			default=""
+		/>
+                <field
+			name="alias"
+			type="text"
+			label="COM_HWDMS_ALIAS_LABEL"
+			description="COM_HWDMS_ALIAS_DESC"
+			size="40"
+			class="inputbox"
+			default=""
+		/>
+		<field 
+                        name="description" 
+                        type="hwdeditor" 
+                        class="inputbox"
+			label="COM_HWDMS_DESCRIPTION_LABEL" 
+                        description="COM_HWDMS_DESCRIPTION_DESC"
+			filter="safehtml" 
+                        buttons="true"
+                />
                 <field
                         name="catid"
                         type="category"
                         extension="com_hwdmediashare"
                         class="inputbox"
                         default=""
+                        size="10"
                         label="COM_HWDMS_CATEGORY_LABEL"
                         description="COM_HWDMS_CATEGORY_DESC"
                         multiple="multiple"
                 >
                         <option value="0">JOPTION_SELECT_CATEGORY</option>
                 </field>
- 		<field
-                        name="user_id"
-                        type="user"
-			label="COM_HWDMS_AUTHOR_LABEL"
-                        description="COM_HWDMS_AUTHOR_DESC"
+                <field
+			name="tags"
+			type="tag"
+			label="COM_HWDMS_TAGS_LABEL"
+			description="COM_HWDMS_TAGS_DESC"
+                        class="inputbox"
+                        multiple="true"
+		>
+		</field>
+		<field 
+                        name="published" 
+                        type="list" 
+                        label="JPUBLISHED"
+			description="JFIELD_PUBLISHED_DESC" 
+                        class="inputbox"
+			filter="intval" 
+                        size="1" 
+                        default="1"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="2">JARCHIVED</option>
+			<option value="-2">JTRASHED</option>
+		</field>
+		<field 
+                        name="featured" 
+                        type="radio"
+			label="JFEATURED"
+			description="COM_HWDMS_FEATURED_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field 
+                        name="access" 
+                        type="accesslevel" 
+                        label="JFIELD_ACCESS_LABEL"
+			description="JFIELD_ACCESS_DESC" 
+                        class="inputbox" 
+                        size="1" 
                 />
+		<field 
+                        name="language" 
+                        type="contentlanguage" 
+                        label="JFIELD_LANGUAGE_LABEL"
+			description="COM_HWDMS_LANGUAGE_DESC" 
+                        class="inputbox"
+		>
+			<option value="*">JALL</option>
+		</field>
  		<field
                         name="album_id"
-                        type="album"
-			label="COM_HWDMS_ALBUM_LABEL"
-                        description="COM_HWDMS_ALBUM_DESC"
+                        type="hidden"
                 />
  		<field
-                        name="playlist_id"
-                        type="playlist"
-			label="COM_HWDMS_PLAYLIST_LABEL"
-                        description="COM_HWDMS_PLAYLIST_DESC"
-
- 		/>
+                        name="category_id"
+                        type="hidden"
+                />
                 <field
                         name="group_id"
-                        type="group"
-			label="COM_HWDMS_GROUP_LABEL"
-                        description="COM_HWDMS_GROUP_DESC"
-                />
-        </fieldset>
+                        type="hidden"
+                />                   
+ 		<field
+                        name="playlist_id"
+                        type="hidden"
+ 		/>
+	</fieldset>
 </form>
 
