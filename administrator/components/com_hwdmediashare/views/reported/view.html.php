@@ -23,25 +23,32 @@ class hwdMediaShareViewReported extends JViewLegacy
 	{
                 $jinput = JFactory::getApplication()->input;
                 $layout = $jinput->get('layout', '', 'word');
+                $tmpl = $jinput->get('tmpl', '', 'word');
                 
                 // Get data from the model based on layout.
-                switch ($layout) {
+                switch ($layout)
+                {
                     case 'media':
-                        
+                    case 'albums':
+                    case 'groups':
+                    case 'playlists':
+                    case 'users':
                         $this->items = $this->get('Items');
                         $this->pagination = $this->get('Pagination');
                         $this->state	= $this->get('State');
-                        break;
+                        break;                     
                     default:
-                        // Get data from the model
                         $this->media = $this->get('media');
                         $this->albums = $this->get('albums');
                         $this->groups = $this->get('groups');
-                        $this->users = $this->get('users');
                         $this->playlists = $this->get('playlists');
+                        $this->users = $this->get('users');
                         break;
                 }
                 
+                hwdMediaShareFactory::load('downloads');
+                $this->return = base64_encode(JFactory::getURI()->toString());
+
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
@@ -50,7 +57,7 @@ class hwdMediaShareViewReported extends JViewLegacy
                 }
 
 		// We don't need toolbar in the modal window.
-		if ($this->getLayout() !== 'modal')
+		if ($this->getLayout() !== 'modal' && $tmpl !== 'component')
 		{
 			$this->addToolbar();
 			$this->sidebar = JHtmlSidebar::render();
@@ -72,9 +79,7 @@ class hwdMediaShareViewReported extends JViewLegacy
 	{
 		JToolBarHelper::title(JText::_('COM_HWDMS_REPORTED_ITEMS'), 'notification');
 
-		JToolbarHelper::cancel('reported.cancel', 'JTOOLBAR_CLOSE');
-		JToolbarHelper::divider();
-		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
+                JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
         
 	/**
