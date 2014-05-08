@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form
+        addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        addrulepath="/administrator/components/com_hwdmediashare/models/rules"  
+>
 	<fieldset
                 name="local"
         >
@@ -113,24 +116,18 @@
 			type="text"
 			label="COM_HWDMS_TITLE_LABEL"
 			description="COM_HWDMS_TITLE_DESC"
-			size="40"
 			class="inputbox input-xxlarge input-large-text"
 			required="true"
-			default=""
 		/>
                 <field
 			name="alias"
 			type="text"
 			label="COM_HWDMS_ALIAS_LABEL"
 			description="COM_HWDMS_ALIAS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
 		/>
 		<field 
                         name="description" 
                         type="hwdeditor" 
-                        class="inputbox"
 			label="COM_HWDMS_DESCRIPTION_LABEL" 
                         description="COM_HWDMS_DESCRIPTION_DESC"
 			filter="safehtml" 
@@ -140,21 +137,16 @@
                         name="catid"
                         type="category"
                         extension="com_hwdmediashare"
-                        class="inputbox"
                         default=""
-                        size="10"
                         label="COM_HWDMS_CATEGORY_LABEL"
                         description="COM_HWDMS_CATEGORY_DESC"
                         multiple="multiple"
-                >
-                        <option value="0">JOPTION_SELECT_CATEGORY</option>
-                </field>
+                />
                 <field
 			name="tags"
 			type="tag"
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
-                        class="inputbox"
                         multiple="true"
 		>
 		</field>
