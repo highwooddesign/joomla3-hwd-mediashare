@@ -38,8 +38,8 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.user.'.$ite
         <td class="center">
                 <div class="btn-group">
                         <?php echo JHtml::_('jgrid.published', $item->published, $i, 'users.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>
-                        <?php echo JHtml::_('HwdAdminPlaylists.featured', $item->featured, $i, $canChange); ?>
-                        <?php echo JHtml::_('HwdAdminPlaylists.status', $item->status, $i, $canChange); ?> 
+                        <?php echo JHtml::_('HwdAdminUsers.featured', $item->featured, $i, $canChange); ?>
+                        <?php echo JHtml::_('HwdAdminUsers.status', $item->status, $i, $canChange); ?> 
                         <?php
                         // Create dropdown items
                         $action = $archived ? 'unarchive' : 'archive';
