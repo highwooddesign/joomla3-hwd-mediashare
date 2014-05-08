@@ -79,7 +79,7 @@ class hwdMediaShareModelExtensions extends JModelList
                 {
 			$query->where('a.published = '.(int) $published);
 		}
-                else if ($published === '')
+                elseif ($published === '')
                 {
 			$query->where('(a.published IN (0, 1))');
 		}
