@@ -1,41 +1,40 @@
 <?php
 /**
- * @version    SVN $Id: default.php 481 2012-08-21 16:28:14Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmigrator
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
+
 JHtml::_('behavior.framework', true);
 JHtml::_('behavior.tooltip');
-
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmigrator'); ?>" method="post" name="adminForm" id="adminForm">
         <table class="table table-striped table-hover">
                 <thead>
                         <tr>
                                 <th>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_RESOURCE' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_RESOURCE'); ?>
                                 </th>
                                 <th width="5%">
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_TOTAL' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_TOTAL'); ?>
                                 </th>
                                 <th width="10%">
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_PROGRESS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_PROGRESS'); ?>
                                 </th>
                                 <th width="8%">
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_STATUS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_STATUS'); ?>
                                 </th>
                         </tr>
                 </thead>
                 <tbody>
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_VIDEO_ITEMS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_VIDEO_ITEMS'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->video_items->count; ?>
@@ -49,7 +48,7 @@ JHtml::_('behavior.tooltip');
                         </tr>
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_VIDEO_CATEGORIES' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_VIDEO_CATEGORIES'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->video_categories->count; ?>
@@ -63,7 +62,7 @@ JHtml::_('behavior.tooltip');
                         </tr>
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_VIDEO_GROUPS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_VIDEO_GROUPS'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->video_groups->count; ?>
@@ -77,7 +76,7 @@ JHtml::_('behavior.tooltip');
                         </tr>
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_VIDEO_PLAYLISTS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_VIDEO_PLAYLISTS'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->video_playlists->count; ?>
@@ -91,7 +90,7 @@ JHtml::_('behavior.tooltip');
                         </tr>                        
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_PHOTO_ITEMS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_PHOTO_ITEMS'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->photo_items->count; ?>
@@ -105,7 +104,7 @@ JHtml::_('behavior.tooltip');
                         </tr>   
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_PHOTO_CATEGORIES' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_PHOTO_CATEGORIES'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->photo_categories->count; ?>
@@ -119,7 +118,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_PHOTO_GROUPS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_PHOTO_GROUPS'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->photo_groups->count; ?>
@@ -133,7 +132,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_PHOTO_ALBUMS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_PHOTO_ALBUMS'); ?>
                                 </td>
                                 <td align="center">
                                         <?php echo $this->photo_albums->count; ?>
@@ -147,7 +146,7 @@ JHtml::_('behavior.tooltip');
                         </tr>   
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_VIDEO_CATEGORIES' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_VIDEO_CATEGORIES'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -161,7 +160,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_VIDEO_TAGS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_VIDEO_TAGS'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -175,7 +174,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_VIDEO_GROUPS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_VIDEO_GROUPS'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -189,7 +188,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_VIDEO_PLAYLISTS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_VIDEO_PLAYLISTS'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -203,7 +202,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_PHOTO_CATEGORIES' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_PHOTO_CATEGORIES'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -217,7 +216,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_PHOTO_TAGS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_PHOTO_TAGS'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -231,7 +230,7 @@ JHtml::_('behavior.tooltip');
                         </tr>
                         <tr class="row0">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_PHOTO_GROUPS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_PHOTO_GROUPS'); ?>
                                 </td>
                                 <td align="center">
                                         N/A
@@ -245,7 +244,7 @@ JHtml::_('behavior.tooltip');
                         </tr> 
                         <tr class="row1">
                                 <td>
-                                        <?php echo JText::_( 'COM_HWDMIGRATOR_MATCH_PHOTO_ALBUMS' ); ?>
+                                        <?php echo JText::_('COM_HWDMIGRATOR_MATCH_PHOTO_ALBUMS'); ?>
                                 </td>
                                 <td align="center">
                                         N/A

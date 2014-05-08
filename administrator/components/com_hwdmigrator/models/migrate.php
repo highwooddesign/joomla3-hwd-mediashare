@@ -1,22 +1,15 @@
 <?php
 /**
- * @version    SVN $Id: migrate.php 1266 2013-03-13 13:54:35Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      16-Apr-2012 17:17:35
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmigrator
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMigratorModelMigrate extends JModelAdmin
 {
 	/**
