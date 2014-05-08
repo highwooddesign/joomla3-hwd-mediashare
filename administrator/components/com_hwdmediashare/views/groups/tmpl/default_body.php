@@ -75,7 +75,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.group.'.$it
         </td>
         <?php if ($this->state->get('filter.status') == 3) : ?>  
         <td class="center">
-                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=media&tmpl=component&id=' . $item->id); ?>" class="modal" rel="{handler: 'iframe', size: {x: 800, y: 500}}">
+                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=groups&tmpl=component&id=' . $item->id); ?>" class="modal" rel="{handler: 'iframe', size: {x: 800, y: 500}}">
                         <?php echo (int) $item->report_count; ?></a>                    
         </td>
         <?php endif; ?>   
