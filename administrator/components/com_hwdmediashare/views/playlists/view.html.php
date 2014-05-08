@@ -85,7 +85,7 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
                         JToolBarHelper::deleteList('', 'playlists.delete', 'JTOOLBAR_EMPTY_TRASH');
                         JToolBarHelper::divider();
                 }
-		else if ($canDo->get('core.edit.state'))
+		elseif ($canDo->get('core.edit.state'))
                 {
 			JToolBarHelper::divider();
                         JToolBarHelper::trash('playlists.trash');
