@@ -1,204 +1,269 @@
 <?php
 /**
- * @version    SVN $Id: reported.php 1239 2013-03-08 14:03:34Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      20-Feb-2012 20:19:14
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modellist');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelReported extends JModelList
 {
-        /**
-	 * Method to count media media.
+    	/**
+	 * Constructor override, defines a white list of column filters.
 	 *
-	 * @param	integer	The id of the primary key.
+	 * @param   array  $config  An optional associative array of configuration settings.
+	 */
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields']))
+		{
+			$config['filter_fields'] = array(
+				'id', 'a.id',
+				'element_type', 'a.element_type',
+				'element_id', 'a.element_id',
+				'user_id', 'a.user_id',
+				'report_id', 'a.report_id',
+				'description', 'a.description',
+				'created', 'a.created',
+			);
+		}
+
+		parent::__construct($config);
+	}
+
+        /**
+	 * Method to count reported media.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getMedia($pk = null)
+	public function getMedia()
 	{
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('1');
-                $query->from('#__hwdms_reports AS a');
-                $query->where('a.element_type = 1');
-                $query->group('a.element_id');
-                $db->setQuery($query);
-                $db->query();                
-                return $db->getNumRows();
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_reports')
+                        ->where('element_type = ' . $db->quote(1))
+                        ->group('element_id');
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $count = $db->getNumRows();                        
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count reported albums.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getAlbums($pk = null)
+	public function getAlbums()
 	{
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('1');
-                $query->from('#__hwdms_reports AS a');
-                $query->where('a.element_type = 2');
-                $query->group('a.element_id');
-                $db->setQuery($query);
-                $db->query();                
-                return $db->getNumRows();
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_reports')
+                        ->where('element_type = ' . $db->quote(2))
+                        ->group('element_id');
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $count = $db->getNumRows();                        
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count reported groups.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getGroups($pk = null)
+	public function getGroups()
 	{
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('1');
-                $query->from('#__hwdms_reports AS a');
-                $query->where('a.element_type = 3');
-                $query->group('a.element_id');
-                $db->setQuery($query);
-                $db->query();                
-                return $db->getNumRows();
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_reports')
+                        ->where('element_type = ' . $db->quote(3))
+                        ->group('element_id');
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $count = $db->getNumRows();                        
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count reported users.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
-	public function getUsers($pk = null)
+	public function getUsers()
 	{
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('1');
-                $query->from('#__hwdms_reports AS a');
-                $query->where('a.element_type = 5');
-                $query->group('a.element_id');
-                $db->setQuery($query);
-                $db->query();                
-                return $db->getNumRows();
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_reports')
+                        ->where('element_type = ' . $db->quote(5))
+                        ->group('element_id');
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $count = $db->getNumRows();                        
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
 	}  
         
         /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
+	 * Method to count reported playlists.
 	 *
 	 * @return	mixed	Object on success, false on failure.
 	 */
 	public function getPlaylists($pk = null)
 	{
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('1');
-                $query->from('#__hwdms_reports AS a');
-                $query->where('a.element_type = 4');
-                $query->group('a.element_id');
-                $db->setQuery($query);
-                $db->query();                
-                return $db->getNumRows();
-	}
-        
-        /**
-	 * Method to count media media.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getActivities($pk = null)
-	{
-                $db =& JFactory::getDBO();
-                $query = $db->getQuery(true);
-                $query->select('1');
-                $query->from('#__hwdms_reports AS a');
-                $query->where('a.element_type = 7');
-                $query->group('a.element_id');
-                $db->setQuery($query);
-                $db->query();                
-                return $db->getNumRows();
-	}
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getItems($pk = null)
-	{                
-                if ($items = parent::getItems($pk))
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_reports')
+                        ->where('element_type = ' . $db->quote(4))
+                        ->group('element_id');
+                try
                 {
-                        for ($i=0, $n=count($items); $i < $n; $i++)
-                        {
-                        }
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $count = $db->getNumRows();                        
                 }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                return $count;
+	}
+                
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{                
+		$items = parent::getItems();
+
+                for ($x = 0, $count = count($items); $x < $count; $x++)
+                {
+                        if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        switch ($items[$x]->element_type)
+                        {
+                                case 1:
+                                    // Media
+                                    $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                    break;
+                                case 2:
+                                    // Album
+                                    $table = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                    break;
+                                case 3:
+                                    // Group
+                                    $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                    break;
+                                case 4:
+                                    // Playlist
+                                    $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                    break;
+                                case 5:
+                                    // Channel
+                                    $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                    break;
+                        }
+
+                        $table->load($items[$x]->element_id);
+                        $properties = $table->getProperties(1);
+                        $row = JArrayHelper::toObject($properties, 'JObject');
+
+                        $items[$x]->title = (isset($row->title) ? $row->title : '');                      
+                }
+
 		return $items;
 	}
         
-        /**
-         * Method to build an SQL query to load the list data.
-         *
-         * @return      string  An SQL query
-         */
+	/**
+	 * Method to get the database query.
+	 *
+	 * @return  JDatabaseQuery  database query
+	 */
         protected function getListQuery()
         {
-		$user	= JFactory::getUser();
-		$groups	= implode(',', $user->getAuthorisedViewLevels());
-
                 // Create a new query object.
                 $db = JFactory::getDBO();
                 $query = $db->getQuery(true);
 
+                // Get HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
 		// Select the required fields from the table.
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.user_id, a.report_id, a.description, a.created'
+				'a.id, a.element_type, a.element_id, a.user_id, a.report_id, a.description, a.created'
 			)
 		);
-                // From the hello table
+                
+                // From the reports table
                 $query->from('#__hwdms_reports AS a');
-
-		// Filter by search in title
-		$search = $this->getState('filter.search');
-		if (!empty($search))
+                
+                // Join over the users for the author, with value based on configuration.
+                $config->get('author') == 0 ? $query->select('ua.name AS author') : $query->select('ua.username AS author');
+		$query->join('LEFT', '#__users AS ua ON ua.id=a.user_id');
+                                
+		// Filter by element_type.
+		if ($elementType = $this->getState('filter.element_type'))
                 {
-			if (stripos($search, 'id:') === 0)
-                        {
-				$query->where('a.id = '.(int) substr($search, 3));
-			} else {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
-				$query->where('a.description LIKE '.$search);
-			}
+			$query->where('a.element_type = '.(int) $elementType);
 		}
                 
-                // Additional filters
-		$elementType = $this->getState('filter.element_type');
-                $query->where('a.element_type = ' . $elementType);
-		$elementId = $this->getState('filter.element_id');
-                $query->where('a.element_id = ' . $elementId);
+		// Filter by element_id.
+		if ($elementId = $this->getState('filter.element_id'))
+                {
+			$query->where('a.element_id = '.(int) $elementId);
+		}
+
+		// Add the list ordering clause.
+                $listOrder = $this->state->get('list.ordering');
+                $listDirn = $this->state->get('list.direction');
+
+		$query->order($db->escape($listOrder.' '.$listDirn));
 
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
@@ -212,74 +277,40 @@ class hwdMediaShareModelReported extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
-		// Initialise variables.
-		$app = JFactory::getApplication('administrator');
+                // Initialise variables.
+                $app = JFactory::getApplication();
 
-		// Load the filter state.
-		$search = $this->getUserStateFromRequest($this->context.'.filter.search', 'filter_search');
-		$this->setState('filter.search', $search);
-
-                $listOrder = $this->getUserStateFromRequest($this->context.'.filter_order', 'filter_order', 'a.created');
-                $this->setState('list.ordering', $listOrder);
-
-                $listDirn  = $this->getUserStateFromRequest($this->context.'.filter_order_Dir', 'filter_order_Dir', 'DESC');
-                $this->setState('list.direction', $listDirn);
-
-                $layout = JRequest::getWord('layout');
-                switch ($layout) {
+                $layout = $app->input->get('layout', '', 'word');
+                
+                switch ($layout) 
+                {
                     case 'media':
                         $this->setState('filter.element_type', 1);
-                        $this->setState('filter.element_id', JRequest::getInt('id'));
-                        break;
+                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        break;                    
+                    case 'albums':
+                        $this->setState('filter.element_type', 2);
+                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        break;    
+                    case 'groups':
+                        $this->setState('filter.element_type', 3);
+                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        break;   
+                    case 'playlists':
+                        $this->setState('filter.element_type', 4);
+                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        break;                      
+                    case 'users':
+                        $this->setState('filter.element_type', 5);
+                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        break; 
                 }
-                
+
 		// Load the parameters.
 		$params = JComponentHelper::getParams('com_hwdmediashare');
 		$this->setState('params', $params);
 
 		// List state information.
-		parent::populateState($listOrder, $listDirn);
+		parent::populateState('a.created', 'desc');
 	}    
-        
-	/**
-	 * Method to delete one or more records.
-         * The delete() method was added to the JModelList class, instead of created a second model file. 
-         * If more actions are added to this feature we can create the second model. 
-	 *
-	 * @param   array  &$pks  An array of record primary keys.
-	 *
-	 * @return  boolean  True if successful, false if an error occurs.
-	 *
-	 * @since   11.1
-	 */
-	public function delete(&$pks)
-	{
-		// Initialise variables.
-		$pks = (array) $pks;
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Report', 'hwdMediaShareTable');
-
-		// Iterate the items to delete each one.
-		foreach ($pks as $i => $pk)
-		{
-			if ($table->load($pk))
-			{
-                                if (!$table->delete($pk))
-                                {
-                                        $this->setError($table->getError());
-                                        return false;
-                                }
-			}
-			else
-			{
-				$this->setError($table->getError());
-				return false;
-			}
-		}
-
-		// Clear the component's cache
-		$this->cleanCache();
-
-		return true;
-	}
 }
