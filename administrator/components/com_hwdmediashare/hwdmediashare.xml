@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="3.2" method="upgrade">
+<extension type="component" version="3.0" method="upgrade">
 	<name>COM_HWDMEDIASHARE</name>
-	<creationDate>@@CREATIONDATE@@</creationDate>
 	<author>HWD</author>
-	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
-	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<creationDate>@@CREATIONDATE@@</creationDate>
 	<copyright>(C) 2014 Highwood Design Limited</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>@@VERSION@@</version>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version>   
 	<description>COM_HWDMEDIASHARE_DESCRIPTION</description>
+        <!-- Installation script -->
 	<scriptfile>script.php</scriptfile>
+        <!-- SQL files -->
 	<install> 
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
@@ -25,6 +27,7 @@
 			<schemapath type="mysql">sql/updates/mysql</schemapath>
 		</schemas>
 	</update>
+        <!-- Site files -->
 	<files folder="site">
                 <filename>controller.php</filename>
                 <filename>hwdmediashare.php</filename>
@@ -32,17 +35,19 @@
                 <filename>router.php</filename>
 		<folder>controllers</folder>
                 <folder>helpers</folder>
-                <folder>language</folder>
                 <folder>libraries</folder>
                 <folder>models</folder>
                 <folder>views</folder>
 	</files>
-	<media destination="com_hwdmediashare" folder="media">
-		<filename>index.html</filename>
-		<folder>assets</folder>
-	</media>
+        <!-- Site language files -->
+	<languages folder="site">
+		<language tag="en-GB">language/en-GB.com_hwdmediashare.ini</language>
+	</languages>
+        <!-- Administrator -->
 	<administration>
+                <!-- Administrator menu -->
 		<menu>COM_HWDMEDIASHARE_MENU</menu>
+                <!-- Administrator files -->
 		<files folder="admin">
 			<filename>access.xml</filename>
 			<filename>cli.php</filename>
@@ -59,10 +64,16 @@
 			<folder>tables</folder>
 			<folder>views</folder>	
 		</files>
+                <!-- Administrator language files -->
 		<languages folder="admin">
 			<language tag="en-GB">language/en-GB.com_hwdmediashare.ini</language>
 			<language tag="en-GB">language/en-GB.com_hwdmediashare.sys.ini</language>
 		</languages>
         </administration>
+        <!-- Media files -->
+	<media destination="com_hwdmediashare" folder="media">
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</media>       
 </extension>
 
