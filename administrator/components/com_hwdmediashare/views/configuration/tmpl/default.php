@@ -24,7 +24,7 @@ JHtml::_('formbehavior.chosen', 'select');
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare');?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
 <input type="hidden" name="task" value="" />
 <?php echo JHtml::_('form.token'); ?>   
-<?php if (!empty( $this->sidebar)) : ?>
+<?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
 	</div>
