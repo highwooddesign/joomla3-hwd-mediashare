@@ -14,7 +14,7 @@ JHtml::_('behavior.modal');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare'); ?>" method="post" name="adminForm" id="adminForm">
 <div class="row-fluid">
-<?php if (!empty( $this->sidebar)) : ?>
+<?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
                 <div class="well well-small">
                         <h4><?php echo JText::_('COM_HWDMS_WELCOME_STATEMENT');?></h4>
