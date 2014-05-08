@@ -1,35 +1,27 @@
 <?php
 /**
- * @version    SVN $Id: dashboard.php 1266 2013-03-13 13:54:35Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmigrator
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// import Joomla modelform library
-jimport('joomla.application.component.modeladmin');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMigratorModelDashboard extends JModelAdmin
 {
 	public function getVideoItems($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
                 $retval->migrated = "0";
 
                 $db->setQuery( 'SHOW TABLES' );
-                //$tables = $db->loadColumn();
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
@@ -59,8 +51,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getVideoCategories($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
@@ -96,8 +88,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getVideoGroups($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
@@ -133,8 +125,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getVideoPlaylists($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
@@ -170,8 +162,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getPhotoItems($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
@@ -207,8 +199,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getPhotoCategories($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
@@ -244,8 +236,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getPhotoGroups($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";
@@ -281,8 +273,8 @@ class hwdMigratorModelDashboard extends JModelAdmin
 
 	public function getPhotoAlbums($pk = null)
 	{
-                $app = & JFactory::getApplication();
-                $db =& JFactory::getDBO();
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
                 $retval = new stdClass;
                 $retval->count = "0";

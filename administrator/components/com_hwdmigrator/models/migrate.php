@@ -39,10 +39,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function videoItems()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -101,7 +101,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -246,7 +246,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                                 $source = JPATH_SITE.'/hwdvideos/uploads/'.$item->video_id.'.mp4';
                                                 $ext = 'mp4';
                                         }
-                                        else if (file_exists(JPATH_SITE.'/hwdvideos/uploads/'.$item->video_id.'.flv'))
+                                        elseif (file_exists(JPATH_SITE.'/hwdvideos/uploads/'.$item->video_id.'.flv'))
                                         {
                                                 $source = JPATH_SITE.'/hwdvideos/uploads/'.$item->video_id.'.flv';
                                                 $ext = 'flv';
@@ -275,18 +275,26 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $data['media_type'] = '';
                                         $data['type'] = '';
                                         $data['source'] = '';
-                                        
+
                                     	// Get seyret information
                                         $vId = explode(",", $item->video_id);
 
-                                        if ($vId[0] == 'local')
+                                        if ($vId[0] == 'youtube.com')
+                                        {
+                                                $item->video_id = $vId[0];
+                                                $data['media_type'] = '4';
+                                                $data['type'] = '2';
+                                                $data['source'] = 'http://www.youtube.com/watch?v='.$vId[1];
+                                                $data['thumbnail'] = 'http://i1.ytimg.com/vi/'.$vId[1].'/hqdefault.jpg';
+                                                $import = true;
+                                                break;
+                                        }
+                                        elseif ($vId[0] == 'local')
                                         {
                                                 // Try to convert to a path
-                                                $path = str_replace($_SERVER["SERVER_NAME"], JPATH_SITE, $vId[1]); 
+                                                $path = str_replace($_SERVER["SERVER_NAME"], JPATH_SITE, $vId[1]);
                                         }
-                                        
                                         $import = false;
-                                        
                                         break;
                                     default:
                                         $import = false;
@@ -300,7 +308,8 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_media = JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                                        $data['id'] = 0;
+                                        $data['id'] = $item->id;                                        
+                                        //$data['id'] = 0;
                                         $data['key'] = hwdMediaShareFactory::generateKey();
                                         $data['asset_id'] = '';
                                         $data['ext_id'] = $ext_id;
@@ -335,17 +344,32 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $data['modified'] = $date->format('Y-m-d H:i:s');
                                         $data['hits'] = (int) $item->number_of_views;
                                         $data['language'] = '*';
+                                        
+// Replace the above bind and store methods with the following to force the same ID during migration
+// Create and populate an object
+$profile = JArrayHelper::toObject($data);
+if ($profile->id == 0)
+{
+	continue;
+}
+else
+{
+	if ($hwdms_media->load($profile->id))
+	{
+		continue;
+	}
+}
 
-                                        // Bind the data.
-                                        if (!$hwdms_media->bind($data)) {
-                                                $this->setError($hwdms_media->getError());
-                                                return false;
-                                        }
-                                        // Store the data.
-                                        if (!$hwdms_media->store()) {
-                                                $this->setError($hwdms_media->getError());
-                                                return false;
-                                        }
+// Insert the object into the user profile table.
+$result = JFactory::getDbo()->insertObject('#__hwdms_media', $profile);
+if (!$result)
+{
+	continue;
+}
+if (!$hwdms_media->load($profile->id))
+{
+	continue;
+}
 
                                         if ($item->video_type == "local" || $item->video_type == "mp4")
                                         {
@@ -442,7 +466,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                                         $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                                                         JFile::copy($source, $dest);
                                                 }
-                                                else if (file_exists(JPATH_SITE.'/hwdvideos/thumbs/tp-'.$item->id.'.jpg') && $jpg_ext_id > 0)
+                                                elseif (file_exists(JPATH_SITE.'/hwdvideos/thumbs/tp-'.$item->id.'.jpg') && $jpg_ext_id > 0)
                                                 {
                                                         $ext = 'jpg';
                                                         $filename = hwdMediaShareFiles::getFilename($hwdms_media->key, '10');
@@ -492,6 +516,16 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                                 $this->setError($migrator_table->getError());
                                                 return false;
                                         }
+                                        
+                                        // If you are running out of disk space during the migration, then you may want to remove the old HWDVideoShare 
+                                        // files after each successful import, by using the following code
+                                        if ($item->video_type == "local" || $item->video_type == "mp4")
+                                        {
+                                                if (file_exists($source))
+                                                {
+                                                            //JFile::delete($source);
+                                                }
+                                        }                                        
                                 }
                         }
                 }
@@ -505,8 +539,8 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function videoCategories()
 	{
-                $db =& JFactory::getDBO();
-                $app = & JFactory::getApplication();
+                $db = JFactory::getDBO();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -553,7 +587,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -647,10 +681,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function videoGroups()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -697,7 +731,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -790,10 +824,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function videoPlaylists()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -840,7 +874,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -933,10 +967,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function photoItems()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -983,7 +1017,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -1136,8 +1170,8 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function photoCategories()
 	{
-                $db =& JFactory::getDBO();
-                $app = & JFactory::getApplication();
+                $db = JFactory::getDBO();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -1184,7 +1218,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -1278,10 +1312,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function photoGroups()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -1328,7 +1362,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -1421,10 +1455,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function photoAlbums()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
@@ -1471,7 +1505,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                         $import = true;
                                 }
-                                else if ($record->status == 0)
+                                elseif ($record->status == 0)
                                 {
                                         $record_id = $record->id;
 
@@ -1564,10 +1598,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchVideoCategories()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -1650,10 +1684,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchVideoTags()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
                 
                 // Set for Tag library
                 $this->elementType = 1;
@@ -1709,10 +1743,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchVideoGroups()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -1767,7 +1801,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         if ($mapExists == 0)
                                         {
                                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                                $table =& JTable::getInstance('LinkedGroups', 'hwdMediaShareTable');
+                                                $table = JTable::getInstance('LinkedGroups', 'hwdMediaShareTable');
 
                                                 // Create an object to bind to the database
                                                 $object = new StdClass;
@@ -1799,10 +1833,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchVideoPlaylists()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -1835,10 +1869,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchPhotoCategories()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
                 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -1895,7 +1929,66 @@ class hwdMigratorModelMigrate extends JModelAdmin
                 }  
                 return true;
         }
-        
+
+        /**
+	 * Method to process an embed code import
+         *
+	 * @since   0.1
+	 */
+	public function matchPhotoTags()
+	{
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                
+                // Set for Tag library
+                $this->elementType = 1;
+                
+                // Require hwdMediaShare factory
+                JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+
+                $query = "
+                    SELECT *
+                    FROM ".$db->quoteName('#__hwdms_migrator')."
+                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('1')."
+                ";
+                $db->setQuery($query);
+                $items = $db->loadObjectList();
+
+                if (!isset($items) || count($items) == 0)
+                {
+                        return true;
+                }
+                else
+                {
+                        foreach ($items as $item)
+                        {
+                                $import = false;
+
+                                $query = "
+                                    SELECT tags
+                                    FROM ".$db->quoteName('#__hwdpsphotos')."
+                                    WHERE ".$db->quoteName('id')." = ".$db->quote($item->element_id)."
+                                ";
+                                $db->setQuery($query);
+                                $tagString = $db->loadResult();
+
+                                if (!empty($tagString))
+                                {
+                                        $params = new StdClass;
+                                        $params->elementType = 1;
+                                        $params->elementId = $item->migration_id;
+                                        $params->tags = $tagString;
+
+                                        hwdMediaShareFactory::load('tags');
+                                        hwdMediaShareTags::save($params);
+                                }
+                        }
+                }
+                return true;
+        }
+                
         /**
 	 * Method to process an embed code import
          *
@@ -1903,10 +1996,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchPhotoGroups()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -1961,7 +2054,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         if ($mapExists == 0)
                                         {
                                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                                $table =& JTable::getInstance('LinkedGroups', 'hwdMediaShareTable');
+                                                $table = JTable::getInstance('LinkedGroups', 'hwdMediaShareTable');
 
                                                 // Create an object to bind to the database
                                                 $object = new StdClass;
@@ -1993,10 +2086,10 @@ class hwdMigratorModelMigrate extends JModelAdmin
 	 */
 	public function matchPhotoAlbums()
 	{
-                $db =& JFactory::getDBO();
-                $date =& JFactory::getDate();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
                 $user = JFactory::getUser();
-                $app = & JFactory::getApplication();
+                $app = JFactory::getApplication();
                 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -2051,7 +2144,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                                 if ($mapExists == 0)
                                                 {
                                                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                                        $table =& JTable::getInstance('LinkedAlbums', 'hwdMediaShareTable');
+                                                        $table = JTable::getInstance('LinkedAlbums', 'hwdMediaShareTable');
 
                                                         // Create an object to bind to the database
                                                         $object = new StdClass;
@@ -2089,7 +2182,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                         return "1";
                 }
 
-                $db =& JFactory::getDBO();
+                $db = JFactory::getDBO();
                 $query = "
                     SELECT *
                     FROM ".$db->quoteName('#__hwdms_migrator')."
@@ -2127,8 +2220,8 @@ class hwdMigratorModelMigrate extends JModelAdmin
                         return $level;
                 }
 
-                $db =& JFactory::getDBO();
-                $app = & JFactory::getApplication();
+                $db = JFactory::getDBO();
+                $app = JFactory::getApplication();
 
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();

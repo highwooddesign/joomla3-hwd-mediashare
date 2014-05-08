@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: com_hwdmigrator.xml 912 2013-01-15 16:10:48Z dhorsfall $ -->
-<extension type="component" version="1.7.0" method="upgrade">
-
+<extension type="component" version="3.0" method="upgrade">
 	<name>COM_HWDMIGRATOR</name>
-	<creationDate>2013-10-17</creationDate>
-	<author>Highwood Design</author>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
-	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
-	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>1.1.12</version>
-	<svn>1691</svn>
+	<version>@@VERSION@@</version>  
 	<description>COM_HWDMIGRATOR_DESCRIPTION</description>
-
+        <!-- Installation script -->
 	<scriptfile>script.php</scriptfile>
-
+        <!-- SQL files -->
 	<install> 
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
@@ -30,19 +27,19 @@
 			<schemapath type="mysql">sql/updates/mysql</schemapath>
 		</schemas>
 	</update>
-
+        <!-- Site files -->
 	<files folder="site">
                 <filename>hwdmigrator.php</filename>
                 <filename>index.html</filename>
 	</files>
-
-	<media destination="com_hwdmigrator" folder="media">
-		<filename>index.html</filename>
-		<folder>assets</folder>
-	</media>
-
+        <!-- Site language files -->
+	<languages folder="site">
+		<language tag="en-GB">language/en-GB.com_hwdmigrator.ini</language>
+	</languages>
+        <!-- Administrator -->        
 	<administration>
-		<menu img="../media/com_hwdmigrator/assets/images/icons/16/hwdmigrator.png">COM_HWDMIGRATOR_MENU</menu>
+                <!-- Administrator menu -->
+		<menu>COM_HWDMIGRATOR_MENU</menu>
 		<files folder="admin">
 			<filename>access.xml</filename>
                         <filename>config.xml</filename>
@@ -56,13 +53,16 @@
 			<folder>tables</folder>
 			<folder>views</folder>	
 		</files>
-
+                <!-- Administrator language files -->                
 		<languages folder="admin">
 			<language tag="en-GB">language/en-GB.com_hwdmigrator.ini</language>
 			<language tag="en-GB">language/en-GB.com_hwdmigrator.sys.ini</language>
 		</languages>
-                
-	</administration>
-
+        </administration>
+        <!-- Media files -->
+	<media destination="com_hwdmigrator" folder="media">
+		<filename>index.html</filename>
+		<folder>assets</folder>
+	</media>        
 </extension>
 

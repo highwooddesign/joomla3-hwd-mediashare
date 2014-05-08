@@ -15,7 +15,7 @@ JHtml::_('behavior.tooltip');
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmigrator'); ?>" method="post" name="adminForm" id="adminForm">
-        <table class="adminlist">
+        <table class="table table-striped table-hover">
                 <thead>
                         <tr>
                                 <th>
@@ -27,7 +27,7 @@ JHtml::_('behavior.tooltip');
                                 <th width="10%">
                                         <?php echo JText::_( 'COM_HWDMIGRATOR_PROGRESS' ); ?>
                                 </th>
-                                <th width="5%">
+                                <th width="8%">
                                         <?php echo JText::_( 'COM_HWDMIGRATOR_STATUS' ); ?>
                                 </th>
                         </tr>
