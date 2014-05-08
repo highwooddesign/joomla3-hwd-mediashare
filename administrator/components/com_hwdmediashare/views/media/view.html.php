@@ -92,7 +92,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
                         JToolBarHelper::deleteList('', 'media.delete', 'JTOOLBAR_EMPTY_TRASH');
                         JToolBarHelper::divider();
                 }
-		else if ($canDo->get('core.edit.state'))
+		elseif ($canDo->get('core.edit.state'))
                 {
 			JToolBarHelper::divider();
                         JToolBarHelper::trash('media.trash');
