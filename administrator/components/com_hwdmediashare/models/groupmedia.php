@@ -75,9 +75,14 @@ class hwdMediaShareModelGroupMedia extends JModelList
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
+		// Load the parameters (required as this model is extended in the frontend).
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                $this->setState('params', $config);
+                            
                 // Initialise variables.
                 $app = JFactory::getApplication();
-               
+                
                 $this->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
                 $this->setState('filter.group_id', $app->input->get('group_id', '', 'int'));
 
