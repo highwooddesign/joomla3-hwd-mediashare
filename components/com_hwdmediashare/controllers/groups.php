@@ -129,7 +129,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Like/dislike the group.
 			if ($model->like($cid, $value))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_LIKED'));
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_'.strtoupper($task).'D'));
 			}
 			else
 			{
@@ -150,6 +150,10 @@ class hwdMediaShareControllerGroups extends JControllerForm
 		// Check for request forgeries
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
 		// Get items to report from the request.
 		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
 
@@ -165,16 +169,13 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Report the group.
 			if ($model->report($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_GROUP_REPORTED'));
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_GROUP_REPORTED', 'COM_HWDMS_NOTICE_GROUP_REPORTED_DESC'); 
 			}
 			else
 			{
-				$this->setMessage($model->getError());
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_GROUP_REPORT_FAILED', $model->getError()); 
 			}
 		}
-                
-                $return = base64_decode($this->input->get('return', null, 'base64'));
-		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	} 
 
 	/**
@@ -205,7 +206,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Join the group.
 			if ($model->join($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_JOINED_GROUP'));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_GROUPS_JOINED', count($cid)));
 			}
 			else
 			{
@@ -245,7 +246,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Leave the group.
 			if ($model->leave($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_LEFT_GROUP'));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_GROUPS_LEFT', count($cid)));
 			}
 			else
 			{
