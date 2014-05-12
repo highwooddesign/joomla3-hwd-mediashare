@@ -12,6 +12,12 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerReport extends JControllerAdmin
 {
+	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+            
         /**
 	 * Proxy for getModel.
 	 * @return	void
