@@ -88,7 +88,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			// Publish/unpublish the users.
 			if ($model->publish($cid, $value))
 			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
+                                switch ($task) {
+                                    case 'delete':
+                                        $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+                                        break;
+                                    default:
+                                        $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
+                                }
 			}
 			else
 			{
