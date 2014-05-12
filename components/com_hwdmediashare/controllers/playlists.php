@@ -129,7 +129,7 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 			// Like/dislike the playlist.
 			if ($model->like($cid, $value))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_LIKED'));
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_'.strtoupper($task).'D'));
 			}
 			else
 			{
@@ -150,6 +150,10 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 		// Check for request forgeries
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+
 		// Get items to report from the request.
 		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
 
@@ -165,15 +169,12 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 			// Report the playlist.
 			if ($model->report($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_PLAYLIST_REPORTED', 'COM_HWDMS_NOTICE_PLAYLIST_REPORTED_DESC'); 
 			}
 			else
 			{
-				$this->setMessage($model->getError());
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_PLAYLIST_REPORT_FAILED', $model->getError()); 
 			}
 		}
-                
-                $return = base64_decode($this->input->get('return', null, 'base64'));
-		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}          
 }
