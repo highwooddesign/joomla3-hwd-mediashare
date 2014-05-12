@@ -75,7 +75,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 			// Approve the items.
 			if ($model->searchable($cid, $value))
 			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task), count($cid)));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_FIELDS_'.strtoupper($task), count($cid)));
 			}
 			else
 			{
@@ -119,7 +119,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 			// Approve the items.
 			if ($model->visible($cid, $value))
 			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task), count($cid)));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_FIELDS_'.strtoupper($task), count($cid)));
 			}
 			else
 			{
@@ -163,7 +163,7 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 			// Approve the items.
 			if ($model->required($cid, $value))
 			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task), count($cid)));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_FIELDS_'.strtoupper($task), count($cid)));
 			}
 			else
 			{
