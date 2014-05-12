@@ -13,6 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 {
 	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+        
+	/**
 	 * The URL view list variable.
 	 * @var    string
 	 */
