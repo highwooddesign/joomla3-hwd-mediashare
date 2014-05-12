@@ -12,6 +12,12 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 {
+    	/**
+	 * The prefix to use with controller messages.
+	 * @var    string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+        
 	/**
 	 * The URL view list variable.
 	 * @var    string
@@ -99,7 +105,7 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 			// Approve the items.
 			if ($model->link($cid, $groupId))
 			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_LINKED_FROM_GROUP', count($cid)));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_LINKED_TO_GROUP', count($cid)));
 			}
 			else
 			{
