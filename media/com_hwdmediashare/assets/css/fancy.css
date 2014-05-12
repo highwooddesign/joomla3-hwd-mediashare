@@ -5,26 +5,27 @@
 .swiff-uploader-box a {
 	display: none !important;
 }
-
-/* .hover simulates the flash interactions */
+/* Class .hover simulates the flash interactions */
 a:hover, a.hover {
-	color: red;
+	color: #ffffff;
 }
-
 #hwd-upload-status {
 	/* padding: 10px 15px; */
 }
-
 #hwd-upload-status p {
 	padding: 0;
 	margin: 0 0 10px 0;
 }
-
+#hwd-upload-status .current-text {
+	padding: 0;
+	margin: 10px 0 10px 0;
+}
 #hwd-upload-status .progress {
 	background: url(../images/ajaxupload/progress-bar/progress.gif) no-repeat;
 	background-position: +50% 0;
 	margin-right: 0.5em;
 	vertical-align: middle;
+        margin-bottom: 0;
 }
 #hwd-upload-status .overall-title,
 #hwd-upload-status .current-title {
@@ -37,21 +38,12 @@ a:hover, a.hover {
 	font-size: 0.9em;
 	font-weight: bold;
 }
-
+/* File list */
 #hwd-upload-list {
 	list-style: none;
-	/*width: 450px;*/
-	padding: 10px 15px;
+	padding: 0;
         margin: 0;
         clear:both;
-}
-
-#hwd-upload-list li.class {
-	list-style: none;
-	/*width: 450px;*/
-	padding: 10px 15px;
-        margin: 0;
-        border: 1px solid #ccc;
 }
 #hwd-upload-list li.validation-error {
 	padding-left: 44px;
@@ -64,24 +56,28 @@ a:hover, a.hover {
 	background: #fbe3e4 url(../images/ajaxupload/failed.png) no-repeat 4px 4px;
 }
 #hwd-upload-list li.file {
-	border-bottom: 1px solid #eee;
-	background: url(../images/ajaxupload/file.png) no-repeat 4px 4px;
+
 	overflow: auto;
+        margin: 10px 0;
+        padding: 20px;
+        border-left: 3px solid #eee;
+        background-color: #f4f8fa;
+        border-color: #bce8f1;      
 }
 #hwd-upload-list li.file.file-uploading {
-	background-image: url(../images/ajaxupload/uploading.png);
-	background-color: #DDF4FB;
+        background-color: #faf8f0;
+        border-color: #faebcc;
 }
 #hwd-upload-list li.file.file-success {
-	background-image: url(../images/ajaxupload/success.png);
+        background-color: #D6E9C6;
+        border-color: #468847;
 }
 #hwd-upload-list li.file.file-failed {
-	background-image: url(../images/ajaxupload/failed.png);
+        background-color: #fdf7f7;
+        border-color: #eed3d7;
 }
-
 #hwd-upload-list li.file .file-name {
 	font-size: 1.2em;
-	margin-left: 44px;
 	display: block;
 	clear: left;
 	line-height: 40px;
@@ -97,10 +93,9 @@ a:hover, a.hover {
 }
 #hwd-upload-list li.file .file-info {
 	display: block;
-	margin-left: 44px;
 	font-size: 0.9em;
 	line-height: 20px;
-	clear
+	font-weight: normal;        
 }
 #hwd-upload-list li.file .file-remove {
 	clear: right;
