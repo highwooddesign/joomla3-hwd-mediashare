@@ -2,16 +2,27 @@
 /* CSS Document © Copyright 2011, All rights reserved
    This sheet loads FancyUpload2 styles */
 /**********************************************************************************************/
-@import url("ajax.css");
+@import url("hwd.css");
+.ajax-loading {
+    background:transparent url(../images/ajax-loader.gif) center center no-repeat;
+    width:16px;
+    height:11px;
+}
 /* The directory import iframe */
 #folderframe { 
-	border: 0;
+	border:0;
         margin-left:20px;
 }
 /* The thumbnail wrapper for floats */
-.thumb-wrapper { 
-        margin-bottom: 5px;
-        margin-left: 0;
-        margin-right: 5px;
-        margin-top: 0;
+.pull-right.thumb-wrapper {
+        margin-bottom:0;
+        margin-left:5px;
+        margin-right:0;
+        margin-top:0;
+}
+.pull-left.thumb-wrapper {
+        margin-bottom:0;
+        margin-left:0;
+        margin-right:5px;
+        margin-top:0;
 }
