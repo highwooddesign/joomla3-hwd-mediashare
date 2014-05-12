@@ -129,7 +129,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			// Like/dislike the user.
 			if ($model->like($cid, $value))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_LIKED'));
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_USER_'.strtoupper($task).'D'));
 			}
 			else
 			{
@@ -150,6 +150,10 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 		// Check for request forgeries
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
 		// Get items to report from the request.
 		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
 
@@ -165,16 +169,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			// Report the user.
 			if ($model->report($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_USER_REPORTED', 'COM_HWDMS_NOTICE_USER_REPORTED_DESC'); 
 			}
 			else
 			{
-				$this->setMessage($model->getError());
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_USER_REPORT_FAILED', $model->getError()); 
 			}
 		}
-                
-                $return = base64_decode($this->input->get('return', null, 'base64'));
-		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
 
 	/**
@@ -207,7 +208,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			// Subscribe to the user.
 			if ($model->subscribe($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_SUBSCRIBED', count($cid)));
 			}
 			else
 			{
@@ -242,14 +243,14 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
                         $model = hwdMediaShareSubscriptions::getInstance();                     
                         $model->elementType = 5;
 
-			// Make sure the item ids are integers
+                        // Make sure the item ids are integers
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Subscribe to the user.
+			// Unsubscribe from the user.
 			if ($model->unsubscribe($cid))
 			{
-				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_PLAYLIST_REPORTED'));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_UNSUBSCRIBED', count($cid)));
 			}
 			else
 			{
