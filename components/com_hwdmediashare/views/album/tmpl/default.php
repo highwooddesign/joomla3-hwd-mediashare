@@ -34,6 +34,15 @@ $canAddMedia = (($user->authorise('hwdmediashare.upload','com_hwdmediashare') ||
         <?php if ($canAddMedia): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&album_id='.(int)$this->album->id.'&return=' . $this->return); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
+        <?php if ($this->album->featured) : ?>
+          <div class="btn btn-info"><i class="icon-star"></i> <?php echo JText::_('COM_HWDMS_FEATURED'); ?></div>
+        <?php endif; ?>
+        <?php if ($this->album->status != 1) : ?>
+          <div class="btn btn-danger"><i class="icon-notification"></i> <?php echo $this->utilities->getReadableStatus($this->album); ?></div>
+        <?php endif; ?>   
+        <?php if ($this->album->published != 1) : ?>
+          <div class="btn btn-danger"><i class="icon-unpublish"></i> <?php echo JText::_('COM_HWDMS_UNPUBLISHED'); ?></div>
+        <?php endif; ?> 
         <?php if ($this->params->get('item_meta_report') != 'hide' && $this->album->created_user_id != $user->id): ?>                  
           <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albumform.report&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-form"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>    
