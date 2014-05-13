@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -30,10 +30,9 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 	function display($tpl = null)
 	{
                 // Get data from the model.
-                // Playlist is called afterwards so we have data from the items.                        
+                $this->playlist = $this->get('Playlist');
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
-                $this->playlist = $this->get('Playlist');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
@@ -47,6 +46,7 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
                 
+                $this->playlist->nummedia = $this->get('numMedia');
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
@@ -82,6 +82,7 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
+                JHtml::_('bootstrap.framework');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
                 if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
@@ -182,4 +183,17 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 			$this->document->setMetadata('author', $this->playlist->author);
                 }
         }
+
+	/**
+	 * Prepares the category list
+	 *
+	 * @return  void
+	 */
+	public function getCategories($item)
+	{            
+                hwdMediaShareFactory::load('category');
+                $cat = hwdMediaShareCategory::getInstance();
+                $cat->elementType = 1;
+                return $cat->getCategories($item);
+	}
 }
