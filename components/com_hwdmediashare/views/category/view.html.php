@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -34,11 +34,10 @@ class hwdMediaShareViewCategory extends JViewLegacy
 	function display($tpl = null)
 	{
                 // Get data from the model.
-                // Category is called afterwards so we have data from the items.            
+                $this->category = $this->get('Category');
                 $this->subcategories = $this->get('Subcategories');
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
-                $this->category = $this->get('Category');
                 $this->feature = $this->get('Feature');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
@@ -53,6 +52,7 @@ class hwdMediaShareViewCategory extends JViewLegacy
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
                 
+                $this->category->nummedia = $this->get('numMedia');
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
