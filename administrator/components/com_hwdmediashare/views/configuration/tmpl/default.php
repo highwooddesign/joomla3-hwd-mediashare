@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
+JHtml::_('behavior.tabstate');
 JHtml::_('dropdown.init');
 JHtml::_('formbehavior.chosen', 'select');
 
