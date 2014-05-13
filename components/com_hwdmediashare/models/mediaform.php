@@ -1,81 +1,62 @@
 <?php
 /**
- * @version    SVN $Id: mediaform.php 829 2012-12-21 16:45:44Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      26-Nov-2011 12:02:10
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 // Base this model on the backend version.
 require_once JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/editmedia.php';
 
-// Import Joomla modelitem library
-jimport('joomla.application.component.modelform');
-
-/**
- * hwdMediaShare Model
- */
 class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 {
 	/**
-	 * An item.
-	 *
-	 * @var    array
-	 * @since  11.1
-	 */
-	protected $item = null;
-
-	/**
-	 * An item.
-	 *
-	 * @var    array
-	 * @deprecated use $item declare as private
-	 */
-	protected $_item = null;
-        
-        /**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 *
+	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
+		// Initialise variables.
 		$app = JFactory::getApplication();
-
-		// Load state from the request.
-		$id = JRequest::getInt('id');
-		$this->setState('media.id', $id);
-
-		$return = JRequest::getVar('return', null, 'default', 'base64');
-		$this->setState('return_page', base64_decode($return));
-
+                $user = JFactory::getUser();
+                
 		// Load the parameters.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
 
-		parent::populateState();
+		// Load state from the request.
+		$id = $app->input->getInt('id');
+		$this->setState('media.id', $id);
+
+		$return = $app->input->get('return', null, 'base64');
+		$this->setState('return_page', base64_decode($return));
+
+		$this->setState('layout', $app->input->getString('layout'));                
+
+		parent::populateState();               
 	}
 
 	/**
-	 * Method to get article data.
+	 * Method to get a single record.
 	 *
-	 * @param	integer	The id of the article.
-	 *
-	 * @return	mixed	Content item data object on success, false on failure.
+	 * @param   integer  $itemId  The id of the primary key.
+         * 
+	 * @return  mixed    Object on success, false on failure.
 	 */
 	public function getItem($itemId = null)
-	{   
-                // Because this isn't a extending JModelList we must manually call populate state
-                $this->populatestate();
-                
+	{
 		// Initialise variables.
 		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('media.id');
 
@@ -86,7 +67,8 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 		$return = $table->load($itemId);
 
 		// Check for a table object error.
-		if ($return === false && $table->getError()) {
+		if ($return === false && $table->getError())
+                {
 			$this->setError($table->getError());
 			return false;
 		}
@@ -94,15 +76,8 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 		$properties = $table->getProperties(1);
 		$value = JArrayHelper::toObject($properties, 'JObject');
 
-                hwdMediaShareFactory::load('category');
-                $value->catid = hwdMediaShareCategory::getInput($value);
-                hwdMediaShareFactory::load('tags');
-                $value->tags = hwdMediaShareTags::getInput($value);
-                hwdMediaShareFactory::load('customfields');
-                $value->customfields = hwdMediaShareCustomFields::get($value);
-                $value->customthumbnail = $this->getThumbnail($value);
-
-		// Convert params field to array, so it will bind correctly to form
+		// Convert params field to array. We don't convert to registry to avoid 
+                // SimpleXMLElement warnings when binding the data to the form
 		if (property_exists($value, 'params'))
 		{
 			$registry = new JRegistry;
@@ -110,39 +85,62 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 			$value->params = $registry->toArray();
 		}
                 
-                // Create controls Registry
-		$value->controls = new JRegistry;
-                
+		// Define access registry.
+ 		$value->attributes = new JRegistry;
+
 		// Compute selected asset permissions.
 		$user	= JFactory::getUser();
 		$userId	= $user->get('id');
-		$asset	= 'com_hwdmediashare.media.'.$value->id;
+		$asset	= 'com_hwdmediashare.media.' . $value->id;
 
 		// Check general edit permission first.
-		if ($user->authorise('core.edit', $asset)) 
-                {
-			$value->controls->set('access-edit', true);
+		if ($user->authorise('core.edit', $asset))
+		{
+			$value->attributes->set('access-edit', true);
 		}
+
 		// Now check if edit.own is available.
-		else if (!empty($userId) && $user->authorise('core.edit.own', $asset)) 
-                {
+		elseif (!empty($userId) && $user->authorise('core.edit.own', $asset))
+		{
 			// Check for a valid user and that they are the owner.
 			if ($userId == $value->created_user_id)
-                        {
-				$value->controls->set('access-edit', true);
+			{
+				$value->attributes->set('access-edit', true);
 			}
 		}
 
 		// Check edit state permission.
 		if ($itemId)
-                {
+		{
 			// Existing item
-			$value->controls->set('access-change', $user->authorise('core.edit.state', $asset));
+			$value->attributes->set('access-change', $user->authorise('core.edit.state', $asset));
 		}
-		else 
-                {
-                        // New item    
-			$value->controls->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
+		else
+		{
+			// New item.
+			$value->attributes->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
+		}
+
+		if ($itemId)
+		{
+                        // Add the tags.
+                        $value->tags = new JHelperTags;
+                        $value->tags->getTagIds($value->id, 'com_hwdmediashare.media');
+
+                        // Add the custom fields.
+                        hwdMediaShareFactory::load('customfields');
+                        $cf = hwdMediaShareCustomFields::getInstance();
+                        $cf->elementType = 1;
+                        $value->customfields = $cf->get($value);
+                        
+                        // Add thumbnail.
+                        $value->customthumbnail = $this->getThumbnail($value);
+                        
+                        // Add categories.
+                        hwdMediaShareFactory::load('category');
+                        $HWDcategories = hwdMediaShareCategory::getInstance();
+                        $HWDcategories->elementType = 1;
+                        $value->catid = $HWDcategories->getInput($value);                           
 		}
 
 		return $value;
@@ -151,134 +149,105 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 	/**
 	 * Get the return URL.
 	 *
-	 * @return	string	The return URL.
-	 * @since	0.1
+	 * @return  string  The return URL.
 	 */
 	public function getReturnPage()
 	{
 		return base64_encode($this->getState('return_page'));
 	}
-
-        /**
-	 * Get the return URL.
+        
+	/**
+	 * Method for getting the report form.
 	 *
-	 * @return	string	The return URL.
-	 * @since	0.1
+	 * @return  mixed  A JForm object on success, false on failure
 	 */
-	public function save($data)
+	public function getReportForm()
 	{
-                $form = parent::save($data);
-		if ($form) 
-                {                        
-                        return true;
-		}            
-                return false;
-	}
-       
-        /**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
-	 */
-	public function getReportForm($data = array(), $loadData = true)
-	{
-                $form = & JForm::getInstance('report', JPATH_SITE.'/components/com_hwdmediashare/models/forms/report.xml');
+		// Get the form.
+		$form = JForm::getInstance('report', JPATH_SITE.'/components/com_hwdmediashare/models/forms/report.xml');
 
-                if (empty($form))
+		if (empty($form))
 		{
-			$this->setError(JText::_('COM_HWDMS_ERROR_FAILED_TO_LOAD_FORM'));
-                        return false;
+			return false;
 		}
-		return $form;
-	}
 
-        /**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
-	 */
-	public function getShareForm($data = array(), $loadData = true)
-	{
-                $form = & JForm::getInstance('share', JPATH_SITE.'/components/com_hwdmediashare/models/forms/share.xml');
-
-                if (empty($form))
-		{
-			$this->setError(JText::_('COM_HWDMS_ERROR_FAILED_TO_LOAD_FORM'));
-                        return false;
-		}
 		return $form;
 	}
         
-        /**
-	 * Method to get the record form.
+	/**
+	 * Method for getting the sharing form.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * @return  mixed  A JForm object on success, false on failure
+	 */
+	public function getShareForm()
+	{
+		// Get the form.
+                $form = JForm::getInstance('share', JPATH_SITE.'/components/com_hwdmediashare/models/forms/share.xml');
+
+		if (empty($form))
+		{
+			return false;
+		}
+
+		return $form;
+	}
+        
+	/**
+	 * Method for getting the linking form.
+	 *
+	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getLinkForm($data = array(), $loadData = true)
 	{
-		// Load state from the request.
-		$id = JRequest::getInt('id');
-		$this->setState('media.id', $id);
+		// Get the form.
+                $form = JForm::getInstance('share', JPATH_SITE.'/components/com_hwdmediashare/models/forms/link.xml');
 
-		// Get form.
-                $form = & JForm::getInstance('link', JPATH_SITE.'/components/com_hwdmediashare/models/forms/link.xml');
-
-                if (empty($form))
+		if (empty($form))
 		{
-			$this->setError(JText::_('COM_HWDMS_ERROR_FAILED_TO_LOAD_FORM'));
-                        return false;
+			return false;
 		}
+
 		return $form;
 	}
         
-        /**
-	 * Method to get the record form.
+	/**
+	 * Method for getting the meta data associated with a media item.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * @return void
 	 */
-	public function getMeta($data = array(), $loadData = true)
+	public function getMeta()
 	{
-                $id = JRequest::getInt( 'id' );
+		// Initialise variables.
+		$app = JFactory::getApplication();
                 
-                // Load album
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $id );
+                $this->populateState();
 
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
+                $item = $this->getItem();
 
                 hwdMediaShareFactory::load('media');
-                $meta = hwdMediaShareMedia::getMeta($item);
+                $HWDmedia = hwdMediaShareMedia::getInstance();
+                $meta = $HWDmedia->getMeta($item);
 
                 return $meta;
 	}  
                 
-        /**
-	 * Method to get the record form.
+	/**
+	 * Method for getting the media files associated with a media item.
 	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * @return void
 	 */
-	public function getDownloads($data = array(), $loadData = true)
+	public function getDownloads()
 	{
+		// Initialise variables.
+		$app = JFactory::getApplication();
+                
+                $this->populateState();
+
+                $item = $this->getItem();
+
                 hwdMediaShareFactory::load('files');
-                $hwdmsFiles = hwdMediaShareFiles::getInstance();
-                $files = $hwdmsFiles->getMediaFiles($this->getItem(JRequest::getInt('id')));
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+                $files = $HWDfiles->getMediaFiles($item);
 
                 return $files;
 	}        
