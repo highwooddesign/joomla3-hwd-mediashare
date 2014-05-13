@@ -1,45 +1,22 @@
 <?php
 /**
- * @version    $Id: comments_facebook.php 538 2012-10-03 10:22:59Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import hwdMediaShare remote library
-hwdMediaShareFactory::load('remote');
-
-/**
- * hwdMediaShare framework files class
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.comments_disqus
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-class plgHwdmediashareComments_facebook
+
+defined('_JEXEC') or die;
+
+class plgHwdmediashareComments_facebook extends JObject
 {               
-        /**
-	 * Constructor
-	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
-	 */
-	public function __construct()
-	{
-	}
-        
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareComments_facebook object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @return plgHwdmediashareComments_facebook object.
 	 */
 	public static function getInstance()
 	{
@@ -55,31 +32,37 @@ class plgHwdmediashareComments_facebook
 	}
     
         /**
-	 * Method to add a file to the database
+	 * Method to insert the Facebook commenting system.
          * 
-	 * @since   0.1
+	 * @return  void
 	 **/
 	public function getComments()
 	{
-                // Load hwdMediaShare config
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
+                
+                // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                $plugin =& JPluginHelper::getPlugin('hwdmediashare', 'comments_facebook');
-                
-                // Die if plugin not avaliable
-                if (isset($plugin->params)) 
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'comments_facebook');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_comments_facebook', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
                 {
-                        $params = new JRegistry( $plugin->params );
-                }
-                else
-                {
-                        $params = new JRegistry();
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_ERROR_NOT_PUBLISHED'));
+                        return false;
                 }
 
-                jimport( 'joomla.environment.uri' );
-                
-                $doc = & JFactory::getDocument();
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Set Facebook AppID value to allow moderation of comments
                 $doc->setMetaData("fb:app_id", $config->get('facebook_appid'));
                 
                 ob_start();
