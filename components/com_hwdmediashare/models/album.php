@@ -103,22 +103,23 @@ class hwdMediaShareModelAlbum extends JModelList
                                 $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNPUBLISHED'));
                                 return false;
                         }
-                        else if (is_int($published) && $table->published != $published) 
+                        elseif (is_int($published) && $table->published != $published) 
                         {
                                 $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNPUBLISHED'));
                                 return false;
                         }
                 }
          
-                // Check approval status and access permissions.
+                // Check approval status and access permissions, but allow users to see own unapproved items.
+                $user = JFactory::getUser();
                 if ($status = $this->getState('filter.status'))
                 {
-                        if (is_array($status) && !in_array($table->status, $status)) 
+                        if (is_array($status) && !in_array($table->status, $status) && $table->created_user_id != $user->id) 
                         {
                                 $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
                                 return false;
                         }
-                        else if (is_int($status) && $table->status != $status) 
+                        elseif (is_int($status) && $table->status != $status && $table->created_user_id != $user->id) 
                         {
                                 $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
                                 return false;
@@ -126,7 +127,6 @@ class hwdMediaShareModelAlbum extends JModelList
                 }
 
                 // Check group access level and access permissions.
-                $user = JFactory::getUser();
                 $groups = $user->getAuthorisedViewLevels();
                 if (!in_array($table->access, $groups)) 
                 {                                    
