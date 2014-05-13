@@ -44,13 +44,21 @@ class hwdMediaShareViewAccount extends JViewLegacy
 	 * @return  void
 	 */
 	function display($tpl = null)
-	{
+	{                
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                $user = JFactory::getUser();                
                 $this->layout = $app->input->get('layout', 'media', 'word');
 
+                // Account access check. 
+                if (!$user->id)
+                {
+                        $return = base64_encode(JFactory::getURI()->toString());
+                        $app->enqueueMessage(JText::_('COM_HWDMS_PLEASE_LOGIN_TO_VIEW_YOUR_ACCOUNT'));
+                        $app->getApplication()->redirect('index.php?option=com_users&view=login&return='.$return);
+                }
+                
                 // Get data from the model.
-                // User is called afterwards so we have data from the items.
                 $this->albums = $this->get('Albums');
                 $this->favourites = $this->get('Favourites');
                 $this->groups = $this->get('Groups');
@@ -268,28 +276,5 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 $cat = hwdMediaShareCategory::getInstance();
                 $cat->elementType = 1;
                 return $cat->getCategories($item);
-	}    
-
-	/**
-	 * Get a human readable status
-	 *
-	 * @return  void
-	 */
-	public function getStatus($item)
-	{
-                switch ($item->status) {
-                    case 0:
-                        return JText::_('COM_HWDMS_UNAPPROVED');
-                        break;
-                    case 1:
-                        return JText::_('COM_HWDMS_APPROVED');
-                        break;
-                    case 2:
-                        return JText::_('COM_HWDMS_PENDING');
-                        break;
-                    case 3:
-                        return JText::_('COM_HWDMS_REPORTED');
-                        break;
-                }
-	}          
+	}        
 }
