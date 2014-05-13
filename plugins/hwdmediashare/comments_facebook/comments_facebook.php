@@ -36,7 +36,7 @@ class plgHwdmediashareComments_facebook extends JObject
          * 
 	 * @return  void
 	 **/
-	public function getComments()
+	public function getComments($item, $elementType=1)
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
