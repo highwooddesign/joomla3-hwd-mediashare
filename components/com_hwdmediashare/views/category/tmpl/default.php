@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
-JHtml::_('HwdPopup.page');
+JHtml::_('HwdPopup.form');
 
 $user = JFactory::getUser();
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.category.'.$this->category->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.category.'.$this->category->id) && ($this->category->created_user_id == $user->id)));
@@ -35,7 +35,7 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
           <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&category_id='.(int)$this->category->id); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
         <?php if ($this->params->get('item_meta_report') != 'hide' && $this->category->created_user_id != $user->id): ?>                  
-          <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-page"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
+          <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-form"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>    
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
@@ -94,7 +94,7 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
           <dd class="media-info-hits"><?php echo JText::_('COM_HWDMS_VIEWS'); ?> (<?php echo (int) $this->category->hits; ?>)</dd>
         <?php endif; ?>
         <?php if ($this->params->get('item_meta_report') != 'hide') :?>
-          <dd class="media-info-report"><a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="media-popup-page"><?php echo JText::_('COM_HWDMS_REPORT'); ?> </a> </dd>
+          <dd class="media-info-report"><a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="media-popup-form"><?php echo JText::_('COM_HWDMS_REPORT'); ?> </a> </dd>
         <?php endif; ?>           
       </dl>
       <?php endif; ?>
