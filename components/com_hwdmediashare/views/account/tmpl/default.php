@@ -68,7 +68,7 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
       <?php echo JLayoutHelper::render('search_tools', array('view' => $this), JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
       <div class="clear"></div>
     </div>
-    <div class="media-details-view">
+    <div class="media-list-view">
         <?php echo JLayoutHelper::render($this->layout . '_manage', $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
     </div>    
     <!-- Pagination -->
