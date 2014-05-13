@@ -524,7 +524,7 @@ class hwdMediaShareModelGroup extends JModelList
 	 * Method to report an object
 	 * @return  void
 	 */
-	public function join()
+	public function join($pks)
 	{
 		// Initialiase variables.
                 $user = JFactory::getUser();
