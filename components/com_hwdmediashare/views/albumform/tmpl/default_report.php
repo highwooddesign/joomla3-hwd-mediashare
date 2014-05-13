@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.framework', true);
 ?>
 <div class="edit">
-  <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare'); ?>" method="post" id="adminForm" class="formelm">
+  <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&tmpl=component&id=' . $this->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
     <fieldset>
       <legend><?php echo JText::_('COM_HWDMS_REPORT_ALBUM'); ?></legend>
       <?php foreach($this->form->getFieldset('details') as $field): ?>
@@ -31,9 +31,7 @@ JHtml::_('behavior.framework', true);
       <button onclick="Joomla.submitbutton('albums.report')" type="button" class="btn"><?php echo JText::_('COM_HWDMS_REPORT'); ?></button>
     </div>
     <div>
-      <input type="hidden" name="tmpl" value="component" />
-      <input type="hidden" name="id" value="<?php echo $this->id; ?>" />
-      <input type="hidden" name="task" value="albums.report" />
-      <?php echo JHtml::_('form.token'); ?> </div>
+    <input type="hidden" name="task" value="" />
+    <?php echo JHtml::_('form.token'); ?> </div>
   </form>
 </div>
