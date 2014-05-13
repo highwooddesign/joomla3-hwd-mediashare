@@ -1,45 +1,22 @@
 <?php
 /**
- * @version    $Id: comments_jcomments.php 884 2013-01-07 12:00:29Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import hwdMediaShare remote library
-hwdMediaShareFactory::load('remote');
-
-/**
- * hwdMediaShare framework files class
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.comments_disqus
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-class plgHwdmediashareComments_jcomments
+
+defined('_JEXEC') or die;
+
+class plgHwdmediashareComments_jcomments extends JObject
 {               
-        /**
-	 * Constructor
-	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
-	 */
-	public function __construct()
-	{
-	}
-        
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareComments_jcomments object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @return plgHwdmediashareComments_jcomments object.
 	 */
 	public static function getInstance()
 	{
@@ -55,68 +32,58 @@ class plgHwdmediashareComments_jcomments
 	}
     
         /**
-	 * Method to add a file to the database
+	 * Method to insert the jComments commenting system.
          * 
-	 * @since   0.1
+	 * @return  void
 	 **/
-	public function getComments()
+	public function getComments($item, $elementType=1)
 	{
-                // Load hwdMediaShare config
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
+                
+                // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                $extension = JRequest::getCmd( 'option' );
-                $view = JRequest::getCmd( 'view' );
-                
-                // Check we are viewing a media item
-                if (!($extension == "com_hwdmediashare" && $view == "mediaitem")) return false;
-                
-                $plugin =& JPluginHelper::getPlugin('hwdmediashare', 'comments_jcomments');
-                
-                // Die if plugin not avaliable
-                if (isset($plugin->params)) 
-                {
-                        $params = new JRegistry( $plugin->params );
-                }
-                else
-                {
-                        $params = new JRegistry();
-                }
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'comments_jcomments');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_comments_jcomments', JPATH_SITE . '/administrator');
 
-		// @task: Load jcomments
-                $comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
-
-                jimport('joomla.filesystem.file');
-
-                if( !JFile::exists( $comments ) )
+                if (!$plugin)
                 {
-                        // Missing jcomments
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_JCOMMENTS_ERROR_NOT_PUBLISHED'));
                         return false;
                 }
 
-                $comments = require_once( $comments );
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
 
-                // Get a row instance.
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                // Define request parameters.
+                $extension = $app->input->get('option', '', 'word');
+                $view = $app->input->get('view', '', 'word');
+                
+                // Check we are viewing a media item.
+                if ($extension != "com_hwdmediashare" && $view != "mediaitem")
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_JCOMMENTS_ERROR_NOT_VIEWING_MEDIA'));
+                        return false;
+                }
 
-                // Attempt to load the row.
-                if ($table->load(JRequest::getCmd( 'id' )))
+		// Load jComments
+                $comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
+                if(!JFile::exists($comments))
                 {
-                        // Convert the JTable to a clean JObject.
-                        $properties = $table->getProperties(1);
-                        $item = JArrayHelper::toObject($properties, 'JObject');
-                        
-                        // Ready to Commentify!                        
-                        return JComments::showComments($item->id, $extension, $item->title);
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_JCOMMENTS_ERROR_COMPONENT_NOT_INSTALLED'));
+                        return false;                    
                 }
-                else if ($error = $table->getError()) 
-                {
-                        //@TODO: Add suitable error handling
-                        //$this->setError($error);
-                        //jexit();
-                }
-                        
-                return false;          
+
+                require_once($comments);
+
+                // Ready to Commentify!                        
+                return JComments::showComments($item->id, $extension, $item->title);
         }   
 }
