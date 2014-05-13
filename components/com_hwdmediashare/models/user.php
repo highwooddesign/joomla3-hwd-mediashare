@@ -143,12 +143,12 @@ class hwdMediaShareModelUser extends JModelList
                 $user = JFactory::getUser();
                 if ($status = $this->getState('filter.status'))
                 {
-                        if (is_array($status) && !in_array($table->status, $status) && $table->created_user_id != $user->id) 
+                        if (is_array($status) && !in_array($table->status, $status) && $table->id != $user->id) 
                         {
                                 $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
                                 return false;
                         }
-                        elseif (is_int($status) && $table->status != $status && $table->created_user_id != $user->id) 
+                        elseif (is_int($status) && $table->status != $status && $table->id != $user->id) 
                         {
                                 $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_UNAPPROVED'));
                                 return false;
