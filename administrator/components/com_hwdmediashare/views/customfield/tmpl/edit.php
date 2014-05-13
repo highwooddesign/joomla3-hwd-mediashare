@@ -18,10 +18,11 @@ JHtml::_('behavior.framework', true);
 
 JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
-//@TODO: Get the parameter AJAX update working with the chosen framework
-//JHtml::_('formbehavior.chosen', 'select');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.modal');
+JHtml::_('behavior.tabstate');
+//@TODO: Get the parameter AJAX update working with the chosen framework
+//JHtml::_('formbehavior.chosen', 'select');
 
 $app = JFactory::getApplication();
 $input = $app->input;
