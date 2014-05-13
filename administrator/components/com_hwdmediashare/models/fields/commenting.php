@@ -46,21 +46,21 @@ class JFormFieldCommenting extends JFormFieldList
                         return false;                            
                 }
 
-                // Loop all plugins and check if a cdn plugin
+                // Loop all plugins and check if a commenting plugin
 		for($i = 0; $i < count($rows); $i++)
 		{
 			$row = $rows[$i];
 
                         if(substr($row->element, 0, 9) == 'comments_')
 			{
-                                // Load the plugin language file
+                                // Load the language file.
                                 $lang = JFactory::getLanguage();
-                                $lang->load($row->name, JPATH_SITE . '/administrator', $lang->getTag());
+                                $lang->load('plg_hwdmediashare_' . $row->element, JPATH_SITE . '/administrator');
 
-                                // Add option
+                                // Add option.
                                 if (file_exists(JPATH_ROOT.'/plugins/hwdmediashare/' . $row->element . '/' . $row->element . '.php'))
                                 {
-                                        $options[] = JHtml::_('select.option', $row->element, JText::_($row->name));  
+                                        $options[] = JHtml::_('select.option', $row->element, JText::_('PLG_HWDMEDIASHARE_' . strtoupper($row->element) . '_OPTION_NAME'));  
                                 }
 			}
 		}
