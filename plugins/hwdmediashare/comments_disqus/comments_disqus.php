@@ -1,45 +1,22 @@
 <?php
 /**
- * @version    $Id: comments_disqus.php 538 2012-10-03 10:22:59Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import hwdMediaShare remote library
-hwdMediaShareFactory::load('remote');
-
-/**
- * hwdMediaShare framework files class
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.comments_disqus
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-class plgHwdmediashareComments_disqus
+
+defined('_JEXEC') or die;
+
+class plgHwdmediashareComments_disqus extends JObject
 {               
-        /**
-	 * Constructor
-	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
-	 */
-	public function __construct()
-	{
-	}
-        
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareComments_disqus object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @return  plgHwdmediashareComments_disqus object.
 	 */
 	public static function getInstance()
 	{
@@ -55,20 +32,40 @@ class plgHwdmediashareComments_disqus
 	}
     
         /**
-	 * Method to add a file to the database
+	 * Method to insert the Disqus commenting system.
          * 
-	 * @since   0.1
+	 * @return  void
 	 **/
-	public function getComments()
+	public function getComments($item, $elementType=1)
 	{
-		$plugin =& JPluginHelper::getPlugin('hwdmediashare', 'comments_disqus');
-		$params = new JRegistry( $plugin->params );
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'comments_disqus');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_comments_disqus', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // If shortname not defined then return.
+		if ($params->get('shortname') == '')
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_ERROR_NO_SHORTNAME'));
+                        return false;
+                }                    
                 
-                // If shortname not defined then return
-		if ($params->get('shortname') == '') return; 
-                
-                // Set a unique identifier for this thread
-                $identifier = substr(md5($params->get('shortname')),0,10).'_hwdms_'.JRequest::getWord('view').JRequest::getInt('id');
+                // Set a unique identifier for this thread.
+                $identifier = substr(md5($params->get('shortname')), 0, 10) . '_hwdms_' . $app->input->get('view', '', 'word') . $app->input->get('id', '', 'integer');
 
                 ob_start();
                 ?>
