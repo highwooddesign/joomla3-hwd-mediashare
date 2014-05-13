@@ -16,7 +16,7 @@ class plgHwdmediashareComments_disqus extends JObject
 	 * Returns the plgHwdmediashareComments_disqus object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  plgHwdmediashareComments_disqus object.
+	 * @return plgHwdmediashareComments_disqus object.
 	 */
 	public static function getInstance()
 	{
