@@ -50,7 +50,7 @@ class plgHwdmediashareComments_disqus extends JObject
 
                 if (!$plugin)
                 {
-                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_ERROR_NOT_PUBLISHED'));
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_DISQUS_ERROR_NOT_PUBLISHED'));
                         return false;
                 }
 
@@ -60,7 +60,7 @@ class plgHwdmediashareComments_disqus extends JObject
                 // If shortname not defined then return.
 		if ($params->get('shortname') == '')
                 {
-                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_ERROR_NO_SHORTNAME'));
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_COMMENTS_DISQUS_ERROR_NO_SHORTNAME'));
                         return false;
                 }                    
                 
