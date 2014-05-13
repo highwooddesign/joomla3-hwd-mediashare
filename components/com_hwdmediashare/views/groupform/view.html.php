@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -57,7 +57,7 @@ class hwdMediaShareViewGroupForm extends JViewLegacy
 		}
 		else
 		{
-			$authorised = $this->item->access->get('access-edit');
+			$authorised = $this->item->attributes->get('access-edit');
 		}
 		if ($authorised !== true)
 		{
