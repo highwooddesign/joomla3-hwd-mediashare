@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -19,7 +19,7 @@ class hwdMediaShareModelUsers extends JModelList
 	public $context = 'com_hwdmediashare.users';
 
 	/**
-	 * Modal data
+	 * Model data
 	 * @var array
 	 */
 	protected $_items = null;
@@ -36,7 +36,7 @@ class hwdMediaShareModelUsers extends JModelList
 				'title', 'a.title',
 				'likes', 'a.likes',
 				'dislikes', 'a.dislikes',
-				'ordering', 'a.ordering', 'map.ordering',
+				'ordering', 'a.ordering', 'map.ordering', 'pmap.ordering',
 				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
                                 'created', 'a.created',
 				'modified', 'a.modified',
@@ -55,11 +55,12 @@ class hwdMediaShareModelUsers extends JModelList
 	 */
 	public function getItems()
 	{
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                        if (empty($items[$x]->title)) unset($items[$x]);
+		if ($items = parent::getItems())
+		{            
+                        for ($x = 0, $count = count($items); $x < $count; $x++)
+                        {
+                                if (empty($items[$x]->title)) unset($items[$x]);
+                        }
                 }
 
 		return $items;
@@ -105,7 +106,7 @@ class hwdMediaShareModelUsers extends JModelList
                 }
                 
                 // Restrict based on privacy access.
-                $query->where('(a.private = 0 OR (a.private = 1 && a.created_user_id = '.$user->id.'))');
+                $query->where('(a.private = 0 OR (a.private = 1 && a.id = '.$user->id.'))');
                 
                 // Join over the users.
 		$query->select('u.name, u.username, u.block, u.activation');
@@ -127,14 +128,23 @@ class hwdMediaShareModelUsers extends JModelList
                                 $query->where('a.published IN ('.$published.')');
 			}
 		}
-                else if (is_numeric($published))
+                elseif (is_numeric($published))
                 {
 			$query->where('a.published = '.(int) $published);
 		}
 
                 // Filter by status state.
 		$status = $this->getState('filter.status');
-		if (is_numeric($status))
+		if (is_array($status)) 
+                {
+			JArrayHelper::toInteger($status);
+			$status = implode(',', $status);
+			if ($status) 
+                        {
+                                $query->where('a.status IN ('.$status.')');
+			}
+		}
+                elseif (is_numeric($status))
                 {
 			$query->where('a.status = '.(int) $status);
 		}
@@ -174,64 +184,6 @@ class hwdMediaShareModelUsers extends JModelList
                                 $query->order($db->escape($listOrder.' '.$listDirn));
                         }                    
 		}    
-
-		// Filter by author
-		$authorId = $this->getState('filter.author_id');
-		$authorWhere = '';
-		if (is_numeric($authorId)) 
-                {
-			$type = $this->getState('filter.author_id.include', true) ? '= ' : '<> ';
-			$authorWhere = 'a.created_user_id '.$type.(int) $authorId;
-		}
-		elseif (is_array($authorId)) 
-                {
-			JArrayHelper::toInteger($authorId);
-			$authorId = implode(',', $authorId);
-
-			if ($authorId) {
-				$type = $this->getState('filter.author_id.include', true) ? 'IN' : 'NOT IN';
-				$authorWhere = 'a.created_user_id '.$type.' ('.$authorId.')';
-			}
-		}
-
-		// Filter by author alias
-		$authorAlias = $this->getState('filter.author_alias');
-		$authorAliasWhere = '';
-		if (is_string($authorAlias))
-                {
-			$type = $this->getState('filter.author_alias.include', true) ? '= ' : '<> ';
-			$authorAliasWhere = 'a.created_user_id_alias '.$type.$db->Quote($authorAlias);
-		}
-		elseif (is_array($authorAlias)) 
-                {
-			$first = current($authorAlias);
-
-			if (!empty($first)) {
-				JArrayHelper::toString($authorAlias);
-
-				foreach ($authorAlias as $key => $alias)
-				{
-					$authorAlias[$key] = $db->Quote($alias);
-				}
-
-				$authorAlias = implode(',', $authorAlias);
-
-				if ($authorAlias) {
-					$type = $this->getState('filter.author_alias.include', true) ? 'IN' : 'NOT IN';
-					$authorAliasWhere = 'a.created_user_id_alias '.$type.' ('.$authorAlias .')';
-				}
-			}
-		}
-		if (!empty($authorWhere) && !empty($authorAliasWhere)) {
-			$query->where('('.$authorWhere.' OR '.$authorAliasWhere.')');
-		}
-		elseif (empty($authorWhere) && empty($authorAliasWhere)) {
-			// If both are empty we don't want to add to the query
-		}
-		else {
-			// One of these is empty, the other is not so we just add both
-			$query->where($authorWhere.$authorAliasWhere);
-		}
 
 		// Filter by start and end dates.
 		$nullDate = $db->Quote($db->getNullDate());
@@ -327,7 +279,7 @@ class hwdMediaShareModelUsers extends JModelList
 	 *
 	 * @return  void
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	public function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -349,19 +301,27 @@ class hwdMediaShareModelUsers extends JModelList
 		}
                 else
                 {
-			// Limit to published for people who can't edit or edit.state.
+			// Allow access to unpublished and unapproved items.
 			$this->setState('filter.published',	array(0,1));
-			$this->setState('filter.status',	1);
+			$this->setState('filter.status',	array(0,1,2,3));
                 }
 
 		$this->setState('filter.language', $app->getLanguageFilter());
 
 		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.display_users', 'display', $config->get('list_default_display', 'details' ), 'word', false);
-                if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
-		$this->setState('media.display_users', $display);
+		$this->setState('media.display_users', 'details');
+
+                // Check for list inputs and set default values
+                $ordering = $config->get('list_order_channel', 'a.created DESC');
+                $orderingParts = explode(' ', $ordering); 
+                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                {
+                        $list['fullordering'] = $ordering;
+                        $list['limit'] = $config->get('list_limit', 6);
+                        $app->setUserState($this->context . '.list', $list);
+                }
 
 		// List state information.
-		parent::populateState('a.created', 'desc');
+		parent::populateState($orderingParts[0], $orderingParts[1]); 
 	}
 }
