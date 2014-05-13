@@ -140,7 +140,7 @@ class hwdMediaShareModelCategory extends JModelList
 
                         if ($this->_feature = $this->_model->getItem()) return $this->_feature; 
                 }
-                else if ($this->_category->params->get('feature') > 1)
+                elseif ($this->_category->params->get('feature') > 1)
                 {
                         $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
                         $this->_model->populateState();
