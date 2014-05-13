@@ -91,7 +91,6 @@ class hwdMediaShareModelCategories extends JModelList
 		// Initialise variables.
 		$app = JFactory::getApplication();
                 $user = JFactory::getUser();
-                $jinput = JFactory::getApplication()->input;
 
 		// Load the parameters.
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -102,7 +101,7 @@ class hwdMediaShareModelCategories extends JModelList
 		$this->setState('filter.extension', $this->extension);
 
 		// Get the parent id if defined.
-		$parentId = $jinput->get('id', '0', 'int');
+		$parentId = $app->input->get('id', '0', 'integer');
 		$this->setState('filter.parentId', $parentId);
                 
 		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
