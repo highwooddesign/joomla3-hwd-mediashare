@@ -130,8 +130,9 @@ class hwdMediaShareModelAlbum extends JModelList
                 $groups = $user->getAuthorisedViewLevels();
                 if (!in_array($table->access, $groups)) 
                 {                                    
-                        $option = JFactory::getApplication()->input->get('option');
-                        $view = JFactory::getApplication()->input->get('view');
+                        $app = JFactory::getApplication();
+                        $option = $app->input->get('option');
+                        $view = $app->input->get('view');
                         if ($option == 'com_hwdmediashare' && $view == 'album') 
                         {
                                 JFactory::getApplication()->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
