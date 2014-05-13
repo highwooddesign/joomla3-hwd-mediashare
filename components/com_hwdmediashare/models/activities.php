@@ -115,11 +115,11 @@ class hwdMediaShareModelActivities extends JModelList
                 {
                         $query->where('(a.action = ' . $db->quote($action) . ' OR a.target = ' . $db->quote($target) . ')');
 		}
-                else if ($action)
+                elseif ($action)
                 {
                         $query->where('a.action = ' . $db->quote($action));
                 }
-                else if ($target)
+                elseif ($target)
                 {
                         $query->where('a.target = ' . $db->quote($target));
 		}
@@ -135,7 +135,7 @@ class hwdMediaShareModelActivities extends JModelList
                                 $query->where('a.verb IN ('.$verb.')');
 			}
 		}
-                else if (is_numeric($verb))
+                elseif (is_numeric($verb))
                 {
 			$query->where('a.verb = '.(int) $verb);
 		}
