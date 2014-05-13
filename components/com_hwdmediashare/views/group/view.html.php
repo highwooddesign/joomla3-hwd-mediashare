@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -40,7 +40,7 @@ class hwdMediaShareViewGroup extends JViewLegacy
                 $this->layout = $app->input->get('layout', 'media', 'word');
 
                 // Get data from the model.
-                // Group is called afterwards so we have data from the items.
+                $this->group = $this->get('Group');
                 $this->media = $this->get('Media');
                 $this->members = $this->get('Members');
                 $this->activities = $this->get('Activities');
@@ -57,7 +57,6 @@ class hwdMediaShareViewGroup extends JViewLegacy
                         break;
                 }
                 
-                $this->group = $this->get('Group');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
@@ -72,6 +71,8 @@ class hwdMediaShareViewGroup extends JViewLegacy
 		hwdMediaShareFactory::load('utilities');
                 hwdMediaShareFactory::load('activities');
 
+                $this->group->nummedia = $this->get('numMedia');
+                $this->group->nummembers = $this->get('numMembers');
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = (int) $this->params->get('list_columns', 3) - 1; // This view has columns, so we reduce the number of columns
@@ -228,20 +229,32 @@ class hwdMediaShareViewGroup extends JViewLegacy
 	 *
 	 * @return  void
 	 */
-	public function getComments()
+	public function getComments($group)
 	{
-                // Load HWD config
+                // Load hwdMediaShare config
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+
                 $pluginClass = 'plgHwdmediashare'.$config->get('commenting');
                 $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('commenting').'/'.$config->get('commenting').'.php';
+
+                // Import hwdMediaShare plugins
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $comments = call_user_func(array($pluginClass, 'getInstance'));
-                        $registry = new JRegistry();
-                        return $comments->getComments($this->group, $registry);
+                        $HWDcomments = call_user_func(array($pluginClass, 'getInstance'));
+                        if ($comments = $HWDcomments->getComments($group))
+                        {
+                                return $comments;
+                        }
+                        else
+                        {
+                                return $utilities->printNotice($HWDcomments->getError());
+                        }
                 }
 	} 
 }
