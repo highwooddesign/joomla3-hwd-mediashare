@@ -91,6 +91,9 @@ class hwdMediaShareModelUser extends JModelList
 	public function getUser($pk = null)
 	{
 		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get the filter.user_id value.
 		$pk = (int) (!empty($pk)) ? $pk : $this->getState('filter.user_id');
 
                 // Get HWD config.
@@ -159,7 +162,6 @@ class hwdMediaShareModelUser extends JModelList
                 $groups = $user->getAuthorisedViewLevels();
                 if (!in_array($table->access, $groups)) 
                 {                                    
-                        $app = JFactory::getApplication();
                         $option = $app->input->get('option');
                         $view = $app->input->get('view');
                         if ($option == 'com_hwdmediashare' && $view == 'user') 

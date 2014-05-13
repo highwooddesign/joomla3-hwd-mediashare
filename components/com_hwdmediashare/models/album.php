@@ -76,6 +76,9 @@ class hwdMediaShareModelAlbum extends JModelList
 	public function getAlbum($pk = null)
 	{
 		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get the filter.album_id value.
 		$pk = (int) (!empty($pk)) ? $pk : $this->getState('filter.album_id');
 
                 // Get HWD config.
@@ -130,7 +133,6 @@ class hwdMediaShareModelAlbum extends JModelList
                 $groups = $user->getAuthorisedViewLevels();
                 if (!in_array($table->access, $groups)) 
                 {                                    
-                        $app = JFactory::getApplication();
                         $option = $app->input->get('option');
                         $view = $app->input->get('view');
                         if ($option == 'com_hwdmediashare' && $view == 'album') 

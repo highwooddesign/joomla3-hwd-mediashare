@@ -76,6 +76,9 @@ class hwdMediaShareModelPlaylist extends JModelList
 	public function getPlaylist($pk = null)
 	{
 		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get the filter.playlist_id value.
 		$pk = (int) (!empty($pk)) ? $pk : $this->getState('filter.playlist_id');
 
                 // Get HWD config.
@@ -130,7 +133,6 @@ class hwdMediaShareModelPlaylist extends JModelList
                 $groups = $user->getAuthorisedViewLevels();
                 if (!in_array($table->access, $groups)) 
                 {                                    
-                        $app = JFactory::getApplication();
                         $option = $app->input->get('option');
                         $view = $app->input->get('view');
                         if ($option == 'com_hwdmediashare' && $view == 'playlist') 

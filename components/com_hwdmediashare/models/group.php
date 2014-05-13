@@ -80,6 +80,9 @@ class hwdMediaShareModelGroup extends JModelList
 	public function getGroup($pk = null)
 	{
 		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get the filter.group_id value.
 		$pk = (int) (!empty($pk)) ? $pk : $this->getState('filter.group_id');
 
                 // Get HWD config.
@@ -134,7 +137,6 @@ class hwdMediaShareModelGroup extends JModelList
                 $groups = $user->getAuthorisedViewLevels();
                 if (!in_array($table->access, $groups)) 
                 {                                    
-                        $app = JFactory::getApplication();
                         $option = $app->input->get('option');
                         $view = $app->input->get('view');
                         if ($option == 'com_hwdmediashare' && $view == 'group') 
