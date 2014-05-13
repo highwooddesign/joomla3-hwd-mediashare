@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     Joomla.administrator
+ * @package     Joomla.site
  * @subpackage  Component.hwdmediashare
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
@@ -76,5 +76,28 @@ class hwdMediaShareViewGroupMembers extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
                 
 		$this->document->setTitle($title);  
+	}
+
+	/**
+	 * Display appropriate button to either link or unlink the member from the group.
+	 * @return  void
+	 */
+	public function getButton($row, $i)
+	{
+                $task = $row->connection ? 'unlink' : 'link';
+                $buttonClass = $row->connection ? 'btn btn-danger' : 'btn';
+
+                // Start output
+                ob_start();
+                ?>
+                <div class="btn-wrapper pull-right">
+                        <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','groupmembers.<?php echo $task; ?>')">
+                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_MEMBER') : JText::_('COM_HWDMS_BTN_ADD_MEMBER')); ?>
+                        </a>
+                </div>
+                <?php
+                $html = ob_get_contents();
+                ob_end_clean();
+                return $html;
 	}
 }
