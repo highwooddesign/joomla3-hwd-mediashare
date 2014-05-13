@@ -123,7 +123,7 @@ class hwdMediaShareModelGroups extends JModelList
                                 $query->where('a.published IN ('.$published.')');
 			}
 		}
-                else if (is_numeric($published))
+                elseif (is_numeric($published))
                 {
 			$query->where('a.published = '.(int) $published);
 		}
@@ -139,7 +139,7 @@ class hwdMediaShareModelGroups extends JModelList
                                 $query->where('a.status IN ('.$status.')');
 			}
 		}
-                else if (is_numeric($status))
+                elseif (is_numeric($status))
                 {
 			$query->where('a.status = '.(int) $status);
 		}
@@ -186,7 +186,7 @@ class hwdMediaShareModelGroups extends JModelList
 		if (is_numeric($authorId)) 
                 {
 			$type = $this->getState('filter.author_id.include', true) ? '= ' : '<> ';
-			$authorWhere = 'a.created_user_id '.$type.(int) $authorId;
+			$query->where('a.created_user_id '.$type.(int) $authorId);
 		}
 		elseif (is_array($authorId)) 
                 {
@@ -195,49 +195,10 @@ class hwdMediaShareModelGroups extends JModelList
 
 			if ($authorId) {
 				$type = $this->getState('filter.author_id.include', true) ? 'IN' : 'NOT IN';
-				$authorWhere = 'a.created_user_id '.$type.' ('.$authorId.')';
+				$query->where('a.created_user_id '.$type.' ('.$authorId.')');
 			}
 		}
-
-		// Filter by author alias
-		$authorAlias = $this->getState('filter.author_alias');
-		$authorAliasWhere = '';
-		if (is_string($authorAlias))
-                {
-			$type = $this->getState('filter.author_alias.include', true) ? '= ' : '<> ';
-			$authorAliasWhere = 'a.created_user_id_alias '.$type.$db->Quote($authorAlias);
-		}
-		elseif (is_array($authorAlias)) 
-                {
-			$first = current($authorAlias);
-
-			if (!empty($first)) {
-				JArrayHelper::toString($authorAlias);
-
-				foreach ($authorAlias as $key => $alias)
-				{
-					$authorAlias[$key] = $db->Quote($alias);
-				}
-
-				$authorAlias = implode(',', $authorAlias);
-
-				if ($authorAlias) {
-					$type = $this->getState('filter.author_alias.include', true) ? 'IN' : 'NOT IN';
-					$authorAliasWhere = 'a.created_user_id_alias '.$type.' ('.$authorAlias .')';
-				}
-			}
-		}
-		if (!empty($authorWhere) && !empty($authorAliasWhere)) {
-			$query->where('('.$authorWhere.' OR '.$authorAliasWhere.')');
-		}
-		elseif (empty($authorWhere) && empty($authorAliasWhere)) {
-			// If both are empty we don't want to add to the query
-		}
-		else {
-			// One of these is empty, the other is not so we just add both
-			$query->where($authorWhere.$authorAliasWhere);
-		}
-
+                
 		// Filter by start and end dates.
 		$nullDate = $db->Quote($db->getNullDate());
 		$nowDate = $db->Quote(JFactory::getDate()->toSql());
@@ -288,11 +249,20 @@ class hwdMediaShareModelGroups extends JModelList
 		}                
 
                 // Filter by media.
-		if ($mediaId = $this->getState('media.id'))
+		$mediaId = $this->getState('filter.media.id');
+                if (is_numeric($mediaId))
                 {
-                        $query->join('LEFT', '#__hwdms_group_map AS gmap ON gmap.group_id = a.id AND gmap.media_id = '.$mediaId);
+                        $query->join('LEFT', '#__hwdms_group_map AS gmap ON gmap.group_id = a.id');
                         $query->where('gmap.media_id = ' . $db->quote($mediaId));
 		}
+                
+                // Filter by membership.
+                $memberId = $this->getState('filter.member_id');
+                if (is_numeric($memberId))
+                {
+                        $query->join('LEFT', '#__hwdms_group_members AS gmem ON gmem.group_id = a.id');
+                        $query->where('gmem.member_id = ' . $db->quote($memberId));
+		}                
 
                 //echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
