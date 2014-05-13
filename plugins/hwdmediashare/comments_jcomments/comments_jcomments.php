@@ -73,7 +73,7 @@ class plgHwdmediashareComments_jcomments extends JObject
                         return false;
                 }
 
-		// Load jComments
+		// Load jComments libraries.
                 $comments = JPATH_SITE . '/components/com_jcomments/jcomments.php';
                 if(!JFile::exists($comments))
                 {
