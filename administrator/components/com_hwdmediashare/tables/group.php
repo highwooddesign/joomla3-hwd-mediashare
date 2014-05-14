@@ -74,7 +74,16 @@ class hwdMediaShareTableGroup extends JTable
 		{
 			// Existing item, so set modified details.
 			$this->modified		= $date->toSql();
-			$this->modified_user_id	= $user->get('id');  
+			$this->modified_user_id	= $user->get('id'); 
+
+                        // Only allow users with permission to edit states.
+                        if (!$user->authorise('core.edit.state', 'com_hwdmediashare.group.'. (int) $this->id))
+                        {
+                                unset($this->published);
+                                unset($this->status);
+                                unset($this->featured);
+                                unset($this->access);
+                        }                         
 		}
 		else
 		{
@@ -92,6 +101,14 @@ class hwdMediaShareTableGroup extends JTable
                                         return false;
                                 }
                         }
+
+                        // Only allow users with permission to edit states.
+                        if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
+                        {
+                                $this->published = 1;
+                                $this->featured = 1;
+                                $this->access = 1;
+                        } 
                         
                         // Set approval status
                         $this->status = (!$app->isAdmin() && $config->get('approve_new_groups') == 1) ? 2 : 1;
