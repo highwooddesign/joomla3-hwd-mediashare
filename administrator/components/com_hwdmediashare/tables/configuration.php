@@ -15,12 +15,6 @@ jimport('joomla.database.table');
 
 class hwdMediaShareTableConfiguration extends JTable
 {
-	var $id                 = null;
-	var $name		= null;
-	var $date		= null;
-        var $params		= null;
-        var $asset_id		= null;
-
 	/**
 	 * Constructor.
 	 * @return	void
@@ -28,15 +22,6 @@ class hwdMediaShareTableConfiguration extends JTable
 	function __construct($db)
 	{
 		parent::__construct('#__hwdms_config', 'id', $db);
-                
-                // Here, we set the asset_id for the table. Since Joomla 2.5.7 there is new code 
-                // to "Create an asset_id or heal one that is corrupted" which broke HWDMediaShare 
-                // because the configuration table doesn't have an asset_id column. This is a work
-                // around for that issue.                
-		$name = $this->_getAssetName();
-		$asset = JTable::getInstance('Asset', 'JTable', array('dbo' => $this->getDbo()));
-		$asset->loadByName($name);
-		$this->asset_id = $asset->id;
 	}
 
 	/**
@@ -62,8 +47,6 @@ class hwdMediaShareTableConfiguration extends JTable
                         }
 
                         $this->setRules($array['rules']);
-                        //@TODO: Remove this
-                        $this->_trackAssets = true;
 		}
 		return parent::bind($array, $ignore);
 	}
