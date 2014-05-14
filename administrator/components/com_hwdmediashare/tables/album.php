@@ -102,6 +102,15 @@ class hwdMediaShareTableAlbum extends JTable
 			// Existing item, so set modified details.
 			$this->modified		= $date->toSql();
 			$this->modified_user_id	= $user->get('id');  
+          
+                        // Only allow users with permission to edit states.
+                        if (!$user->authorise('core.edit.state', 'com_hwdmediashare.album.'. (int) $this->id))
+                        {
+                                unset($this->published);
+                                unset($this->status);
+                                unset($this->featured);
+                                unset($this->access);
+                        }                        
 		}
 		else
 		{
@@ -120,6 +129,14 @@ class hwdMediaShareTableAlbum extends JTable
                                 }
                         }
                         
+                        // Only allow users with permission to edit states.
+                        if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
+                        {
+                                $this->published = 1;
+                                $this->featured = 1;
+                                $this->access = 1;
+                        } 
+                        
                         // Set approval status
                         $this->status = (!$app->isAdmin() && $config->get('approve_new_albums') == 1) ? 2 : 1;
 
@@ -132,7 +149,7 @@ class hwdMediaShareTableAlbum extends JTable
 			if (empty($this->created_user_id))
 			{
 				$this->created_user_id = $user->get('id');
-			}                      
+			}                     
 		}
 
 		// Set publish_up to null date if not set
@@ -228,7 +245,7 @@ class hwdMediaShareTableAlbum extends JTable
 			$this->setError(JText::_('JGLOBAL_START_PUBLISH_AFTER_FINISH'));
 			return false;
 		}
-
+                        
 		return true;
 	}
         
