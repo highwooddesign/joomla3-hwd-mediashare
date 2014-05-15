@@ -26,12 +26,17 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
       <div class="btn-group pull-right">
         <?php if ($canAdd): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_ALBUM'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albumform&layout=edit&return=' . $this->return); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_ALBUM'); ?></a>
+        <?php endif; ?>
+        <?php if ($this->state->get('albums.show_featured') == 'only'): ?>
+          <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
+        <?php else: ?>  
+          <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>  
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_list_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('list')); ?>" class="btn"><i class="icon-list"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
       </div>        
       <div class="clear"></div>
