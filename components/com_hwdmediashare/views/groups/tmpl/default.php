@@ -25,11 +25,16 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
         <?php if ($canAdd): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_GROUP'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupform&layout=edit&return='.base64_encode(JFactory::getURI())); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_GROUP'); ?></a>
         <?php endif; ?>  
+        <?php if ($this->state->get('groups.show_featured') == 'only'): ?>
+          <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
+        <?php else: ?>  
+          <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
+        <?php endif; ?>  
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_list_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('list')); ?>" class="btn"><i class="icon-list"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
       </div>        
       <div class="clear"></div>
