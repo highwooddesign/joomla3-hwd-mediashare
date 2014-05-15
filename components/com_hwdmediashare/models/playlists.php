@@ -299,22 +299,34 @@ class hwdMediaShareModelPlaylists extends JModelList
 
 		$this->setState('filter.language', $app->getLanguageFilter());
 
-		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.display_playlists', 'display', $config->get('list_default_display', 'details' ), 'word', false);
-                if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
-		$this->setState('media.display_playlists', $display);
+                // Only set these states when in the com_hwdmediashare.media context.
+                if ($this->context == 'com_hwdmediashare.playlists')
+                {                   
+                        // Load the display state.
+                        $display = $this->getUserStateFromRequest('media.display_playlists', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                        if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
+                        $this->setState('media.display_playlists', $display);
 
-                // Check for list inputs and set default values
-                $ordering = $config->get('list_order_playlist', 'a.created DESC');
-                $orderingParts = explode(' ', $ordering); 
-                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
-                {
-                        $list['fullordering'] = $ordering;
-                        $list['limit'] = $config->get('list_limit', 6);
-                        $app->setUserState($this->context . '.list', $list);
+                        // Load the featured state.
+                        $featured = $this->getUserStateFromRequest('playlists.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
+                        $this->setState('playlists.show_featured', $featured);
+                        $this->setState('filter.featured', $featured);
+
+                        // Check for list inputs and set default values
+                        $orderingFull = $config->get('list_order_playlist', 'a.created DESC');
+                        $orderingParts = explode(' ', $orderingFull);
+                        $ordering = $orderingParts[0];
+                        $direction = $orderingParts[1];                           
+                        if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                        {
+                                $list['fullordering'] = $orderingFull;
+                                $list['limit'] = $config->get('list_limit', 6);
+                                $app->setUserState($this->context . '.list', $list);
+                        }
                 }
-
-		// List state information.
-		parent::populateState($orderingParts[0], $orderingParts[1]);  
+                
+                // List state information.
+                parent::populateState($ordering, $direction);   
 	}
 }
