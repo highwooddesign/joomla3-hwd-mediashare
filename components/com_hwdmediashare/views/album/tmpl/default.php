@@ -13,12 +13,14 @@ defined('_JEXEC') or die;
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
 JHtml::_('HwdPopup.form');
+JHtml::_('HwdPopup.page');
 
 $user = JFactory::getUser();
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.album.'.$this->album->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.album.'.$this->album->id) && ($this->album->created_user_id == $user->id)));
 $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.album.'.$this->album->id);
 $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.album.'.$this->album->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.album.'.$this->album->id) && ($this->album->created_user_id == $user->id)));
 $canAddMedia = (($user->authorise('hwdmediashare.upload','com_hwdmediashare') || $user->authorise('hwdmediashare.import','com_hwdmediashare')) && ($this->album->created_user_id == $user->id));
+$canManageMedia = ($this->album->created_user_id == $user->id);
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
   <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
@@ -34,6 +36,9 @@ $canAddMedia = (($user->authorise('hwdmediashare.upload','com_hwdmediashare') ||
         <?php if ($canAddMedia): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&album_id='.(int)$this->album->id.'&return=' . $this->return); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
+        <?php if ($canManageMedia): ?>
+          <a title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albummedia&tmpl=component&album_id=' . $this->album->id); ?>" class="btn media-popup-page" ><?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?></a>
+        <?php endif; ?>
         <?php if ($this->album->featured) : ?>
           <div class="btn btn-info"><i class="icon-star"></i> <?php echo JText::_('COM_HWDMS_FEATURED'); ?></div>
         <?php endif; ?>
@@ -47,13 +52,13 @@ $canAddMedia = (($user->authorise('hwdmediashare.upload','com_hwdmediashare') ||
           <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=albumform.report&id=' . $this->album->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-form"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>    
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($this->album->id, array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_gallery_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_GALLERY'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('gallery')); ?>" class="btn"><i class="icon-grid"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_GALLERY'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($this->album->id, array('display' => 'gallery'))); ?>" class="btn"><i class="icon-grid"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_list_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('list')); ?>" class="btn"><i class="icon-list"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($this->album->id, array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
         <?php if ($canEdit || $canDelete): ?>
         <?php
