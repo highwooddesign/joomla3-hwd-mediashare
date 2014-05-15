@@ -16,7 +16,6 @@ JLoader::register('hwdMediaShareFactory', dirname(__FILE__).'/libraries/factory.
 // Require helper files.
 JLoader::register('hwdMediaShareHelperRoute', dirname(__FILE__).'/helpers/route.php');
 JLoader::register('hwdMediaShareHelperNavigation', dirname(__FILE__).'/helpers/navigation.php');
-JLoader::register('hwdMediaShareHelperMobile', dirname(__FILE__).'/helpers/mobile.php');
 JLoader::register('hwdMediaShareHelperModule', dirname(__FILE__).'/helpers/module.php');
 
 // Access check.
