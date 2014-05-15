@@ -34,17 +34,22 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
         <?php if ($canAddMedia): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&category_id='.(int)$this->category->id); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
+        <?php if ($this->state->get('category.show_featured') == 'only'): ?>
+          <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
+        <?php else: ?>  
+          <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
+        <?php endif; ?>           
         <?php if ($this->params->get('item_meta_report') != 'hide' && $this->category->created_user_id != $user->id): ?>                  
           <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-form"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>    
         <?php if ($this->params->get('list_details_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_gallery_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_GALLERY'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('gallery')); ?>" class="btn"><i class="icon-grid"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_GALLERY'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('display' => 'gallery'))); ?>" class="btn"><i class="icon-grid"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_list_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('list')); ?>" class="btn"><i class="icon-list"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
         <?php if ($canEdit || $canDelete): ?>
         <?php
