@@ -308,20 +308,32 @@ class hwdMediaShareModelUsers extends JModelList
 
 		$this->setState('filter.language', $app->getLanguageFilter());
 
-		// Load the display state.
-		$this->setState('media.display_users', 'details');
+                // Only set these states when in the com_hwdmediashare.media context.
+                if ($this->context == 'com_hwdmediashare.users')
+                {                   
+                        // Load the display state.
+                        $this->setState('media.display_users', 'details');
 
-                // Check for list inputs and set default values
-                $ordering = $config->get('list_order_channel', 'a.created DESC');
-                $orderingParts = explode(' ', $ordering); 
-                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
-                {
-                        $list['fullordering'] = $ordering;
-                        $list['limit'] = $config->get('list_limit', 6);
-                        $app->setUserState($this->context . '.list', $list);
+                        // Load the featured state.
+                        $featured = $this->getUserStateFromRequest('users.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
+                        $this->setState('users.show_featured', $featured);
+                        $this->setState('filter.featured', $featured);
+
+                        // Check for list inputs and set default values
+                        $orderingFull = $config->get('list_order_channel', 'a.created DESC');
+                        $orderingParts = explode(' ', $orderingFull);
+                        $ordering = $orderingParts[0];
+                        $direction = $orderingParts[1];                          
+                        if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                        {
+                                $list['fullordering'] = $orderingFull;
+                                $list['limit'] = $config->get('list_limit', 6);
+                                $app->setUserState($this->context . '.list', $list);
+                        }
                 }
-
-		// List state information.
-		parent::populateState($orderingParts[0], $orderingParts[1]); 
+                
+                // List state information.
+                parent::populateState($ordering, $direction); 
 	}
 }
