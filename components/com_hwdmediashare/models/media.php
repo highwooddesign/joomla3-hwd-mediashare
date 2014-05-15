@@ -433,113 +433,120 @@ class hwdMediaShareModelMedia extends JModelList
 
 		$this->setState('filter.language', $app->getLanguageFilter());
 
-		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
-                if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
-		$this->setState('media.display', $display);
-
-                $ordering = $config->get('list_order_media', 'a.created DESC');
-		$orderingParts = explode(' ', $ordering);
-
-                // Check for list inputs and set default values
-                $ordering = $config->get('list_order_media', 'a.created DESC');
-                $orderingParts = explode(' ', $ordering); 
-                if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                // Only set these states when in the com_hwdmediashare.media context.
+                if ($this->context == 'com_hwdmediashare.media')
                 {
-                        $list['fullordering'] = $ordering;
-                        $list['limit'] = $config->get('list_limit', 6);
-                        $app->setUserState($this->context . '.list', $list);
-                }
+                        // Load the display state.
+                        $display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                        if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
+                        $this->setState('media.display', $display);
+
+                        // Load the featured state.
+                        $featured = $this->getUserStateFromRequest('media.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
+                        $this->setState('media.show_featured', $featured);
+                        $this->setState('filter.featured', $featured);
+
+                        // Check for list inputs and set default values
+                        $orderingFull = $config->get('list_order_media', 'a.created DESC');
+                        $orderingParts = explode(' ', $orderingFull);
+                        $ordering = $orderingParts[0];
+                        $direction = $orderingParts[1];
+                        if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                        {
+                                $list['fullordering'] = $orderingFull;
+                                $list['limit'] = $config->get('list_limit', 6);
+                                $app->setUserState($this->context . '.list', $list);
+                        }
+
+                        //@TODO: Work out these filters.hwd
+
+
+                        $mediaType = $this->getUserStateFromRequest('filter.mediaType', 'filter_mediaType', $config->get('list_default_media_type', '' ), 'integer', false);
+                        // If we are viewing a menu item that has a media type filter applied, then we need to show that instead of the user state.
+                        if ($config->get('list_default_media_type')) $mediaType = $config->get('list_default_media_type');
+                        $this->setState('filter.mediaType', $mediaType);
+
+                        // Load the display state.
+                        $display = $this->getUserStateFromRequest('media.media-display', 'display', $config->get('list_default_display', 'details' ), 'none', false);
+                        if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
+                        $this->setState('media.media-display', $display);
+
+                        $catids = $config->get('catid');
+                        $this->setState('filter.category_id.include', (bool) $config->get('category_filtering_type', 1));
+
+                        // Category filter
+                        if ($catids) {                    
+                                if ($config->get('show_child_category_articles', 0) && (int) $config->get('levels', 0) > 0) {
+                                        // Get an instance of the generic categories model
+                                        $categories = JModelLegacy::getInstance('Categories', 'hwdMediaShareModel', array('ignore_request' => true));
+                                        $categories->setState('params', $appParams);
+                                        $levels = $config->get('levels', 1) ? $config->get('levels', 1) : 9999;
+                                        $categories->setState('filter.get_children', $levels);
+                                        $categories->setState('filter.published', 1);
+                                        $additional_catids = array();
+
+                                        foreach($catids as $catid)
+                                        {
+                                                $categories->setState('filter.parentId', $catid);
+                                                $recursive = true;
+                                                $items = $categories->getItems($recursive);
+
+                                                if ($items)
+                                                {
+                                                        foreach($items as $category)
+                                                        {
+                                                                $condition = (($category->level - $categories->getParent()->level) <= $levels);
+                                                                if ($condition) {
+                                                                        $additional_catids[] = $category->id;
+                                                                }
+
+                                                        }
+                                                }
+                                        }
+
+                                        $catids = array_unique(array_merge($catids, $additional_catids));
+                                }
+
+                                $this->setState('filter.category_id', $catids);
+                        }
+
+                        // New Parameters
+                        $this->setState('filter.author_id', $config->get('created_by', ""));
+                        $this->setState('filter.author_id.include', $config->get('author_filtering_type', 1));
+                        $this->setState('filter.author_alias', $config->get('created_by_alias', ""));
+                        $this->setState('filter.author_alias.include', $config->get('author_alias_filtering_type', 1));
+                        $excluded_articles = $config->get('excluded_articles', '');
+
+                        if ($excluded_articles) 
+                        {
+                                $excluded_articles = explode("\r\n", $excluded_articles);
+                                $this->setState('filter.article_id', $excluded_articles);
+                                $this->setState('filter.article_id.include', false); // Exclude
+                        }
+
+                        $date_filtering = $config->get('date_filtering', 'off');
+                        if ($date_filtering !== 'off') 
+                        {
+                                $this->setState('filter.date_filtering', $date_filtering);
+                                $this->setState('filter.date_field', $config->get('date_field', 'a.created'));
+                                $this->setState('filter.start_date_range', $config->get('start_date_range', '1000-01-01 00:00:00'));
+                                $this->setState('filter.end_date_range', $config->get('end_date_range', '9999-12-31 23:59:59'));
+                                $this->setState('filter.relative_date', $config->get('relative_date', 30));
+                        }
+
+                        // API filter parameters, not stored in the state
+                        JRequest::getInt('filter_group_id') > 0 ? $this->setState('filter.group_id', JRequest::getInt('filter_group_id')) : null;
+                        JRequest::getInt('filter_album_id') > 0 ? $this->setState('filter.album_id', JRequest::getInt('filter_album_id')) : null;
+                        JRequest::getInt('filter_playlist_id') > 0 ? $this->setState('filter.playlist_id', JRequest::getInt('filter_playlist_id')) : null;
+                        JRequest::getInt('filter_category_id') > 0 ? $this->setState('filter.category_id', JRequest::getInt('filter_category_id')) : null;
+                        JRequest::getInt('filter_favourites_id') > 0 ? $this->setState('filter.favourites_id', JRequest::getInt('filter_favourites_id')) : null;
+                        JRequest::getInt('filter_author_id') > 0 ? $this->setState('filter.author_id', JRequest::getInt('filter_author_id')) : null;
+                        JRequest::getWord('filter_author_filtering_type') != '' ? $this->setState('filter.author_id.include', JRequest::getWord('filter_author_filtering_type')) : null;
+                        JRequest::getVar('filter_tag') != '' ? $this->setState('filter.tag', JRequest::getVar('filter_tag')) : null; 
+                }    
                 
-		// List state information.
-		parent::populateState($orderingParts[0], $orderingParts[1]);
-                
-                
-                
-                
-                $mediaType = $this->getUserStateFromRequest('filter.mediaType', 'filter_mediaType', $config->get('list_default_media_type', '' ), 'integer', false);
-                // If we are viewing a menu item that has a media type filter applied, then we need to show that instead of the user state.
-                if ($config->get('list_default_media_type')) $mediaType = $config->get('list_default_media_type');
-                $this->setState('filter.mediaType', $mediaType);
-
-		// Load the display state.
-		$display = $this->getUserStateFromRequest('media.media-display', 'display', $config->get('list_default_display', 'details' ), 'none', false);
-                if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
-                $this->setState('media.media-display', $display);
-
-                $catids = $config->get('catid');
-                $this->setState('filter.category_id.include', (bool) $config->get('category_filtering_type', 1));
-
-		// Category filter
-		if ($catids) {                    
-			if ($config->get('show_child_category_articles', 0) && (int) $config->get('levels', 0) > 0) {
-				// Get an instance of the generic categories model
-				$categories = JModelLegacy::getInstance('Categories', 'hwdMediaShareModel', array('ignore_request' => true));
-				$categories->setState('params', $appParams);
-				$levels = $config->get('levels', 1) ? $config->get('levels', 1) : 9999;
-				$categories->setState('filter.get_children', $levels);
-				$categories->setState('filter.published', 1);
-				$additional_catids = array();
-
-				foreach($catids as $catid)
-				{
-					$categories->setState('filter.parentId', $catid);
-					$recursive = true;
-					$items = $categories->getItems($recursive);
-
-					if ($items)
-					{
-						foreach($items as $category)
-						{
-							$condition = (($category->level - $categories->getParent()->level) <= $levels);
-                                                        if ($condition) {
-								$additional_catids[] = $category->id;
-							}
-
-						}
-					}
-				}
-
-				$catids = array_unique(array_merge($catids, $additional_catids));
-			}
-
-			$this->setState('filter.category_id', $catids);
-		}
-
-		// New Parameters
-		$this->setState('filter.featured', $config->get('show_featured', 'show'));
-		$this->setState('filter.author_id', $config->get('created_by', ""));
-		$this->setState('filter.author_id.include', $config->get('author_filtering_type', 1));
-		$this->setState('filter.author_alias', $config->get('created_by_alias', ""));
-		$this->setState('filter.author_alias.include', $config->get('author_alias_filtering_type', 1));
-		$excluded_articles = $config->get('excluded_articles', '');
-
-		if ($excluded_articles) 
-                {
-			$excluded_articles = explode("\r\n", $excluded_articles);
-			$this->setState('filter.article_id', $excluded_articles);
-			$this->setState('filter.article_id.include', false); // Exclude
-		}
-
-		$date_filtering = $config->get('date_filtering', 'off');
-		if ($date_filtering !== 'off') 
-                {
-			$this->setState('filter.date_filtering', $date_filtering);
-			$this->setState('filter.date_field', $config->get('date_field', 'a.created'));
-			$this->setState('filter.start_date_range', $config->get('start_date_range', '1000-01-01 00:00:00'));
-			$this->setState('filter.end_date_range', $config->get('end_date_range', '9999-12-31 23:59:59'));
-			$this->setState('filter.relative_date', $config->get('relative_date', 30));
-		}
-
-                // API filter parameters, not stored in the state
-		JRequest::getInt('filter_group_id') > 0 ? $this->setState('filter.group_id', JRequest::getInt('filter_group_id')) : null;
-		JRequest::getInt('filter_album_id') > 0 ? $this->setState('filter.album_id', JRequest::getInt('filter_album_id')) : null;
-		JRequest::getInt('filter_playlist_id') > 0 ? $this->setState('filter.playlist_id', JRequest::getInt('filter_playlist_id')) : null;
-		JRequest::getInt('filter_category_id') > 0 ? $this->setState('filter.category_id', JRequest::getInt('filter_category_id')) : null;
-		JRequest::getInt('filter_favourites_id') > 0 ? $this->setState('filter.favourites_id', JRequest::getInt('filter_favourites_id')) : null;
-		JRequest::getInt('filter_author_id') > 0 ? $this->setState('filter.author_id', JRequest::getInt('filter_author_id')) : null;
-		JRequest::getWord('filter_featured') != '' ? $this->setState('filter.featured', JRequest::getWord('filter_featured')) : null;
-		JRequest::getWord('filter_author_filtering_type') != '' ? $this->setState('filter.author_id.include', JRequest::getWord('filter_author_filtering_type')) : null;
-		JRequest::getVar('filter_tag') != '' ? $this->setState('filter.tag', JRequest::getVar('filter_tag')) : null;                
+                // List state information.
+                parent::populateState($ordering, $direction);                
 	}
 }
