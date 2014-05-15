@@ -27,7 +27,7 @@ class hwdMediaShareModelCategory extends JModelList
 	protected $_subcategories = null;        
 	protected $_feature = null;        
 	protected $_model = null;
-        protected $_numMedia = null;
+        protected $_numMedia = 0;
         
 	/**
 	 * Method to get a table object, load it if necessary.

@@ -25,7 +25,7 @@ class hwdMediaShareModelAlbum extends JModelList
 	protected $_album = null;
 	protected $_items = null;
 	protected $_model = null;
-        protected $_numMedia = null;
+        protected $_numMedia = 0;
         
     	/**
 	 * Constructor override, defines a white list of column filters.

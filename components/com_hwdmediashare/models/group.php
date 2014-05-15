@@ -28,8 +28,8 @@ class hwdMediaShareModelGroup extends JModelList
 	protected $_members = null;
 	protected $_activities = null;
 	protected $_model = null;
-        protected $_numMedia = null;
-        protected $_numMembers = null;
+        protected $_numMedia = 0;
+        protected $_numMembers = 0;
 
     	/**
 	 * Constructor override, defines a white list of column filters.
