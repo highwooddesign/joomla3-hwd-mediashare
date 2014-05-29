@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+<extension type="plugin" group="hwdmediashare" version="3.0" method="upgrade">
 	<name>plg_hwdmediashare_remote_youtubecom</name>
-	<creationDate>2013-10-24</creationDate>
-	<author>Highwood Design</author>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
-	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
-	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>1.1.12</version>
+	<version>@@VERSION@@</version> 
 	<description>PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_XML_DESCRIPTION</description>
 	<url>http://youtube.com</url>
 	<files>
@@ -19,14 +19,19 @@
 		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_youtubecom.sys.ini</language>
 	</languages>
 	<config>
-		<fields name="params">
+		<fields 
+                        name="params"
+                        addrulepath="/administrator/components/com_hwdmediashare/models/rules" 
+                >
 			<fieldset name="basic">
 				<field 
                                         name="autohide" 
                                         type="list"
-					default="2"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_AUTOHIDE_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_AUTOHIDE_DESC"
+					default="2"
+                                        validate="integer"
+                                        filter="integer"                                        
 				>
 					<option value="0">JDISABLED</option>
 					<option value="1">PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_OPTION_1SEC</option>
@@ -35,29 +40,33 @@
 				<field 
                                         name="border" 
                                         type="radio"
-					default="0"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_BORDER_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_BORDER_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
 				</field>
 				<field 
                                         name="cc_load_policy" 
                                         type="radio"
-					default=""
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_CCLOADPOLICY_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_CCLOADPOLICY_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="0"
 				>
-					<option value="">JDISABLED</option>
 					<option value="1">JENABLED</option>
+					<option value="0">JDISABLED</option>
 				</field>
 				<field 
                                         name="color" 
-                                        type="radio"
-					default="red"
+                                        type="list"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_COLOR_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_COLOR_DESC"
+					default="red"
 				>
 					<option value="red">PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_OPTION_RED</option>
 					<option value="white">PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_OPTION_WHITE</option>
@@ -65,93 +74,114 @@
 				<field 
                                         name="color1" 
                                         type="text"
-					default=""
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_COLOR1_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_COLOR1_DESC"
+					default=""
 				/>
 				<field 
                                         name="color2" 
                                         type="text"
-					default=""
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_COLOR2_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_COLOR2_DESC"
+					default=""
 				/>
 				<field 
                                         name="controls" 
                                         type="radio"
-					default="1"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_CONTROLS_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_CONTROLS_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
 				</field>                             
 				<field 
                                         name="fs" 
                                         type="radio"
-					default="1"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_FS_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_FS_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
 				</field>                                 
 				<field 
                                         name="hd" 
                                         type="radio"
-					default="0"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_HD_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_HD_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="0">JNO</option>
 					<option value="1">JYES</option>
+					<option value="0">JNO</option>
 				</field>                                 
 				<field 
                                         name="iv_load_policy" 
                                         type="radio"
-					default="1"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_IVLOADPOLICY_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_IVLOADPOLICY_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="3">JHIDE</option>
 					<option value="1">JSHOW</option>
+					<option value="3">JHIDE</option>
 				</field> 
 				<field 
                                         name="modestbranding" 
                                         type="radio"
-					default="1"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_MODESTBRANDING_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_MODESTBRANDING_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="0">JNO</option>
 					<option value="1">JYES</option>
+					<option value="0">JNO</option>
 				</field> 
 				<field 
                                         name="rel" 
                                         type="radio"
-					default="0"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_RELATED_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_RELATED_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+                                        validate="integer"
+                                        filter="integer"
 				>
-					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
 				</field>
 				<field 
                                         name="theme" 
-                                        type="radio"
-					default="dark"
+                                        type="list"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_THEME_LABEL"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_THEME_DESC"
+					default="dark"
 				>
 					<option value="dark">PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_OPTION_DARK</option>
 					<option value="light">PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_OPTION_LIGHT</option>
 				</field>                                
                                 <field 
                                         name="https" 
-                                        type="list"
+                                        type="radio"
 					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_HTTPS_DESC"
 					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_HTTPS_LABEL"
-                                        default="0" 
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+                                        validate="integer"
+                                        filter="integer"
 				>
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
@@ -160,10 +190,13 @@
 			<fieldset name="advanced">
                                 <field 
                                         name="play_local" 
-                                        type="list" 
-                                        default="0"
+                                        type="radio" 
                                         label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_PLAYLOCAL_LABEL"
                                         description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_PLAYLOCAL_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+                                        validate="integer"
+                                        filter="integer"
                                 >
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>

@@ -1,35 +1,27 @@
 <?php
 /**
- * @version    $Id: remote_youtubecom.php 1668 2013-08-21 12:33:07Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import hwdMediaShare remote library
-hwdMediaShareFactory::load('remote');
-
-
-/**
- * hwdMediaShare framework files class
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.comments_disqus
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class plgHwdmediashareRemote_youtubecom extends JObject
 {    
 	/**
 	 * Remote media type integer.
-	 *
-	 * @var		int
+	 * @var int
 	 */
 	public $mediaType = 4;
         
+	/**
+	 * Library data
+	 * @var strings
+	 */
         var $_url;
         var $_host;
         var $_buffer;
@@ -39,29 +31,16 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         var $_duration;
         var $_thumbnail;
         
-        /**
-	 * Constructor
-	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
-	 */
-	public function __construct()
-	{
-	}
-        
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareRemote_youtubecom object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @return plgHwdmediashareRemote_youtubecom object.
 	 */
 	public static function getInstance()
 	{
 		static $instance;
-                unset($instance);
+
 		if (!isset ($instance))
                 {
 			$c = 'plgHwdmediashareRemote_youtubecom';
@@ -72,9 +51,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
     
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the title of the media.
+	 * @return  void
 	 **/
 	public function getTitle()
 	{
@@ -89,9 +67,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         }   
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the description of the media.
+	 * @return  void
 	 **/
 	public function getDescription()
 	{
@@ -105,9 +82,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         }  
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the source of the media.
+	 * @return  void
 	 **/
 	public function getSource()
 	{
@@ -121,9 +97,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         } 
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the duration of the media.
+	 * @return  void
 	 **/
 	public function getDuration()
 	{
@@ -147,9 +122,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         } 
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the thumbnail location of the media.
+	 * @return  void
 	 **/
 	public function getThumbnail()
 	{
@@ -161,9 +135,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         } 
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Request the source, and set to buffer.
+	 * @return  void
 	 **/
 	public function getBuffer()
 	{
@@ -180,9 +153,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the host of the media.
+	 * @return  void
 	 **/
 	public function getHost()
 	{
@@ -196,9 +168,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Get the url of the media.
+	 * @return  void
 	 **/
 	public function getUrl()
 	{
@@ -212,30 +183,39 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Render the HTML to display the media.
+	 * @return  void
 	 **/
 	public function display($item)
 	{
-		$doc = JFactory::getDocument();
-                
-                $plugin =& JPluginHelper::getPlugin('hwdmediashare', 'remote_youtubecom');
-		$params = new JRegistry( @$plugin->params );
+		// Initialise variables.
+                $app = JFactory::getApplication();
 
-                // Load hwdMediaShare config
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_youtubecom');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_youtubecom', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                $autoplay = (JRequest::getInt('media_autoplay', $config->get('media_autoplay')) == 1 ? '1' : '0');
-                                
+                
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-
-                $this->width = $utilities->getMediaWidth();
-                $this->height = (int) $config->get('mediaitem_height') ? $config->get('mediaitem_height') : $this->width*$config->get('video_aspect',0.75);
-
-                // Youtube ID
+                
+                // Get Youtube ID
                 $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
@@ -249,8 +229,6 @@ class plgHwdmediashareRemote_youtubecom extends JObject
                 {
                         $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
                         $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
-
-                        // Import hwdMediaShare plugins
                         if (file_exists($pluginPath))
                         {
                                 JLoader::register($pluginClass, $pluginPath);
@@ -263,16 +241,15 @@ class plgHwdmediashareRemote_youtubecom extends JObject
                         }
                 }
 
+                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 $this->width = '100%';
                 $this->height = '100%';
-                $doc->addStyleDeclaration('#hwd-container .media-respond { max-width:'.$config->get('mediaitem_size', '500').'px!important;}');
-
                 ob_start();
                 ?>
-                <div class="media-respond">
+                <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                   <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                   <div class="media-content">
-                    <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://www.youtube.com/embed/<?php echo $id; ?>?wmode=opaque&amp;autoplay=<?php echo $autoplay; ?>&amp;autohide=<?php echo $params->get('autohide',2); ?>&amp;border=<?php echo $params->get('border',0); ?>&amp;cc_load_policy=<?php echo $params->get('cc_load_policy',1); ?>&amp;cc_lang_pref=<?php echo $params->get('cc_lang_pref','en'); ?>&amp;hl=<?php echo $params->get('hl','en'); ?>&amp;color=<?php echo $params->get('color','red'); ?>&amp;color1=<?php echo $params->get('color1'); ?>&amp;color2=<?php echo $params->get('color2'); ?>&amp;controls=<?php echo $params->get('controls',1); ?>&amp;fs=<?php echo $params->get('fs',1); ?>&amp;hd=<?php echo $params->get('hd',0); ?>&amp;iv_load_policy=<?php echo $params->get('iv_load_policy',1); ?>&amp;modestbranding=<?php echo $params->get('modestbranding',1); ?>&amp;rel=<?php echo $params->get('rel',1); ?>&amp;theme=<?php echo $params->get('theme','dark'); ?>" frameborder="0" allowfullscreen></iframe>	
+                    <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://www.youtube.com/embed/<?php echo $id; ?>?wmode=opaque&amp;autoplay=<?php echo $this->autoplay; ?>&amp;autohide=<?php echo $params->get('autohide',2); ?>&amp;border=<?php echo $params->get('border',0); ?>&amp;cc_load_policy=<?php echo $params->get('cc_load_policy',1); ?>&amp;cc_lang_pref=<?php echo $params->get('cc_lang_pref','en'); ?>&amp;hl=<?php echo $params->get('hl','en'); ?>&amp;color=<?php echo $params->get('color','red'); ?>&amp;color1=<?php echo $params->get('color1'); ?>&amp;color2=<?php echo $params->get('color2'); ?>&amp;controls=<?php echo $params->get('controls',1); ?>&amp;fs=<?php echo $params->get('fs',1); ?>&amp;hd=<?php echo $params->get('hd',0); ?>&amp;iv_load_policy=<?php echo $params->get('iv_load_policy',1); ?>&amp;modestbranding=<?php echo $params->get('modestbranding',1); ?>&amp;rel=<?php echo $params->get('rel',1); ?>&amp;theme=<?php echo $params->get('theme','dark'); ?>" frameborder="0" allowfullscreen></iframe>	
                   </div>
                 </div>
                 <?php
@@ -283,9 +260,8 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
+	 * Parse the source to extract the media.
+	 * @return  void
 	 **/        
         protected function parse($url, $return='embed', $width='', $height='', $rel=0)
         {
@@ -333,15 +309,13 @@ class plgHwdmediashareRemote_youtubecom extends JObject
                 }
         }
         
-       /**
-	 * Method to create a SWF link to use as an open graph video tag.
-         *
-	 * @since   0.1
+        /**
+	 * Method to construct a video link for use with SWF, as an open graph video tag.
+	 * @return  void
 	 **/
 	public function getOgVideoTag($item)
 	{
-            // Youtube ID
-            $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
-            return 'http://www.youtube.com/v/'.$id.'?version=3&amp;autohide=1';
+                $id = plgHwdmediashareRemote_youtubecom::parse($item->source);
+                return 'http://www.youtube.com/v/'.$id.'?version=3&amp;autohide=1';
         } 
 }
