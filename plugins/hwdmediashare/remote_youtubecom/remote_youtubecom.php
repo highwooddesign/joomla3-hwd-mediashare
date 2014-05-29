@@ -315,7 +315,7 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 **/
 	public function getOgVideoTag($item)
 	{
-                $id = plgHwdmediashareRemote_youtubecom::parse($item->source);
+                $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
                 return 'http://www.youtube.com/v/'.$id.'?version=3&amp;autohide=1';
         } 
 }
