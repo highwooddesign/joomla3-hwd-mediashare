@@ -40,7 +40,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 		<thead>
 			<tr>
                                 <th width="1%" class="center">
-                                        <?php echo JHtml::_('grid.checkall', 'checkall-toggle', 'JGLOBAL_CHECK_ALL', 'Joomla.checkAll(this, \'mb\')'); ?>
+                                        <?php echo JHtml::_('grid.checkall', 'checkall-toggle', 'JGLOBAL_CHECK_ALL', 'Joomla.checkAll(this, \'cb\')'); ?>
                                 </th>
                                 <th>
                                         <a class="label" href="javascript:void(0);" onclick="Joomla.submitbutton('groupmembers.link')">
