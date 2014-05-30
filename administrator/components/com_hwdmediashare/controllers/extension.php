@@ -13,26 +13,28 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerExtension extends JControllerForm
 {
 	/**
-	 * The URL view list variable.
-	 * @var    string
+	 * The prefix to use with controller messages.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "extensions";
 
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object      $model  The model.
-	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 * @access	public
+	 * @param       object      $model      The model.
+	 * @return      boolean     True if successful, false otherwise and internal error is set.
 	 */    
 	public function batch($model = null)
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		// Set the model
+		// Set the model.
 		$model = $this->getModel('Extension', '', array());
 
-		// Preset the redirect
+		// Preset the redirect.
 		$this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=extensions' . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
