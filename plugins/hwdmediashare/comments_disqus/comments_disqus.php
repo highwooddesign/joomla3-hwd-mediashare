@@ -47,6 +47,8 @@ class plgHwdmediashareComments_disqus extends JObject
 	 * Method to insert the Disqus commenting system.
          * 
 	 * @access	public
+	 * @param       object      $item           The item being discussed.
+	 * @param       integer     $elementType    The element type being discussed: http://hwdmediashare.co.uk/learn/api/68-api-definitions
 	 * @return      void
 	 **/
 	public function getComments($item, $elementType=1)

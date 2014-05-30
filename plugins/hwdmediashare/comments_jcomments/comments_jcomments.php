@@ -13,10 +13,22 @@ defined('_JEXEC') or die;
 class plgHwdmediashareComments_jcomments extends JObject
 {               
 	/**
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+        
+	/**
 	 * Returns the plgHwdmediashareComments_jcomments object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return plgHwdmediashareComments_jcomments object.
+	 * @access	public
+	 * @return      object      The plgHwdmediashareComments_jcomments object.
 	 */
 	public static function getInstance()
 	{
@@ -34,7 +46,10 @@ class plgHwdmediashareComments_jcomments extends JObject
         /**
 	 * Method to insert the jComments commenting system.
          * 
-	 * @return  void
+	 * @access	public
+	 * @param       object      $item           The item being discussed.
+	 * @param       integer     $elementType    The element type being discussed: http://hwdmediashare.co.uk/learn/api/68-api-definitions
+	 * @return      void
 	 **/
 	public function getComments($item, $elementType=1)
 	{
@@ -83,7 +98,7 @@ class plgHwdmediashareComments_jcomments extends JObject
 
                 require_once($comments);
 
-                // Ready to Commentify!                        
+                // Return the commenting system.
                 return JComments::showComments($item->id, $extension, $item->title);
         }   
 }
