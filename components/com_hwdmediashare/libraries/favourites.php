@@ -84,7 +84,6 @@ class hwdMediaShareFavourites extends JObject
                         try
                         {                
                                 $db->setQuery($query);
-                                $db->query(); 
                                 $favourite = $db->loadResult();
                         }
                         catch (Exception $e)
@@ -190,7 +189,6 @@ class hwdMediaShareFavourites extends JObject
                 try
                 {                
                         $db->setQuery($query);
-                        $db->query(); 
                         $favourite = $db->loadResult();
                 }
                 catch (Exception $e)
