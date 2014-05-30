@@ -48,7 +48,7 @@
 		</item>
 		<item>
 			<name>Search</name>
-			<alias>media-search</alias>
+			<alias>search</alias>
 			<link><![CDATA[index.php?option=com_hwdmediashare&view=search]]></link>
 		</item>
 	</items>
