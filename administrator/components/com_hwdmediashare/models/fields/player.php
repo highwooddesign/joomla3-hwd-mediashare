@@ -15,16 +15,18 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldPlayer extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $type = 'Player';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @access	protected
+	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
 	{
@@ -46,7 +48,7 @@ class JFormFieldPlayer extends JFormFieldList
                         return false;                            
                 }
 
-                // Loop all plugins and check if a cdn plugin
+                // Loop all plugins and check if a player plugin.
 		for($i = 0; $i < count($rows); $i++)
 		{
 			$row = $rows[$i];
