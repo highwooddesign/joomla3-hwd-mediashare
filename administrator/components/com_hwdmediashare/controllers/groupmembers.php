@@ -12,21 +12,27 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 {
-    	/**
+	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * The URL view list variable.
-	 * @var    string
+	 * The name of the listing view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "groupmembers";
             
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'GroupMembers', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -35,12 +41,14 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 	}
         
         /**
-	 * Method to unlink groups from a media item
-	 * @return	void
+	 * Method to unlink members from a group.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function unlink()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -57,11 +65,11 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Unlink the items.
 			if ($model->unlink($cid, $groupId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_UNLINKED_FROM_GROUP', count($cid)));
@@ -76,12 +84,14 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 	}
         
         /**
-	 * Method to link groups to a media item
-	 * @return	void
+	 * Method to link members to a group.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function link()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -98,11 +108,11 @@ class hwdMediaShareControllerGroupMembers extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Link the items.
 			if ($model->link($cid, $groupId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_USERS_LINKED_TO_GROUP', count($cid)));
