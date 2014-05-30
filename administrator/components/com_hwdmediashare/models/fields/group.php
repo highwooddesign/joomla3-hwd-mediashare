@@ -10,42 +10,43 @@
 
 defined('_JEXEC') or die;
 
-/**
- * Supports a modal group picker.
- *
- * @package     Joomla.Administrator
- * @subpackage  com_hwdmediashare
- */
 class JFormFieldGroup extends JFormField
 {
-        /**
- 	 * Field type
- 	 * @var string
- 	 */
+	/**
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
+	 */
  	protected $type = 'Group';
 
-        /**
- 	 * Field name
- 	 * @var string
- 	 */
+	/**
+	 * The name of the form field.
+         * 
+         * @access      protected
+	 * @var         string
+	 */
  	protected $name = 'group';
 
-        /**
- 	 * Field id
- 	 * @var string
- 	 */
+	/**
+	 * The id of the form field.
+         * 
+         * @access      protected
+	 * @var         string
+	 */
  	protected $id = 'group';
 
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @return  string	The field input markup.
+	 * @access	public
+	 * @return      string      The field input markup.
 	 */
         public function getInput()
         {
 		$allowClear		= ((string) $this->element['clear'] != 'false') ? true : false;
 
-		// Load language
+		// Load language.
 		JFactory::getLanguage()->load('com_hwdmediashare', JPATH_ADMINISTRATOR);
 
 		// Load the modal behavior script.
@@ -54,7 +55,7 @@ class JFormFieldGroup extends JFormField
 		// Build the script.
 		$script = array();
 
-		// Select button script
+		// Select button script.
 		$script[] = '	function jSelectGroup_'.$this->id.'(id, title, catid, object) {';
 		$script[] = '		document.getElementById("'.$this->id.'_id").value = id;';
 		$script[] = '		document.getElementById("'.$this->id.'_name").value = title;';
@@ -67,7 +68,7 @@ class JFormFieldGroup extends JFormField
 		$script[] = '		SqueezeBox.close();';
 		$script[] = '	}';
 
-		// Clear button script
+		// Clear button script.
 		static $scriptClear;
 
 		if ($allowClear && !$scriptClear)
@@ -131,7 +132,7 @@ class JFormFieldGroup extends JFormField
 		$html[] = '<input type="text" class="input-medium" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
 		$html[] = '<a class="modal btn hasTooltip" title="'.JHtml::tooltipText('COM_HWDMS_CHANGE_GROUP').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> '.JText::_('JSELECT').'</a>';
 
-		// Clear button
+		// Clear button.
 		if ($allowClear)
 		{
 			$html[] = '<button id="'.$this->id.'_clear" class="btn'.($value ? '' : ' hidden').'" onclick="return jClearGroup(\''.$this->id.'\')"><span class="icon-remove"></span> ' . JText::_('JCLEAR') . '</button>';
