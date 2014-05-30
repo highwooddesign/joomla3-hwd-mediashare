@@ -130,9 +130,9 @@ class hwdMediaShareModelGroup extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_group_map')
                         ->where('group_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -154,9 +154,9 @@ class hwdMediaShareModelGroup extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_group_members')
                         ->where('group_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
