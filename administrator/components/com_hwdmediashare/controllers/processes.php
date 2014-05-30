@@ -14,13 +14,17 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * Constructor.
-	 * @return	void
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
@@ -32,7 +36,9 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'Process', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -42,7 +48,9 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 
         /**
 	 * Method to allow return to process manager from ajax run page.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function close()
 	{
@@ -51,11 +59,13 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
 	/**
 	 * Method to reset the attempt counter on a list of processes.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function reset()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -75,7 +85,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -95,11 +105,13 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
 	/**
 	 * Method to remove all processes marked as successful.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function deletesuccessful()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the database.
@@ -111,7 +123,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
                 $db->setQuery($query);
                 $results = $db->loadObjectList();
                 
-                // Loop through the data array
+                // Loop through the data array.
                 $cid = array();
                 foreach ($results as $result)
                 {
@@ -127,7 +139,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -147,11 +159,13 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         
 	/**
 	 * Method to remove all processes marked as unnecessary.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function deleteunnecessary()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the database.
@@ -163,7 +177,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
                 $db->setQuery($query);
                 $results = $db->loadObjectList();
                 
-                // Loop through the data array
+                // Loop through the data array.
                 $cid = array();
                 foreach ($results as $result)
                 {
@@ -179,7 +193,7 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
