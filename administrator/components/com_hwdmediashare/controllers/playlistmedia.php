@@ -71,7 +71,7 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Unlink the items.
 			if ($model->unlink($cid, $playlistId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_UNLINKED_FROM_PLAYLIST', count($cid)));
@@ -116,7 +116,7 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Link the items.
 			if ($model->link($cid, $playlistId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_LINKED_TO_PLAYLIST', count($cid)));
