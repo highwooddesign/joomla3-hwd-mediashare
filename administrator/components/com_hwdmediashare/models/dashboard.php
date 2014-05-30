@@ -66,9 +66,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_media')
                         ->where('published IN (0, 1)');
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -90,9 +90,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__categories')
                         ->where('extension = ' . $db->quote('com_hwdmediashare'));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -114,9 +114,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_albums')
                         ->where('published IN (0, 1)');
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -138,9 +138,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_groups')
                         ->where('published IN (0, 1)');
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -162,9 +162,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_users')
                         ->where('published IN (0, 1)');
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -186,9 +186,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_playlists')
                         ->where('published IN (0, 1)');
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
