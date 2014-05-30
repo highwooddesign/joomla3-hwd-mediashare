@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class HwdMediaShareControllerProcess extends JControllerLegacy 
 {
         /**
-	 * Method to run a process
+	 * Method to run a process.
 	 *
 	 * @access	public
          * @return      void
