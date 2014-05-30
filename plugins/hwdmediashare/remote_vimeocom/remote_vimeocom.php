@@ -1,34 +1,29 @@
 <?php
 /**
- * @version    $Id: remote_vimeocom.php 1667 2013-08-21 12:31:43Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import hwdMediaShare remote library
-hwdMediaShareFactory::load('remote');
-
-/**
- * hwdMediaShare framework files class
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.remote_vimeocom
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class plgHwdmediashareRemote_vimeocom extends JObject
 {    
 	/**
-	 * Remote media type integer.
-	 *
-	 * @var		int
+	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
+         * 
+         * @access      public
+	 * @var         integer
 	 */
 	public $mediaType = 4;
         
+	/**
+	 * Library data
+	 * @var strings
+	 */
         var $_url;
         var $_host;
         var $_buffer;
@@ -38,30 +33,29 @@ class plgHwdmediashareRemote_vimeocom extends JObject
         var $_duration;
         var $_thumbnail;
         
-        /**
-	 * Constructor
+	/**
+	 * Class constructor.
 	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct()
 	{
+		parent::__construct();
 	}
         
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareRemote_vimeocom object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @access	public
+	 * @return      object      The plgHwdmediashareRemote_vimeocom object.
 	 */
 	public static function getInstance()
 	{
 		static $instance;
-                unset($instance);
-		if (!isset ($instance))
+
+                if (!isset ($instance))
                 {
 			$c = 'plgHwdmediashareRemote_vimeocom';
                         $instance = new $c;
@@ -71,10 +65,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
 	}
     
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the title of the media.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getTitle()
 	{
                 if( !$this->_title )
@@ -88,10 +83,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
         }   
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the description of the media.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getDescription()
 	{
                 if( !$this->_description )
@@ -104,10 +100,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
         }  
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the source of the media.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getSource()
 	{
                 if( !$this->_source )
@@ -120,10 +117,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
         } 
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the duration of the media.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getDuration()
 	{
                 if( !$this->_duration )
@@ -151,10 +149,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
         }  
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the thumbnail location of the media.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getThumbnail()
 	{
                 if( !$this->_thumbnail )
@@ -182,7 +181,7 @@ class plgHwdmediashareRemote_vimeocom extends JObject
                                         }
                                         else
                                         {
-                                                $length = $pos_thumb_end+4 - $pos_thumb_start;
+                                                $length = $pos_thumb_end + 4 - $pos_thumb_start;
                                                 $thumbnail = substr($buffer, $pos_thumb_start, $length);
                                                 $thumbnail = strip_tags($thumbnail);
                                         }
@@ -204,10 +203,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
         } 
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Request the source, and set to buffer.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getBuffer()
 	{
                 $this->getHost();
@@ -223,10 +223,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
 	}
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the host of the media source.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getHost()
 	{
                 if (!$this->_host)
@@ -239,10 +240,11 @@ class plgHwdmediashareRemote_vimeocom extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Get the url of the media source.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getUrl()
 	{
                 if (!$this->_url)
@@ -255,31 +257,55 @@ class plgHwdmediashareRemote_vimeocom extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Render the HTML to display the media.
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      void
+	 */
 	public function display($item)
 	{
-		$plugin =& JPluginHelper::getPlugin('hwdmediashare', 'remote_vimeocom');
-		$params = new JRegistry( @$plugin->params );
-                
-                // Load hwdMediaShare config
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_vimeocom');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_vimeocom', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VIMEOCOM_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                $autoplay = (JRequest::getInt('media_autoplay', $config->get('media_autoplay')) == 1 ? 'true' : 'false');
-
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-
-                $this->width = $utilities->getMediaWidth();
-                $this->height = (int) $config->get('mediaitem_height') ? $config->get('mediaitem_height') : $this->width*$config->get('video_aspect',0.75);
-
-                $id = plgHwdmediashareRemote_vimeocom::parse($item->source);                
+                
+                // Get Vimeo ID
+                $id = plgHwdmediashareRemote_vimeocom::parse($item->source);
+              
+                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+                $this->width = '100%';
+                $this->height = '100%';
                 ob_start();
                 ?>
-                <iframe src="<?php echo JURI::getInstance()->getScheme(); ?>://player.vimeo.com/video/<?php echo $id; ?>?title=0&amp;autoplay=<?php echo $autoplay; ?>&amp;byline=0&amp;portrait=0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>	
+                <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
+                  <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
+                  <div class="media-content">
+                    <iframe src="<?php echo JURI::getInstance()->getScheme(); ?>://player.vimeo.com/video/<?php echo $id; ?>?title=0&amp;autoplay=<?php echo $this->autoplay; ?>&amp;byline=0&amp;portrait=0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>	
+                  </div>
+                </div>
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
@@ -287,19 +313,22 @@ class plgHwdmediashareRemote_vimeocom extends JObject
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/        
+	 * Parse the source to extract the media.
+	 *
+	 * @access	public
+	 * @param       string      $url        The media url.
+         * @return      void
+	 */         
         protected function parse($url)
         {
-                // Switch back to http
+                // Switch back to http.
                 $url = str_replace("https", "http", $url);
                 
                 if (preg_match('~^http://(?:www\.)?vimeo\.com/(?:clip:)?(\d+)~', $url, $match)) 
                 {
                         if (!empty($match[1])) return $match[1];
-                } 
+                }
+                
                 return null;
         }
 }
