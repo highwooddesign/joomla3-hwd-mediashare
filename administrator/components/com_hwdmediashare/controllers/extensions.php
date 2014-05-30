@@ -14,7 +14,9 @@ class hwdMediaShareControllerExtensions extends JControllerAdmin
 {
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'Extension', $prefix = 'hwdMediaShareModel', $config = array())
 	{
