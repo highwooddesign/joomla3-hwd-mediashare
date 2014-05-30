@@ -12,20 +12,23 @@ defined('_JEXEC') or die;
 
 class JFormFieldDuration extends JFormField
 {
-    	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	/**
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $type = 'Duration';
 
 	/**
-	 * Method to get the duration field input markup.
+	 * Method to get the field options.
 	 *
-	 * @return  string  The field input markup.
+	 * @access	protected
+	 * @return      array       The field option objects.
 	 */
 	protected function getInput()
 	{
+                // Initialise variables.
 		$doc = JFactory::getDocument();            
 
                 // Add page assets.
@@ -33,6 +36,7 @@ class JFormFieldDuration extends JFormField
                 $doc->addStyleSheet(JURI::root( true ).'/media/com_hwdmediashare/assets/css/bootstrap-timepicker.min.css');
                 $doc->addScript(JURI::root( true ).'/media/com_hwdmediashare/assets/javascript/bootstrap-timepicker.min.js');
                 
+                // Convert seconds into time object.
                 $duration = hwdMediaShareMedia::secondsToTime($this->value, true);
 
                 // Start capturing output into a buffer.
