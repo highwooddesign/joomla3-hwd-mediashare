@@ -14,7 +14,9 @@ class hwdMediaShareControllerMaintenance extends JControllerForm
 {
         /**
 	 * Proxy for cancel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function cancel($key = null)
 	{
