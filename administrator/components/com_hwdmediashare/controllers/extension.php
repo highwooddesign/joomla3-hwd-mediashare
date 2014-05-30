@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerExtension extends JControllerForm
 {
 	/**
-	 * The prefix to use with controller messages.
+	 * The name of the listing view to use with this controller.
          * 
          * @access      protected
 	 * @var         string
