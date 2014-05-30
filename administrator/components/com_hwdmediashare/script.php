@@ -62,6 +62,12 @@ class com_hwdMediaShareInstallerScript
 	{
 		// $parent is the class calling this method
 		// echo '<p>' . JText::_('COM_HWDMEDIASHARE_UPDATE_TEXT') . '</p>';
+                
+                // Remove old files.
+                com_hwdMediaShareInstallerScript::removeOldFiles();
+                
+                // Update database.
+                com_hwdMediaShareInstallerScript::databaseFixes();            
 	}
 
 	/**
@@ -103,16 +109,10 @@ class com_hwdMediaShareInstallerScript
 		// $parent is the class calling this method
 		// $type is the type of change (install, update or discover_install)
 		// echo '<p>' . JText::_('COM_HWDMEDIASHARE_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
-                
-                // Remove old files.
-                com_hwdMediaShareInstallerScript::removeOldFiles();
 
                 // Add content types.
                 com_hwdMediaShareInstallerScript::addContentTypes();
 
-                // Update database.
-                com_hwdMediaShareInstallerScript::databaseFixes();
-                
                 // Check if the HWD menu exists.
                 if (!com_hwdMediaShareInstallerScript::checkMenuExists())
                 {
