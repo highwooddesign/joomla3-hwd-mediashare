@@ -75,7 +75,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -125,7 +125,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Feature/unfeature the items.
 			if ($model->feature($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'D', count($cid)));
