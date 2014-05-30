@@ -14,13 +14,17 @@ class hwdMediaShareControllerProcess extends JControllerForm
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * Constructor.
-	 * @return	void
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
@@ -32,11 +36,13 @@ class hwdMediaShareControllerProcess extends JControllerForm
         
         /**
 	 * Method to run processes sequentially using ajax.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
         function run()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -47,7 +53,7 @@ class hwdMediaShareControllerProcess extends JControllerForm
 		$task	= $this->getTask();
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
                 
-                // If we want to process everything, then reset the $cid array
+                // If we want to process everything, then reset the $cid array.
                 if ($value)
                 {
                         $cid = array();
