@@ -27,7 +27,7 @@ class hwdMediaShareControllerCustomField extends JControllerForm
 		 * change, making it impossible for AJAX to work.
 		 */
             
-                // Get the document object.
+		// Initialise variables.
                 $document = JFactory::getDocument();
                 
                 $return = array();
