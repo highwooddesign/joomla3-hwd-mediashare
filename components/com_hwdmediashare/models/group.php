@@ -563,16 +563,15 @@ class hwdMediaShareModelGroup extends JModelList
                                 return false;
                         }
 
+                        $query = $db->getQuery(true)
+                                ->select('COUNT(*)')
+                                ->from('#__hwdms_group_members')
+                                ->where('group_id = ' . $db->quote($pk))
+                                ->where('member_id = ' . $db->quote($user->id))
+                                ->group('member_id');                        
                         try
                         {                
-                                $query = $db->getQuery(true)
-                                        ->select('COUNT(*)')
-                                        ->from('#__hwdms_group_members')
-                                        ->where('group_id = ' . $db->quote($pk))
-                                        ->where('member_id = ' . $db->quote($user->id))
-                                        ->group('member_id');
                                 $db->setQuery($query);
-                                $db->query(); 
                                 $member = $db->loadResult();
                         }
                         catch (Exception $e)
@@ -689,17 +688,16 @@ class hwdMediaShareModelGroup extends JModelList
                 // Initialise variables
                 $db = JFactory::getDBO();
                 $user = JFactory::getUser();
-                
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_group_members')
+                        ->where('group_id = ' . $db->quote($group->id))
+                        ->where('member_id = ' . $db->quote($user->id))
+                        ->group('member_id');                
                 try
                 {                
-                        $query = $db->getQuery(true)
-                                ->select('COUNT(*)')
-                                ->from('#__hwdms_group_members')
-                                ->where('group_id = ' . $db->quote($group->id))
-                                ->where('member_id = ' . $db->quote($user->id))
-                                ->group('member_id');
                         $db->setQuery($query);
-                        $db->execute(); 
                         $member = $db->loadResult();
                 }
                 catch (Exception $e)
