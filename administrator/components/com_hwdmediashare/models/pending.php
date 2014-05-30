@@ -24,9 +24,9 @@ class hwdMediaShareModelPending extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_media')
                         ->where('status = ' . $db->quote(2));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -49,9 +49,9 @@ class hwdMediaShareModelPending extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_albums')
                         ->where('status = ' . $db->quote(2));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -74,9 +74,9 @@ class hwdMediaShareModelPending extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_groups')
                         ->where('status = ' . $db->quote(2));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -101,9 +101,9 @@ class hwdMediaShareModelPending extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_users')
                         ->where('status = ' . $db->quote(2));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -126,9 +126,9 @@ class hwdMediaShareModelPending extends JModelLegacy
                         ->select('COUNT(*)')
                         ->from('#__hwdms_playlists')
                         ->where('status = ' . $db->quote(2));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
