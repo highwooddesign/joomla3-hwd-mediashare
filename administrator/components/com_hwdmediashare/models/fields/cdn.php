@@ -15,16 +15,18 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldCdn extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $type = 'CDN';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @access	protected
+	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
 	{
@@ -46,18 +48,18 @@ class JFormFieldCdn extends JFormFieldList
                         return false;                            
                 }
 
-                // Loop all plugins and check if a cdn plugin
+                // Loop all plugins and check if a cdn plugin.
 		for($i = 0; $i < count($rows); $i++)
 		{
 			$row = $rows[$i];
 
                         if(substr($row->element, 0, 4) == 'cdn_')
 			{
-                                // Load the plugin language file
+                                // Load the plugin language file.
                                 $lang = JFactory::getLanguage();
                                 $lang->load($row->name, JPATH_SITE . '/administrator', $lang->getTag());
 
-                                // Add option
+                                // Add option.
                                 if (file_exists(JPATH_ROOT.'/plugins/hwdmediashare/' . $row->element . '/' . $row->element . '.php'))
                                 {
                                         $options[] = JHtml::_('select.option', $row->element, JText::_($row->name));  
