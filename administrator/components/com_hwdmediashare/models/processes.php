@@ -128,9 +128,9 @@ class hwdMediaShareModelProcesses extends JModelList
                         ->select('COUNT(*)')
                         ->from('#__hwdms_processes')
                         ->where('status = ' . $db->quote(2));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -152,9 +152,9 @@ class hwdMediaShareModelProcesses extends JModelList
                         ->select('COUNT(*)')
                         ->from('#__hwdms_processes')
                         ->where('status = ' . $db->quote(4));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
