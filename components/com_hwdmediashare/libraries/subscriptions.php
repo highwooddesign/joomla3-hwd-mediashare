@@ -90,7 +90,6 @@ class hwdMediaShareSubscriptions extends JObject
                         try
                         {                
                                 $db->setQuery($query);
-                                $db->query(); 
                                 $subscribed = $db->loadResult();
                         }
                         catch (Exception $e)
@@ -202,7 +201,6 @@ class hwdMediaShareSubscriptions extends JObject
                 try
                 {                
                         $db->setQuery($query);
-                        $db->query(); 
                         $subscribed = $db->loadResult();
                 }
                 catch (Exception $e)
