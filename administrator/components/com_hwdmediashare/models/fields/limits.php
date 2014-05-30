@@ -17,7 +17,7 @@ class JFormFieldLimits extends JFormFieldRules
 	/**
 	 * The name of the form field type.
          * 
-         * @access      protected
+         * @access      public
 	 * @var         string
 	 */
 	public $type = 'Limits';
