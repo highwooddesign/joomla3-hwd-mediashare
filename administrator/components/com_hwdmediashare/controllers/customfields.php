@@ -14,13 +14,17 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
             
 	/**
-	 * Constructor.
-	 * @return	void
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
@@ -34,7 +38,9 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'CustomField', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -44,11 +50,13 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
         
 	/**
 	 * Method to toggle the "searchable" setting of a list of custom fields.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function searchable()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -68,11 +76,11 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Toogle "searchable" setting of the items.
 			if ($model->searchable($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_FIELDS_'.strtoupper($task), count($cid)));
@@ -88,11 +96,13 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
         
 	/**
 	 * Method to toggle the "visible" setting of a list of custom fields.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function visible()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -112,11 +122,11 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Toogle "visible" setting of the items.
 			if ($model->visible($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_FIELDS_'.strtoupper($task), count($cid)));
@@ -132,11 +142,13 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
         
 	/**
 	 * Method to toggle the "required" setting of a list of custom fields.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function required()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -156,11 +168,11 @@ class hwdMediaShareControllerCustomFields extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Toogle "required" setting of the items.
 			if ($model->required($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_FIELDS_'.strtoupper($task), count($cid)));
