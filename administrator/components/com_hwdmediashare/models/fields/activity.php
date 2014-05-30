@@ -15,16 +15,18 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldActivity extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $type = 'Activity';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @access	protected
+	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
 	{
