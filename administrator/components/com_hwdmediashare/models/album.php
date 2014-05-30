@@ -127,9 +127,9 @@ class hwdMediaShareModelAlbum extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_album_map')
                         ->where('album_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
