@@ -13,8 +13,10 @@ defined('_JEXEC') or die;
 class plgHwdmediashareRemote_youtubecom extends JObject
 {    
 	/**
-	 * Remote media type integer.
-	 * @var int
+	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
+         * 
+         * @access      public
+	 * @var         integer
 	 */
 	public $mediaType = 4;
         
@@ -32,10 +34,22 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         var $_thumbnail;
         
 	/**
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+        
+	/**
 	 * Returns the plgHwdmediashareRemote_youtubecom object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return plgHwdmediashareRemote_youtubecom object.
+	 * @access	public
+	 * @return      object      The plgHwdmediashareRemote_youtubecom object.
 	 */
 	public static function getInstance()
 	{
@@ -52,8 +66,10 @@ class plgHwdmediashareRemote_youtubecom extends JObject
     
         /**
 	 * Get the title of the media.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getTitle()
 	{
                 if( !$this->_title )
@@ -68,8 +84,10 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 
         /**
 	 * Get the description of the media.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getDescription()
 	{
                 if( !$this->_description )
@@ -83,8 +101,10 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         
         /**
 	 * Get the source of the media.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getSource()
 	{
                 if( !$this->_source )
@@ -98,8 +118,10 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 
         /**
 	 * Get the duration of the media.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getDuration()
 	{
                 if( !$this->_duration )
@@ -123,8 +145,10 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 
         /**
 	 * Get the thumbnail location of the media.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getThumbnail()
 	{
                 if( !$this->_thumbnail )
@@ -136,8 +160,10 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         
         /**
 	 * Request the source, and set to buffer.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getBuffer()
 	{
                 $this->getHost();
@@ -153,9 +179,11 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
 
         /**
-	 * Get the host of the media.
-	 * @return  void
-	 **/
+	 * Get the host of the media source.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getHost()
 	{
                 if (!$this->_host)
@@ -168,9 +196,11 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	}
         
         /**
-	 * Get the url of the media.
-	 * @return  void
-	 **/
+	 * Get the url of the media source.
+	 *
+	 * @access	public
+         * @return      void
+	 */
 	public function getUrl()
 	{
                 if (!$this->_url)
@@ -184,8 +214,11 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         
         /**
 	 * Render the HTML to display the media.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      void
+	 */
 	public function display($item)
 	{
 		// Initialise variables.
@@ -261,8 +294,15 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         
         /**
 	 * Parse the source to extract the media.
-	 * @return  void
-	 **/        
+	 *
+	 * @access	public
+	 * @param       string      $url        The media url.
+	 * @param       string      $return     The format to return.
+	 * @param       integer     $width      The width.
+	 * @param       integer     $height     The height.
+	 * @param       integer     $rel        The option to display relative videos after the video finishes playing.
+         * @return      void
+	 */      
         protected function parse($url, $return='embed', $width='', $height='', $rel=0)
         {
                 $urls = parse_url($url);
@@ -287,22 +327,22 @@ class plgHwdmediashareRemote_youtubecom extends JObject
                     $id = $arrayVars['v'];    
                 }
                 
-                // Return embed iframe
+                // Return embed iframe.
                 if($return == 'embed')
                 {
                     return '<iframe width="'.($width?$width:560).'" height="'.($height?$height:349).'" src="http://www.youtube.com/embed/'.$id.'?rel='.$rel.'" frameborder="0" allowfullscreen></iframe>';
                 }
-                // Return normal thumb
+                // Return normal thumb.
                 else if($return == 'thumb')
                 {
                     return 'http://i1.ytimg.com/vi/'.$id.'/default.jpg';
                 }
-                // Return hqthumb
+                // Return hqthumb.
                 else if($return == 'hqthumb')
                 {
                     return 'http://i1.ytimg.com/vi/'.$id.'/hqdefault.jpg';
                 }
-                // Return id
+                // Return id.
                 else
                 {
                     return $id;
@@ -311,8 +351,11 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         
         /**
 	 * Method to construct a video link for use with SWF, as an open graph video tag.
-	 * @return  void
-	 **/
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      void
+	 */
 	public function getOgVideoTag($item)
 	{
                 $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
