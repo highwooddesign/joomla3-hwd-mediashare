@@ -14,13 +14,17 @@ class hwdMediaShareControllerGroups extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * Constructor.
-	 * @return	void
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
@@ -33,7 +37,9 @@ class hwdMediaShareControllerGroups extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'Group', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -43,11 +49,13 @@ class hwdMediaShareControllerGroups extends JControllerAdmin
         
 	/**
 	 * Method to toggle the status setting of a list of groups.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function approve()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -67,7 +75,7 @@ class hwdMediaShareControllerGroups extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -87,11 +95,13 @@ class hwdMediaShareControllerGroups extends JControllerAdmin
         
 	/**
 	 * Method to toggle the featured setting of a list of groups.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function feature()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -111,7 +121,7 @@ class hwdMediaShareControllerGroups extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
