@@ -23,7 +23,7 @@ class JFormFieldLimits extends JFormFieldRules
 	public $type = 'Limits';
 
 	/**
-	 * Method to get the field input markup for upload limits
+	 * Method to get the field input markup for upload limits.
 	 *
 	 * @access	protected
 	 * @return      string          The field input markup.
