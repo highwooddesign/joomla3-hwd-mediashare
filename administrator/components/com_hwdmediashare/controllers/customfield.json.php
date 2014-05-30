@@ -13,10 +13,13 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerCustomField extends JControllerForm
 {
         /**
-	 * Method to get the field parameters of a custom field type, in JSON format, for AJAX requests
-	 * @return	json
+	 * Method to get the field parameters of a custom field type
+         * in JSON format, for AJAX requests
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function fieldparameters()
+        public function fieldparameters()
         {
 		/*
 		 * Note: we don't do a token check as we're fetching information
@@ -45,12 +48,12 @@ class hwdMediaShareControllerCustomField extends JControllerForm
                                 return false;
                         }
 
-                        // Load params from database
+                        // Load params from database.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $row = JTable::getInstance('CustomField', 'hwdMediaShareTable');
                         $row->load($field);
                         
-                        // Bind params to form
+                        // Bind params to form.
                         $form->bind($row->params); 
 
                         foreach($form->getFieldset('details') as $field)
