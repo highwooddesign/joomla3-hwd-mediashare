@@ -14,13 +14,17 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
             
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'Report', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -30,11 +34,13 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 
         /**
 	 * Method to dismiss a report.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function dismiss()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -49,7 +55,7 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -69,11 +75,11 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 	}  
         
 	/**
-	 * Get the return URL.
-	 *
-	 * If a "return" variable has been passed in the request
-	 *
-	 * @return  string	The return URL.
+	 * Get the return URL, if a "return" variable has been 
+         * passed in the request.
+         * 
+	 * @access	protected
+         * @return      string      The return URL.
 	 */
 	protected function getReturnPage()
 	{
