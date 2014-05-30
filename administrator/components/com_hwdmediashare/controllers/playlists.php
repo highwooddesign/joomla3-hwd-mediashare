@@ -125,7 +125,7 @@ class hwdMediaShareControllerPlaylists extends JControllerAdmin
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Feature/unfeature the items.
 			if ($model->feature($cid, $value))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'D', count($cid)));
