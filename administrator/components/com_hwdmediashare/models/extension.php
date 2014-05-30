@@ -97,9 +97,9 @@ class hwdMediaShareModelExtension extends JModelAdmin
                                 ->select('COUNT(*)')
                                 ->from('#__hwdms_media')
                                 ->where('ext_id = ' . $db->quote($pk));
-                        $db->setQuery($query);
                         try
                         {
+                                $db->setQuery($query);
                                 $count = $db->loadResult();
                         }
                         catch (RuntimeException $e)
