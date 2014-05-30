@@ -13,16 +13,15 @@ defined('_JEXEC') or die;
 abstract class hwdMediaShareHelper
 {
 	/**
-	 * Configure the Linkbar.
-         * 
-	 * @param   string  $vName  The name of the active view.
-         * 
-	 * @return  void
+	 * Configure the submenu by adding entries to the sidebar.
+	 *
+	 * @access	public
+	 * @static
+	 * @param       string      $submenu        The name of the active view.
+         * @return      void
 	 */
 	public static function addSubmenu($submenu)
 	{
-                $version = new JVersion();
-
 		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_DASHBOARD'),
 			'index.php?option=com_hwdmediashare&view=dashboard',
@@ -83,11 +82,11 @@ abstract class hwdMediaShareHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @param   string   $component  The component name.
-	 * @param   string   $section    The access section name.
-	 * @param   integer  $id         The item ID.
-	 *
-	 * @return  JObject
+	 * @access	public
+	 * @static
+	 * @param       integer     $id         The item ID.
+	 * @param       string      $type       The access section name.
+         * @return      JObject
 	 */
 	public static function getActions($id = 0, $type = 'media')
 	{
