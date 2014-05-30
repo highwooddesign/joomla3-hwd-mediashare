@@ -13,19 +13,20 @@ defined('_JEXEC') or die;
 abstract class JHtmlHwdAdminPlaylists
 {
 	/**
-	 * Show the feature/unfeature links
+	 * Show the feature/unfeature links.
 	 *
-	 * @param   int      $value      The state value
-	 * @param   int      $i          Row number
-	 * @param   boolean  $canChange  Is user allowed to change?
-	 *
-	 * @return  string   HTML code
+	 * @access	public
+         * @static 
+	 * @param       int         $value      The state value
+	 * @param       int         $i          Row number
+	 * @param       boolean     $canChange  Is user allowed to change?
+	 * @return      string      HTML code
 	 */
 	public static function featured($value = 0, $i, $canChange = true)
 	{
 		JHtml::_('bootstrap.tooltip');
 
-		// Array of image, task, title, action
+		// Array of image, task, title, action.
 		$states	= array(
 			0	=> array('unfeatured',	'playlists.feature',	'COM_HWDMS_UNFEATURED',         'COM_HWDMS_TOGGLE_TO_FEATURE'),
 			1	=> array('featured',	'playlists.unfeature',	'COM_HWDMS_FEATURED',		'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
@@ -48,19 +49,20 @@ abstract class JHtmlHwdAdminPlaylists
 	}
         
 	/**
-	 * Show the approve/unapprove links
+	 * Show the approve/unapprove links.
 	 *
-	 * @param   int      $value      The state value
-	 * @param   int      $i          Row number
-	 * @param   boolean  $canChange  Is user allowed to change?
-	 *
-	 * @return  string       HTML code
+	 * @access	public
+         * @static 
+	 * @param       int         $value      The state value
+	 * @param       int         $i          Row number
+	 * @param       boolean     $canChange  Is user allowed to change?
+	 * @return      string      HTML code
 	 */
 	public static function status($value = 0, $i, $canChange = true)
 	{
 		JHtml::_('bootstrap.tooltip');
 
-		// Array of image, task, title, action
+		// Array of image, task, title, action.
 		$states	= array(
 			0	=> array('unpublish',	'playlists.approve',	'COM_HWDMS_UNAPPROVED',         'COM_HWDMS_TOGGLE_TO_APPROVE'),
 			1	=> array('publish',	'playlists.unapprove',	'COM_HWDMS_APPROVED',		'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
