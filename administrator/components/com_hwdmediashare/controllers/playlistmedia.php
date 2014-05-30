@@ -14,19 +14,25 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
             
 	/**
-	 * The URL view list variable.
-	 * @var    string
+	 * The name of the listing view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "playlistmedia";
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'PlaylistMediaItem', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -35,12 +41,14 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 	}
         
         /**
-	 * Method to unlink media from a playlist
-	 * @return	void
+	 * Method to unlink media from a playlist.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function unlink()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -59,7 +67,7 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -78,12 +86,14 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 	}
         
         /**
-	 * Method to link media to a playlist
-	 * @return	void
+	 * Method to link media to a playlist.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function link()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -102,7 +112,7 @@ class hwdMediaShareControllerPlaylistMedia extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
