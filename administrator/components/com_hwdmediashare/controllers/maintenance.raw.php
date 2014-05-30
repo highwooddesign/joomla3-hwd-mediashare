@@ -12,11 +12,12 @@ defined('_JEXEC') or die;
 
 class HwdMediaShareControllerMaintenance extends JControllerLegacy
 {
-        
         /**
 	 * Proxy for getModel.
-	 * @return	void
-	 */                
+	 *
+	 * @access	public
+         * @return      object      The model.
+	 */               
 	public function getModel($name = 'Maintenance', $prefix = 'hwdMediaShareModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
@@ -25,7 +26,9 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy
         
         /**
 	 * Method to run the maintenance.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
         function run()
         {
