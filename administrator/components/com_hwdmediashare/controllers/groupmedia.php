@@ -14,19 +14,25 @@ class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * The URL view list variable.
-	 * @var    string
+	 * The name of the listing view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "groupmedia";
             
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'GroupMediaItem', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -35,12 +41,14 @@ class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 	}
         
         /**
-	 * Method to unlink media from a group
-	 * @return	void
+	 * Method to unlink media from a group.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function unlink()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -59,11 +67,11 @@ class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Unlink the items.
 			if ($model->unlink($cid, $groupId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_UNLINKED_FROM_GROUP', count($cid)));
@@ -78,12 +86,14 @@ class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 	}
         
         /**
-	 * Method to link media to a group
-	 * @return	void
+	 * Method to link media to a group.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function link()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -102,11 +112,11 @@ class hwdMediaShareControllerGroupMedia extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Link the items.
 			if ($model->link($cid, $groupId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_LINKED_TO_GROUP', count($cid)));
