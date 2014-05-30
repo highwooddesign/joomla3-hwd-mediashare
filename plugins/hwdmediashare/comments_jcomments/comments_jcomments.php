@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.site
- * @subpackage  Plugin.hwdmediashare.comments_disqus
+ * @subpackage  Plugin.hwdmediashare.comments_jcomments
  *
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
