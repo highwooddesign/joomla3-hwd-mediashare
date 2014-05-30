@@ -127,9 +127,9 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_playlist_map')
                         ->where('playlist_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
