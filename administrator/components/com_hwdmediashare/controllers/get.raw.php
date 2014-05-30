@@ -13,8 +13,11 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerGet extends JControllerForm
 {        
 	/**
-	 * Method to deliver a media file through HWD.
-	 * @return void
+	 * Method to dynamically deliver a media file.
+	 *
+	 * @access	public
+	 * @static
+         * @return      void
 	 */
         public static function file()
         {
