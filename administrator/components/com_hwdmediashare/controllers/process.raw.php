@@ -14,7 +14,9 @@ class HwdMediaShareControllerProcess extends JControllerLegacy
 {
         /**
 	 * Method to run a process
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
         public function run()
         {
