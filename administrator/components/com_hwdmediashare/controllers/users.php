@@ -14,13 +14,17 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * Constructor.
-	 * @return	void
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
@@ -33,7 +37,9 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'User', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -43,7 +49,9 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
         
 	/**
 	 * Method to toggle the status setting of a list of users.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function approve()
 	{
@@ -87,7 +95,9 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
         
 	/**
 	 * Method to toggle the featured setting of a list of users.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function feature()
 	{
