@@ -16,20 +16,22 @@ JFormHelper::loadFieldClass('limitbox');
 class JFormFieldHwdLimitBox extends JFormFieldLimitbox
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	public $type = 'HwdLimitBox';
 
 	/**
-	 * Method to get the options to populate to populate list
+	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @access	protected
+	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
 	{
-                // Get HWD config
+                // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
