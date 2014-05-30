@@ -13,8 +13,10 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerSample extends JControllerLegacy 
 {
         /**
-	 * Method to install sample data
-	 * @return	void
+	 * Method to install sample data.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function install()
 	{
@@ -37,7 +39,7 @@ class hwdMediaShareControllerSample extends JControllerLegacy
                 
                 $db = JFactory::getDBO();
                 
-                // Install sample album data
+                // Install sample album data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_albums` (`id`, `thumbnail_ext_id`, `key`, `title`, `alias`, `description`, `likes`, `dislikes`, `status`, `published`, `featured`, `checked_out`, `checked_out_time`, `access`, `params`, `ordering`, `created_user_id`, `created_user_id_alias`, `created`, `publish_up`, `publish_down`, `modified_user_id`, `modified`, `hits`, `language`) VALUES
 (28, 0, '0f89f7b5a6475021e312d73e7c7f1e0f', 'Nature', 'nature', '<p>\r\nAliquet tincidunt nec auctor auctor pulvinar etiam magnis purus porttitor ultrices integer cursus mus mauris, est. Montes. Ut, a, augue etiam pellentesque integer. Porta proin? Tincidunt! Arcu, nascetur, odio? \r\n</p>\r\n<p>\r\nPulvinar nisi, aliquam mauris porttitor sed, aenean hac mauris aliquam, penatibus magnis, mid magna, enim! Turpis facilisis scelerisque? Tincidunt! A eu lorem, lectus augue pulvinar hac lectus augue adipiscing in! Phasellus eros adipiscing dictumst et a lectus lacus ac magna auctor nunc, porttitor nunc auctor, quis lundium nisi amet amet? \r\n</p>\r\n<p>\r\nDiam amet vut pulvinar, turpis velit nunc, ac, enim augue enim ac! Rhoncus, integer! Nisi nunc, hac lundium? Sed cum. Ridiculus tincidunt lacus aliquet, turpis ut, elit in! Mattis. Adipiscing ac nascetur mus ultrices ut dignissim, magna ultricies! Tincidunt scelerisque.\r\n</p>', 376, 37, 1, 1, 1, 0, '0000-00-00 00:00:00', 1, '{"metadesc":"","metakey":"","robots":"","author":"","rights":""}', 0, $user->id, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', $user->id, '0000-00-00 00:00:00', 4726, '*'),
@@ -54,7 +56,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample group data
+                // Install sample group data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_groups` (`id`, `thumbnail_ext_id`, `key`, `title`, `alias`, `description`, `likes`, `dislikes`, `status`, `published`, `featured`, `checked_out`, `checked_out_time`, `access`, `params`, `ordering`, `created_user_id`, `created_user_id_alias`, `created`, `publish_up`, `publish_down`, `modified_user_id`, `modified`, `hits`, `language`) VALUES
 (28, 0, '19e46a96a763f1429f8ebae9257620c7', 'Nature Enthusiasts', 'nature-enthusiasts', '<p>\r\nSit facilisis turpis, habitasse odio vut? Egestas, augue elementum urna ac vut mattis in! Dolor odio dapibus, lacus sagittis, urna, eros, duis nisi, ac ultrices adipiscing ultrices massa ultricies velit ac. Phasellus etiam? \r\n</p>\r\n<p>\r\nQuis ac, et lundium etiam, lundium. Sit in tincidunt adipiscing, dis? Eu pid dis, a nunc. Non? Amet mauris cum. Amet turpis, enim pulvinar augue porttitor. Enim integer eros nunc, pulvinar placerat, turpis tristique est tincidunt? Et porttitor, urna lectus dignissim pulvinar nisi lectus nascetur tortor! Non etiam scelerisque enim? \r\n</p>\r\n</p>\r\nVel, et nec mauris, lorem ut. Massa, mid nisi in quis adipiscing. Aenean? Massa ut! Porttitor turpis mid integer integer egestas rhoncus. Ac mauris tristique dolor, sed a lorem, enim, adipiscing placerat augue? Et in ac.\r\n</p>', 375, 203, 1, 1, 1, 0, '0000-00-00 00:00:00', 1, '{"metadesc":"","metakey":"","robots":"","author":"","rights":""}', 0, $user->id, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', $user->id, '0000-00-00 00:00:00', 2768, '*'),
@@ -71,7 +73,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample playlist data
+                // Install sample playlist data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_playlists` (`id`, `thumbnail_ext_id`, `key`, `title`, `alias`, `description`, `likes`, `dislikes`, `status`, `published`, `featured`, `checked_out`, `checked_out_time`, `access`, `params`, `ordering`, `created_user_id`, `created_user_id_alias`, `created`, `publish_up`, `publish_down`, `modified_user_id`, `modified`, `hits`, `language`) VALUES
 (28, 0, 'bb48a83ef5d8e64d20d66da56ffb42c7', 'Nature', 'nature', '<p>Mattis, scelerisque placerat. Ridiculus penatibus, lacus urna nec placerat sit ac eu sed amet, cras phasellus diam aenean turpis? Sed, sagittis dolor nec integer tristique in turpis turpis egestas, egestas augue, lacus sit vel eros?</p>\r\n\r\n<p>Penatibus duis porta porta? Habitasse nec! Dignissim ridiculus a, arcu egestas a, porttitor placerat augue penatibus, quis phasellus, placerat? Ut ut integer aenean amet, in dapibus ultricies pid enim aliquet ac, hac scelerisque porta, montes dapibus turpis elementum odio, arcu massa porttitor facilisis tincidunt, cum, pellentesque turpis sit?</p>\r\n\r\n<p>Mid et, nisi enim ut nunc ultrices mauris, integer ultricies urna rhoncus? Mus eu sagittis ut! Odio urna! Etiam sit dignissim, ut massa, risus vut placerat turpis, cursus, et, rhoncus turpis ridiculus, integer auctor augue turpis.</p>', 213, 93, 1, 1, 1, 0, '0000-00-00 00:00:00', 1, '{"metadesc":"","metakey":"","robots":"","author":"","rights":""}', 0, $user->id, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', $user->id, '0000-00-00 00:00:00', 10274, '*'),
@@ -88,7 +90,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample activity data
+                // Install sample activity data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_activities` (`id`, `activity_type`, `element_type`, `element_id`, `reply_id`, `title`, `alias`, `description`, `likes`, `dislikes`, `status`, `published`, `featured`, `checked_out`, `checked_out_time`, `access`, `params`, `ordering`, `created_user_id`, `created_user_id_alias`, `created`, `publish_up`, `publish_down`, `modified_user_id`, `modified`, `hits`, `language`) VALUES
 (28, 3, 2, 28, 0, '', '', '', 36, 6, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '', 0, $user->id, '', '2012-01-25 12:00:00', '2012-01-25 12:00:00', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, ''),
@@ -114,7 +116,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Now we download the sample data pack, and save it to the /tmp folder
+                // Now we download the sample data pack, and save it to the Joomla tmp folder.
                 $url  = 'http://hwdmediashare.co.uk/media/sample.zip';
                 $path = JPATH_SITE.'/tmp/sample.zip';
                 $dest = JPATH_SITE.'/media/com_hwdmediashare/files/';
@@ -129,12 +131,12 @@ SQL;
                 curl_close($ch);
                 fclose($fp);
 
-                // Now we extract the sample data
+                // Now we extract the sample data.
                 jimport('joomla.filesystem.archive');
                 JArchive::extract($path, $dest);
                 
-                // If successfull, we inject the rest of the sample data
-                // Install sample media data
+                // If successfull, we inject the rest of the sample data.
+                // Install sample media data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_media` (`id`, `asset_id`, `ext_id`, `key`, `title`, `alias`, `description`, `type`, `source`, `storage`, `duration`, `streamer`, `file`, `embed_code`, `thumbnail`, `location`, `likes`, `dislikes`, `status`, `published`, `featured`, `checked_out`, `checked_out_time`, `access`, `params`, `ordering`, `created_user_id`, `created_user_id_alias`, `created`, `publish_up`, `publish_down`, `modified_user_id`, `modified`, `hits`, `language`) VALUES
 (28, 0, 29, '71c51ac4569155797973416383547d6d', 'Football', 'football', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae felis tortor. Cras ut risus erat. Mauris at ipsum eget augue pharetra congue. Proin feugiat auctor bibendum. Mauris auctor risus mi. Aenean purus diam, feugiat quis placerat a, elementum vel justo. Vestibulum nec augue id odio bibendum pulvinar ut sed nibh. Donec vitae nunc sit amet mi ullamcorper tempus. Donec bibendum risus eget felis mattis a suscipit lectus auctor. Vivamus blandit velit at arcu porttitor pellentesque. Praesent sit amet purus sit amet nisi elementum mattis at quis felis. Sed sit amet diam in nunc luctus feugiat. In volutpat dolor ac elit faucibus pulvinar porta augue luctus.', 1, '', '', '', '', '', '', '', 'Newcastle, UK', 0, 0, 1, 1, 0, 0, '0000-00-00 00:00:00', 1, '', 0, $user->id, '', '2012-02-22 20:01:33', '2012-02-22 20:01:33', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, '*'),
@@ -166,7 +168,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample file data
+                // Install sample file data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_files` (`id`, `element_type`, `element_id`, `file_type`, `basename`, `ext`, `size`, `checked`) VALUES
 (28, 1, 43, 1, '4767a2aa3fdc307d0f51663920a6ec25', 'jpg', 67846, '2012-01-25 12:00:00'),
@@ -198,7 +200,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample album map data
+                // Install sample album map data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_album_map` (`id`, `media_id`, `album_id`, `created_user_id`, `created`) VALUES
 (1, 37, 28, 0, '0000-00-00 00:00:00'),
@@ -230,7 +232,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample group map data
+                // Install sample group map data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_group_map` (`id`, `media_id`, `group_id`, `created_user_id`, `created`) VALUES
 (1, 37, 28, 0, '0000-00-00 00:00:00'),
@@ -262,7 +264,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
 
-                // Install sample playlist map data
+                // Install sample playlist map data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_playlist_map` (`id`, `playlist_id`, `media_id`, `ordering`, `created_user_id`, `created`) VALUES
 (1, 28, 37, 6, 0, '0000-00-00 00:00:00'),
@@ -296,7 +298,7 @@ SQL;
                     
                 JTable::addIncludePath(JPATH_SITE.'/libraries/joomla/database/table');
 
-                // Setup sample nature category
+                // Setup sample nature category.
                 $nature = JTable::getInstance('Category', 'JTable');
                 $nature->setLocation($data['parent_id'], 'last-child');
                 
@@ -322,7 +324,7 @@ SQL;
                         JError::raiseError(500, $nature->getError());
                 } 
 
-                // Install sample category map data
+                // Install sample category map data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_category_map` (`id`, `element_type`, `element_id`, `category_id`, `created_user_id`, `created`) VALUES
 (1, 1, 37, $nature->id, 0, '0000-00-00 00:00:00'),
@@ -342,7 +344,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
                 
-                // Setup sample business category               
+                // Setup sample business category  .             
                 $business = JTable::getInstance('Category', 'JTable');
                 $business->setLocation($data['parent_id'], 'last-child');  
                 
@@ -368,7 +370,7 @@ SQL;
                         JError::raiseError(500, $nature->getError());
                 } 
                 
-                // Install sample category map data
+                // Install sample category map data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_category_map` (`id`, `element_type`, `element_id`, `category_id`, `created_user_id`, `created`) VALUES
 (7, 1, 38, $business->id, 0, '0000-00-00 00:00:00'),
@@ -388,7 +390,7 @@ SQL;
                         JError::raiseError(500, $e->getMessage());
                 }
                 
-                // Setup sample sports category               
+                // Setup sample sports category.
                 $sports = JTable::getInstance('Category', 'JTable');
                 $sports->setLocation($data['parent_id'], 'last-child');  
                 
@@ -414,7 +416,7 @@ SQL;
                         JError::raiseError(500, $nature->getError());
                 } 
                 
-                // Install sample category map data
+                // Install sample category map data.
 $query = <<<SQL
 INSERT INTO `#__hwdms_category_map` (`id`, `element_type`, `element_id`, `category_id`, `created_user_id`, `created`) VALUES
 (13, 1, 28, $sports->id, 0, '0000-00-00 00:00:00'),
