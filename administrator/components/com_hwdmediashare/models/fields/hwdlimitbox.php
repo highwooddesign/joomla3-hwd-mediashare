@@ -18,7 +18,7 @@ class JFormFieldHwdLimitBox extends JFormFieldLimitbox
 	/**
 	 * The name of the form field type.
          * 
-         * @access      protected
+         * @access      public
 	 * @var         string
 	 */
 	public $type = 'HwdLimitBox';
