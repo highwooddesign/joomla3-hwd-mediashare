@@ -69,7 +69,7 @@ class hwdMediaShareControllerLinkedGroups extends JControllerAdmin
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Unlink the items.
 			if ($model->unlink($cid, $mediaId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_GROUPS_UNLINKED_FROM_MEDIA', count($cid)));
@@ -112,7 +112,7 @@ class hwdMediaShareControllerLinkedGroups extends JControllerAdmin
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
-			// Approve the items.
+			// Link the items.
 			if ($model->link($cid, $mediaId))
 			{
 				$this->setMessage(JText::plural($this->text_prefix . '_N_GROUPS_LINKED_TO_MEDIA', count($cid)));
