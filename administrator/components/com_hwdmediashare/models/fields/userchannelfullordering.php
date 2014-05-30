@@ -15,16 +15,19 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldUserChannelFullOrdering extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $type = 'UserChannelFullOrdering';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @access	protected
+         * @static 
+	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
 	{
