@@ -15,16 +15,18 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldExtension extends JFormFieldList
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $type = 'Extension';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @return  array  The field option objects.
+	 * @access	protected
+	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
 	{
@@ -45,7 +47,7 @@ class JFormFieldExtension extends JFormFieldList
                         return false;                            
                 }
 
-                // Loop all plugins and check if a cdn plugin
+                // Loop all valid extension types and add option.
 		for($i = 0; $i < count($rows); $i++)
 		{
                         $options[] = JHtml::_('select.option', $rows[$i]->id, $rows[$i]->ext);     
