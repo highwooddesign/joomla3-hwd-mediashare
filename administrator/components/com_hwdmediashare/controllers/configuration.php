@@ -13,30 +13,34 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerConfiguration extends JControllerForm
 {
 	/**
-	 * The URL view list variable (we redirect back to dashboard when saving and closing).
-	 * @var    string
+	 * The name of the listing view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "dashboard";
         
 	/**
 	 * Method to test background execution and display results.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	function background()
 	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 $result = false;
                 
-                // Delete test file is already exists
+                // Delete test file if already exists.
                 jimport('joomla.filesystem.file' );
                 $filename = JPATH_SITE.'/tmp/hwdms.background';
 		if (JFile::exists($filename)) JFile::delete($filename);
 
                 $cli = JPATH_SITE.'/administrator/components/com_hwdmediashare/cli.php';
 
-                // Try to create test file in background
+                // Try to create test file in background.
 		if(substr(PHP_OS, 0, 3) != "WIN") 
                 {
 			exec("env -i ".$config->get('path_php')." $cli test &>/dev/null &");
@@ -46,10 +50,10 @@ class hwdMediaShareControllerConfiguration extends JControllerForm
 			exec($config->get('path_php')." $cli test NUL");
 		}
                 
-                // Sleep for 2 seconds
+                // Sleep for 2 seconds.
 		usleep(1000000);
                 
-                // Check if file exists
+                // Check if file exists.
                 if (JFile::exists($filename)) 
                 {
                         JFile::delete($filename);
