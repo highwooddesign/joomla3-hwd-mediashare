@@ -26,7 +26,6 @@ class JFormFieldUserChannelFullOrdering extends JFormFieldList
 	 * Method to get the field options.
 	 *
 	 * @access	protected
-         * @static 
 	 * @return      array       The field option objects.
 	 */
 	protected function getOptions()
