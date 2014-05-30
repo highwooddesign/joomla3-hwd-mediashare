@@ -55,7 +55,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 	 */
 	public function approve()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -101,7 +101,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 	 */
 	public function feature()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -121,7 +121,7 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
