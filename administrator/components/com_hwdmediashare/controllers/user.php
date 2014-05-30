@@ -12,19 +12,23 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareControllerUser extends JControllerForm
 {
-    	/**
-	 * The URL view list variable.
-	 * @var    string
+	/**
+	 * The name of the listing view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "users";
 
         /**
-	 * Proxy for edit, to generate the channel row in the database.
-	 * @return	void
+	 * Proxy for edit.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
-                // Get the HWD utilities.
+                // Get HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
@@ -44,12 +48,14 @@ class hwdMediaShareControllerUser extends JControllerForm
 	}
         
 	/**
-	 * Proxy for add, to direct to the Joomla user manager.
-	 * @return	void
+	 * Proxy for add, to redirect to the Joomla user manager.
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function add()
 	{
-		// Redirect to create Joomla user
+		// Redirect to create Joomla user.
                 $this->setMessage(JText::_('COM_HWDMS_ADD_NEW_USER_CHANNEL_NOTICE'));
 		$this->setRedirect(JRoute::_('index.php?option=com_users&task=user.add', false));
 	}
@@ -57,18 +63,18 @@ class hwdMediaShareControllerUser extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @param   object      $model  The model.
-	 *
-	 * @return  boolean     True if successful, false otherwise and internal error is set.
+	 * @access	public
+	 * @param       object      $model      The model.
+	 * @return      boolean     True if successful, false otherwise and internal error is set.
 	 */    
 	public function batch($model = null)
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-		// Set the model
+		// Set the model.
 		$model = $this->getModel('User', '', array());
 
-		// Preset the redirect
+		// Preset the redirect.
 		$this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
