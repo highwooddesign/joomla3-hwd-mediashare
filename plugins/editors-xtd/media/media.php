@@ -1,89 +1,62 @@
 <?php
 /**
- * @version    $Id: media.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import Joomla plugin library
-jimport('joomla.plugin.plugin');
-
-/**
- * Editor Article buton
+ * @package     Joomla.site
+ * @subpackage  Plugin.editors-xtd.media
  *
- * @package		Joomla.Plugin
- * @subpackage	Editors-xtd.article
- * @since 1.5
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class plgButtonMedia extends JPlugin
 {
 	/**
-	 * Constructor
+	 * Load the language file on instantiation.
 	 *
 	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
+	 * @var         boolean
 	 */
-	public function __construct(& $subject, $config)
-	{
-		parent::__construct($subject, $config);
-		$this->loadLanguage();
-	}
-
-
+	protected $autoloadLanguage = true;
+        
 	/**
-	 * Display the button
+	 * Display the button.
 	 *
-	 * @return array A four element array of (article_id, article_title, category_id, object)
+	 * @param   string   $name    The name of the button to display.
+	 * @param   string   $asset   The name of the asset being edited.
+	 * @param   integer  $author  The id of the author owning the asset being edited.
+	 *
+	 * @return  array    A two element array of (imageName, textToInsert) or false if not authorised.
 	 */
-	function onDisplay($name)
+	public function onDisplay($name, $asset, $author)
 	{
-		$app = &JFactory::getApplication();
-
-                /*
+		/*
 		 * Javascript to insert the link
-		 * View element calls jSelectMedia when a media is clicked
-		 * jSelectMedia creates the link tag, sends it to the editor,
+		 * View element calls jSelectMedia when an article is clicked
+		 * jSelectMedia creates the plugin tag, sends it to the editor,
 		 * and closes the select frame.
 		 */
 		$js = "
-		function jSelectMedia(id, width, align, display) {
-			var tag = '{media load=media,id='+id+',width='+width+',align='+align+',display='+display+'}';
-			jInsertEditorText(tag, '".$name."');
+		function jSelectMedia(id, title) {
+			var tag = '<div>{media load=media,id=' + id + ',width=" . $this->params->get('width', '320') . ",align=" . $this->params->get('align', '320') . ",display=" . $this->params->get('display', 'inline') . "}</div><br />';
+			jInsertEditorText(tag, '" . $name . "');
 			SqueezeBox.close();
 		}";
 
-                $css = "
-                .button2-left .media {
-                        background: transparent url('".JURI::root( true )."/plugins/editors-xtd/media/assets/j_button2_media.jpg') no-repeat 100% 0px;
-                }";
-
 		$doc = JFactory::getDocument();
 		$doc->addScriptDeclaration($js);
-                ($app->isAdmin() ? $doc->addStyleDeclaration($css) : null);                
+                
+                $link = 'index.php?option=com_hwdmediashare&amp;view=media&amp;layout=modal&amp;tmpl=component&amp;function=jSelectMedia';
+                JHtml::_('behavior.modal');
+                $button = new JObject;
+                $button->modal = true;
+                $button->class = 'btn';
+                $button->link = $link;
+                $button->text = JText::_('PLG_EDITORS-XTD_MEDIA_BUTTON_MEDIA');
+                $button->name = 'video';
+                $button->options = "{handler: 'iframe', size: {x: 800, y: 500}}";
 
-		JHtml::_('behavior.modal');
-
-		/*
-		 * Use the built-in element view to select the media.
-		 * Currently uses blank class.
-		 */
-		$link = 'index.php?option=com_hwdmediashare&amp;view=media&amp;layout=editor&amp;tmpl=component&amp;function=jSelectMedia';
-
-		$button = new JObject();
-		$button->set('modal', true);
-		$button->set('link', $link);
-		$button->set('text', JText::_('PLG_EDITORS-XTD_MEDIA_BUTTON_MEDIA'));
-		$button->set('name', 'media');
-		$button->set('options', "{handler: 'iframe', size: {x: 770, y: 400}}");
-
-		return $button;
+                return $button;
 	}
 }
