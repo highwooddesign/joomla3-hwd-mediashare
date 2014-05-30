@@ -11,12 +11,24 @@
 defined('_JEXEC') or die;
 
 class plgHwdmediashareComments_disqus extends JObject
-{               
+{
+	/**
+	 * Class constructor.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+        
 	/**
 	 * Returns the plgHwdmediashareComments_disqus object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return plgHwdmediashareComments_disqus object.
+	 * @access	public
+	 * @return      object      The plgHwdmediashareComments_disqus object.
 	 */
 	public static function getInstance()
 	{
@@ -34,7 +46,8 @@ class plgHwdmediashareComments_disqus extends JObject
         /**
 	 * Method to insert the Disqus commenting system.
          * 
-	 * @return  void
+	 * @access	public
+	 * @return      void
 	 **/
 	public function getComments($item, $elementType=1)
 	{
