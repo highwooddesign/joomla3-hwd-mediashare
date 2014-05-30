@@ -13,15 +13,26 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerAddMedia extends JControllerForm
 {
 	/**
-	 * The URL view variable.
-	 * @var    string
+	 * The name of the view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view = "addmedia";
+        
+	/**
+	 * The name of the listing view to use with this controller.
+         * 
+         * @access      protected
+	 * @var         string
+	 */
     	protected $view_list = "media";
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      object      The model.
 	 */
 	public function getModel($name = 'AddMedia', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -29,13 +40,30 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 return $model;
 	}
         
-	/**
-	 * Method to process file upload
-	 * @return	void
+        /**
+	 * Proxy for cancel.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function cancel()
+	{
+		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+
+		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+
+		return true;
+	}
+        
+        /**
+	 * Method to process a php upload.
+	 *
+	 * @access	public
+         * @return      void
 	 */
         public function upload()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
 		// Define input field to process from the request.
@@ -60,23 +88,22 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
 
 	/**
-	 * Method to process uber upload
-	 * @return	void
+	 * Method to process an uber upload.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function uber()
+        public function uber()
         {
-		// Check for request forgeries
-		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
-
                 // Get the upload library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
                 // Process the upload.
-                if ($model->uber($upload))
+                if ($model->uber())
                 {
-                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_id, false));                                              
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_item->title));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_item->id, false));                                              
                 }
                 else
                 {
@@ -86,12 +113,14 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
 
 	/**
-	 * Method to process remote media import
-	 * @return	void
+	 * Method to process remote media import.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function remote()
+        public function remote()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
                 // Get the remote library.
@@ -121,12 +150,14 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
 
 	/**
-	 * Method to process embed code import
-	 * @return	void
+	 * Method to process embed code import.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function embed()
+        public function embed()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
                 // Get the embed library.
@@ -147,12 +178,14 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process remote file import
-	 * @return	void
+	 * Method to process remote file import.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function link()
+        public function link()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
                 // Load the remote library.
@@ -173,12 +206,14 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process rtmp import
-	 * @return	void
+	 * Method to process rtmp import.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function rtmp()
+        public function rtmp()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
                 // Load the rtmp library.
@@ -199,12 +234,14 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process bulk import from server directory
-	 * @return	void
+	 * Method to process bulk import from server directory.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function import()
+        public function import()
         {
-		// Check for request forgeries
+		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
                 // Load the remote library.
@@ -225,10 +262,12 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to display the directory scan tree view
-	 * @return	void
+	 * Method to display the directory scan tree view.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function scan()
+        public function scan()
         {
 		// Get the document object.
 		$document	= JFactory::getDocument();
@@ -252,10 +291,12 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
-	 * Method to process two part upload process
-	 * @return	void
+	 * Method to process two part upload process.
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function processForm()
+        public function processForm()
         {
 		// Get the document object.
 		$document	= JFactory::getDocument();
@@ -266,7 +307,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName);
+			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
