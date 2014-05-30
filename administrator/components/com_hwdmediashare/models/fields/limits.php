@@ -15,24 +15,24 @@ JFormHelper::loadFieldClass('rules');
 class JFormFieldLimits extends JFormFieldRules
 {
 	/**
-	 * The form field type.
-	 *
-	 * @var  string
+	 * The name of the form field type.
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	public $type = 'Limits';
 
 	/**
 	 * Method to get the field input markup for upload limits
-         *
-	 * @return  string  The field input markup.
 	 *
-	 * @since	0.1
+	 * @access	protected
+	 * @return      string          The field input markup.
 	 */
 	protected function getInput()
 	{
 		JHtml::_('behavior.tooltip');
 
-		// Define objects for custom limits
+		// Define objects for custom limits.
                 $space = new StdClass;
                 $space->name = 'space'; 
                 $space->title = JText::_('COM_HWDMS_LIMIT_SPACE_LABEL'); 
@@ -63,7 +63,7 @@ class JFormFieldLimits extends JFormFieldRules
 
 		foreach ($groups as $group)
 		{
-			// Initial Active Tab
+			// Initial active tab.
 			$active = "";
 
 			if ($group->value == 1)
@@ -85,7 +85,7 @@ class JFormFieldLimits extends JFormFieldRules
 		// Start a row for each user group.
 		foreach ($groups as $group)
 		{
-			// Initial Active Pane
+			// Initial active pane.
 			$active = "";
 
 			if ($group->value == 1)
@@ -112,7 +112,7 @@ class JFormFieldLimits extends JFormFieldRules
 
 			foreach ($actions as $action)
 			{
-                                // Define the value for this group, and this action
+                                // Define the value for this group, and this action.
                                 $value = null;
                                 if (isset($this->value[$action->name][$group->value])) { $value = intval($this->value[$action->name][$group->value]); }
 
