@@ -1,7 +1,11 @@
 @charset "utf-8";
-/* CSS Document © Copyright 2011, All rights reserved
+/* CSS Document © Copyright 2013, All rights reserved
    This sheet loads the HWD styles */
 /**********************************************************************************************/
+.hwd-cnn-popup .mfp-iframe-holder .mfp-content {
+  width: 416px;
+  height: 260px;
+}
 .row.mod_hwd_cnn_videobox_default {
   margin-right:-15px!important;
   margin-left:-15px!important;
