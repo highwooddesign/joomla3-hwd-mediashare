@@ -11,12 +11,12 @@
 	<description>MOD_HWD_CNN_VIDEOBOX_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_hwd_cnn_videobox">mod_hwd_cnn_videobox.php</filename>
-		<filename module="mod_hwd_cnn_videobox">helper.php</filename>
-		<filename module="mod_hwd_cnn_videobox">index.html</filename>		
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
 		<folder>tmpl</folder>
+                <filename>helper.php</filename>
+		<filename>index.html</filename>
 	</files>
 	<languages>
 		<language tag="en-GB">language/en-GB.mod_hwd_cnn_videobox.ini</language>
@@ -24,9 +24,7 @@
 	</languages>
 	<config>
 		<fields name="params">
-			<fieldset 
-                                name="basic"
-			>
+			<fieldset name="basic">
 				<field 
                                         name="layout" 
                                         type="modulelayout"
