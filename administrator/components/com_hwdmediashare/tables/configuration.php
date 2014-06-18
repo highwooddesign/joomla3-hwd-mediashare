@@ -10,53 +10,55 @@
 
 defined('_JEXEC') or die;
 
-// Import Joomla table library
-jimport('joomla.database.table');
-
 class hwdMediaShareTableConfiguration extends JTable
 {
 	/**
-	 * Constructor.
-	 * @return	void
-	 */
-	function __construct($db)
+	 * Class constructor. Overridden to explicitly set the table and key fields.
+	 *
+	 * @access	public
+	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
+         * @return      void
+	 */ 
+	public function __construct($db)
 	{
 		parent::__construct('#__hwdms_config', 'id', $db);
 	}
 
 	/**
-	 * Overloaded bind function
+	 * Method to bind an associative array or object to the JTable instance.
 	 *
-	 * @param   array  $array   Named array to bind
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
-	 *
-	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error
+         * @access  public
+	 * @param   mixed   $src     An associative array or object to bind to the JTable instance.
+	 * @param   mixed   $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @return  boolean True on success.
+	 * @link    http://docs.joomla.org/JTable/bind
+	 * @throws  InvalidArgumentException
 	 */
-	public function bind($array, $ignore = '')
+	public function bind($src, $ignore = '')
         {
                 // Bind the rules.
-		if (isset($array['rules']) && is_array($array['rules']))
+		if (isset($src['rules']) && is_array($src['rules']))
                 {
                         // Unset empty (inherited) rules to avoid them being set to Denied
-                        foreach($array['rules'] as $action=>$identity)
+                        foreach($src['rules'] as $action=>$identity)
                         {
                                 foreach($identity as $rule=>$value)
                                 {
-                                        if($value == "") unset($array['rules'][$action][$rule]);
+                                        if($value == "") unset($src['rules'][$action][$rule]);
                                 }
                         }
 
-                        $this->setRules($array['rules']);
+                        $this->setRules($src['rules']);
 		}
-		return parent::bind($array, $ignore);
+                
+		return parent::bind($src, $ignore);
 	}
 
 	/**
 	 * Method to compute the default name of the asset.
-	 * The default name is in the form `table_name.id`
-	 * where id is the value of the primary key of the table.
 	 *
-	 * @return	string
+	 * @access  protected
+	 * @return  string
 	 */
         protected function _getAssetName()
         {
