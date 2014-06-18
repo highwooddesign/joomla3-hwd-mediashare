@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 {
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'LinkedGroups', $prefix = 'hwdMediaShareTable', $config = array())
@@ -29,10 +29,10 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -50,9 +50,9 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	/**
 	 * Method to unlink one or more media items with a group.
 	 *
-	 * @param   array    $pks         A list of the primary keys to change.
-	 * @param   integer  $groupId  The value of the group key to associate with.
-	 *
+	 * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $groupId   The value of the group key to associate with.
 	 * @return  boolean  True on success.
 	 */
         public function unlink($pks, $groupId = null)
@@ -127,11 +127,11 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                 }
                         }
                         
-                        // Reorder this group
+                        // Reorder this group.
                         $table->reorder(' group_id = '.$pk.' ');
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
              
 		return true;
@@ -140,9 +140,9 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	/**
 	 * Method to link one or more media items with a group.
 	 *
-	 * @param   array    $pks         A list of the primary keys to change.
-	 * @param   integer  $groupId  The value of the group key to associate with.
-	 *
+	 * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $groupId   The value of the group key to associate with.
 	 * @return  boolean  True on success.
 	 */
 	public function link($pks, $groupId = null)
@@ -184,7 +184,7 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                                 }
                         }
                         
-                        // Check if association already exists
+                        // Check if association already exists.
                         $db = JFactory::getDbo();
                         $query = $db->getQuery(true)->select('id')->from('#__hwdms_group_map')
                                  ->where($db->quoteName('group_id') . ' = ' . $db->quote($groupId))
@@ -192,7 +192,7 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                         $db->setQuery($query);
                         $exists = $db->loadResult();
 
-                        // Create an object to bind to the database
+                        // Create an object to bind to the database.
                         if (!$exists)
                         {
                                 $object = new StdClass;
@@ -211,10 +211,10 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
                         }
 		}
 
-                // Reorder this group
+                // Reorder this group.
                 $table->reorder(' group_id = '.$groupId.' ');  
                 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
                 return true;
@@ -223,9 +223,9 @@ class hwdMediaShareModelGroupMediaItem extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param	object	A record object.
-	 *
-	 * @return	array	An array of conditions to add to add to ordering queries.
+	 * @access  protected
+	 * @param   object  A record object.
+	 * @return  array   An array of conditions to add to add to ordering queries.
 	 */
 	protected function getReorderConditions($table)
 	{
