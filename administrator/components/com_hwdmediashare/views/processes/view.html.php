@@ -12,14 +12,26 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewProcesses extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+
+	protected $successful;
+        
+	protected $unnecessary;
+        
+	public $filterForm;
+            
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -46,13 +58,14 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -60,7 +73,7 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 		$canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		// Get the toolbar object instance
+		// Get the toolbar object instance.
 		$bar = JToolBar::getInstance('toolbar');
                 
                 JToolBarHelper::title(JText::_('COM_HWDMS_PROCESSES'), 'cog');
@@ -69,17 +82,13 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 JToolBarHelper::custom('process.runall', 'cog', 'cog', JText::_('COM_HWDMS_PROCESS_ALL'), false);
 		if ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::custom('processes.reset', 'switch', 'switch','COM_HWDMS_RESET', true);
                         JToolBarHelper::custom('processes.resetall', 'switch', 'switch','COM_HWDMS_FORCE_RESET', true);
-			JToolBarHelper::divider();
                         JToolBarHelper::checkin('processes.checkin');
 		}
                 if ($canDo->get('core.delete'))
 		{
-			JToolBarHelper::divider();
                         JToolBarHelper::deleteList('', 'processes.delete');
-			JToolBarHelper::divider();
                 }
                 if ($this->successful) 
                 {
@@ -87,14 +96,16 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 }
                 if ($this->unnecessary) 
                 {
-                        JToolBarHelper::custom('processes.deleteunnecessary', 'delete','delete', JText::sprintf('COM_HWDMS_DELETE_X_UNNECESSARY', $this->unnecessary), false);
+                        JToolBarHelper::custom('processes.deleteunnecessary', 'delete', 'delete', JText::sprintf('COM_HWDMS_DELETE_X_UNNECESSARY', $this->unnecessary), false);
                 }
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
         
 	/**
 	 * Method to display a human readable process type.
-	 * @return  void
+	 *
+	 * @access  public
+	 * @return  string  The process type.
 	 */
 	public function getProcessType($item)
 	{
@@ -104,7 +115,9 @@ class hwdMediaShareViewProcesses extends JViewLegacy
         
 	/**
 	 * Method to display a human readable process status.
-	 * @return  void
+	 *
+	 * @access  public
+	 * @return  string  The process status.
 	 */
 	public function getStatus($item)
 	{
@@ -126,15 +139,15 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 	}
         
 	/**
-	 * Display the run view
+	 * Display the run view.
 	 *
+         * @access  public
 	 * @param   array  $cid  The array of process that should be run.
-	 *
 	 * @return  void
 	 */
-	function run($cid = array())
+	public function run($cid = array())
 	{
-                // Make sure the ids are integers
+                // Make sure the ids are integers.
                 jimport('joomla.utilities.arrayhelper');
                 JArrayHelper::toInteger($cid);
                         
@@ -148,11 +161,11 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 }
 
                 JToolBarHelper::title(JText::_('COM_HWDMS_PROCESSES'), 'cog');
+                
                 JToolBarHelper::cancel('processes.close', 'JTOOLBAR_CLOSE');
-                JToolBarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 
-                // Display the template
+                // Display the template.
 		parent::display('run');
 	}        
 }
