@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
 {
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'LinkedAlbums', $prefix = 'hwdMediaShareTable', $config = array())
@@ -29,10 +29,10 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -50,9 +50,9 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
 	/**
 	 * Method to unlink one or more media items with a album.
 	 *
-	 * @param   array    $pks         A list of the primary keys to change.
-	 * @param   integer  $albumId     The value of the album key to associate with.
-	 *
+	 * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $albumId   The value of the album key to associate with.
 	 * @return  boolean  True on success.
 	 */
         public function unlink($pks, $albumId = null)
@@ -127,11 +127,11 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
                                 }
                         }
                         
-                        // Reorder this album
+                        // Reorder this album.
                         $table->reorder(' album_id = '.$pk.' ');
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
              
 		return true;
@@ -140,9 +140,9 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
 	/**
 	 * Method to link one or more media items with a album.
 	 *
-	 * @param   array    $pks         A list of the primary keys to change.
-	 * @param   integer  $albumId  The value of the album key to associate with.
-	 *
+	 * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $albumId   The value of the album key to associate with.
 	 * @return  boolean  True on success.
 	 */
 	public function link($pks, $albumId = null)
@@ -184,7 +184,7 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
                                 }
                         }
                         
-                        // Check if association already exists
+                        // Check if association already exists.
                         $db = JFactory::getDbo();
                         $query = $db->getQuery(true)->select('id')->from('#__hwdms_album_map')
                                  ->where($db->quoteName('album_id') . ' = ' . $db->quote($albumId))
@@ -192,7 +192,7 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
                         $db->setQuery($query);
                         $exists = $db->loadResult();
 
-                        // Create an object to bind to the database
+                        // Create an object to bind to the database.
                         if (!$exists)
                         {
                                 $object = new StdClass;
@@ -211,10 +211,10 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
                         }                      
 		}
 
-                // Reorder this album
+                // Reorder this album.
                 $table->reorder(' album_id = '.$albumId.' ');  
                         
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
                 return true;
@@ -223,9 +223,9 @@ class hwdMediaShareModelAlbumMediaItem extends JModelAdmin
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
-	 * @param	object	A record object.
-	 *
-	 * @return	array	An array of conditions to add to add to ordering queries.
+	 * @access  protected
+	 * @param   object  A record object.
+	 * @return  array   An array of conditions to add to add to ordering queries.
 	 */
 	protected function getReorderConditions($table)
 	{
