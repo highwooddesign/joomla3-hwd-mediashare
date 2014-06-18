@@ -12,6 +12,14 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewGroupMembers extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+
+	protected $groupId;
+    
 	/**
 	 * Display the view.
 	 *
