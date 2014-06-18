@@ -268,7 +268,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * @return  boolean True if successful, false if an error occurs.
 	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
-	public function delete($pks)
+	public function delete(&$pks)
 	{
                 if (!parent::delete($pks))
                 {
