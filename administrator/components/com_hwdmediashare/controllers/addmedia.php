@@ -46,7 +46,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 * @access	public
          * @return      void
 	 */
-	public function cancel()
+	public function cancel($key = null)        
 	{
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
