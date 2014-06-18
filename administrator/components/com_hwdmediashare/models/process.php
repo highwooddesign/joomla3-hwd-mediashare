@@ -12,13 +12,13 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelProcess extends JModelAdmin
 {
-    	/**
-	 * Method to get a table object, load it if necessary.
+	/**
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Process', $prefix = 'hwdMediaShareTable', $config = array())
@@ -29,23 +29,21 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 	}
 
 	/**
-	 * Method to get a single record.
+	 * Method to get a single item.
 	 *
-	 * @param   integer  $pk  The id of the primary key.
-	 *
-	 * @return  mixed  Object on success, false on failure.
-	 *
-	 * @since   1.6
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
         public function getItem($pk = null)
         {
@@ -78,6 +76,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
         public function getItems()
@@ -108,11 +107,11 @@ class hwdMediaShareModelProcess extends JModelAdmin
         }
         
 	/**
-	 * Method to reset processes in manager.
+	 * Method to reset the number of attempts on a process.
 	 *
+         * @access  public
 	 * @param   array    $pks  An array of record primary keys.
 	 * @param   boolean  $all  True if all processes should be reset regardless of their status.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function reset($pks, $all)
@@ -137,7 +136,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
                                     ->set('attempts = ' . $db->quote(0) . ', status = ' . $db->quote(1))
                                     ->where('id IN (' . implode(',', $pks) . ')');
                         
-                        // Only reset queued processes unless specified
+                        // Only reset queued processes when specified.
                         if (!$all) $query->where('status = ' . $db->quote(1));
                    
 			$db->setQuery($query);
@@ -149,7 +148,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
@@ -159,11 +158,11 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 * Method to delete one or more records. Overload to remove any
          * associated process log entries.
 	 *
-	 * @param   array    $pks  An array of record primary keys.
-	 *
-	 * @return  boolean  True if successful, false if an error occurs.
-	 */        
-	public function delete(&$pks)
+         * @access  public
+	 * @param   array   $pks    An array of record primary keys.
+	 * @return  boolean True if successful, false if an error occurs.
+	 */
+	public function delete($pks)
 	{
                 if (!parent::delete($pks))
                 {
@@ -173,16 +172,16 @@ class hwdMediaShareModelProcess extends JModelAdmin
 		$db = JFactory::getDBO();
                 $pks = (array) $pks;
                 
-                // Array holding all queries
+                // Array holding all queries.
                 $queries = array();
 
 		// Loop through keys and generate queries to execute.
 		foreach ($pks as $i => $pk)
 		{
-                        // Delete associated field value data
-                       $queries[] = $db->getQuery(true)
-                                  ->delete('#__hwdms_process_log')
-                                  ->where('process_id = ' . $db->quote($pk));
+                        // Delete associated field value data.
+                        $queries[] = $db->getQuery(true)
+                                        ->delete('#__hwdms_process_log')
+                                        ->where('process_id = ' . $db->quote($pk));
 		}                       
                         
                 // Execute the generated queries.
@@ -200,7 +199,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
                         }
                 }   
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
