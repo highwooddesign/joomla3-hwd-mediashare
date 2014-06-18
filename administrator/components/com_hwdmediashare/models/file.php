@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelFile extends JModelAdmin
 {
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'File', $prefix = 'hwdMediaShareTable', $config = array())
@@ -29,10 +29,10 @@ class hwdMediaShareModelFile extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -50,7 +50,8 @@ class hwdMediaShareModelFile extends JModelAdmin
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  mixed  The data for the form.
+	 * @access  protected
+         * @return  mixed       The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -69,17 +70,17 @@ class hwdMediaShareModelFile extends JModelAdmin
 	 * Method to delete one or more records. Overload to remove the
          * associated file.
 	 *
-	 * @param   array  $pks  An array of record primary keys.
-	 *
-	 * @return  boolean  True if successful, false if an error occurs.
+         * @access  public
+	 * @param   array   $pks    An array of record primary keys.
+	 * @return  boolean True if successful, false if an error occurs.
 	 */
-	public function delete(&$pks)
+	public function delete($pks)
 	{
 		// Initialise variables.
                 $user = JFactory::getUser();
 		$db = JFactory::getDBO();
         
-                // Load the file system library
+                // Load the file system library.
                 jimport('joomla.filesystem.file');
                 
 		// Sanitize the ids.
@@ -131,7 +132,7 @@ class hwdMediaShareModelFile extends JModelAdmin
                         
                         if (!is_object($element))
                         {
-				// Prune items that the user can't change.
+				// Prune items that we can't load.
 				unset($pks[$i]);
                                 continue;
                         }
@@ -151,7 +152,7 @@ class hwdMediaShareModelFile extends JModelAdmin
                         {
                                 if(!JFile::delete($pathSource))
                                 {
-                                        // Prune items that the user can't change.
+                                        // Prune items to which we can't remove a media file.
                                         unset($pks[$i]);
                                         JError::raiseNotice(403, JText::_('COM_HWDMS_UNABLE_TO_REMOVE_FILE_FROM_DISK'));
                                 }
@@ -164,7 +165,7 @@ class hwdMediaShareModelFile extends JModelAdmin
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
