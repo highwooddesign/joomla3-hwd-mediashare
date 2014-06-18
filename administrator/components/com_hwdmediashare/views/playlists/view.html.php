@@ -49,7 +49,7 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
@@ -79,26 +79,20 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 		}
 		if ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
 			JToolBarHelper::publish('playlists.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('playlists.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::custom('playlists.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
                         JToolBarHelper::custom('playlists.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
-                        JToolBarHelper::divider();
 			JToolBarHelper::archiveList('playlists.archive');
 			JToolBarHelper::checkin('playlists.checkin');
 		}
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::deleteList('', 'playlists.delete', 'JTOOLBAR_EMPTY_TRASH');
-                        JToolBarHelper::divider();
                 }
 		elseif ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::trash('playlists.trash');
-                        JToolBarHelper::divider();
 		}
 		// Add a batch button.
 		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
