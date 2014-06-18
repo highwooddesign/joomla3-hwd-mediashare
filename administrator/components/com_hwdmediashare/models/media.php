@@ -12,17 +12,21 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelMedia extends JModelList
 {
-    	/**
+	/**
 	 * The element type to use with model methods.
-	 * @var    integer
-	 */    
+         * 
+         * @access      public
+	 * @var         integer
+	 */
 	public $elementType = 1;
 
-        /**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */    
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields']))
@@ -61,6 +65,7 @@ class hwdMediaShareModelMedia extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -85,6 +90,7 @@ class hwdMediaShareModelMedia extends JModelList
 	/**
 	 * Method to get the database query.
 	 *
+	 * @access  protected
 	 * @return  JDatabaseQuery  database query
 	 */
         protected function getListQuery()
@@ -285,9 +291,9 @@ class hwdMediaShareModelMedia extends JModelList
                 $albumId = $this->getState('filter.album_id');
                 if ($albumId > 0)
                 {
-                        // Join over the album_map
+                        // Join over the album_map (and restrict the map to the $albumId value to prevent errors in connection variable)
                         $query->select('map.id AS mapid, map.album_id, map.ordering AS mapordering, IF(map.album_id = '.$albumId.', true, false) AS connection');
-                        $query->join('LEFT', '#__hwdms_album_map AS map ON map.media_id = a.id');
+                        $query->join('LEFT', '#__hwdms_album_map AS map ON map.media_id = a.id AND map.album_id = '.$albumId);
 
                         $viewAll = $this->getState('filter.add_to_album') ? true : false;
                         if (!$viewAll)
@@ -300,9 +306,9 @@ class hwdMediaShareModelMedia extends JModelList
                 $groupId = $this->getState('filter.group_id');
                 if ($groupId > 0)
                 {
-                        // Join over the group_map
+                        // Join over the group_map (and restrict the map to the $groupId value to prevent errors in connection variable)
                         $query->select('map.id AS mapid, map.group_id, map.ordering AS mapordering, IF(map.group_id = '.$groupId.', true, false) AS connection');
-                        $query->join('LEFT', '#__hwdms_group_map AS map ON map.media_id = a.id');
+                        $query->join('LEFT', '#__hwdms_group_map AS map ON map.media_id = a.id AND map.group_id = '.$groupId);
 
                         $viewAll = $this->getState('filter.add_to_group') ? true : false;
                         if (!$viewAll)
@@ -315,9 +321,9 @@ class hwdMediaShareModelMedia extends JModelList
                 $playlistId = $this->getState('filter.playlist_id');
                 if ($playlistId > 0)
                 {
-                        // Join over the playlist_map
+                        // Join over the playlist_map (and restrict the map to the $playlistId value to prevent errors in connection variable)
                         $query->select('map.id AS mapid, map.playlist_id, map.ordering AS mapordering, IF(map.playlist_id = '.$playlistId.', true, false) AS connection');
-                        $query->join('LEFT', '#__hwdms_playlist_map AS map ON map.media_id = a.id');
+                        $query->join('LEFT', '#__hwdms_playlist_map AS map ON map.media_id = a.id AND map.playlist_id = '.$playlistId);
 
                         $viewAll = $this->getState('filter.add_to_playlist') ? true : false;
                         if (!$viewAll)
@@ -332,7 +338,7 @@ class hwdMediaShareModelMedia extends JModelList
                 {
                         $query->where('a.id <> '.$mediaId);
                     
-                        // Join over the media_map
+                        // Join over the media_map (and restrict the map to the $mediaId value to prevent errors in connection variable)
                         $query->select('map.id AS mapid, map.media_id_1, map.media_id_2, map.ordering AS mapordering, IF(map.media_id_1 = '.$mediaId.' OR map.media_id_2 = '.$mediaId.', true, false) AS connection');
                         $query->join('LEFT', '#__hwdms_media_map AS map ON map.media_id_1 = a.id OR map.media_id_2 = a.id');
 
@@ -369,9 +375,9 @@ class hwdMediaShareModelMedia extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -383,10 +389,10 @@ class hwdMediaShareModelMedia extends JModelList
 	/**
 	 * Get the batch form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access      public
+	 * @param       array       $data       Data for the form.
+	 * @param       boolean     $loadData   True if the form is to load its own data (default case), false if not.
+	 * @return      mixed       A JForm object on success, false on failure
 	 */
 	public function getBatchForm($data = array(), $loadData = true)
 	{
