@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelReport extends JModelAdmin
 {
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Report', $prefix = 'hwdMediaShareTable', $config = array())
@@ -29,10 +29,10 @@ class hwdMediaShareModelReport extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
