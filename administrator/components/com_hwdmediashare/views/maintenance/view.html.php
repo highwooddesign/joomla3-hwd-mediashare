@@ -13,10 +13,10 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewMaintenance extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -35,7 +35,7 @@ class hwdMediaShareViewMaintenance extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
                 
 		$document = JFactory::getDocument();
@@ -46,6 +46,7 @@ class hwdMediaShareViewMaintenance extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -53,9 +54,7 @@ class hwdMediaShareViewMaintenance extends JViewLegacy
 		JToolBarHelper::title(JText::_('COM_HWDMS_MAINTENANCE'), 'cog');
 
 		JToolBarHelper::custom('maintenance.run', 'apply', 'apply', 'COM_HWDMS_RUN', false);
-		JToolbarHelper::divider();
 		JToolbarHelper::cancel('maintenance.cancel', 'JTOOLBAR_CLOSE');
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
