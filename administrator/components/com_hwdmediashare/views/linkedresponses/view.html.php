@@ -12,6 +12,14 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewLinkedResponses extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+
+	protected $mediaId;
+
 	/**
 	 * Display the view.
 	 *
