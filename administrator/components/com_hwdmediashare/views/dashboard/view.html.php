@@ -13,10 +13,10 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewDashboard extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -32,10 +32,10 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 $this->numchannels = $this->get('UserCount');
                 $this->numplaylists = $this->get('PlaylistCount');
                 
-                // Load HWD libaries
+                // Load HWD libaries.
                 hwdMediaShareFactory::load('activities');
                 
-                // Check for errors
+                // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
                         JError::raiseError(500, implode('<br />', $errors));
@@ -49,13 +49,14 @@ class hwdMediaShareViewDashboard extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -68,7 +69,7 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 
 		JToolBarHelper::title(JText::_('COM_HWDMS_DASHBOARD'), 'home');
 
-                // Sample data install option
+                // If no data exists in the gallery, then show the sample data installation button.
                 if ($this->nummedia == 0 && $this->numcategories == 0 && $this->numalbums == 0 && $this->numgroups == 0 && $this->numchannels == 0 && $this->numplaylists == 0) 
                 {
                         JToolBarHelper::custom('sample.install', 'database', 'database', JText::_('COM_HWDMS_INSTALL_SAMPLE_DATA'), false);
