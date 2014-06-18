@@ -54,38 +54,6 @@ class hwdMediaShareTableAlbum extends JTable
                 
 		return parent::bind($src, $ignore);
 	}
-
-	/**
-	 * Method to load a row from the database by primary key and bind the fields
-	 * to the JTable instance properties.
-	 *
-	 * @access  public
-	 * @param   mixed    $keys   An optional primary key value to load the row by, or an array of fields to match.  If not
-	 *                           set the instance property value is used.
-	 * @param   boolean  $reset  True to reset the default values before loading the new row.
-	 * @return  boolean  True if successful. False if row not found.
-	 * @link    http://docs.joomla.org/JTable/load
-	 * @throws  InvalidArgumentException
-	 * @throws  RuntimeException
-	 * @throws  UnexpectedValueException
-	 */
-	public function load($pk = null, $reset = true) 
-	{
-		if (parent::load($pk, $reset)) 
-		{
-                        // Convert the params string to an array.
-                        if (property_exists($this, 'params'))
-                        {
-                                $registry = new JRegistry;
-                                $registry->loadString($this->params);
-                                $this->params = $registry;
-                        } 
-                        
-			return true;
-		}
-		
-                return false;
-	}
         
 	/**
 	 * Method to store a row in the database from the JTable instance properties.
