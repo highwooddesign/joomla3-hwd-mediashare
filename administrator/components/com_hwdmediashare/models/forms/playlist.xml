@@ -229,7 +229,7 @@
                                 description="COM_HWDMS_MEDIA_ORDERING_DESC"
                                 default=""
                         >
-                                <option value="">COM_HWDMS_GLOBAL</option>
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
                         </field>
                 </fieldset>
                 <fieldset
