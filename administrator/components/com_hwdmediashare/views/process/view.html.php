@@ -17,18 +17,14 @@ class hwdMediaShareViewProcess extends JViewLegacy
 	protected $item;
 
 	protected $form;
-
-	/**
-	 * The logs for this process.
-	 * @var    object
-	 */        
+      
 	protected $items;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -51,13 +47,14 @@ class hwdMediaShareViewProcess extends JViewLegacy
 		$this->addToolbar();
 		$this->sidebar = JHtmlSidebar::render();
 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -67,13 +64,14 @@ class hwdMediaShareViewProcess extends JViewLegacy
 		JToolBarHelper::title(JText::_('COM_HWDMS_PROCESS_LOG'), 'cog');
 
 		JToolbarHelper::cancel('process.cancel', 'JTOOLBAR_CLOSE');
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
         
 	/**
 	 * Add the human readable process type.
-	 * @return  void
+	 *
+	 * @access  public
+	 * @return  string  The process type.
 	 */
 	public function getProcessType($item)
 	{
