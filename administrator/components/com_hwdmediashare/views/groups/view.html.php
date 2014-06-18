@@ -12,16 +12,24 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewGroups extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+        
+	public $filterForm;
+        
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
-                // Get data from the model
+                // Get data from the model.
                 $this->items = $this->get('Items');
                 $this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
@@ -41,13 +49,14 @@ class hwdMediaShareViewGroups extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -55,7 +64,7 @@ class hwdMediaShareViewGroups extends JViewLegacy
 		$canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		// Get the toolbar object instance
+		// Get the toolbar object instance.
 		$bar = JToolBar::getInstance('toolbar');
 
 		JToolBarHelper::title(JText::_('COM_HWDMS_GROUPS'), 'users');
@@ -70,34 +79,28 @@ class hwdMediaShareViewGroups extends JViewLegacy
 		}
 		if ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
 			JToolBarHelper::publish('groups.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('groups.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::custom('groups.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
                         JToolBarHelper::custom('groups.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
-                        JToolBarHelper::divider();
 			JToolBarHelper::archiveList('groups.archive');
 			JToolBarHelper::checkin('groups.checkin');
 		}
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::deleteList('', 'groups.delete', 'JTOOLBAR_EMPTY_TRASH');
-                        JToolBarHelper::divider();
                 }
 		elseif ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::trash('groups.trash');
-                        JToolBarHelper::divider();
 		}
-		// Add a batch button
+		// Add a batch button.
 		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
 		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 
-			// Instantiate a new JLayoutFile instance and render the batch button
+			// Instantiate a new JLayoutFile instance and render the batch button.
 			$layout = new JLayoutFile('joomla.toolbar.batch');
 
 			$dhtml = $layout->render(array('title' => $title));
