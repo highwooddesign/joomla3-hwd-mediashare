@@ -64,9 +64,6 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         $item->numlinkedpages = $this->getLinkedPagesCount($item);
                         $item->numresponses = $this->getResponseCount($item);
                         
-                        // Add the media which this responds to
-                        $item->responds = $this->getResponds($item);
-                        
                         // Add the album thumbnail.
                         //$item->thumbnail = $this->getThumbnail($item);
                         $item->customthumbnail = $this->getThumbnail($item);
@@ -321,25 +318,6 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         return false;                            
                 }
                 return $count;
-	}
-
-        /**
-	 * Method to get media to which this media is a response.
-         * 
-         * @access  public
-         * @param   object  $item   The media object.
-	 * @return  mixed   An integer on success, false on failure.
-	 */
-	public function getResponds($item)
-	{
-                $db = JFactory::getDBO();
-                $query = "
-                  SELECT *
-                    FROM ".$db->quoteName('#__hwdms_response_map')."
-                    WHERE ".$db->quoteName('response_id')." = ".$db->quote($item->id).";
-                  ";
-                $db->setQuery($query); 
-                return $db->loadObjectList(); 
 	}
 
 	/**
