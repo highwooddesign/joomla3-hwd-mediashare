@@ -10,9 +10,6 @@
 
 defined('_JEXEC') or die;
 
-// Import Joomla table library
-jimport('joomla.database.table');
-
 class hwdMediaShareTableSubscription extends JTable
 {
 	/**
