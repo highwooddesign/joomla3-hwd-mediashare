@@ -19,10 +19,10 @@ class hwdMediaShareViewCustomField extends JViewLegacy
 	protected $form;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -42,24 +42,23 @@ class hwdMediaShareViewCustomField extends JViewLegacy
 		$this->addToolbar();
 		$this->sidebar = JHtmlSidebar::render();
 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
+		$canDo		= hwdMediaShareHelper::getActions($this->item->id, 'customfield');
 		$user		= JFactory::getUser();
 		$isNew		= ($this->item->id == 0);
-
-		// Since we don't track these assets at the item level, use the category id.
-		$canDo		= hwdMediaShareHelper::getActions($this->item->id, 'customfield');
 
 		JToolBarHelper::title($isNew ? JText::_('COM_HWDMS_NEW_CUSTOM_FIELD') : JText::_('COM_HWDMS_EDIT_CUSTOM_FIELD'), 'checkmark-circle');
 
@@ -86,8 +85,6 @@ class hwdMediaShareViewCustomField extends JViewLegacy
 		{
 			JToolbarHelper::cancel('customfield.cancel', 'JTOOLBAR_CLOSE');
 		}
-
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
