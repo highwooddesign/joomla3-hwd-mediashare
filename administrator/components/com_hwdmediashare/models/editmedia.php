@@ -13,17 +13,19 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelEditMedia extends JModelAdmin
 {
 	/**
-	 * The type alias for this content type (for example, 'com_content.article').
-	 * @var      string
-	 */
+	 * The type alias for this content type.
+         * 
+         * @access      public
+	 * @var         string
+	 */  
 	public $typeAlias = 'com_hwdmediashare.media';
         
 	/**
-	 * Method to get a single record.
+	 * Method to get a single item.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -94,12 +96,12 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Media', $prefix = 'hwdMediaShareTable', $config = array())
@@ -110,10 +112,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -131,7 +133,8 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  mixed  The data for the form.
+	 * @access  protected
+         * @return  mixed       The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -151,12 +154,19 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	}
 
         /**
-	 * Method to get the thumbnail for the album
-	 * @return  void
+	 * Method to get the thumbnail for the media.
+         * 
+         * @access  public
+         * @param   object  $item   The album object.
+	 * @return  mixed   The thumnail location on success, false on failure.
 	 */
 	public function getThumbnail($item)
 	{
-                if ($thumbnail = hwdMediaShareFactory::getElementThumbnail($item))
+                // Load the HWD downloads library.
+                hwdMediaShareFactory::load('downloads');
+                $HWDdownloads = hwdMediaShareDownloads::getInstance();
+                $HWDdownloads->elementType = 1;
+                if ($thumbnail = $HWDdownloads->getElementThumbnail($item))
                 {
                         return $thumbnail;
                 }
@@ -168,7 +178,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
         
         /**
 	 * Method to count the number of albums associated with a media.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getAlbumCount($item)
 	{
@@ -177,9 +190,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_album_map')
                         ->where('media_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -192,7 +205,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
         
         /**
 	 * Method to count the number of playlists associated with a media.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getPlaylistCount($item)
 	{
@@ -201,9 +217,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_playlist_map')
                         ->where('media_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -216,7 +232,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
         
         /**
 	 * Method to count the number of groups associated with a media.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getGroupCount($item)
 	{
@@ -225,9 +244,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_group_map')
                         ->where('media_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -240,7 +259,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
         
         /**
 	 * Method to count the number of other media associated with a media.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getLinkedMediaCount($item)
 	{
@@ -249,9 +271,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_media_map')
                         ->where('(media_id_1 = ' . $db->quote($item->id) . ' OR media_id_2 = ' . $db->quote($item->id) . ')');
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -264,7 +286,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 
         /**
 	 * Method to count the number of pages associated with a media.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getLinkedPagesCount($item)
 	{
@@ -273,7 +298,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
         
         /**
 	 * Method to count the number of responses associated with a media.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getResponseCount($item)
 	{
@@ -282,9 +310,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         ->select('COUNT(*)')
                         ->from('#__hwdms_response_map')
                         ->where('media_id = ' . $db->quote($item->id));
-                $db->setQuery($query);
                 try
                 {
+                        $db->setQuery($query);
                         $count = $db->loadResult();
                 }
                 catch (RuntimeException $e)
@@ -297,31 +325,34 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 
         /**
 	 * Method to get media to which this media is a response.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The media object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getResponds($item)
 	{
-                $db =& JFactory::getDBO();
+                $db = JFactory::getDBO();
                 $query = "
                   SELECT *
                     FROM ".$db->quoteName('#__hwdms_response_map')."
                     WHERE ".$db->quoteName('response_id')." = ".$db->quote($item->id).";
                   ";
-                $db->setQuery($query);
-                return $db->loadObjectList();
+                $db->setQuery($query); 
+                return $db->loadObjectList(); 
 	}
 
 	/**
 	 * Method to toggle the approval status of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks   An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function approve($pks, $value = 0)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $user = JFactory::getUser();
                 
 		// Sanitize the ids.
@@ -383,14 +414,14 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * Method to toggle the featured value of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks   An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function feature($pks, $value = 0)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $user = JFactory::getUser();
                             
 		// Sanitize the ids.
@@ -439,14 +470,14 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * Method to link one or more media items with a category.
 	 *
+         * @access  public
 	 * @param   array    $pks         A list of the primary keys to change.
 	 * @param   integer  $categoryId  The value of the category key to associate with.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function assignCategory($pks, $categoryId = null)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
@@ -478,7 +509,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                                 }
                         }
                         
-                        // Create an object to bind to the database
+                        // Create an object to bind to the database.
                         $object = new StdClass;
                         $object->categoryId = (int) $categoryId;
                         $object->elementId = (int) $pk;
@@ -492,7 +523,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         }                      
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
                 return true;
@@ -501,14 +532,14 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * Method to unlink one or more media items with a category.
 	 *
+         * @access  public
 	 * @param   array    $pks         A list of the primary keys to change.
 	 * @param   integer  $categoryId  The value of the category key to associate with.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function unassignCategory($pks, $categoryId = null)
 	{
-		// Initialiase variables.
+		// Initialise variables.
                 $db = JFactory::getDbo();
 
                 hwdMediaShareFactory::load('utilities');
@@ -587,35 +618,64 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	}
 
         /**
-	 * Method to assign category to a single record
+	 * Method to add a process for an array of media items.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $processId The value of the process key to associate with.
+	 * @return  boolean  True on success.
 	 */
-	public function assignProcess($id = null)
+	public function assignProcess($pks, $processId = null)
 	{
-                if(empty($id))
+		// Initialise variables.
+                $user = JFactory::getUser();
+
+		hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
+
+		// Iterate through the items to process each one.
+		foreach ($pks as $i => $pk)
 		{
-			JError::raiseError( '500' , JText::_('COM_HWDMS_INVALID_ID') );
+                        if (!$user->authorise('core.edit', 'com_hwdmediashare.media.'.$pk))
+                        {
+                                // Prune items that you can't change.
+                                unset($pks[$i]);
+                                $error = $this->getError();
+
+                                if ($error)
+                                {
+                                        JLog::add($error, JLog::WARNING, 'jerror');
+                                        return false;
+                                }
+                                else
+                                {
+                                        JLog::add(JText::_('COM_HWDMS_ERROR_ACTION_NOT_PERMITTED'), JLog::WARNING, 'jerror');
+                                        return false;
+                                }
+                        }
+                        
+                        // Load the media item
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                        $table->load($pk);
+
+                        $properties = $table->getProperties(1);
+                        $item = JArrayHelper::toObject($properties, 'JObject');
+
+                        // Attempt to add the process to the media.
+                        if (!$HWDprocesses->add($item, $processId))
+                        {
+                                $this->setError($HWDprocesses->getError());
+                                return false;
+                        }                      
 		}
 
-                $processType = JRequest::getInt('assign_process_type');
-                if(empty($processType) || $processType == 0)
-		{
-			JError::raiseError( '500' , JText::_('COM_HWDMS_INVALID_PROCESS') );
-		}
-                
-                // Load media
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $id );
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
-                hwdMediaShareFactory::load('processes');
-                hwdMediaShareProcesses::add($item,$processType);
+		// Clear the component's cache.
+		$this->cleanCache();
 
                 return true;
 	}
@@ -623,11 +683,11 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * Method to perform batch operations on an item or a set of items.
 	 *
-	 * @param   array  $commands  An array of commands to perform.
-	 * @param   array  $pks       An array of item ids.
-	 * @param   array  $contexts  An array of item contexts.
-	 *
-	 * @return  boolean  Returns true on success, false on failure.
+	 * @access  public
+	 * @param   array   $commands  An array of commands to perform.
+	 * @param   array   $pks       An array of item ids.
+	 * @param   array   $contexts  An array of item contexts.
+	 * @return  boolean Returns true on success, false on failure.
 	 */
 	public function batch($commands, $pks, $contexts)
 	{           
@@ -775,7 +835,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			return false;
 		}
 
-		// Clear the cache
+		// Clear the cache.
 		$this->cleanCache();
 
 		return true;                
@@ -785,11 +845,12 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to delete one or more records. Overload to remove any
          * associated data.
 	 *
-	 * @param   array  $pks  An array of record primary keys.
-	 *
-	 * @return  boolean  True if successful, false if an error occurs.
+         * @access  public
+	 * @param   array   $pks    An array of record primary keys.
+	 * @return  boolean True if successful, false if an error occurs.
+	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
-	public function delete($pks)
+	public function delete(&$pks)
 	{
                 if (!parent::delete($pks))
                 {
@@ -799,88 +860,88 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		$db = JFactory::getDBO();
                 $pks = (array) $pks;
                 
-                // Array holding all queries
+                // Array holding all queries.
                 $queries = array();
 
 		// Loop through keys and generate queries to execute.
 		foreach ($pks as $i => $pk)
 		{
-                        // Delete records from activities
+                        // Delete records from activities.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_activities')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_activities')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk));
 
-                        // Delete records from album map
+                        // Delete records from album map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_album_map')
-                                   ->where('media_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_album_map')
+                                        ->where('media_id = ' . $db->quote($pk));
 
-                       // Delete records from category map
+                       // Delete records from category map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_category_map')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_category_map')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk));
 
-                        // Delete records from content map
+                        // Delete records from content map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_content_map')
-                                   ->where('media_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_content_map')
+                                        ->where('media_id = ' . $db->quote($pk));
 
-                        // Delete records from favourites
+                        // Delete records from favourites.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_favourites')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_favourites')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk));
                         
-                        // Delete records from field values
+                        // Delete records from field values.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_fields_values')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_fields_values')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk));
 
-                        // Delete records from group map
+                        // Delete records from group map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_group_map')
-                                   ->where('media_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_group_map')
+                                        ->where('media_id = ' . $db->quote($pk));
 
-                        // Delete records from likes
+                        // Delete records from likes.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_likes')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_likes')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk));
 
-                        // Delete records from media map
+                        // Delete records from media map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_media_map')
-                                   ->where('(media_id_1 = ' . $db->quote(1) . ' OR media_id_2 = ' . $db->quote($pk) . ')');
+                                        ->delete('#__hwdms_media_map')
+                                        ->where('(media_id_1 = ' . $db->quote(1) . ' OR media_id_2 = ' . $db->quote($pk) . ')');
 
-                        // Delete records from playlist map
+                        // Delete records from playlist map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_playlist_map')
-                                   ->where('media_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_playlist_map')
+                                        ->where('media_id = ' . $db->quote($pk));
 
-                        // Delete records from processes
+                        // Delete records from processes.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_processes')
-                                   ->where('media_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_processes')
+                                        ->where('media_id = ' . $db->quote($pk));
 
-                        // Delete records from reports
+                        // Delete records from reports.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_reports')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_reports')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk));
 
-                        // Delete records from response map
+                        // Delete records from response map.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_processes')
-                                   ->where('media_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_processes')
+                                        ->where('media_id = ' . $db->quote($pk));
 
-                        // Delete records from reports
+                        // Delete records from reports.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_subscriptions')
-                                   ->where('element_type = ' . $db->quote(1))
-                                   ->where('element_id = ' . $db->quote($pk)); 
+                                        ->delete('#__hwdms_subscriptions')
+                                        ->where('element_type = ' . $db->quote(1))
+                                        ->where('element_id = ' . $db->quote($pk)); 
 		}
 
                 // Execute the generated queries.
@@ -889,7 +950,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         try
                         {
                                 $db->setQuery($query);
-                                $db->query();
+                                $db->execute();
                         }
                         catch (RuntimeException $e)
                         {
@@ -898,14 +959,14 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         }
                 }   
                 
-                // Load media table
+                // Load media table.
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                // Load file model
+                // Load file model.
                 $modelFile = JModelAdmin::getInstance('File','hwdMediaShareModel'); 
                 
-                // Load HWDFiles library
+                // Load HWDFiles library.
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFiles::getLocalStoragePath();
                 $HWDfiles = hwdMediaShareFiles::getInstance();
@@ -933,7 +994,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         }
                 }
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
