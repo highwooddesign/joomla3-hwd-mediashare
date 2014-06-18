@@ -22,7 +22,7 @@ JLoader::register('hwdMediaShareHelper', dirname(__FILE__).'/helpers/hwdmediasha
 // Require hwdMediaShare factory.
 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
 
-// Get an instance of the controller prefixed by hwdMediaShare.
+// Get an instance of the controller.
 $controller = JControllerLegacy::getInstance('hwdMediaShare');
 
 // Perform the task.
