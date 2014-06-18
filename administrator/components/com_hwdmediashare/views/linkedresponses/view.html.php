@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewLinkedResponses extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -36,7 +36,7 @@ class hwdMediaShareViewLinkedResponses extends JViewLegacy
                         return false;
                 }
 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 
 		$document = JFactory::getDocument();
@@ -45,7 +45,9 @@ class hwdMediaShareViewLinkedResponses extends JViewLegacy
 
 	/**
 	 * Display appropriate button to either link or unlink the response from the media item.
-	 * @return  void
+	 *
+	 * @access  public
+	 * @return  string  The HTML to render the button.
 	 */
 	public function getButton($row, $i)
 	{
@@ -53,7 +55,6 @@ class hwdMediaShareViewLinkedResponses extends JViewLegacy
                 $class = $row->connection ? 'btn btn-danger' : 'btn';
                 $text = $row->connection ? 'COM_HWDMS_BTN_REMOVE_RESPONSE' : 'COM_HWDMS_BTN_ADD_RESPONSE';
 
-                // Start output
                 ob_start();
                 ?>
                 <div class="btn-wrapper pull-right">
