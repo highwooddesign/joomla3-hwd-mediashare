@@ -99,7 +99,7 @@ class hwdMediaShareModelAlbum extends JModelAdmin
 
         /**
 	 * Method to get the thumbnail for the album.
-
+         * 
          * @access  public
          * @param   object  $item   The album object.
 	 * @return  mixed   The thumnail location on success, false on failure.
