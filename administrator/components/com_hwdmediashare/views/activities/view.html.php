@@ -68,7 +68,7 @@ class hwdMediaShareViewActivities extends JViewLegacy
 		$canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		// Get the toolbar object instance
+		// Get the toolbar object instance.
 		$bar = JToolBar::getInstance('toolbar');
                 
                 JToolBarHelper::title(JText::_('COM_HWDMS_ACTIVITIES'), 'grid');
