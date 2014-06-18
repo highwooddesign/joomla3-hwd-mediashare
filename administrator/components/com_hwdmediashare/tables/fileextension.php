@@ -10,27 +10,28 @@
 
 defined('_JEXEC') or die;
 
-// Import Joomla table library
-jimport('joomla.database.table');
-
 class hwdMediaShareTableFileExtension extends JTable
 {
 	/**
-	 * Constructor.
-	 * @return	void
-	 */
-	function __construct($db)
+	 * Class constructor. Overridden to explicitly set the table and key fields.
+	 *
+	 * @access	public
+	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
+         * @return      void
+	 */ 
+	public function __construct($db)
 	{
 		parent::__construct('#__hwdms_ext', 'id', $db);
 	}
         
         
 	/**
-	 * Overload store method
+	 * Method to store a row in the database from the JTable instance properties.
 	 *
-	 * @param   boolean   $updateNulls   Toggle whether null values should be updated.
-         * 
-	 * @return  boolean   True on success, false on failure.
+         * @access  public
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @return  boolean  True on success.
+	 * @link    http://docs.joomla.org/JTable/store
 	 */
 	public function store($updateNulls = false)
 	{
@@ -57,13 +58,13 @@ class hwdMediaShareTableFileExtension extends JTable
 			}  
 		}
 
-		// Set publish_up to null date if not set
+		// Set publish_up to null date if not set.
 		if (!$this->publish_up)
 		{
 			$this->publish_up = $this->_db->getNullDate();
 		}
 
-		// Set publish_down to null date if not set
+		// Set publish_down to null date if not set.
 		if (!$this->publish_down)
 		{
 			$this->publish_down = $this->_db->getNullDate();
@@ -73,13 +74,16 @@ class hwdMediaShareTableFileExtension extends JTable
 	}
         
 	/**
-	 * Overloaded check method to ensure data integrity.
+	 * Method to perform sanity checks on the JTable instance properties to ensure
+	 * they are safe to store in the database.
 	 *
-	 * @return  boolean  True on success.
+         * @access  public
+	 * @return  boolean  True if the instance is sane and able to be stored in the database.
+	 * @link    http://docs.joomla.org/JTable/check
 	 */
 	public function check()
 	{
-		// Check for valid name
+		// Check for valid name.
 		if (trim($this->ext) == '')
 		{
 			$this->setError(JText::_('COM_HWDMS_ERROR_SAVE_NO_EXT'));
