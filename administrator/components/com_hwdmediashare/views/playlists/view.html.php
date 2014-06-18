@@ -12,14 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewPlaylists extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+        
+	public $filterForm;
+        
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -48,6 +56,7 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -91,13 +100,13 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
                         JToolBarHelper::trash('playlists.trash');
                         JToolBarHelper::divider();
 		}
-		// Add a batch button
+		// Add a batch button.
 		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
 		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 
-			// Instantiate a new JLayoutFile instance and render the batch button
+			// Instantiate a new JLayoutFile instance and render the batch button.
 			$layout = new JLayoutFile('joomla.toolbar.batch');
 
 			$dhtml = $layout->render(array('title' => $title));
