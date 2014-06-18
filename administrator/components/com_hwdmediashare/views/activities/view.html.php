@@ -12,14 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewActivities extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+        
+	public $filterForm;
+            
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -45,13 +53,14 @@ class hwdMediaShareViewActivities extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
