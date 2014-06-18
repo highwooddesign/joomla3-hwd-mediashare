@@ -12,14 +12,22 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewSubscriptions extends JViewLegacy 
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+        
+	public $filterForm;
+
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -44,13 +52,14 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -58,7 +67,7 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy
 		$canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		// Get the toolbar object instance
+		// Get the toolbar object instance.
 		$bar = JToolBar::getInstance('toolbar');
                 
 		JToolBarHelper::title(JText::_('COM_HWDMS_SUBSCRIPTIONS'), 'users');
