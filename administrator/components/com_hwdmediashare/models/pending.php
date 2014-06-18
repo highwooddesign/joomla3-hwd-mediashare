@@ -15,7 +15,8 @@ class hwdMediaShareModelPending extends JModelLegacy
         /**
 	 * Method to count pending media.
          * 
-         * @return	mixed	Object on success, false on failure.
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getMedia()
 	{
@@ -39,8 +40,9 @@ class hwdMediaShareModelPending extends JModelLegacy
         
         /**
 	 * Method to count pending albums.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getAlbums()
 	{
@@ -64,8 +66,9 @@ class hwdMediaShareModelPending extends JModelLegacy
         
         /**
 	 * Method to count pending groups.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getGroups()
 	{
@@ -89,10 +92,9 @@ class hwdMediaShareModelPending extends JModelLegacy
         
         /**
 	 * Method to count pending users.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getUsers()
 	{
@@ -116,8 +118,9 @@ class hwdMediaShareModelPending extends JModelLegacy
         
         /**
 	 * Method to count pending playlists.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getPlaylists()
 	{
