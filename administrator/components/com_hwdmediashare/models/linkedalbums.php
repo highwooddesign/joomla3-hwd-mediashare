@@ -189,7 +189,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
                         }
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
