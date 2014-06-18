@@ -13,11 +13,11 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelGroup extends JModelAdmin
 {        
 	/**
-	 * Method to get a single record.
+	 * Method to get a single item.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -47,12 +47,12 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	}
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Group', $prefix = 'hwdMediaShareTable', $config = array())
@@ -63,10 +63,10 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -84,7 +84,8 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  mixed  The data for the form.
+	 * @access  protected
+         * @return  mixed       The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -100,8 +101,11 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	}
 
         /**
-	 * Method to get the thumbnail for the group
-	 * @return  void
+	 * Method to get the thumbnail for the group.
+         * 
+         * @access  public
+         * @param   object  $item   The group object.
+	 * @return  mixed   The thumnail location on success, false on failure.
 	 */
 	public function getThumbnail($item)
 	{
@@ -121,7 +125,10 @@ class hwdMediaShareModelGroup extends JModelAdmin
         
         /**
 	 * Method to count the number of media in the group.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The group object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getMediaCount($item)
 	{
@@ -145,7 +152,10 @@ class hwdMediaShareModelGroup extends JModelAdmin
         
         /**
 	 * Method to count the number of members in the group.
-	 * @return  void
+         * 
+         * @access  public
+         * @param   object  $item   The group object.
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getMemberCount($item)
 	{
@@ -167,12 +177,12 @@ class hwdMediaShareModelGroup extends JModelAdmin
                 return $count;
 	}
 
-        /**
+	/**
 	 * Method to toggle the approval status of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks   An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function approve($pks, $value = 0)
@@ -217,7 +227,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
@@ -226,9 +236,9 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	/**
 	 * Method to toggle the featured value of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks   An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function feature($pks, $value = 0)
@@ -273,7 +283,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
@@ -283,11 +293,11 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	 * Method to delete one or more records. Overload to remove any
          * associated data.
 	 *
-	 * @param   array  $pks  An array of record primary keys.
-	 *
-	 * @return  boolean  True if successful, false if an error occurs.
+         * @access  public
+	 * @param   array   $pks    An array of record primary keys.
+	 * @return  boolean True if successful, false if an error occurs.
 	 */
-	public function delete(&$pks)
+	public function delete($pks)
 	{
                 if (!parent::delete($pks))
                 {
@@ -297,56 +307,56 @@ class hwdMediaShareModelGroup extends JModelAdmin
 		$db = JFactory::getDBO();
                 $pks = (array) $pks;
                 
-                // Array holding all queries
+                // Array holding all queries.
                 $queries = array();
 
 		// Loop through keys and generate queries to execute.
 		foreach ($pks as $i => $pk)
 		{
-                        // Delete records from activities
+                        // Delete records from activities.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_activities')
-                                   ->where('element_type = ' . $db->quote(3))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_activities')
+                                        ->where('element_type = ' . $db->quote(3))
+                                        ->where('element_id = ' . $db->quote($pk));
 
-                        // Delete records from field values
+                        // Delete records from field values.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_fields_values')
-                                   ->where('element_type = ' . $db->quote(3))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_fields_values')
+                                        ->where('element_type = ' . $db->quote(3))
+                                        ->where('element_id = ' . $db->quote($pk));
                         
-                        // Delete records from group invite
+                        // Delete records from group invite.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_group_invite')
-                                   ->where('group_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_group_invite')
+                                        ->where('group_id = ' . $db->quote($pk));
 
-                        // Delete records from group invite
+                        // Delete records from group invite.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_group_map')
-                                   ->where('group_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_group_map')
+                                        ->where('group_id = ' . $db->quote($pk));
 
-                        // Delete records from group invite
+                        // Delete records from group invite.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_group_members')
-                                   ->where('group_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_group_members')
+                                        ->where('group_id = ' . $db->quote($pk));
 
-                        // Delete records from likes
+                        // Delete records from likes.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_likes')
-                                   ->where('element_type = ' . $db->quote(3))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_likes')
+                                        ->where('element_type = ' . $db->quote(3))
+                                        ->where('element_id = ' . $db->quote($pk));
                         
-                        // Delete records from reports
+                        // Delete records from reports.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_reports')
-                                   ->where('element_type = ' . $db->quote(3))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_reports')
+                                        ->where('element_type = ' . $db->quote(3))
+                                        ->where('element_id = ' . $db->quote($pk));
                         
-                        // Delete records from reports
+                        // Delete records from reports.
                         $queries[] = $db->getQuery(true)
-                                   ->delete('#__hwdms_reports')
-                                   ->where('element_type = ' . $db->quote(3))
-                                   ->where('element_id = ' . $db->quote($pk));
+                                        ->delete('#__hwdms_reports')
+                                        ->where('element_type = ' . $db->quote(3))
+                                        ->where('element_id = ' . $db->quote($pk));
 		}
 
                 // Execute the generated queries.
@@ -364,7 +374,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
                         }
                 }   
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
