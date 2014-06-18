@@ -19,10 +19,10 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 	protected $form;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -44,25 +44,24 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		$this->addToolbar();
 		$this->sidebar = JHtmlSidebar::render();
 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
+		$canDo		= hwdMediaShareHelper::getActions($this->item->id, 'album');
 		$user		= JFactory::getUser();
 		$isNew		= ($this->item->id == 0);
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
-
-		// Since we don't track these assets at the item level, use the category id.
-		$canDo		= hwdMediaShareHelper::getActions($this->item->id, 'album');
 
 		JToolBarHelper::title($isNew ? JText::_('COM_HWDMS_NEW_ALBUM') : JText::_('COM_HWDMS_EDIT_ALBUM'), 'book');
 
@@ -89,8 +88,6 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		{
 			JToolbarHelper::cancel('album.cancel', 'JTOOLBAR_CLOSE');
 		}
-
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
