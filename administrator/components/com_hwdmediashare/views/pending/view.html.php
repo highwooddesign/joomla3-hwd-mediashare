@@ -13,10 +13,10 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewPending extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -42,7 +42,7 @@ class hwdMediaShareViewPending extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
                 
 		$document = JFactory::getDocument();
@@ -52,6 +52,7 @@ class hwdMediaShareViewPending extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -59,7 +60,6 @@ class hwdMediaShareViewPending extends JViewLegacy
 		JToolBarHelper::title(JText::_('COM_HWDMS_PENDING_ITEMS'), 'notification');
 
 		JToolbarHelper::cancel('pending.cancel', 'JTOOLBAR_CLOSE');
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
