@@ -12,11 +12,13 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelReported extends JModelList
 {
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */    
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields']))
@@ -37,8 +39,9 @@ class hwdMediaShareModelReported extends JModelList
 
         /**
 	 * Method to count reported media.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getMedia()
 	{
@@ -64,8 +67,9 @@ class hwdMediaShareModelReported extends JModelList
         
         /**
 	 * Method to count reported albums.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getAlbums()
 	{
@@ -91,8 +95,9 @@ class hwdMediaShareModelReported extends JModelList
         
         /**
 	 * Method to count reported groups.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getGroups()
 	{
@@ -118,8 +123,9 @@ class hwdMediaShareModelReported extends JModelList
         
         /**
 	 * Method to count reported users.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getUsers()
 	{
@@ -145,8 +151,9 @@ class hwdMediaShareModelReported extends JModelList
         
         /**
 	 * Method to count reported playlists.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getPlaylists($pk = null)
 	{
@@ -173,6 +180,7 @@ class hwdMediaShareModelReported extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -220,6 +228,7 @@ class hwdMediaShareModelReported extends JModelList
 	/**
 	 * Method to get the database query.
 	 *
+	 * @access  protected
 	 * @return  JDatabaseQuery  database query
 	 */
         protected function getListQuery()
@@ -268,12 +277,16 @@ class hwdMediaShareModelReported extends JModelList
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
+        
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @access  protected
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
