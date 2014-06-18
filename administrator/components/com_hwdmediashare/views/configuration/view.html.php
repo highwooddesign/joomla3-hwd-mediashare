@@ -19,10 +19,10 @@ class hwdMediaShareViewConfiguration extends JViewLegacy
 	protected $form;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -46,7 +46,7 @@ class hwdMediaShareViewConfiguration extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
                 
 		$document = JFactory::getDocument();
@@ -56,25 +56,23 @@ class hwdMediaShareViewConfiguration extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
 	{
 		JFactory::getApplication()->input->set('hidemainmenu', true);
 
-		// Since we don't track these assets at the item level, use the category id.
 		$canDo = hwdMediaShareHelper::getActions();
 
 		JToolBarHelper::title(JText::_('COM_HWDMS_CONFIGURATION'), 'cog');
 
-		// If not checked out, can save the item.
 		if ($canDo->get('core.edit'))
 		{
 			JToolbarHelper::apply('configuration.apply');
 			JToolbarHelper::save('configuration.save');
 		}
 		JToolbarHelper::cancel('configuration.cancel', 'JTOOLBAR_CLOSE');
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
 }
