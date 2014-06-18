@@ -340,7 +340,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">COM_HWDMS_GLOBAL</option>
+                                <option value="2">JGLOBAL_USE_GLOBAL</option>
                         </field>
                         <field
                                 name="password_protect"
@@ -372,7 +372,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">COM_HWDMS_GLOBAL</option>
+                                <option value="2">JGLOBAL_USE_GLOBAL</option>
                         </field>
                         <field
                                 name="age"
@@ -411,7 +411,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">COM_HWDMS_GLOBAL</option>
+                                <option value="2">JGLOBAL_USE_GLOBAL</option>
                         </field>
                         <field
                                 name="allow_likes"
@@ -424,7 +424,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">COM_HWDMS_GLOBAL</option>
+                                <option value="2">JGLOBAL_USE_GLOBAL</option>
                         </field>
                         <field
                                 name="allow_embedding"
@@ -437,7 +437,7 @@
                         >
                                 <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">COM_HWDMS_GLOBAL</option>
+                                <option value="2">JGLOBAL_USE_GLOBAL</option>
                         </field>
                 </fieldset>
 	</fields>
