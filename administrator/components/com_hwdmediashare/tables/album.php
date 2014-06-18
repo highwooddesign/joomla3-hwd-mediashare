@@ -124,7 +124,7 @@ class hwdMediaShareTableAlbum extends JTable
 		}
 		else
 		{
-			// New item
+			// New item.
                         $isNew = true;
                         
                         // Set a unique key.
