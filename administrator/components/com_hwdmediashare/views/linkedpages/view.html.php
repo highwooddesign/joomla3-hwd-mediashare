@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewLinkedPages extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -36,7 +36,7 @@ class hwdMediaShareViewLinkedPages extends JViewLegacy
                         return false;
                 }
 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 
 		$document = JFactory::getDocument();
