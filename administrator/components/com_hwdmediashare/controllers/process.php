@@ -21,11 +21,12 @@ class hwdMediaShareControllerProcess extends JControllerForm
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * Class constructor.
+	 * Class constructor. Defines a white list of column filters.
 	 *
 	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
          * @return      void
-	 */
+	 */    
 	public function __construct($config = array())
 	{
 		parent::__construct($config);

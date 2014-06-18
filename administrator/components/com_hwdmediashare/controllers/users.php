@@ -24,8 +24,9 @@ class hwdMediaShareControllerUsers extends JControllerAdmin
 	 * Class constructor.
 	 *
 	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
          * @return      void
-	 */
+	 */    
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
