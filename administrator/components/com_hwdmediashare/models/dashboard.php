@@ -14,7 +14,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
 {
         /**
 	 * Method to count the number of media added each day for the past 30 days.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An array of data items on success, false on failure.
 	 */
 	public function getMedia()
 	{
@@ -40,7 +42,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
           
         /**
 	 * Method to get the recent gallery activity.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An array of data items on success, false on failure.
 	 */
 	public function getActivity()
 	{
@@ -57,7 +61,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
         
         /**
 	 * Method to count the number of media in the gallery.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getMediaCount()
 	{
@@ -81,7 +87,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
 
         /**
 	 * Method to count the number of categories in the gallery.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getCategoryCount()
 	{
@@ -105,7 +113,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
         
         /**
 	 * Method to count the number of albums in the gallery.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getAlbumCount()
 	{
@@ -129,7 +139,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
         
         /**
 	 * Method to count the number of groups in the gallery.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getGroupCount()
 	{
@@ -153,7 +165,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
         
         /**
 	 * Method to count the number of user channels in the gallery.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getUserCount()
 	{
@@ -176,8 +190,10 @@ class hwdMediaShareModelDashboard extends JModelLegacy
 	}
         
         /**
-	 * Method to count the number of categories in the gallery.
-	 * @return  void
+	 * Method to count the number of playlists in the gallery.
+         * 
+         * @access  public
+	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getPlaylistCount($pk = null)
 	{
@@ -201,7 +217,9 @@ class hwdMediaShareModelDashboard extends JModelLegacy
         
         /**
 	 * Method to get the version number of HWD.
-	 * @return  void
+         * 
+         * @access  public
+	 * @return  string  The version number of HWD from the manifest cache.
 	 */
 	public function getVersion()
 	{
