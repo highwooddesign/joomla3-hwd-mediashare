@@ -12,11 +12,13 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelCustomFields extends JModelList
 {
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */    
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields']))
@@ -43,6 +45,7 @@ class hwdMediaShareModelCustomFields extends JModelList
 	/**
 	 * Method to get the database query.
 	 *
+	 * @access  protected
 	 * @return  JDatabaseQuery  database query
 	 */
         protected function getListQuery()
@@ -126,9 +129,9 @@ class hwdMediaShareModelCustomFields extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -140,10 +143,10 @@ class hwdMediaShareModelCustomFields extends JModelList
 	/**
 	 * Get the batch form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access      public
+	 * @param       array       $data       Data for the form.
+	 * @param       boolean     $loadData   True if the form is to load its own data (default case), false if not.
+	 * @return      mixed       A JForm object on success, false on failure
 	 */
 	public function getBatchForm($data = array(), $loadData = true)
 	{
