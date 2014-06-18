@@ -13,12 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareModelExtension extends JModelAdmin
 {
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'FileExtension', $prefix = 'hwdMediaShareTable', $config = array())
@@ -29,10 +29,10 @@ class hwdMediaShareModelExtension extends JModelAdmin
 	/**
 	 * Abstract method for getting the form from the model.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -50,7 +50,8 @@ class hwdMediaShareModelExtension extends JModelAdmin
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
-	 * @return  mixed  The data for the form.
+	 * @access  protected
+         * @return  mixed       The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -69,11 +70,11 @@ class hwdMediaShareModelExtension extends JModelAdmin
 	 * Method to delete one or more records. Overload to check if 
          * gallery still contains media with the extension being deleted.
 	 *
-	 * @param   array  $pks  An array of record primary keys.
-	 *
-	 * @return  boolean  True if successful, false if an error occurs.
+         * @access  public
+	 * @param   array   $pks    An array of record primary keys.
+	 * @return  boolean True if successful, false if an error occurs.
 	 */
-	public function delete(&$pks)
+	public function delete($pks)
 	{
 		// Initialise variables.
                 $user = JFactory::getUser();
