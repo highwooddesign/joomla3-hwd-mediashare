@@ -12,13 +12,21 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelGroupMembers extends JModelList
 {
+	/**
+	 * The model used to get the list of users.
+         * 
+         * @access      protected
+	 * @var         object
+	 */    
         protected $model;
 
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */    
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -33,12 +41,12 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	}
 
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'GroupMembers', $prefix = 'hwdMediaShareTable', $config = array())
@@ -49,6 +57,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -70,6 +79,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+	 * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -82,9 +92,9 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -107,9 +117,9 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	/**
 	 * Method to unlink one or more users from a group.
 	 *
-	 * @param   array    $pks      A list of the primary keys to change.
-	 * @param   integer  $groupId  The value of the media key to associate with.
-	 *
+	 * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $groupId   The value of the group key to associate with.
 	 * @return  boolean  True on success.
 	 */
         public function unlink($pks, $groupId = null)
@@ -185,7 +195,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
                         }
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
@@ -194,9 +204,9 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	/**
 	 * Method to link one or more users to a group.
 	 *
-	 * @param   array    $pks      A list of the primary keys to change.
-	 * @param   integer  $groupId  The value of the media key to associate with.
-	 *
+	 * @access  public
+	 * @param   array    $pks       A list of the primary keys to change.
+	 * @param   integer  $groupId   The value of the group key to associate with.
 	 * @return  boolean  True on success.
 	 */
 	public function link($pks, $groupId = null)
@@ -238,7 +248,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
                                 }
                         }
                         
-                        // Check if association already exists
+                        // Check if association already exists.
                         $db = JFactory::getDbo();
                         $query = $db->getQuery(true)->select('id')->from('#__hwdms_group_members')
                                  ->where($db->quoteName('group_id') . ' = ' . $db->quote($groupId))
@@ -246,7 +256,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
                         $db->setQuery($query);
                         $exists = $db->loadResult();
 
-                        // Create an object to bind to the database
+                        // Create an object to bind to the database.
                         if (!$exists)
                         {
                                 $object = new StdClass;
@@ -265,7 +275,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
                         }
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
