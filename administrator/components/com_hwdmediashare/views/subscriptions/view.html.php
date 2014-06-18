@@ -78,9 +78,7 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy
 		}
                 if ($canDo->get('core.delete'))
 		{
-			JToolBarHelper::divider();
 			JToolBarHelper::deleteList('', 'subscriptions.delete');
-                        JToolBarHelper::divider();
                 }
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');   
         }        
