@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewLinkedGroups extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -36,7 +36,7 @@ class hwdMediaShareViewLinkedGroups extends JViewLegacy
                         return false;
                 }
 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 
 		$document = JFactory::getDocument();
@@ -45,7 +45,9 @@ class hwdMediaShareViewLinkedGroups extends JViewLegacy
 
 	/**
 	 * Display appropriate button to either link or unlink the media from the group.
-	 * @return  void
+	 *
+	 * @access  public
+	 * @return  string  The HTML to render the button.
 	 */
 	public function getButton($row, $i)
 	{
@@ -53,7 +55,6 @@ class hwdMediaShareViewLinkedGroups extends JViewLegacy
                 $class = $row->connection ? 'btn btn-danger' : 'btn';
                 $text = $row->connection ? 'COM_HWDMS_BTN_REMOVE_FROM_GROUP' : 'COM_HWDMS_BTN_ADD_TO_GROUP';
 
-                // Start output
                 ob_start();
                 ?>
                 <div class="btn-wrapper pull-right">
