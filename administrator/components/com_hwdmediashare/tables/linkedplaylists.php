@@ -10,16 +10,16 @@
 
 defined('_JEXEC') or die;
 
-// Import Joomla table library
-jimport('joomla.database.table');
-
 class hwdMediaShareTableLinkedPlaylists extends JTable
 {
 	/**
-	 * Constructor.
-	 * @return	void
-	 */
-	function __construct($db)
+	 * Class constructor. Overridden to explicitly set the table and key fields.
+	 *
+	 * @access	public
+	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
+         * @return      void
+	 */ 
+	public function __construct($db)
 	{
 		parent::__construct('#__hwdms_playlist_map', 'id', $db);
 	}
