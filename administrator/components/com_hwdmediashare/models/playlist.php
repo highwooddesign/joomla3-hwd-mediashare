@@ -266,6 +266,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
          * @access  public
 	 * @param   array   $pks    An array of record primary keys.
 	 * @return  boolean True if successful, false if an error occurs.
+	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
 	public function delete($pks)
 	{
