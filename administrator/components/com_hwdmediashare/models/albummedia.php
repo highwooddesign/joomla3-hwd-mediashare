@@ -12,13 +12,21 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelAlbumMedia extends JModelList
 {
+	/**
+	 * The model used to get the list of media.
+         * 
+         * @access      protected
+	 * @var         object
+	 */    
         protected $model;
 
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */    
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -35,6 +43,7 @@ class hwdMediaShareModelAlbumMedia extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -56,6 +65,7 @@ class hwdMediaShareModelAlbumMedia extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+	 * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -68,9 +78,9 @@ class hwdMediaShareModelAlbumMedia extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
