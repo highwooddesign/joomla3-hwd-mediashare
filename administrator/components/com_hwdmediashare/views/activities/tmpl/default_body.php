@@ -16,13 +16,8 @@ $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
-
-$trashed	= $this->state->get('filter.published') == -2 ? true : false;
 ?>
-<?php foreach ($this->items as $i => $item) :
-$canCheckin = $user->authorise('core.manage',     'com_hwdmediashare') || $item->checked_out == $userId || $item->checked_out == 0;
-$canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.activity.'.$item->id) && $canCheckin;
-?>
+<?php foreach ($this->items as $i => $item) : ?>
 <tr class="row<?php echo $i % 2; ?>">
         <td class="nowrap has-context">
                 <div class="pull-left">
