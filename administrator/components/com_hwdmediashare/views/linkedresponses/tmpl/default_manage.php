@@ -23,7 +23,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
         <fieldset class="filter clearfix">
 		<div class="btn-toolbar">
 			<div class="btn-group pull-left">
-				<input type="text" name="filter_search" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
+				<input type="text" name="filter[search]" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" size="30" title="<?php echo JText::_('COM_HWDMS_FILTER_SEARCH_DESC'); ?>" />
 			</div>
 			<div class="btn-group pull-left">
 				<button type="submit" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>" data-placement="bottom">
@@ -32,9 +32,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 					<span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
 			</div>
 			<div class="btn-group pull-left">
-                                <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedresponses&tmpl=component&media_id='.$this->mediaId.'&add=1'); ?>">
-                                Add New Media
-                                </a>
+                                <a class="btn btn-info" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedresponses&tmpl=component&media_id='.$this->mediaId.'&add=1'); ?>">
+					<i class="icon-plus"></i><?php echo '&#160;' . JText::_('COM_HWDMS_BTN_ADD_MORE_RESPONSES'); ?></a>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -56,8 +55,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                         <div class="pull-left thumb-wrapper">
                                                 <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item)); ?>" width="75" />
                                         </div>
-                                        <p><strong><?php echo $this->escape($item->title); ?></strong></p>
-                                        <?php echo $item->description; ?>
+                                        <p><strong><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>" target="_blank">
+                                                <?php echo $this->escape($item->title); ?></a></strong></p>
+                                        <p><?php echo $this->escape(JHtmlString::truncate($item->description, 160, true, false)); ?></p>
 				</td>
 			</tr>
 		<?php endforeach; ?>
@@ -66,8 +66,6 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 	<div>
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
-		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-		<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>
