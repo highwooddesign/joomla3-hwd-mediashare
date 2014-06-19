@@ -159,5 +159,34 @@ class hwdMediaShareModelCustomFields extends JModelList
 		}
 
 		return $form;
-	}         
+	} 
+        
+	/**
+	 * Get the batch form.
+	 *
+	 * @access      public
+	 * @return      array       An array of supported profile types.
+	 */
+	public function getProfileTypes()
+	{
+		static $types = false;
+
+		if(!$types)
+		{
+                        $path = JPATH_ROOT . '/components/com_hwdmediashare/libraries/fields/customfields.xml';
+                        $parser = JFactory::getXML($path);                                        
+                        $fields	= $parser->fields;
+                        
+			$data	= array();
+
+			foreach( $fields->children() as $field )
+			{
+                                $data["$field->type"] = $field->name;
+			}
+                        
+			$types = $data;
+		}
+               
+		return $types;
+	}        
 }
