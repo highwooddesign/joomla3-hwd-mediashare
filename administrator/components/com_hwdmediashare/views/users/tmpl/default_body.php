@@ -59,10 +59,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.user.'.$ite
                         <?php echo (int) $item->report_count; ?></a>                    
         </td>
         <?php endif; ?>           
-        <td class="nowrap has-context">
-                <div class="pull-left thumb-wrapper">
-                        <span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText($item->title, $item->description); ?>" ><img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item)); ?>" width="75" /></span>
-                </div>            
+        <td class="nowrap has-context">         
                 <div class="pull-left">
                         <?php if ($item->checked_out) : ?>
                                 <?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'users.', $canCheckin); ?>
