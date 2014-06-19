@@ -24,35 +24,27 @@ JHtml::_('behavior.framework', true);
         <table class="table table-striped" id="maintenanceList">
                 <tbody>
                         <tr>
-                                <td width="90%">
-                                        <div><?php echo JText::_( 'COM_HWDMS_CLEAN_CATEGORY_MAP' ); ?></div>
-                                </td>
-                                <td width="10%">
-                                        <div id="ajax-container-cleancategorymap" class="fltrt"></div>
+                                <td>
+                                        <div id="ajax-container-cleancategorymap" class="pull-right"></div>
+                                        <?php echo JText::_( 'COM_HWDMS_CLEAN_CATEGORY_MAP' ); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::_( 'COM_HWDMS_CLEAN_TAG_MAP' ); ?></div>
-                                </td>
-                                <td>
-                                        <div id="ajax-container-cleantagmap" class="fltrt"></div>
+                                        <div id="ajax-container-cleantagmap" class="pull-right"></div>
+                                        <?php echo JText::_( 'COM_HWDMS_CLEAN_TAG_MAP' ); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::_( 'COM_HWDMS_EMPTY_UPLOAD_TOKENS' ); ?></div>
-                                </td>
-                                <td>
-                                        <div id="ajax-container-emptyuploadtokens" class="fltrt"></div>
+                                        <div id="ajax-container-emptyuploadtokens" class="pull-right"></div>
+                                        <?php echo JText::_( 'COM_HWDMS_EMPTY_UPLOAD_TOKENS' ); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::_( 'COM_HWDMS_PURGE_OLD_PROCESSES' ); ?></div>
-                                </td>
-                                <td>
-                                        <div id="ajax-container-purgeoldprocesses" class="fltrt"></div>
+                                        <div id="ajax-container-purgeoldprocesses" class="pull-right"></div>
+                                        <?php echo JText::_( 'COM_HWDMS_PURGE_OLD_PROCESSES' ); ?>
                                 </td>
                         </tr>
                 </tbody>
