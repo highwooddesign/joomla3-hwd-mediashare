@@ -26,19 +26,19 @@ JHtml::_('behavior.framework', true);
                         <tr>
                                 <td>
                                         <div id="ajax-container-cleancategorymap" class="pull-right"></div>
-                                        <?php echo JText::_( 'COM_HWDMS_CLEAN_CATEGORY_MAP' ); ?>
+                                        <?php echo JText::_('COM_HWDMS_CLEAN_CATEGORY_MAP'); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
                                         <div id="ajax-container-cleantagmap" class="pull-right"></div>
-                                        <?php echo JText::_( 'COM_HWDMS_CLEAN_TAG_MAP' ); ?>
+                                        <?php echo JText::_('COM_HWDMS_CLEAN_TAG_MAP'); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
                                         <div id="ajax-container-emptyuploadtokens" class="pull-right"></div>
-                                        <?php echo JText::_( 'COM_HWDMS_EMPTY_UPLOAD_TOKENS' ); ?>
+                                        <?php echo JText::_('COM_HWDMS_EMPTY_UPLOAD_TOKENS'); ?>
                                 </td>
                         </tr>
                         <tr>
