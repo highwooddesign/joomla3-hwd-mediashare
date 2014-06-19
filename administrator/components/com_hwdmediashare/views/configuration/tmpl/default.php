@@ -33,7 +33,7 @@ JHtml::_('formbehavior.chosen', 'select');
 <?php else : ?>
 	<div id="j-main-container">
 <?php endif;?>
-		<!-- Begin Content -->
+		<!-- Begin Tab Content -->
                 <?php echo JHtml::_('bootstrap.startTabSet', 'config', array('active' => 'page-site')); ?>
 
                 <?php echo JHtml::_('bootstrap.addTab', 'config', 'page-site', JText::_('COM_HWDMS_SITE', true)); ?>
@@ -65,6 +65,6 @@ JHtml::_('formbehavior.chosen', 'select');
                 <?php echo JHtml::_('bootstrap.endTab'); ?>                   
 
                 <?php echo JHtml::_('bootstrap.endTabSet'); ?>
-		<!-- End Content -->
+		<!-- End Tab Content -->
         </div>
 </form>
