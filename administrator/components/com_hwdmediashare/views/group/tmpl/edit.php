@@ -35,9 +35,7 @@ $isNew = $this->item->id == 0 ? true : false ;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=group&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
-    
 	<div class="form-horizontal">
             
 		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
