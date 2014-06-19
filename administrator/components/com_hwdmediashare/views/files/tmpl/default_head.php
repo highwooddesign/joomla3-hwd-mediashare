@@ -23,7 +23,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         <th>
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_FILE_PATH', 'a.basename', $listDirn, $listOrder); ?>
         </th>         
-        <th width="10%" class="nowrap">
+        <th width="10%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_FILE_TYPE', 'a.file_type', $listDirn, $listOrder); ?>
         </th>
         <th width="1%" class="nowrap hidden-phone">
@@ -38,7 +38,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         <th width="10%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>
         </th>
-        <th width="10%">
+        <th width="10%" class="hidden-phone">
 		<?php echo JHtml::_('searchtools.sort', 'JGLOBAL_HITS', 'a.hits', $listDirn, $listOrder); ?>
         </th>
         <th width="1%" class="nowrap hidden-phone">
