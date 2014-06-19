@@ -41,7 +41,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                         </div>                                
                 </div>
         </td>     
-        <td class="small hidden-phone">
+        <td class="small">
                 <a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id='.(int) $item->user_id); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
                 <?php echo $this->escape($item->name); ?></a>
                 <p class="smallsub"><?php echo $this->escape($item->username); ?></p>  
