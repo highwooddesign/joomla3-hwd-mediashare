@@ -20,7 +20,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
         <th>
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_TITLE', 'a.title', $listDirn, $listOrder); ?>
         </th>     
-        <th width="10%" class="nowrap hidden-phone">
+        <th width="10%" class="nowrap">
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_SUBSCRIBER', 'a.created_by', $listDirn, $listOrder); ?>
         </th>
         <th width="10%" class="nowrap hidden-phone">
