@@ -34,9 +34,7 @@ $isNew = $this->item->id == 0 ? true : false ;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=subscription&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-
 	<div class="form-horizontal">
-            
 		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_HWDMS_SUBSCRIPTION_DETAILS', true)); ?>
@@ -59,7 +57,6 @@ $isNew = $this->item->id == 0 ? true : false ;
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
           
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
-
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
