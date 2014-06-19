@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
-$saveOrder	= $listOrder == 'a.ordering';
 ?>
 <tr>
         <th width="1%" class="hidden-phone">
