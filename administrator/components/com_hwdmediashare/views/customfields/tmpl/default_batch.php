@@ -42,7 +42,7 @@ JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" type="button" onclick="document.id('batch-access').value='';" data-dismiss="modal">
+		<button class="btn" type="button" onclick="document.id('batch_searchable').value='';document.id('batch_visible').value='';document.id('batch_required').value=''" data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
 		<button class="btn btn-primary" type="submit" onclick="Joomla.submitbutton('customfield.batch');">
