@@ -11,9 +11,10 @@
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.framework', true);
+JHtml::_('behavior.modal');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported'); ?>" method="post" name="adminForm" id="adminForm">
-<?php if (!empty( $this->sidebar)) : ?>
+<?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
 	</div>
@@ -24,58 +25,48 @@ JHtml::_('behavior.framework', true);
         <table class="table table-striped" id="maintenanceList">
                 <tbody>
                         <tr>
-                                <td width="80%">
+                                <td>
+                                        <div class="btn-group pull-right">
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=media&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                        </div>                                     
                                         <div><?php echo JText::sprintf('COM_HWDMS_N_REPORTED_MEDIA', $this->media); ?></div>
                                 </td>
-                                <td width="20%">
-                                        <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=media'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
-                                        </div>                            
-                                </td>
                         </tr>
                         <tr>
                                 <td>
+                                        <div class="btn-group pull-right">
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albums&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=albums&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                        </div>                                      
                                         <div><?php echo JText::sprintf('COM_HWDMS_N_REPORTED_ALBUMS', $this->albums); ?></div>
                                 </td>
-                                <td>
-                                        <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albums&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=albums'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
-                                        </div>                                      
-                                </td>
                         </tr>
                         <tr>
                                 <td>
+                                        <div class="btn-group pull-right">
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groups&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=groups&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                        </div>                                       
                                         <div><?php echo JText::sprintf('COM_HWDMS_N_REPORTED_GROUPS', $this->groups); ?></div>
                                 </td>
-                                <td>
-                                        <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groups&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=groups'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
-                                        </div>                                       
-                                </td>
                         </tr>
                         <tr>
                                 <td>
+                                        <div class="btn-group pull-right">
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=users&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                        </div>                                       
                                         <div><?php echo JText::sprintf('COM_HWDMS_N_REPORTED_USERS', $this->users); ?></div>
                                 </td>
-                                <td>
-                                        <div class="btn-group">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=users'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
-                                        </div>                                      
-                                </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_REPORTED_PLAYLISTS', $this->playlists); ?></div>
-                                </td>
-                                <td>
-                                        <div class="btn-group">
+                                        <div class="btn-group pull-right">
                                                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlists&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=playlists'); ?>"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=playlists&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                                      
+                                        <div><?php echo JText::sprintf('COM_HWDMS_N_REPORTED_PLAYLISTS', $this->playlists); ?></div>
                                 </td>
                         </tr>
                 </tbody>
