@@ -16,11 +16,6 @@ $user		= JFactory::getUser();
 $userId		= $user->get('id');
 $listOrder	= $this->escape($this->state->get('list.ordering'));
 $listDirn	= $this->escape($this->state->get('list.direction'));
-$saveOrder	= $listOrder == 'a.ordering';
-
-$archived	= $this->state->get('filter.published') == 2 ? true : false;
-$trashed	= $this->state->get('filter.published') == -2 ? true : false;
-
 ?>
 <?php foreach ($this->items as $i => $item) :
 $ordering   = ($listOrder == 'a.ordering');
@@ -43,7 +38,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                         <?php endif; ?>                             
                 </div>
         </td>  
-        <td class="nowrap has-context">
+        <td class="has-context">
                 <a href="<?php echo hwdMediaShareDownloads::protectedUrl($item->element_id, $item->file_type, $item->element_type, 1); ?>"><?php echo $this->getPath($item); ?></a>
         </td>        
         <td class="small hidden-phone">
@@ -61,7 +56,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
         <td class="nowrap small hidden-phone">
                 <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
         </td>
-        <td class="center">
+        <td class="center hidden-phone">
                 <?php echo (int) $item->hits; ?>
         </td>
         <td class="center hidden-phone">
