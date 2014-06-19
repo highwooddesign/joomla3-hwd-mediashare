@@ -44,7 +44,7 @@ JHtml::_('behavior.framework', true);
                         <tr>
                                 <td>
                                         <div id="ajax-container-purgeoldprocesses" class="pull-right"></div>
-                                        <?php echo JText::_( 'COM_HWDMS_PURGE_OLD_PROCESSES' ); ?>
+                                        <?php echo JText::_('COM_HWDMS_PURGE_OLD_PROCESSES'); ?>
                                 </td>
                         </tr>
                 </tbody>
