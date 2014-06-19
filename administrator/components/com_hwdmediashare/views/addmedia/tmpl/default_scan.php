@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.formvalidation');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=addmedia&tmpl=component'); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
-
         <div class="row-fluid">
                 <div class="span12">
                         <div class="well well-small">
@@ -34,7 +33,6 @@ JHtml::_('behavior.formvalidation');
 
         <input type="hidden" name="tmpl" value="component" />
         <input type="hidden" name="folder" value="<?php echo $this->folder; ?>" />   
-
         <input type="hidden" name="task" value="" />
         <?php echo JHtml::_('form.token'); ?>
 </form>
