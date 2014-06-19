@@ -24,53 +24,43 @@ JHtml::_('behavior.framework', true);
         <table class="table table-striped" id="maintenanceList">
                 <tbody>
                         <tr>
-                                <td width="80%">
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_PENDING_MEDIA', $this->media); ?></div>
-                                </td>
-                                <td width="20%">
-                                        <div class="btn-group">
+                                <td>
+                                        <div class="btn-group pull-right">
                                                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                        </div>                            
+                                        </div>                                     
+                                        <?php echo JText::sprintf('COM_HWDMS_N_PENDING_MEDIA', $this->media); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_PENDING_ALBUMS', $this->albums); ?></div>
-                                </td>
-                                <td>
-                                        <div class="btn-group">
+                                        <div class="btn-group pull-right">
                                                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albums&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                        </div>                                      
+                                        </div>                                     
+                                        <?php echo JText::sprintf('COM_HWDMS_N_PENDING_ALBUMS', $this->albums); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_PENDING_GROUPS', $this->groups); ?></div>
-                                </td>
-                                <td>
-                                        <div class="btn-group">
+                                        <div class="btn-group pull-right">
                                                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groups&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                        </div>                                       
+                                        </div>                                     
+                                        <?php echo JText::sprintf('COM_HWDMS_N_PENDING_GROUPS', $this->groups); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_PENDING_USERS', $this->users); ?></div>
-                                </td>
-                                <td>
-                                        <div class="btn-group">
+                                        <div class="btn-group pull-right">
                                                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                        </div>                                      
+                                        </div>                                     
+                                        <?php echo JText::sprintf('COM_HWDMS_N_PENDING_USERS', $this->users); ?>
                                 </td>
                         </tr>
                         <tr>
                                 <td>
-                                        <div><?php echo JText::sprintf('COM_HWDMS_N_PENDING_PLAYLISTS', $this->playlists); ?></div>
-                                </td>
-                                <td>
-                                        <div class="btn-group">
+                                        <div class="btn-group pull-right">
                                                 <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlists&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
                                         </div>                                      
+                                        <?php echo JText::sprintf('COM_HWDMS_N_PENDING_PLAYLISTS', $this->playlists); ?>
                                 </td>
                         </tr>
                 </tbody>
