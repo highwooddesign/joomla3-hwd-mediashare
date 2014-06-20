@@ -14,18 +14,20 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 {
 	/**
 	 * The show form view variable.
-	 * @var    boolean
+         * 
+         * @access      public
+	 * @var         string
 	 */
 	public $show_form = true;
 
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Initialise variables
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -119,6 +121,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -129,29 +132,23 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 
 		JToolBarHelper::title(JText::_('COM_HWDMS_ADD_NEW_MEDIA'), 'upload');
 
-                if ($this->config->get('upload_workflow') == 0 && $this->show_form)
+                if ($this->config->get('upload_workflow') == 0 && $this->show_form && $canDo->get('core.create'))
 		{
-                        if ($canDo->get('core.create'))
-                        {
-				JToolBarHelper::custom('addmedia.processform', 'save-new', 'save-new', 'COM_HWDMS_TOOLBAR_SAVE_AND_UPLOAD', false);
-				JToolBarHelper::custom('addmedia.processform', 'arrow-right', 'arrow-right', 'COM_HWDMS_TOOLBAR_SKIP', false);
-                        }
+                        JToolBarHelper::custom('addmedia.processform', 'save-new', 'save-new', 'COM_HWDMS_TOOLBAR_SAVE_AND_UPLOAD', false);
 		}
-
-                JToolBarHelper::divider();
                 JToolbarHelper::cancel('addmedia.cancel');
-                JToolBarHelper::divider();
-
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
                 
  	/**
-	 * Method to render the platform upload form
-	 * @return void
+	 * Method to render the platform upload form.
+	 *
+	 * @access  protected
+	 * @return  void
 	 */
 	protected function getPlatformUploadForm()
 	{
-                // Load HWD config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
@@ -166,8 +163,10 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	}
         
  	/**
-	 * Method to get the human readable allowed media types
-	 * @return void
+	 * Method to get the human readable allowed media types.
+	 *
+	 * @access  protected
+	 * @return  void
 	 */
 	protected function getReadableAllowedMediaTypes($method=null)
 	{
@@ -176,8 +175,10 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	}
         
  	/**
-	 * Method to get the human readable allowed media extensions
-	 * @return void
+	 * Method to get the human readable allowed media extensions.
+	 *
+	 * @access  protected
+	 * @return  void
 	 */
 	protected function getReadableAllowedExtensions($extensions)
 	{
@@ -186,9 +187,11 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	}
         
  	/**
-	 * Method to get the folder level for the server driectory scan tool
-	 * @return void
-	 */        
+	 * Method to get the folder level for the server driectory scan tool.
+	 *
+	 * @access  protected
+	 * @return  void
+	 */      
 	protected function getFolderLevel($folder)
 	{
 		$this->folders_id = null;
@@ -204,10 +207,10 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	}
         
 	/**
-	 * Display the scan view
+	 * Display the scan view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	function scan($tpl = null)
@@ -215,6 +218,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 // Initialise variables.
                 $app = JFactory::getApplication();            
                 $document = JFactory::getDocument();
+                $db = JFactory::getDBO();
 
 		// Required to initiate the MooTree functionality
                 $document->addScriptDeclaration("
@@ -235,22 +239,29 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 
 		foreach ($files as $file)
 		{
-                        // Import filesystem libraries. Perhaps not necessary, but does not hurt
-                        jimport('joomla.filesystem.file');
-                        
-                        // Retrieve file details
+                        // Retrieve file details.
                         $ext = strtolower(JFile::getExt($file));
 
-                        // First check if the file has the right extension, we need jpg only
-                        $db = JFactory::getDBO();
-                        $query = $db->getQuery(true);
-                        $query->select('id');
-                        $query->from('#__hwdms_ext');
-                        $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-
+                        // Check if the file has an allowed extension
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_ext')
+                                ->where($db->quoteName('ext') . ' = ' . $db->quote($ext))
+                                ->where($db->quoteName('published') . ' = ' . $db->quote(1));
                         $db->setQuery($query);
-                        $ext_id = $db->loadResult();
-                        if ( $ext_id > 0 )
+                        try
+                        {
+                                $db->query(); 
+                                $ext_id = $db->loadResult();                   
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;                            
+                        }
+
+                        // If the extension is allowed, then count it.
+                        if ($ext_id > 0)
                         {
                                 $count++;
                         }
@@ -259,7 +270,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 $this->count = $count;
                 $this->folder = $folder;
 
-                // Display the view
+                // Display the view.
                 parent::display('scan');
 	}        
 }
