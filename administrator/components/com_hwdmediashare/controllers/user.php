@@ -24,6 +24,8 @@ class hwdMediaShareControllerUser extends JControllerForm
 	 * Proxy for edit.
 	 *
 	 * @access	public
+	 * @param       string  $key     The name of the primary key of the URL variable.
+	 * @param       string  $urlVar  The name of the URL variable if different from the primary key.
          * @return      void
 	 */
 	public function edit($key = null, $urlVar = null)
