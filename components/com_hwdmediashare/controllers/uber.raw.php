@@ -13,19 +13,21 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerUber extends JControllerForm
 {
 	/**
-	 * Function that allows uber upload to communicate with HWD during active uploads
+	 * Function that allows uber upload to communicate with HWD during active uploads.
+         * 
+         * @access  public
 	 * @return  void
 	 */
-        function link_upload()
+        public function link_upload()
         {
-                // Get the document object
+                // Get the document object.
                 $document = JFactory::getDocument();
                             
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                // Set the MIME type for output
+                // Set the MIME type for output.
                 $document->setMimeEncoding('text/javascript');
     
                 hwdMediaShareFactory::load('uber.ubr_link_upload');
@@ -34,19 +36,21 @@ class hwdMediaShareControllerUber extends JControllerForm
         }
         
 	/**
-	 * Function that allows uber upload to communicate with HWD during active uploads
+	 * Function that allows uber upload to communicate with HWD during active uploads.
+         * 
+         * @access  public
 	 * @return  void
 	 */
-        function set_progress()
+        public function set_progress()
         {
-                // Get the document object
+                // Get the document object.
                 $document = JFactory::getDocument();
                             
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                // Set the MIME type for output
+                // Set the MIME type for output.
                 $document->setMimeEncoding('text/javascript');
     
                 hwdMediaShareFactory::load('uber.ubr_set_progress');
@@ -55,19 +59,21 @@ class hwdMediaShareControllerUber extends JControllerForm
         }
         
 	/**
-	 * Function that allows uber upload to communicate with HWD during active uploads
+	 * Function that allows uber upload to communicate with HWD during active uploads.
+         * 
+         * @access  public
 	 * @return  void
 	 */
-        function get_progress()
+        public function get_progress()
         {
-                // Get the document object
+                // Get the document object.
                 $document = JFactory::getDocument();
                             
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                // Set the MIME type for output
+                // Set the MIME type for output.
                 $document->setMimeEncoding('text/javascript');
     
                 hwdMediaShareFactory::load('uber.ubr_get_progress');
