@@ -47,6 +47,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 * Proxy for cancel.
 	 *
 	 * @access	public
+	 * @param       string  $key  The name of the primary key of the URL variable.
          * @return      void
 	 */
 	public function cancel($key = null)        
