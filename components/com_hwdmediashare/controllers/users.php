@@ -14,19 +14,26 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * The URL view list variable.
-	 * @var    string
+	 * The URL view list variable to use with this controller.
+	 *
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "users";
         
 	/**
-	 * Constructor.
-	 * @return	void
+	 * Class constructor.
+	 *
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
@@ -47,7 +54,12 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access  public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
 	 */
 	public function getModel($name = 'User', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
@@ -57,11 +69,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
         
 	/**
 	 * Method to toggle the published value of a list of users.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
-	function publish()
+	public function publish()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -81,7 +95,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -108,11 +122,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
         
 	/**
 	 * Method to like or dislike a single user.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function like()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to like from the request.
@@ -149,11 +165,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
         
 	/**
 	 * Method to report a single user.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function report()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
                 // Get HWD utilities.
@@ -186,11 +204,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 
 	/**
 	 * Method to subscribe to a single user.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function subscribe()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to subscribe from the request.
@@ -207,7 +227,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
                         $model = hwdMediaShareSubscriptions::getInstance();                     
                         $model->elementType = 5;
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -228,11 +248,13 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
 
 	/**
 	 * Method to unsubscribe from a single user.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function unsubscribe()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to unsubscribe from the request.
@@ -249,7 +271,7 @@ class hwdMediaShareControllerUsers extends JControllerLegacy
                         $model = hwdMediaShareSubscriptions::getInstance();                     
                         $model->elementType = 5;
 
-                        // Make sure the item ids are integers
+                        // Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
