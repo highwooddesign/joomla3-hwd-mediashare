@@ -14,21 +14,25 @@ class hwdMediaShareControllerAccount extends JControllerForm
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * The URL view item variable.
+	 * The URL view item variable to use with this controller.
 	 *
-	 * @var    string
+         * @access      protected
+	 * @var         string
 	 */
 	protected $view_item = 'account';
 
 	/**
-	 * The URL view list variable.
+	 * The URL view list variable to use with this controller.
 	 *
-	 * @var    string
+         * @access      protected
+	 * @var         string
 	 */
 	protected $view_list = 'users';
 }
