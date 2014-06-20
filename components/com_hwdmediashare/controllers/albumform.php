@@ -13,29 +13,33 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerAlbumForm extends JControllerForm
 {
 	/**
-	 * The URL view item variable.
+	 * The URL view item variable to use with this controller.
 	 *
-	 * @var    string
+         * @access      protected
+	 * @var         string
 	 */
 	protected $view_item = 'albumform';
 
 	/**
-	 * The URL view list variable.
+	 * The URL view list variable to use with this controller.
 	 *
-	 * @var    string
+         * @access      protected
+	 * @var         string
 	 */
 	protected $view_list = 'albums';
 
 	/**
-	 * The URL edit variable.
+	 * The URL edit variable to use with this controller.
 	 *
-	 * @var    string
+         * @access      protected
+	 * @var         string
 	 */
 	protected $urlVar = 'id';
 
 	/**
 	 * Method to add a new record.
 	 *
+	 * @access  public
 	 * @return  mixed  True if the record can be added, a error object if not.
 	 */
 	public function add()
@@ -50,9 +54,9 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	/**
 	 * Method override to check if you can edit an existing record.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key; default is id.
-	 *
+	 * @access  protected
+	 * @param   array       $data  An array of input data.
+	 * @param   string      $key   The name of the key for the primary key; default is id.
 	 * @return  boolean
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
@@ -101,9 +105,9 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	/**
 	 * Method to cancel an edit.
 	 *
+         * @access  public
 	 * @param   string  $key  The name of the primary key of the URL variable.
-	 *
-	 * @return  boolean  True if access level checks pass, false otherwise.
+	 * @return  boolean
 	 */
 	public function cancel($key = 'id')
 	{
@@ -111,18 +115,17 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 
 		// Redirect to the return page.
 		$this->setRedirect($this->getReturnPage());
+                
+                return true;
 	}
 
 	/**
 	 * Method to edit an existing record.
 	 *
+         * @access  public
 	 * @param   string  $key     The name of the primary key of the URL variable.
 	 * @param   string  $urlVar  The name of the URL variable if different from the primary key
-	 * (sometimes required to avoid router collisions).
-	 *
-	 * @return  boolean  True if access level check and checkout passes, false otherwise.
-	 *
-	 * @since   1.6
+	 * @return  boolean
 	 */
 	public function edit($key = null, $urlVar = 'id')
 	{
@@ -131,29 +134,28 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 		return $result;
 	}
 
-	/**
-	 * Method to get a model object, loading it if required.
+        /**
+	 * Proxy for getModel.
 	 *
+	 * @access  public
 	 * @param   string  $name    The model name. Optional.
 	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
 	 */
 	public function getModel($name = 'albumForm', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
-
 		return $model;
 	}
 
 	/**
 	 * Gets the URL arguments to append to an item redirect.
 	 *
-	 * @param   integer  $recordId  The primary key id for the item.
-	 * @param   string   $urlVar    The name of the URL variable for the id.
-	 *
-	 * @return  string	The arguments to append to the redirect URL.
+         * @access  protected
+	 * @param   integer     $recordId  The primary key id for the item.
+	 * @param   string      $urlVar    The name of the URL variable for the id.
+	 * @return  string      The arguments to append to the redirect URL.
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{
@@ -187,11 +189,10 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	}
 
 	/**
-	 * Get the return URL.
+	 * Get the return URL, if a "return" variable has been passed in the request.
 	 *
-	 * If a "return" variable has been passed in the request
-	 *
-	 * @return  string	The return URL.
+         * @access  protected
+         * @return  string	The return URL.
 	 */
 	protected function getReturnPage()
 	{
@@ -210,9 +211,9 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	/**
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
-	 * @param   JModelLegacy  $model  The data model object.
-	 * @param   array         $validData   The validated data.
-	 *
+         * @access  protected
+	 * @param   JModelLegacy  $model        The data model object.
+	 * @param   array         $validData    The validated data.
 	 * @return  void
 	 */
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
@@ -223,9 +224,9 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	/**
 	 * Method to save a record.
 	 *
+         * @access  public
 	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
-	 *
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key.
 	 * @return  boolean  True if successful, false otherwise.
 	 */
 	public function save($key = null, $urlVar = 'id')
@@ -242,8 +243,10 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	}
 
 	/**
-	 * Method to display the report view
-	 * @return	void
+	 * Method to display the report view.
+         * 
+         * @access  public
+	 * @return  void
 	 */
 	public function report()
 	{
