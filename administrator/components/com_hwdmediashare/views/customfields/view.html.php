@@ -12,14 +12,24 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewCustomFields extends JViewLegacy 
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+        
+	public $filterForm;
+        
+	public $batchForm;    
+        
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -42,13 +52,14 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
 	}
 
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -56,7 +67,7 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
 		$canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		// Get the toolbar object instance
+		// Get the toolbar object instance.
 		$bar = JToolBar::getInstance('toolbar');
                             
 		JToolBarHelper::title(JText::_('COM_HWDMS_CUSTOM_FIELDS'), 'checkmark-circle');
@@ -71,32 +82,26 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
 		}
 		if ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
 			JToolBarHelper::publish('customfields.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('customfields.unpublish', 'JTOOLBAR_UNPUBLISH', true);
-			JToolBarHelper::divider();
 			JToolBarHelper::archiveList('customfields.archive');
 			JToolBarHelper::checkin('customfields.checkin');
 		}
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::deleteList('', 'customfields.delete', 'JTOOLBAR_EMPTY_TRASH');
-                        JToolBarHelper::divider();
                 }
 		elseif ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::trash('customfields.trash');
-                        JToolBarHelper::divider();
 		}
-		// Add a batch button
+		// Add a batch button.
 		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
 		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 
-			// Instantiate a new JLayoutFile instance and render the batch button
+			// Instantiate a new JLayoutFile instance and render the batch button.
 			$layout = new JLayoutFile('joomla.toolbar.batch');
 
 			$dhtml = $layout->render(array('title' => $title));
@@ -108,12 +113,13 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
 	/**
 	 * Method to display the human readable field type.
 	 *
-	 * @return  void
+	 * @access  public
+	 * @return  string  The human readable field type.
 	 */
-	public function getFieldText( $type )
+	public function getFieldText($type)
 	{
 		$types	= $this->get('ProfileTypes');
-		$value	= isset( $types[ $type ] ) ? $types[ $type ] : '';
+		$value	= isset($types[ $type ]) ? $types[$type] : '';
 
 		return $value;
 	}
@@ -121,25 +127,27 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
 	/**
 	 * Method to display the human readable element type.
 	 *
-	 * @return  void
+	 * @access  public
+	 * @return  string  The human readable element type.
 	 */
-	public function getElementText( $element )
+	public function getElementText($element)
 	{
-                switch ($element) {
+                switch ($element)
+                {
                     case "1":
-                        return JText::_( 'COM_HWDMS_MEDIA' );
+                        return JText::_('COM_HWDMS_MEDIA');
                         break;
                     case "2":
-                        return JText::_( 'COM_HWDMS_ALBUM' );
+                        return JText::_('COM_HWDMS_ALBUM');
                         break;
                     case "3":
-                        return JText::_( 'COM_HWDMS_GROUP' );
+                        return JText::_('COM_HWDMS_GROUP');
                         break;
                     case "4":
-                        return JText::_( 'COM_HWDMS_PLAYLIST' );
+                        return JText::_('COM_HWDMS_PLAYLIST');
                         break;
                     case "5":
-                        return JText::_( 'COM_HWDMS_CHANNEL' );
+                        return JText::_('COM_HWDMS_CHANNEL');
                         break;
                 }
 	}         
