@@ -23,8 +23,11 @@ class hwdMediaShareControllerReport extends JControllerAdmin
         /**
 	 * Proxy for getModel.
 	 *
-	 * @access	public
-         * @return      object      The model.
+	 * @access  public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
 	 */
 	public function getModel($name = 'Report', $prefix = 'hwdMediaShareModel', $config = array())
 	{
