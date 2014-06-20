@@ -2506,7 +2506,6 @@
                         filter="word"  
                 >
                         <option value="">COM_HWDMS_LIST_SELECT_COMMUNITY_AVATAR</option>
-                        <option value="hwd">COM_HWDMS_MEDIA_AVATAR</option>
                         <option value="cb">COM_HWDMS_CB_AVATAR</option>
                         <option value="easysocial">COM_HWDMS_EASYSOCIAL_AVATAR</option>
                         <option value="gravatar">COM_HWDMS_GRAVATAR</option>
