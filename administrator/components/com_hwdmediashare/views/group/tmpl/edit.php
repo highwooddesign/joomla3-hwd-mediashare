@@ -125,21 +125,21 @@ $isNew = $this->item->id == 0 ? true : false ;
                 <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'media', JText::_('COM_HWDMS_MEDIA_AND_MEMBERS', true)); ?>
                 <div class="row-fluid">
                     <div class="well well-small">
-                        <h2 class="module-title nav-header"><?php echo JText::_( 'COM_HWDMS_MEDIA_IN_THIS_GROUP' ); ?></h2>
+                        <h2 class="module-title nav-header"><?php echo JText::_('COM_HWDMS_MEDIA_IN_THIS_GROUP'); ?></h2>
                         <div class="row-striped">
                             <div class="row-fluid">
                                 <div class="span9">
                                     <span class="badge"><?php echo $this->item->nummedia; ?></span>
                                     <strong class="row-title">
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal">
-                                            <?php echo JText::_( 'COM_HWDMS_MEDIA' ); ?>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_MEDIA'); ?>
                                         </a>
                                     </strong>
                                 </div>
                                 <div class="span3">
                                     <div class="btn-group">
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?></a>
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_( 'COM_HWDMS_ADD_MEDIA' ); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_( 'COM_HWDMS_ADD_MEDIA' ); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmedia&tmpl=component&group_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
                                     </div>                                       
                                 </div>
                             </div>                            
@@ -148,21 +148,21 @@ $isNew = $this->item->id == 0 ? true : false ;
                 </div>
                 <div class="row-fluid">
                     <div class="well well-small">
-                        <h2 class="module-title nav-header"><?php echo JText::_( 'COM_HWDMS_MEMBERS_IN_THIS_GROUP' ); ?></h2>
+                        <h2 class="module-title nav-header"><?php echo JText::_('COM_HWDMS_MEMBERS_IN_THIS_GROUP'); ?></h2>
                         <div class="row-striped">
                             <div class="row-fluid">
                                 <div class="span9">
                                     <span class="badge"><?php echo $this->item->nummembers; ?></span>
                                     <strong class="row-title">
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal">
-                                            <?php echo JText::_( 'COM_HWDMS_MEMBERS' ); ?>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_MEMBERS'); ?>
                                         </a>
                                     </strong>
                                 </div>
                                 <div class="span3">
                                     <div class="btn-group">
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEMBERS' ); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_( 'COM_HWDMS_MANAGE_MEMBERS' ); ?></a>
-                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_( 'COM_HWDMS_ADD_MEMBERS' ); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_( 'COM_HWDMS_ADD_MEMBERS' ); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEMBERS'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE_MEMBERS'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=groupmembers&tmpl=component&group_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_ADD_MEMBERS'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_ADD_MEMBERS'); ?></a>
                                     </div>                                       
                                 </div>
                             </div>                            
