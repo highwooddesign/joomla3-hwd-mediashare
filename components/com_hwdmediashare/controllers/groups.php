@@ -14,20 +14,27 @@ class hwdMediaShareControllerGroups extends JControllerForm
 {
 	/**
 	 * The prefix to use with controller messages.
-	 * @var    string
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
-	 * The URL view list variable.
-	 * @var    string
+	 * The URL view list variable to use with this controller.
+	 *
+         * @access      protected
+	 * @var         string
 	 */
     	protected $view_list = "groups";
         
 	/**
-	 * Constructor.
-	 * @return	void
-	 */
+	 * Class constructor.
+	 *
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -47,7 +54,12 @@ class hwdMediaShareControllerGroups extends JControllerForm
         
         /**
 	 * Proxy for getModel.
-	 * @return	void
+	 *
+	 * @access  public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
 	 */
 	public function getModel($name = 'Group', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
@@ -57,11 +69,13 @@ class hwdMediaShareControllerGroups extends JControllerForm
         
 	/**
 	 * Method to toggle the published value of a list of groups.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
-	function publish()
+	public function publish()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -81,7 +95,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
 
@@ -108,11 +122,13 @@ class hwdMediaShareControllerGroups extends JControllerForm
         
 	/**
 	 * Method to like or dislike a single group.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function like()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to like from the request.
@@ -149,11 +165,13 @@ class hwdMediaShareControllerGroups extends JControllerForm
 
 	/**
 	 * Method to report a single group.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function report()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
                 // Get HWD utilities.
@@ -186,11 +204,13 @@ class hwdMediaShareControllerGroups extends JControllerForm
 
 	/**
 	 * Method to join a group.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function join()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -205,7 +225,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
                         
@@ -226,11 +246,13 @@ class hwdMediaShareControllerGroups extends JControllerForm
         
 	/**
 	 * Method to leave a group.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
 	public function leave()
 	{
-		// Check for request forgeries
+		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
 		// Get items to remove from the request.
@@ -245,7 +267,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 			// Get the model.
 			$model = $this->getModel();
 
-			// Make sure the item ids are integers
+			// Make sure the item ids are integers.
 			jimport('joomla.utilities.arrayhelper');
 			JArrayHelper::toInteger($cid);
                         
