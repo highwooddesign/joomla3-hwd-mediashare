@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" client="site" method="upgrade">
+	<name>mod_hwd_soundcloud_audiobox</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version>  
+	<description>MOD_HWD_SOUNDCLOUD_AUDIOBOX_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_hwd_soundcloud_audiobox">mod_hwd_soundcloud_audiobox.php</filename>
+		<folder>tmpl</folder>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>		
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.mod_hwd_soundcloud_audiobox.ini</language>
+		<language tag="en-GB">language/en-GB.mod_hwd_soundcloud_audiobox.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field 
+                                        name="url" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_FIELD_URL_LABEL"
+					description="MOD_HWD_FIELD_URL_DESC"
+				>
+				</field>	
+                                <field 
+                                        name="autoplay" 
+                                        type="list" 
+                                        default="false"
+					label="MOD_HWD_FIELD_AUTOPLAY_LABEL"
+					description="MOD_HWD_FIELD_AUTOPLAY_DESC"
+				>
+					<option value="true">JYES</option>
+					<option value="false">JNO</option>
+				</field>
+                                <field 
+                                        name="artwork" 
+                                        type="list" 
+                                        default="true"
+					label="MOD_HWD_FIELD_ARTWORK_LABEL"
+					description="MOD_HWD_FIELD_ARTWORK_DESC"
+				>
+					<option value="true">JYES</option>
+					<option value="false">JNO</option>
+				</field>                        
+                                <field 
+                                        name="colour" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_FIELD_COLOUR_LABEL"
+					description="MOD_HWD_FIELD_COLOUR_DESC"
+				>
+				</field>                                                
+			</fieldset>
+		</fields>
+	</config>
+</extension>
