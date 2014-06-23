@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" client="site" method="upgrade">
+	<name>mod_hwd_spotify_audiobox</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version>  
+	<description>MOD_HWD_SPOTIFY_AUDIOBOX_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_hwd_spotify_audiobox">mod_hwd_spotify_audiobox.php</filename>
+		<folder>tmpl</folder>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>		
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.mod_hwd_spotify_audiobox.ini</language>
+		<language tag="en-GB">language/en-GB.mod_hwd_spotify_audiobox.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset 
+                                name="basic"
+			>
+				<field 
+                                        name="url" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_FIELD_URI_LABEL"
+					description="MOD_HWD_FIELD_URI_DESC"
+				>
+				</field>	
+                                <field 
+                                        name="theme" 
+                                        type="list" 
+                                        default="black"
+					label="MOD_HWD_FIELD_THEME_LABEL"
+					description="MOD_HWD_FIELD_THEME_DESC"
+				>
+					<option value="dark">MOD_HWD_DARK</option>
+					<option value="light">MOD_HWD_LIGHT</option>
+				</field>
+                                <field 
+                                        name="view" 
+                                        type="list" 
+                                        default="list"
+					label="MOD_HWD_FIELD_VIEW_LABEL"
+					description="MOD_HWD_FIELD_VIEW_DESC"
+				>
+					<option value="list">MOD_HWD_LIST</option>
+					<option value="coverart">MOD_HWD_ART</option>
+				</field>   
+                                <field 
+                                        name="player" 
+                                        type="list" 
+                                        default="large"
+					label="MOD_HWD_FIELD_PLAYER_LABEL"
+					description="MOD_HWD_FIELD_PLAYER_DESC"
+				>    
+                                        <option value="large">MOD_HWD_LARGE</option>
+					<option value="compact">MOD_HWD_COMPACT</option> 
+                                </field>
+                        </fieldset>
+		</fields>
+	</config>
+</extension>
