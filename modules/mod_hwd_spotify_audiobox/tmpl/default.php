@@ -11,5 +11,5 @@
 defined('_JEXEC') or die;
 ?>
 <div class="mod_hwd_spotify_audiobox">
-    <iframe src="https://embed.spotify.com/?uri=<?php echo $params->get('url','spotify:album:0O82niJ0NpcptYRxogeEZu'); ?>&view=<?php echo $params->get('view', 'list'); ?>&theme=<?php echo $params->get('theme', 'dark'); ?>" width="100%" height="<?php echo $params->get('player') == "compact" ? 80: 380; ?>" frameborder="0" allowtransparency="true"></iframe>
+    <iframe src="https://embed.spotify.com/?uri=<?php echo $helper->params->get('url','spotify:album:0O82niJ0NpcptYRxogeEZu'); ?>&view=<?php echo $helper->params->get('view', 'list'); ?>&theme=<?php echo $helper->params->get('theme', 'dark'); ?>" width="100%" height="<?php echo $helper->params->get('player') == "compact" ? 80: 380; ?>" frameborder="0" allowtransparency="true"></iframe>
 </div>
