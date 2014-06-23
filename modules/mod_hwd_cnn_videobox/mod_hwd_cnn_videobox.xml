@@ -51,7 +51,7 @@
                                         type="text" 
 					label="MOD_HWD_FIELD_COUNT_LABEL"
 					description="MOD_HWD_FIELD_COUNT_DESC" 
-                                        default="5"
+                                        default="6"
                                 />
 				<field 
                                         name="icon" 

@@ -44,10 +44,10 @@ class modHwdCnnVideoBoxHelper extends JObject
 	{
                 JHtml::_('bootstrap.tooltip');
                 $doc = JFactory::getDocument();
-                $doc->addScript(JURI::root().'modules/mod_hwd_youtube_videobox/js/jquery.magnific-popup.js');
-                $doc->addScript(JURI::root().'modules/mod_hwd_youtube_videobox/js/aspect.js');
-                $doc->addStylesheet(JURI::root().'modules/mod_hwd_youtube_videobox/css/magnific-popup.css');
-                $doc->addStylesheet(JURI::root().'modules/mod_hwd_youtube_videobox/css/strapped.3.hwd.css');
+                $doc->addScript(JURI::root().'modules/mod_hwd_cnn_videobox/js/jquery.magnific-popup.js');
+                $doc->addScript(JURI::root().'modules/mod_hwd_cnn_videobox/js/aspect.js');
+                $doc->addStylesheet(JURI::root().'modules/mod_hwd_cnn_videobox/css/magnific-popup.css');
+                $doc->addStylesheet(JURI::root().'modules/mod_hwd_cnn_videobox/css/strapped.3.hwd.css');
                 $doc->addScriptDeclaration("
 jQuery.noConflict();
 (function( $ ) {
@@ -119,7 +119,7 @@ jQuery.noConflict();
                                 $items[] = $object;
                                 $counter++;
 
-                                if ($counter >= $this->get('params')->get('count'))
+                                if ($counter >= $this->get('params')->get('count', 6))
                                 {
                                         break;
                                 }
