@@ -106,11 +106,11 @@ jQuery.noConflict();
 	}
 
         /**
-	 * Method to get the Youtube items.
+	 * Method to get a list of media items.
 	 *
 	 * @access	public
-         * @return      object      A list of Youtube videos.
-	 */         
+         * @return      object      A list of media items.
+	 */          
 	public function getItems($dummy)
 	{
                 $feed = $this->getFeed();
@@ -144,7 +144,7 @@ jQuery.noConflict();
 	}
 
         /**
-	 * Method to get the Youtube feed URI.
+	 * Method to get the feed URI.
 	 *
 	 * @access	public
          * @return      string      The feed URI
