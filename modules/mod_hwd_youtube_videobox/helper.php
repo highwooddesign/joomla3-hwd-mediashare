@@ -31,7 +31,7 @@ class modHwdYoutubeVideoBoxHelper extends JObject
                 // Get data.
                 $this->module = $module;                
                 $this->params = $params;                
-                $this->items = $items = $cache->call(array($this, 'getItems'), $params);
+                $this->items = $cache->call(array($this, 'getItems'), $params);
 
                 // Add assets to the head tag.
                 $this->addHead();  
