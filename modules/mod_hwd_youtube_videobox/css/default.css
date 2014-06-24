@@ -26,11 +26,9 @@
         z-index:100;
         line-height:120%;        
 }
-/* START - Override to keep duration location correct */
 .mod_hwd_youtube_videobox_default .media-item a {
-        line-height:0px;
+        line-height:0px; /* Override to keep duration location correct */
 }
-/* END - Override to keep duration location correct */
 .mod_hwd_youtube_videobox_default .media-item {
         overflow:hidden;
 	position:relative;

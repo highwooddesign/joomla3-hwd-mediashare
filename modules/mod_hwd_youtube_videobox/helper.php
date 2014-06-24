@@ -1,44 +1,74 @@
 <?php
 /**
- * @package    HWD.MediaApps
- * @copyright  Copyright (C) 2013 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
+ * @package     Joomla.site
+ * @subpackage  Module.mod_hwd_youtube_videobox
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class modHwdYoutubeVideoBoxHelper extends JObject
 {
-	public $module 		= null;
-	public $params 		= null;
-	public $url		= null;
-
+        /**
+	 * Class constructor.
+	 *
+	 * @access	public
+	 * @param       array       $module     The module object.
+	 * @param       array       $params     The module parameters object.
+         * @return      void
+	 */       
 	public function __construct($module, $params)
 	{                
-                $this->set('module', $module);
-                $this->set('params', $params);
-		$this->set('url', JURI::root().'modules/mod_hwd_youtube_videobox/');
+                // Load caching.
+                $cache = JFactory::getCache();
+                $cache->setCaching(1);
+
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+
+                // Get data.
+                $this->module = $module;                
+                $this->params = $params;                
+                $this->items = $items = $cache->call(array($this, 'getItems'), $params);
+
+                // Add assets to the head tag.
+                $this->addHead();  
 	}
 
+        /**
+	 * Method to add assets to the head.
+	 *
+	 * @access	public
+         * @return      void
+	 */         
 	public function addHead()
-	{
+	{           
                 JHtml::_('bootstrap.tooltip');
                 $doc = JFactory::getDocument();
-                $doc->addScript(JURI::root().'modules/mod_hwd_youtube_videobox/js/jquery.magnific-popup.js');
-                $doc->addScript(JURI::root().'modules/mod_hwd_youtube_videobox/js/aspect.js');
-                $doc->addStylesheet(JURI::root().'modules/mod_hwd_youtube_videobox/css/magnific-popup.css');
-                $doc->addStylesheet(JURI::root().'modules/mod_hwd_youtube_videobox/css/strapped.3.hwd.css');
+                $doc->addScript(JURI::root() . 'modules/mod_hwd_youtube_videobox/js/jquery.magnific-popup.js');
+                $doc->addScript(JURI::root() . 'modules/mod_hwd_youtube_videobox/js/aspect.js');
+                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_youtube_videobox/css/magnific-popup.css');
+                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_youtube_videobox/css/strapped.3.hwd.css');
+                
+                // Load layout CSS file.
+                if ($layout = explode(":", $this->params->get('layout')))
+                {
+                        if (isset($layout[1]) && file_exists(dirname(__FILE__) . '/css/' . $layout[1] . '.css'))
+                        {
+                                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_youtube_videobox/css/' . $layout[1] . '.css');                
+                        }
+                }
+
                 $doc->addScriptDeclaration("
 jQuery.noConflict();
 (function( $ ) {
   $(function() {
-    // More code using $ as alias to jQuery
     $(document).ready(function() {
       $('.popup-title-" . $this->module->id . "').magnificPopup({ 
         type: 'iframe',
+        mainClass: 'hwd-youtube-popup',
         iframe: {     
           patterns: {
             youtube: {
@@ -55,6 +85,7 @@ jQuery.noConflict();
       }); 
       $('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
         type: 'iframe',
+        mainClass: 'hwd-youtube-popup',
         iframe: {
           patterns: {
             youtube: {
@@ -74,10 +105,16 @@ jQuery.noConflict();
 })(jQuery);");                
 	}
 
-	public function getItems()
+        /**
+	 * Method to get the Youtube items.
+	 *
+	 * @access	public
+         * @return      object      A list of Youtube videos.
+	 */         
+	public function getItems($dummy)
 	{
                 $feed = $this->getFeed();
-                
+
                 $yt    = 'http://gdata.youtube.com/schemas/2007';
                 $media = 'http://search.yahoo.com/mrss/';
                 
@@ -107,13 +144,14 @@ jQuery.noConflict();
 	}
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Method to get the Youtube feed URI.
+	 *
+	 * @access	public
+         * @return      string      The feed URI
+	 */         
 	public function getFeed()
 	{  
-                // Set a default feed
+                // Set a default feed.
                 $feed = 'http://gdata.youtube.com/feeds/api/standardfeeds/top_rated?v=2';
                 
                 switch ($this->get('params')->get('source', 'standard_list'))
@@ -169,52 +207,38 @@ jQuery.noConflict();
 	}
         
         /**
-         * Convert number of seconds into hours, minutes and seconds
-         * and return an array containing those values
-         *
-         * @param integer $seconds Number of seconds to parse
-         * @return array
-         */
-        function secondsToTime($seconds, $returnObject = false)
+	 * Method to convert an integer number of seconds into a timestamp.
+	 *
+	 * @access	public
+         * @param       integer     $seconds    The number of seconds.
+         * @return      void
+	 */         
+        public function secondsToTime($seconds)
         {
-                // Extract hours
+                // Extract hours.
                 $hours = floor($seconds / (60 * 60));
 
-                // Extract minutes
+                // Extract minutes.
                 $divisor_for_minutes = $seconds % (60 * 60);
                 $minutes = floor($divisor_for_minutes / 60);
 
-                // Extract the remaining seconds
+                // Extract the remaining seconds.
                 $divisor_for_seconds = $divisor_for_minutes % 60;
                 $seconds = ceil($divisor_for_seconds);
 
-                // Return the final array
-                $obj = array(
-                    "h" => (int) $hours,
-                    "m" => (int) $minutes,
-                    "s" => (int) $seconds,
-                );
-
-                if ($returnObject)
+                // Prepent seconds with zero if necessary.
+                if ($seconds < 10)
                 {
-                        return $obj;
+                        $seconds = '0'.$seconds;
+                }
+
+                if ($hours > 0)
+                {
+                        return "$hours:$minutes:$seconds";
                 }
                 else
                 {
-                        // Prepent seconds with zero if necessary
-                        if ($seconds < 10)
-                        {
-                                $seconds = '0'.$seconds;
-                        }
-                        
-                        if ($hours > 0)
-                        {
-                                return "$hours:$minutes:$seconds";
-                        }
-                        else
-                        {
-                                return "$minutes:$seconds";
-                        }
+                        return "$minutes:$seconds";
                 }
         }        
 }

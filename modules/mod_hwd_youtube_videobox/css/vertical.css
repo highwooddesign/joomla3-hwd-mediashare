@@ -26,11 +26,9 @@
         z-index:100;
         line-height:120%;        
 }
-/* START - Override to keep duration location correct */
 .mod_hwd_youtube_videobox_vertical .media-item a {
-        line-height:0px;
+        line-height:0px; /* Override to keep duration location correct */
 }
-/* END - Override to keep duration location correct */
 .mod_hwd_youtube_videobox_vertical .media-item {
         overflow:hidden;
 	position:relative;
@@ -89,6 +87,9 @@
 .mod_hwd_youtube_videobox_vertical .cell {
         margin-bottom:10px;
 }
+.mod_hwd_youtube_videobox_vertical .clearfix {
+    margin-bottom:10px; /* Space thumbnails in mobile view */
+}
 /* Pulls */
 .mod_hwd_youtube_videobox_vertical .pull-half-left {
     width:33%;
@@ -100,7 +101,4 @@
     width:64%;
     float:right;
 }
-/* Tweak in mobile view */
-.mod_hwd_youtube_videobox_vertical .clearfix {
-    margin-bottom:10px;
-}
+
