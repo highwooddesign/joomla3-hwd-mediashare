@@ -1,0 +1,104 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2011, All rights reserved
+   This sheet loads the HWD styles */
+/**********************************************************************************************/
+.mod_hwd_vimeo_videobox_grid {
+    	position:relative;
+	margin-bottom:20px;
+}
+.mod_hwd_vimeo_videobox_grid .clear {
+	clear:both;
+}
+.mod_hwd_vimeo_videobox_grid .media-duration {
+	position:absolute;
+	right:2px;
+	top:2px;
+	color:#fff;
+	font-size:10px;
+	padding:1px 2px;
+        background-color:rgba(0, 0, 0, 0.6);
+        border-radius:3px 3px 3px 3px;
+        box-shadow:0 0 1px #DDDDDD; 
+        z-index:100;
+        line-height:120%;        
+}
+
+.mod_hwd_vimeo_videobox_grid .media-item a {
+        line-height:0px; /* Override to keep duration location correct */
+}
+.mod_hwd_vimeo_videobox_grid .media-item {
+        overflow:hidden;
+	position:relative;
+}
+.mod_hwd_vimeo_videobox_grid .media-link-span {
+        background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt 0pt!important;
+        cursor:pointer;
+        color:#000000;
+        display:block;
+        height:35px;
+        position:absolute;
+        text-align:center;
+        text-decoration:none;
+        vertical-align:bottom;
+        width:56px;
+        height:39px; 
+        opacity:0.8;
+        margin:0;
+        top:50%;
+        left:50%;
+        z-index:2;
+}
+.mod_hwd_vimeo_videobox_grid #photos .block_grid .media-item span.media-link-span {
+        margin-left:-25px;
+        margin-top:-20px;
+}
+.mod_hwd_vimeo_videobox_grid .media-link-span:hover {
+        background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt -70px!important;
+}
+.mod_hwd_vimeo_videobox_grid div.title {
+        margin-bottom:6px;
+        margin-left:0;
+        margin-right:0;
+        margin-top:6px;
+        padding:0;
+        border:0;
+        font-size:15px;        
+}
+.mod_hwd_vimeo_videobox_grid .cell {
+        margin-bottom:10px;
+}
+/* Responsive grid */
+.mod_hwd_vimeo_videobox_grid #photos .block_grid {
+        width:auto;
+        margin:0;
+        position:relative;
+}
+.mod_hwd_vimeo_videobox_grid #photos img {
+        /* Just in case there are inline attributes */
+        width:100% !important;
+        height:auto !important;
+}
+.mod_hwd_vimeo_videobox_grid #photos {
+        line-height:0;
+        -webkit-column-gap:0px;
+        -moz-column-gap:0px;
+        column-gap:0px;
+}
+@media (max-width:320px) {
+    .mod_hwd_vimeo_videobox_grid #photos {
+        -webkit-column-count:1!important;
+        -moz-column-count:1!important;
+        column-count:1!important;
+    }
+}
+@media (min-width:321px) and (max-width:767px) {
+    .mod_hwd_vimeo_videobox_grid #photos {
+        -webkit-column-count:2!important;
+        -moz-column-count:2!important;
+        column-count:2!important;
+    }
+}
+@media (min-width:768px) and (max-width:991px) {
+}
+@media (min-width:992px) and (max-width:1199px) {
+}
