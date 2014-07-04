@@ -80,7 +80,7 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                 $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));               
 
                 // Populate state (and set the context).
-                $this->_model->context = 'mod_media_media.media';
+                $this->_model->context = 'mod_media_media';
 		$this->_model->populateState();
 
 		// Set the start and limit states.
