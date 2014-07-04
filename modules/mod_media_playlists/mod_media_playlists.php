@@ -1,5 +1,13 @@
 <?php
-// no direct access
+/**
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
+ */
+
 defined('_JEXEC') or die;
 
 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
@@ -10,8 +18,6 @@ hwdMediaShareFactory::load('downloads');
 
 $helper = new modMediaPlaylistsHelper($module, $params);
 
-$helper->addHead();
-$items = $helper->getItems();
-if (count($items) == 0) return;
+if (!$helper->items || count($helper->items) == 0) return;
 
-require JModuleHelper::getLayoutPath('mod_media_playlists', $params->get('layout', 'default'));
+require JModuleHelper::getLayoutPath('mod_media_albums', $params->get('layout', 'default'));

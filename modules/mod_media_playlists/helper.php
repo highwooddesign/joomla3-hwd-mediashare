@@ -1,104 +1,124 @@
 <?php
-// no direct access
+/**
+ * @package     Joomla.site
+ * @subpackage  Module.mod_media_playlists
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
+ */
+
 defined('_JEXEC') or die;
 
-class modMediaPlaylistsHelper extends JObject {
+// Base this helper on the component view model.
+require_once JPATH_SITE.'/components/com_hwdmediashare/views/playlists/view.html.php';
 
-	public $params 		= null;
-	public $url		= null;
-	public $container	= null;
-
-	public function __construct($module, &$params)
+class modMediaPlaylistsHelper extends hwdMediaShareViewPlaylists
+{
+	public function __construct($module, $params)
 	{
-                // Load config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                $config->merge( $params );
+                // Load HWD assets.
+                JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+                JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
+                JLoader::register('JHtmlHwdIcon', JPATH_ROOT.'/components/com_hwdmediashare/helpers/icon.php');
+                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_ROOT.'/components/com_hwdmediashare/helpers/dropdown.php');
                 
-                // Download links
+                // Load and register libraries.
+                hwdMediaShareFactory::load('media');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('utilities');
-                JLoader::register('JHtmlHwdIcon', JPATH_ROOT.'/components/com_hwdmediashare/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-    
-                // Load the HWDMediaShare language file
-                $lang =& JFactory::getLanguage();
-                $lang->load('com_hwdmediashare', JPATH_SITE.'/components/com_hwdmediashare', $lang->getTag());
-                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
 
-                $params = $config;
-                $this->set('utilities', hwdMediaShareUtilities::getInstance());
-                $this->set('params', $config);
-		$this->set('url', JURI::root().'modules/mod_media_playlists/');
-		$this->set('container', 'modmediaplaylists_'.$module->id);
-                $this->set('return', base64_encode(JFactory::getURI()->toString()));
-                $this->set('columns', $params->get('list_columns', 3));
-                $this->set('elementType', 4);
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // We need to reset this varaible to avoid issues where other modules set this value in earlier position.
+                $config->set('list_default_media_type', '');
+                
+                // Merge with module parameters.
+                $config->merge($params);
+
+                // Load the HWD language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
+                
+                // Get data.
+                $this->module = $module;                
+                $this->params = $config;                
+                $this->items = $this->getItems();
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+                $this->columns = $params->get('list_columns', 3);
+                $this->return = base64_encode(JFactory::getURI()->toString());
+
+                // Add assets to the head tag.
+                $this->addHead();
 	}
 
 	public function addHead()
 	{
+                JHtml::_('bootstrap.framework');
 		$doc = JFactory::getDocument();
 		$doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/lite.css');
                 if ($this->params->get('load_joomla_css') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 	}
 
 	public function getItems()
 	{
-                jimport( 'joomla.application.component.model' );
-                //JModel::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                //$model =& JModel::getInstance('Playlists', 'hwdMediaShareModel', array('ignore_request' => true));
-                $version = new JVersion();
-                ($version->RELEASE >= 3.0 ? JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models') : JModel::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models'));
-                $model = ($version->RELEASE >= 3.0 ? JModelLegacy::getInstance('Playlists', 'hwdMediaShareModel', array('ignore_request' => true)) : JModel::getInstance('Playlists', 'hwdMediaShareModel', array('ignore_request' => true)));
-
-		// Set application parameters in model
+		// Initialise variables.
 		$app = JFactory::getApplication();
-		$appParams = $app->getParams();
-		$model->setState('params', $appParams);
+                $doc = JFactory::getDocument();
+                $cache = JFactory::getCache();
+                
+                // Force method caching.
+                $cache->setCaching(1);
+                
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Playlists', 'hwdMediaShareModel', array('ignore_request' => true));               
 
-		// Set the filters based on the module params
-		$model->setState('list.start', 0);
-		$model->setState('list.limit', (int) $this->params->get('count', 0));
-		$model->setState('filter.published', 1);
+                // Populate state (and set the context).
+                $this->_model->context = 'mod_media_playlists';
+		$this->_model->populateState();
 
-		// Ordering
-		$model->setState('com_hwdmediashare.playlists.list.ordering', $this->params->get('ordering', 'a.ordering'));
-		$model->setState('com_hwdmediashare.playlists.list.direction', $this->params->get('ordering_direction', 'ASC'));
+		// Set the start and limit states.
+		$this->_model->setState('list.start', 0);
+		$this->_model->setState('list.limit', (int) $this->params->get('count', 0));
 
-		// New Parameters
-		$model->setState('filter.featured', $this->params->get('show_featured', 'show'));
-		$model->setState('filter.author_id', $this->params->get('created_by', ""));
-		$model->setState('filter.author_id.include', $this->params->get('author_filtering_type', 1));
-		$model->setState('filter.author_alias', $this->params->get('created_by_alias', ""));
-		$model->setState('filter.author_alias.include', $this->params->get('author_alias_filtering_type', 1));
-		$excluded_articles = $this->params->get('excluded_articles', '');
+		// Set the ordering states.
+                $ordering = $this->params->get('list_order_playlist', 'a.created DESC');
+                $orderingParts = explode(' ', $ordering); 
+                $this->_model->setState('list.ordering', $orderingParts[0]);
+                $this->_model->setState('list.direction', $orderingParts[1]);
+                
+                // Apply author filter.
+                $authors = $this->params->get('created_by');                                        
+                if (is_array($authors)) $authors = array_filter($authors);
+                if ($authors)
+                {    
+                        $this->_model->setState('filter.author_id', $this->params->get('created_by', ''));
+                        $this->_model->setState('filter.author_id.include', $this->params->get('author_filtering_type', 1));
+                }      
 
-		if ($excluded_articles) 
+                // Apply date filter.
+                $date_filtering = $this->params->get('date_filtering', 'off');
+                if ($date_filtering !== 'off') 
                 {
-			$excluded_articles = explode("\r\n", $excluded_articles);
-			$model->setState('filter.article_id', $excluded_articles);
-			$model->setState('filter.article_id.include', false); // Exclude
-		}
-
-		$date_filtering = $this->params->get('date_filtering', 'off');
-		if ($date_filtering !== 'off') 
-                {
-			$model->setState('filter.date_filtering', $date_filtering);
-			$model->setState('filter.date_field', $this->params->get('date_field', 'a.created'));
-			$model->setState('filter.start_date_range', $this->params->get('start_date_range', '1000-01-01 00:00:00'));
-			$model->setState('filter.end_date_range', $this->params->get('end_date_range', '9999-12-31 23:59:59'));
-			$model->setState('filter.relative_date', $this->params->get('relative_date', 30));
-		}
-
-		// Filter by language
-		$model->setState('filter.language', $app->getLanguageFilter());
-
-                if ($items = $model->getItems())
-                {
+                        $this->_model->setState('filter.date_filtering', $date_filtering);
+                        $this->_model->setState('filter.date_field', $this->params->get('date_field', 'a.created'));
+                        $this->_model->setState('filter.start_date_range', $this->params->get('start_date_range', '1000-01-01 00:00:00'));
+                        $this->_model->setState('filter.end_date_range', $this->params->get('end_date_range', '9999-12-31 23:59:59'));
+                        $this->_model->setState('filter.relative_date', $this->params->get('relative_date', 30));
                 }
+                                
+		// Additional filters.
+                $this->_model->setState('filter.media_type', $this->params->get('list_default_media_type', ''));                
+		$this->_model->setState('filter.featured', $this->params->get('show_featured', 'show'));
 
-		return $items;                
+                $this->items = $this->_model->getItems();
+
+                return $this->items;                
 	}
 }
