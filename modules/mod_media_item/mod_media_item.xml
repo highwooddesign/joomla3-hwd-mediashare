@@ -189,10 +189,10 @@
                                         label="MOD_MEDIA_FIELD_SHOW_TITLE_LABEL"
                                         description="MOD_MEDIA_FIELD_SHOW_TITLE_DESC"
                                         class="btn-group btn-group-yesno"
-					default=""
+                                        default=""
                                 >
-                                        <option value="show">JSHOW</option>
-                                        <option value="hide">JHIDE</option>
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
                                 </field>
                                 <field 
