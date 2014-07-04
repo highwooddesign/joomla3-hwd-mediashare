@@ -36,7 +36,7 @@ class modMediaPlaylistsHelper extends hwdMediaShareViewPlaylists
                 
                 // We need to reset this varaible to avoid issues where other modules set this value in earlier position.
                 $config->set('list_default_media_type', '');
-                
+
                 // Merge with module parameters.
                 $config->merge($params);
 
