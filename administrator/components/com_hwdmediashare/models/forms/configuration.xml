@@ -1670,12 +1670,12 @@
 			label="COM_HWDMS_DETAILS_DISPLAY_BUTTON_LABEL"
 			description="COM_HWDMS_DETAILS_DISPLAY_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                
                 <field
 			name="list_gallery_button"
@@ -1683,12 +1683,12 @@
 			label="COM_HWDMS_GALLERY_DISPLAY_BUTTON_LABEL"
 			description="COM_HWDMS_GALLERY_DISPLAY_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                 
                 <field
 			name="list_list_button"
@@ -1696,12 +1696,12 @@
 			label="COM_HWDMS_LIST_DISPLAY_BUTTON_LABEL"
 			description="COM_HWDMS_LIST_DISPLAY_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                 
                 <field
 			name="list_tree_button"
@@ -1709,12 +1709,12 @@
 			label="COM_HWDMS_TREE_DISPLAY_BUTTON_LABEL"
 			description="COM_HWDMS_TREE_DISPLAY_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                  
                 <field
 			name="list_filter_search"
@@ -1722,12 +1722,12 @@
 			label="COM_HWDMS_HEADER_SEARCH_FILTER_LABEL"
 			description="COM_HWDMS_HEADER_SEARCH_FILTER_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_filter_media"
@@ -1735,12 +1735,12 @@
 			label="COM_HWDMS_HEADER_MEDIA_FILTER_LABEL"
 			description="COM_HWDMS_HEADER_MEDIA_FILTER_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_filter_ordering"
@@ -1748,12 +1748,12 @@
 			label="COM_HWDMS_HEADER_ORDERING_FILTER_LABEL"
 			description="COM_HWDMS_HEADER_ORDERING_FILTER_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_filter_pagination"
@@ -1761,12 +1761,12 @@
 			label="COM_HWDMS_HEADER_PAGINATION_FILTER_LABEL"
 			description="COM_HWDMS_HEADER_PAGINATION_FILTER_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_title"
@@ -1774,12 +1774,12 @@
 			label="COM_HWDMS_SHOW_TITLE_LABEL"
 			description="COM_HWDMS_SHOW_TITLE_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_thumbnail"
@@ -1787,12 +1787,12 @@
 			label="COM_HWDMS_SHOW_THUMBNAIL_LABEL"
 			description="COM_HWDMS_SHOW_THUMBNAIL_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_type_icon"
@@ -1800,12 +1800,12 @@
 			label="COM_HWDMS_SHOW_MEDIA_TYPE_ICON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIA_TYPE_ICON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>   
                 <field
 			name="list_meta_duration"
@@ -1813,12 +1813,12 @@
 			label="COM_HWDMS_SHOW_DURATION_LABEL"
 			description="COM_HWDMS_SHOW_DURATION_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>  
                 <field
 			name="list_meta_description"
@@ -1826,12 +1826,12 @@
 			label="COM_HWDMS_SHOW_DESCRIPTION_LABEL"
 			description="COM_HWDMS_SHOW_DESCRIPTION_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field> 
                 <field
 			name="list_meta_category"
@@ -1839,12 +1839,12 @@
 			label="COM_HWDMS_SHOW_CATEGORY_LABEL"
 			description="COM_HWDMS_SHOW_CATEGORY_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field> 
                 <field
 			name="list_meta_author"
@@ -1852,12 +1852,12 @@
 			label="COM_HWDMS_SHOW_AUTHOR_LABEL"
 			description="COM_HWDMS_SHOW_AUTHOR_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_likes"
@@ -1865,12 +1865,12 @@
 			label="COM_HWDMS_SHOW_LIKES_LABEL"
 			description="COM_HWDMS_SHOW_LIKES_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_hits"
@@ -1878,12 +1878,12 @@
 			label="COM_HWDMS_SHOW_VIEWS_LABEL"
 			description="COM_HWDMS_SHOW_VIEWS_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_created"
@@ -1891,12 +1891,12 @@
 			label="COM_HWDMS_SHOW_DATE_CREATED_LABEL"
 			description="COM_HWDMS_SHOW_DATE_CREATED_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_meta_media_count"
@@ -1904,21 +1904,21 @@
 			label="COM_HWDMS_SHOW_MEDIA_COUNT_LABEL"
 			description="COM_HWDMS_SHOW_MEDIA_COUNT_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="category_list_default_display"
 			type="list"
 			label="COM_HWDMS_DISPLAY_STYLE_LABEL"
 			description="COM_HWDMS_DISPLAY_STYLE_DESC"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
                         <option value="details">COM_HWDMS_DETAILS</option>
                         <option value="tree">COM_HWDMS_TREE</option>
@@ -1929,12 +1929,12 @@
 			label="COM_HWDMS_SHOW_CATEGORY_QUICK_VIEW_LABEL"
 			description="COM_HWDMS_SHOW_CATEGORY_QUICK_VIEW_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="category_list_meta_category_desc"
@@ -1942,12 +1942,12 @@
 			label="COM_HWDMS_SHOW_CATEGORY_DESCRIPTION_LABEL"
 			description="COM_HWDMS_SHOW_CATEGORY_DESCRIPTION_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="category_list_meta_subcategory_count"
@@ -1955,12 +1955,12 @@
 			label="COM_HWDMS_SHOW_SUBCATEGORY_COUNT_LABEL"
 			description="COM_HWDMS_SHOW_SUBCATEGORY_COUNT_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="list_order_media"
@@ -2003,12 +2003,12 @@
 			label="COM_HWDMS_SHOW_TITLE_LABEL"
 			description="COM_HWDMS_SHOW_TITLE_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_thumbnail"
@@ -2016,12 +2016,12 @@
 			label="COM_HWDMS_SHOW_THUMBNAIL_LABEL"
 			description="COM_HWDMS_SHOW_THUMBNAIL_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_type_icon"
@@ -2029,12 +2029,12 @@
 			label="COM_HWDMS_SHOW_MEDIA_TYPE_ICON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIA_TYPE_ICON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>   
                 <field
 			name="item_meta_media_count"
@@ -2042,12 +2042,12 @@
 			label="COM_HWDMS_SHOW_MEDIA_COUNT_LABEL"
 			description="COM_HWDMS_SHOW_MEDIA_COUNT_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field> 
                 <field
 			name="item_meta_description"
@@ -2055,12 +2055,12 @@
 			label="COM_HWDMS_SHOW_DESCRIPTION_LABEL"
 			description="COM_HWDMS_SHOW_DESCRIPTION_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_author"
@@ -2068,12 +2068,12 @@
 			label="COM_HWDMS_SHOW_AUTHOR_LABEL"
 			description="COM_HWDMS_SHOW_AUTHOR_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_created"
@@ -2081,12 +2081,12 @@
 			label="COM_HWDMS_SHOW_DATE_CREATED_LABEL"
 			description="COM_HWDMS_SHOW_DATE_CREATED_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_hits"
@@ -2094,12 +2094,12 @@
 			label="COM_HWDMS_SHOW_VIEWS_LABEL"
 			description="COM_HWDMS_SHOW_VIEWS_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_likes"
@@ -2107,12 +2107,12 @@
 			label="COM_HWDMS_SHOW_LIKES_LABEL"
 			description="COM_HWDMS_SHOW_LIKES_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="item_meta_report"
@@ -2120,10 +2120,12 @@
 			label="COM_HWDMS_SHOW_REPORT_LABEL"
 			description="COM_HWDMS_SHOW_REPORT_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field> 
                 <field
 			name="mediaitem_size"
@@ -2140,12 +2142,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_TITLE_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_TITLE_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_navigation"
@@ -2153,12 +2155,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_NAVIGATION_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_NAVIGATION_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_subscribe_button"
@@ -2166,12 +2168,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_SUBSCRIBE_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_SUBSCRIBE_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_like_button"
@@ -2179,12 +2181,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_LIKE_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_LIKE_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_dislike_button"
@@ -2192,12 +2194,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_DISLIKE_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_DISLIKE_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_favourite_button"
@@ -2205,12 +2207,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_FAVOURITE_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_FAVOURITE_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_add_button"
@@ -2218,12 +2220,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_ADD_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_ADD_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_share_button"
@@ -2231,12 +2233,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_SHARE_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_SHARE_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_report_button"
@@ -2244,12 +2246,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_REPORT_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_REPORT_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_download_button"
@@ -2257,12 +2259,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_DOWNLOAD_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_DOWNLOAD_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_quality_button"
@@ -2270,12 +2272,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_QUALITY_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_QUALITY_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_meta_hits"
@@ -2283,12 +2285,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_HITS_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_HITS_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_meta_author"
@@ -2296,10 +2298,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_AUTHOR_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_AUTHOR_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_meta_created"
@@ -2307,12 +2311,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_DATE_CREATED_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_DATE_CREATED_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_meta_likes"
@@ -2320,12 +2324,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_LIKES_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_LIKES_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_description_tab"
@@ -2333,25 +2337,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_DESCRIPTION_TAB_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_DESCRIPTION_TAB_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
-                </field>
-                <field
-			name="mediaitem_related_tab"
-			type="radio"
-			label="COM_HWDMS_SHOW_MEDIAITEM_RELATED_TAB_LABEL"
-			description="COM_HWDMS_SHOW_MEDIAITEM_RELATED_TAB_DESC"
-			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
-                >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_location_tab"
@@ -2359,12 +2350,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_LOCATION_TAB_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_LOCATION_TAB_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_tags_tab"
@@ -2372,12 +2363,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_TAGS_TAB_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_TAGS_TAB_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_associations_tab"
@@ -2385,12 +2376,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_ASSOCIATIONS_TAB_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_ASSOCIATIONS_TAB_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>
                 <field
 			name="mediaitem_activity"
@@ -2398,12 +2389,12 @@
 			label="COM_HWDMS_SHOW_MEDIAITEM_ACTIVITIES_LABEL"
 			description="COM_HWDMS_SHOW_MEDIAITEM_ACTIVITIES_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>  
                 <field
 			name="groupitem_media_count"
@@ -2411,12 +2402,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_MEDIA_COUNT_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_MEDIA_COUNT_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                 
                 <field
 			name="groupitem_member_count"
@@ -2424,12 +2415,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_MEMBER_COUNT_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_MEMBER_COUNT_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                 
                 <field
 			name="groupitem_join_button"
@@ -2437,12 +2428,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_JOIN_BUTTON_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_JOIN_BUTTON_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field> 
                 <field
 			name="groupitem_media_map"
@@ -2450,12 +2441,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_MEDIA_MAP_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_MEDIA_MAP_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                 
                 <field
 			name="groupitem_group_activity"
@@ -2463,12 +2454,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_GROUP_ACTIVITY_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_GROUP_ACTIVITY_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer" 
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                   
                 <field
 			name="groupitem_group_members"
@@ -2476,12 +2467,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_GROUP_MEMBERS_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_GROUP_MEMBERS_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                 
                 <field
 			name="groupitem_group_media"
@@ -2489,12 +2480,12 @@
 			label="COM_HWDMS_SHOW_GROUPITEM_GROUP_MEDIA_LABEL"
 			description="COM_HWDMS_SHOW_GROUPITEM_GROUP_MEDIA_DESC"
 			class="btn-group btn-group-yesno"
-			default="show"
-			validate="word"
-                        filter="word"  
+			default="1"
+			validate="integer"
+                        filter="integer"
                 >
-                        <option value="show">JSHOW</option>
-                        <option value="hide">JHIDE</option>
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
                 </field>                  
                 <field
 			name="community_avatar"
