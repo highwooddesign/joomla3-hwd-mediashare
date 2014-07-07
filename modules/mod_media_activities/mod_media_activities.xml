@@ -11,9 +11,6 @@
 	<description>MOD_MEDIA_ACTIVITIES_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_media_activities">mod_media_activities.php</filename>
-		<folder>css</folder>
-		<folder>images</folder>
-		<folder>js</folder>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
