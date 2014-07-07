@@ -15,11 +15,11 @@ $menu = $app->getMenu();
 ?>
 <div class="hwd-module">
   <div class="media-details-view">
-    <?php if (empty($helper->items)) : ?>
+    <?php if (empty($helper->items)): ?>
       <div class="alert alert-no-items">
         <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
       </div>
-    <?php else : ?>
+    <?php else: ?>
       <?php echo JLayoutHelper::render('media_details', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
     <?php endif; ?>
   </div> 
