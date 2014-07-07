@@ -1,28 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="module" client="site" method="upgrade">
+<extension type="module" version="3.0" client="site" method="upgrade">
 	<name>mod_media_categories</name>
-	<creationDate>2013-10-24</creationDate>
-	<author>Highwood Design</author>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
-	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
-	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>1.1.12</version>
+	<version>@@VERSION@@</version>  
 	<description>MOD_MEDIA_CATEGORIES_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_media_categories">mod_media_categories.php</filename>
-		<filename module="mod_media_categories">helper.php</filename>
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
-		<folder>language</folder>
 		<folder>tmpl</folder>
+		<filename>helper.php</filename>
 		<filename>index.html</filename>		
-		<filename>mod_media_categories.xml</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB/en-GB.mod_media_categories.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.mod_media_categories.sys.ini</language>
+		<language tag="en-GB">language/en-GB.mod_media_categories.ini</language>
+		<language tag="en-GB">language/en-GB.mod_media_categories.sys.ini</language>
 	</languages>
 	<config>
                 <fields name="params">
@@ -41,11 +39,12 @@
                                 <field 
                                         name="list_item_heading" 
                                         type="list" 
-                                        default=""
-                                        label="COM_HWDMS_HEADING_LEVEL_LABEL"
-                                        description="COM_HWDMS_HEADING_LEVEL_DESC"
+                                        label="MOD_MEDIA_TITLE_HEADING_LABEL"
+                                        description="MOD_MEDIA_TITLE_HEADING_DESC"
+                                        default="0"
                                 >
-                                        <option value="">COM_HWDMS_GLOBAL</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                        <option value="0">MOD_MEDIA_OPTION_PARAGRAPH</option>
                                         <option value="1">JH1</option>
                                         <option value="2">JH2</option>
                                         <option value="3">JH3</option>
@@ -56,22 +55,24 @@
                                 <field
                                         name="show_description"
                                         type="radio"
-                                        default="0"
                                         label="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_LABEL"
                                         description="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
                                 >
-                                        <option value="0">JNO</option>
                                         <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
                                 </field>
                                 <field
                                         name="show_children"
                                         type="radio"
-                                        default="0"
                                         label="MOD_MEDIA_FIELD_SHOW_CHILDREN_LABEL"
                                         description="MOD_MEDIA_FIELD_SHOW_CHILDREN_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
                                 >
-                                        <option value="0">JNO</option>
                                         <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
                                 </field>
                                 <field 
                                         name="count" 
@@ -118,6 +119,7 @@
 					type="modulelayout"
 					label="JFIELD_ALT_LAYOUT_LABEL"
 					description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
+                                        default="_:default"
                                 />
 				<field
 					name="moduleclass_sfx"
