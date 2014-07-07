@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="search" method="upgrade">
+<extension type="plugin" group="search" version="3.0" method="upgrade">
 	<name>plg_search_media</name>
-	<creationDate>2013-10-24</creationDate>
-	<author>Highwood Design</author>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
-	<copyright>(C) 2011 - 2013 Highwood Design Limited</copyright>
-	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>1.1.12</version>
+	<version>@@VERSION@@</version>  
 	<description>PLG_SEARCH_MEDIA_XML_DESCRIPTION</description>
         <files>
 		<filename plugin="media">media.php</filename>
@@ -19,134 +19,155 @@
 	</languages>
 	<config>
 		<fields name="params">
+                        <fieldset 
+                                name="basic"
+                        >
+                                <field 
+                                        name="use_caching" 
+                                        type="radio"
+					label="PLG_SEARCH_MEDIA_USE_CACHING_LABEL"
+					description="PLG_SEARCH_MEDIA_USE_CACHING_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
+				>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>   
+				<field 
+                                        name="search_limit" 
+                                        type="text"
+					label="PLG_SEARCH_MEDIA_SEARCHLIMIT_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCHLIMIT_DESC"
+					default="50"
+				/>                                                                                              
+			</fieldset>                    
 			<fieldset name="areas"
 				  label="PLG_SEARCH_MEDIA_FIELD_GROUP_AREAS_LABEL"
 			>    
                                 <field 
                                         name="search_media" 
-                                        type="list"
-					default="1"
-					description="PLG_SEARCH_MEDIA_SEARCH_MEDIA_DESC"
+                                        type="radio"
 					label="PLG_SEARCH_MEDIA_SEARCH_MEDIA_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_MEDIA_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
 				</field> 
                                 <field 
                                         name="search_albums" 
-                                        type="list"
-					default=""
-					description="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_DESC"
+                                        type="radio"
 					label="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
-					<option value="">PLG_SEARCH_MEDIA_GLOBAL</option>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
 				</field> 
                                 <field 
                                         name="search_groups" 
-                                        type="list"
-					default=""
-					description="PLG_SEARCH_MEDIA_SEARCH_GROUPS_DESC"
+                                        type="radio"
 					label="PLG_SEARCH_MEDIA_SEARCH_GROUPS_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_GROUPS_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
-					<option value="">PLG_SEARCH_MEDIA_GLOBAL</option>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
 				</field> 
                                 <field 
                                         name="search_playlists" 
-                                        type="list"
-					default=""
-					description="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_DESC"
+                                        type="radio"
 					label="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
-					<option value="">PLG_SEARCH_MEDIA_GLOBAL</option>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
 				</field> 
 			</fieldset>   
-			<fieldset name="include"
-				  label="PLG_SEARCH_MEDIA_FIELD_GROUP_DATA_LABEL"
+			<fieldset 
+                                name="fields"
+                                label="PLG_SEARCH_MEDIA_FIELD_GROUP_FIELDS_LABEL"
 			>    
                                 <field 
                                         name="search_title" 
                                         type="radio"
-					default="1"
-					description="PLG_SEARCH_MEDIA_SEARCH_TITLE_DESC"
 					label="PLG_SEARCH_MEDIA_SEARCH_TITLE_LABEL"
-				>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
-				</field>                                
-                                <field 
-                                        name="search_description" 
-                                        type="radio"
+					description="PLG_SEARCH_MEDIA_SEARCH_TITLE_DESC"
+                                        class="btn-group btn-group-yesno"
 					default="1"
-					description="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_DESC"
-					label="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_LABEL"
-				>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
-				</field>
-                                <field 
-                                        name="search_alias" 
-                                        type="radio"
-					default="0"
-					description="PLG_SEARCH_MEDIA_SEARCH_ALIAS_DESC"
-					label="PLG_SEARCH_MEDIA_SEARCH_ALIAS_LABEL"
-				>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
-				</field>
-                                <field 
-                                        name="search_metadata" 
-                                        type="radio"
-					default="0"
-					description="PLG_SEARCH_MEDIA_SEARCH_METADATA_DESC"
-					label="PLG_SEARCH_MEDIA_SEARCH_METADATA_LABEL"
-				>
-                                        <option value="1">JON</option>
-					<option value="0">JOFF</option>					
-				</field>	                          
-			</fieldset>                             
-			<fieldset name="basic">
-                                <field 
-                                        name="use_caching" 
-                                        type="radio"
-					default="1"
-					description="PLG_SEARCH_MEDIA_USE_CACHING_DESC"
-					label="PLG_SEARCH_MEDIA_USE_CACHING_LABEL"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
-				</field>  
+				</field>                                 
                                 <field 
-                                        name="include_thumbnail" 
+                                        name="search_description" 
                                         type="radio"
+					label="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_DESC"
+                                        class="btn-group btn-group-yesno"
 					default="1"
-					description="PLG_SEARCH_MEDIA_INCLUDE_THUMBNAIL_DESC"
-					label="PLG_SEARCH_MEDIA_INCLUDE_THUMBNAIL_LABEL"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
-					<option value="1">JON</option>
-					<option value="0">JOFF</option>
-				</field>  
-				<field 
-                                        name="search_limit" 
-                                        type="text"
-					default="50"
-					description="PLG_SEARCH_MEDIA_SEARCHLIMIT_DESC"
-					label="PLG_SEARCH_MEDIA_SEARCHLIMIT_LABEL"
-					size="5"
-				/>
-			</fieldset>                             
-                        <fieldset name="method">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>   
+                                <field 
+                                        name="search_alias" 
+                                        type="radio"
+					label="PLG_SEARCH_MEDIA_SEARCH_ALIAS_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_ALIAS_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="0"
+                                        validate="integer"
+                                        filter="integer"                                          
+				>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>   
+                                <field 
+                                        name="search_metadata" 
+                                        type="radio"
+					label="PLG_SEARCH_MEDIA_SEARCH_METADATA_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_METADATA_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="0"
+                                        validate="integer"
+                                        filter="integer"                                          
+				>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>   	                          
+			</fieldset>    
+			<fieldset 
+                                name="method"
+                                label="PLG_SEARCH_MEDIA_FIELD_GROUP_METHOD_LABEL"
+			>    
                                 <field 
                                         name="search_method" 
                                         type="list"
-					default="1"
-					description="PLG_SEARCH_MEDIA_SEARCH_METHOD_DESC"
 					label="PLG_SEARCH_MEDIA_SEARCH_METHOD_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_METHOD_DESC"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
 					<option value="0">PLG_SEARCH_MEDIA_OPTION_MATCH</option>
 					<option value="1">PLG_SEARCH_MEDIA_OPTION_LIKE</option>
@@ -154,9 +175,11 @@
  				<field 
                                         name="relation_method" 
                                         type="list"
-					default="0"
-					description="PLG_SEARCH_MEDIA_RELATION_METHOD_DESC"
 					label="PLG_SEARCH_MEDIA_RELATION_METHOD_LABEL"
+					description="PLG_SEARCH_MEDIA_RELATION_METHOD_DESC"
+					default="0"
+                                        validate="integer"
+                                        filter="integer"                                          
 				>
 					<option value="0">PLG_SEARCH_MEDIA_OPTION_MATCH</option>
 					<option value="1">PLG_SEARCH_MEDIA_OPTION_LIKE</option>
