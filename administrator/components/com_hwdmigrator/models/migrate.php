@@ -631,12 +631,7 @@ if (!$hwdms_media->load($profile->id))
                                         $jcat->setLocation($data['parent_id'], 'last-child');
 
                                         // Bind the data.
-                                        if (!$jcat->bind($data)) {
-                                                $this->setError($jcat->getError());
-                                                return false;
-                                        }
-                                        // Store the data.
-                                        if (!$jcat->store()) {
+                                        if (!$jcat->save($data)) {
                                                 $this->setError($jcat->getError());
                                                 return false;
                                         }
@@ -652,12 +647,7 @@ if (!$hwdms_media->load($profile->id))
                                         $migrated['status'] = 1;
 
                                         // Bind the data.
-                                        if (!$migrator_table->bind($migrated)) {
-                                                $this->setError($migrator_table->getError());
-                                                return false;
-                                        }
-                                        // Store the data.
-                                        if (!$migrator_table->store()) {
+                                        if (!$migrator_table->save($migrated)) {
                                                 $this->setError($migrator_table->getError());
                                                 return false;
                                         }
