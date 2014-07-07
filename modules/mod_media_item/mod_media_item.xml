@@ -198,8 +198,8 @@
                                 <field 
                                         name="item_meta_heading" 
                                         type="list" 
-                                        label="COM_HWDMS_HEADING_LEVEL_LABEL"
-                                        description="COM_HWDMS_HEADING_LEVEL_DESC"
+                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
+                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
                                         default=""
                                 >
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
