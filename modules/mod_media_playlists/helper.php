@@ -10,10 +10,7 @@
 
 defined('_JEXEC') or die;
 
-// Base this helper on the component view model.
-require_once JPATH_SITE.'/components/com_hwdmediashare/views/playlists/view.html.php';
-
-class modMediaPlaylistsHelper extends hwdMediaShareViewPlaylists
+class modMediaPlaylistsHelper extends JViewLegacy 
 {
 	public function __construct($module, $params)
 	{
