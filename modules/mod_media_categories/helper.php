@@ -67,7 +67,7 @@ class modMediaCategoriesHelper extends JViewLegacy
 
 	public function getItems()
 	{
-		// Get an instance with a dummary option array to load a complete cateogry node tree.
+		// Get an instance with a dummy option array to load a complete category node tree.
                 $categories = JCategories::getInstance('hwdMediaShare', array('module' => true));
 		$category = $categories->get($this->params->get('parent', 'root'));
 
