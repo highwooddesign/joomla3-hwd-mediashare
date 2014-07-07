@@ -11,5 +11,11 @@
 defined('_JEXEC') or die;
 ?>
 <div class="hwd-module">
-  <?php echo JLayoutHelper::render('activities_list', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+  <?php if (empty($helper->items)): ?>
+    <div class="alert alert-no-items">
+      <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
+    </div>
+  <?php else: ?>
+    <?php echo JLayoutHelper::render('activities_list', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+  <?php endif; ?>
 </div>
