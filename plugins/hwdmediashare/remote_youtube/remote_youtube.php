@@ -1,53 +1,45 @@
 <?php
 /**
- * @version    $Id: remote_youtube.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.remote_youtubecom
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import hwdMediaShare remote library
+// Import hwdMediaShare remote library.
 hwdMediaShareFactory::load('remote');
 
-// Load the main Youtube.com plugin
+// Load the main Youtube.com plugin.
 JLoader::register('plgHwdmediashareRemote_youtubecom', JPATH_PLUGINS.'/hwdmediashare/remote_youtubecom/remote_youtubecom.php');
 
-/**
- * hwdMediaShare framework files class
- *
- * @package hwdMediaShare
- * @since   0.1
- */
 class plgHwdmediashareRemote_youtube extends plgHwdmediashareRemote_youtubecom
 {     
-        /**
-	 * Constructor
+	/**
+	 * Class constructor.
 	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
+	 * @access	public
+         * @return      void
 	 */
 	public function __construct()
 	{
+		parent::__construct();
 	}
-        
+
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareRemote_youtube object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @access	public
+	 * @return      object      The plgHwdmediashareRemote_youtube object.
 	 */
 	public static function getInstance()
 	{
 		static $instance;
-                unset($instance);
+
 		if (!isset ($instance))
                 {
 			$c = 'plgHwdmediashareRemote_youtube';
@@ -58,13 +50,14 @@ class plgHwdmediashareRemote_youtube extends plgHwdmediashareRemote_youtubecom
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	function getUrl()
+	 * Get the url of the media source.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function getUrl()
 	{
-                $id = plgHwdmediashareRemote_youtubecom::parse($this->url, '');
+                $id = plgHwdmediashareRemote_youtubecom::parse($this->_url, '');
                 $this->_url = 'http://www.youtube.com/watch?v='.$id;
 	}
 }
