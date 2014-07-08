@@ -68,7 +68,6 @@ class plgHwdmediashareRemote_vineco extends JObject
 	 */
 	public function getTitle()
 	{
-            return "title";
                 if( !$this->_title )
 		{
                         hwdMediaShareFactory::load('remote');
@@ -352,6 +351,8 @@ class plgHwdmediashareRemote_vineco extends JObject
                 // Get Vine ID
                 $id = plgHwdmediashareRemote_vineco::parse($item->source);
 
+                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+                
                 return JURI::getInstance()->getScheme() .'://vine.co/v/' . $id . '/embed/simple';
         }
         
