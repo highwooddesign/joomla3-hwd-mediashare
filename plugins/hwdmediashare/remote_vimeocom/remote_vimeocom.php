@@ -20,18 +20,14 @@ class plgHwdmediashareRemote_vimeocom extends JObject
 	 */
 	public $mediaType = 4;
         
-	/**
-	 * Library data
-	 * @var strings
-	 */
-        var $_url;
-        var $_host;
-        var $_buffer;
-        var $_title;
-        var $_description;
-        var $_source;
-        var $_duration;
-        var $_thumbnail;
+        public $_url;
+        public $_host;
+        public $_buffer;
+        public $_title;
+        public $_description;
+        public $_source;
+        public $_duration;
+        public $_thumbnail;
         
 	/**
 	 * Class constructor.
@@ -331,4 +327,60 @@ class plgHwdmediashareRemote_vimeocom extends JObject
                 
                 return null;
         }
+        
+        /**
+	 * Method to construct the direct display location for the media.
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      void
+	 */
+	public function getDirectDisplayLocation($item)
+	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_vimeocom');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_vimeocom', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VIMEOCOM_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Get Vimeo ID
+                $id = plgHwdmediashareRemote_vimeocom::parse($item->source);
+            
+                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+
+                return JURI::getInstance()->getScheme() .'://player.vimeo.com/video/' . $id . '?title=0&amp;autoplay=' . $this->autoplay . '&amp;byline=0&amp;portrait=0';
+        }  
+
+        /**
+	 * Method to determine the type of media that will be displayed.
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      integer     The API value of the media type being displayed.
+	 */
+	public function getDirectDisplayType($item)
+	{
+                return $this->mediaType;
+        } 
 }
