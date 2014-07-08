@@ -20,18 +20,14 @@ class plgHwdmediashareRemote_vineco extends JObject
 	 */
 	public $mediaType = 4;
         
-	/**
-	 * Library data
-	 * @var strings
-	 */
-        var $_url;
-        var $_host;
-        var $_buffer;
-        var $_title;
-        var $_description;
-        var $_source;
-        var $_duration;
-        var $_thumbnail;
+        public $_url;
+        public $_host;
+        public $_buffer;
+        public $_title;
+        public $_description;
+        public $_source;
+        public $_duration;
+        public $_thumbnail;
         
 	/**
 	 * Class constructor.
@@ -54,8 +50,8 @@ class plgHwdmediashareRemote_vineco extends JObject
 	public static function getInstance()
 	{
 		static $instance;
-                unset($instance);
-		if (!isset ($instance))
+
+                if (!isset ($instance))
                 {
 			$c = 'plgHwdmediashareRemote_vineco';
                         $instance = new $c;
@@ -72,6 +68,7 @@ class plgHwdmediashareRemote_vineco extends JObject
 	 */
 	public function getTitle()
 	{
+            return "title";
                 if( !$this->_title )
 		{
                         hwdMediaShareFactory::load('remote');
@@ -315,4 +312,58 @@ class plgHwdmediashareRemote_vineco extends JObject
 
 		return $code;
         }
+        
+        /**
+	 * Method to construct the direct display location for the media.
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      void
+	 */
+	public function getDirectDisplayLocation($item)
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_vineco');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_vineco', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VINECO_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Get Vine ID
+                $id = plgHwdmediashareRemote_vineco::parse($item->source);
+
+                return JURI::getInstance()->getScheme() .'://vine.co/v/' . $id . '/embed/simple';
+        }
+        
+        /**
+	 * Method to determine the type of media that will be displayed.
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      integer     The API value of the media type being displayed.
+	 */
+	public function getDirectDisplayType($item)
+	{
+                return $this->mediaType;
+        }         
 }
