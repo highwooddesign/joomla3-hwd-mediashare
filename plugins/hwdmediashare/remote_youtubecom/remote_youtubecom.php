@@ -20,18 +20,14 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 */
 	public $mediaType = 4;
         
-	/**
-	 * Library data
-	 * @var strings
-	 */
-        var $_url;
-        var $_host;
-        var $_buffer;
-        var $_title;
-        var $_description;
-        var $_source;
-        var $_duration;
-        var $_thumbnail;
+        public $_url;
+        public $_host;
+        public $_buffer;
+        public $_title;
+        public $_description;
+        public $_source;
+        public $_duration;
+        public $_thumbnail;
         
 	/**
 	 * Class constructor.
@@ -350,15 +346,65 @@ class plgHwdmediashareRemote_youtubecom extends JObject
         }
         
         /**
-	 * Method to construct a video link for use with SWF, as an open graph video tag.
+	 * Method to construct the direct display location for the media.
 	 *
 	 * @access	public
 	 * @param       object      $item       The media item being displayed.
          * @return      void
 	 */
-	public function getOgVideoTag($item)
+	public function getDirectDisplayLocation($item)
 	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_youtubecom');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_youtubecom', JPATH_SITE . '/administrator');
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Get Youtube ID
                 $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
-                return 'http://www.youtube.com/v/'.$id.'?version=3&amp;autohide=1';
-        } 
+
+                // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
+                $url = parse_url($item->source);
+                parse_str($url['query'], $ytvars);
+                if (isset($ytvars['cc_load_policy'])) $params->set('cc_load_policy', $ytvars['cc_load_policy']);
+                if (isset($ytvars['cc_lang_pref'])) $params->set('cc_lang_pref', $ytvars['cc_lang_pref']);
+                if (isset($ytvars['hl'])) $params->set('hl', $ytvars['hl']);
+
+                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+
+                return JURI::getInstance()->getScheme() .'://www.youtube.com/embed/' . $id . '?wmode=opaque&amp;autoplay=' . $this->autoplay . '&amp;autohide=' . $params->get('autohide',2) . '&amp;border=' . $params->get('border',0) . '&amp;cc_load_policy=' . $params->get('cc_load_policy',1) . '&amp;cc_lang_pref=' . $params->get('cc_lang_pref','en') . '&amp;hl=' . $params->get('hl','en') . '&amp;color=' . $params->get('color','red') . '&amp;color1=' . $params->get('color1') . '&amp;color2=' . $params->get('color2') . '&amp;controls=' . $params->get('controls',1) . '&amp;fs=' . $params->get('fs',1) . '&amp;hd=' . $params->get('hd',0) . '&amp;iv_load_policy=' . $params->get('iv_load_policy',1) . '&amp;modestbranding=' . $params->get('modestbranding',1) . '&amp;rel=' . $params->get('rel',1) . '&amp;theme=' . $params->get('theme','dark');
+        }
+        
+        /**
+	 * Method to determine the type of media that will be displayed.
+	 *
+	 * @access	public
+	 * @param       object      $item       The media item being displayed.
+         * @return      integer     The API value of the media type being displayed.
+	 */
+	public function getDirectDisplayType($item)
+	{
+                return $this->mediaType;
+        }         
 }
