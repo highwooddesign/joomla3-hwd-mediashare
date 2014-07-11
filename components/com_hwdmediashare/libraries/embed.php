@@ -45,6 +45,8 @@ class hwdMediaShareEmbed extends JObject
 	 * Returns the hwdMediaShareEmbed object, only creating it if it
 	 * doesn't already exist.
 	 *
+	 * @access  public
+         * @static
 	 * @return  hwdMediaShareEmbed Object.
 	 */ 
 	public static function getInstance()
