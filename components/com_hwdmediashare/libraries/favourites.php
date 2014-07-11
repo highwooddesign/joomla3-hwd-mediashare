@@ -37,6 +37,8 @@ class hwdMediaShareFavourites extends JObject
 	 * Returns the hwdMediaShareFavourites object, only creating it if it
 	 * doesn't already exist.
 	 *
+	 * @access  public
+         * @static
 	 * @return  hwdMediaShareFavourites Object.
 	 */
 	public static function getInstance()
