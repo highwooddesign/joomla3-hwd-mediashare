@@ -89,7 +89,7 @@ class hwdMediaShareEmbed extends JObject
                         return false;
                 }   
                 
-                // We will apply the safeHtml filter to the variable, but define additional allowed tags
+                // We will apply the safeHtml filter to the variable, but define additional allowed tags.
                 jimport('joomla.filter.filterinput');
                 $safeHtmlFilter = JFilterInput::getInstance(null, null, 1, 1);
                 $safeHtmlFilter->tagBlacklist = array ('applet', 'body', 'bgsound', 'base', 'basefont', 'frame', 'frameset', 'head', 'html', 'id', 'ilayer', 'layer', 'link', 'meta', 'name', 'script', 'style', 'title', 'xml');
@@ -98,7 +98,7 @@ class hwdMediaShareEmbed extends JObject
                 hwdMediaShareFactory::load('upload');
                 $data = hwdMediaShareUpload::getProcessedUploadData();
 
-                // Clean the raw embed code
+                // Clean the raw embed code.
                 $embed_code = $safeHtmlFilter->clean($data['embed_code']);
                 if (empty($embed_code))
                 {
@@ -117,7 +117,7 @@ class hwdMediaShareEmbed extends JObject
 
                 $post = array();
 
-                // Check if we need to replace an existing media item
+                // Check if we need to replace an existing media item.
                 if ($data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                 {
                         $post['id']                     = $data['id'];
