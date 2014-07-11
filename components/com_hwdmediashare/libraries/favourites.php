@@ -106,7 +106,7 @@ class hwdMediaShareFavourites extends JObject
                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 $table = JTable::getInstance('Favourite', 'hwdMediaShareTable');    
 
-                                // Create an object to bind to the database
+                                // Create an object to bind to the database.
                                 $object = new StdClass;
                                 $object->element_type = $this->elementType;
                                 $object->element_id = $pk;
