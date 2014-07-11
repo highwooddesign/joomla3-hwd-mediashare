@@ -1,44 +1,46 @@
 <?php
 /**
- * @version    SVN $Id: rtmp.php 1540 2013-05-30 11:30:02Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      18-Feb-2012 14:40:29
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework rtmp class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-class hwdMediaShareRtmp extends JObject
-{        
-	var $_id;
 
-        /**
+defined('_JEXEC') or die;
+
+class hwdMediaShareRtmp
+{        
+	/**
+	 * The variable to hold the item details.
+         * 
+         * @access      public
+	 * @var         object
+	 */
+	public $_item;
+
+	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
-	 * Returns the hwdMediaShareRemote object, only creating it if it
+	 * Returns the hwdMediaShareRtmp object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareMedia A hwdMediaShareRemote object.
-	 * @since   0.1
-	 */
+	 * @access  public
+         * @static
+	 * @return  hwdMediaShareRtmp Object.
+	 */ 
 	public static function getInstance()
 	{
 		static $instance;
@@ -52,71 +54,71 @@ class hwdMediaShareRtmp extends JObject
 		return $instance;
 	}
         
-        /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	/**
+	 * Method to process an rtmp stream.
+         * 
+         * @access  public
+         * @return  boolean True on success.
 	 */
 	public function addRtmp()
 	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
-
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
+                
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                $error = false;
-
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
+                // Load HWD utiltiies.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();               
                 
-                hwdMediaShareFactory::load('upload');
-                $key = hwdMediaShareUpload::generateKey();
-
-                jimport( 'joomla.filter.filterinput' );
-
-                // We will apply the most strict filter to the variable
-                $noHtmlFilter = JFilterInput::getInstance();
-                $streamer = $noHtmlFilter->clean($data['streamer']);
-                $file = $noHtmlFilter->clean($data['file']);
-                $title = basename($file);
-                $type = intval($data['media_type']);
-
-                if (hwdMediaShareUpload::keyExists($key))
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.import', 'com_hwdmediashare'))
                 {
-                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                        return false; 
-                }
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                }   
                 
-                if (empty($streamer))
+                // We will apply the safeHtml filter to the variable, but define additional allowed tags.
+                jimport('joomla.filter.filterinput');
+                $noHtmlFilter = JFilterInput::getInstance();
+                
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+                
+                if (empty($data['streamer']))
                 {
                         $this->setError(JText::_('COM_HWDMS_ERROR_NO_RTMP_STREAMER_FOUND'));
                         return false; 
                 }
                 
-                if (empty($file))
+                if (empty($data['file']))
                 {
                         $this->setError(JText::_('COM_HWDMS_ERROR_NO_RTMP_FILE_FOUND'));
                         return false; 
                 }
 
-                // Set approved/pending
+                // Set approved/pending.
                 (!$app->isAdmin() && $config->get('approve_new_media')) == 1 ? $status = 2 : $status = 1; 
                 $config->get('approve_new_media') == 1 ? $status = 2 : $status = 1; 
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $row =& JTable::getInstance('media', 'hwdMediaShareTable');
+                $table = JTable::getInstance('media', 'hwdMediaShareTable');
 
                 $post = array();
                 
-                // Check if we need to replace an existing media item
+                // Check if we need to replace an existing media item.
                 if ($data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                 {
                         $post['id']                     = $data['id'];
                         //$post['asset_id']             = '';
                         //$post['ext_id']               = '';
-                        $post['media_type']             = (($type > 0) ? $type : '');
+                        $post['media_type']             = (($data['media_type'] > 0) ? $data['media_type'] : '');
                         //$post['key']                  = '';
                         //$post['title']                = '';
                         //$post['alias']                = '';
@@ -125,8 +127,8 @@ class hwdMediaShareRtmp extends JObject
                         $post['source']                 = '';
                         $post['storage']                = '';
                         //$post['duration']             = '';
-                        $post['streamer']               = $streamer;
-                        $post['file']                   = $file;
+                        $post['streamer']               = $noHtmlFilter->clean($data['streamer']);
+                        $post['file']                   = $noHtmlFilter->clean($data['file']);
                         $post['embed_code']             = '';
                         //$post['thumbnail']            = '';
                         //$post['thumbnail_ext_id']     = '';
@@ -150,7 +152,7 @@ class hwdMediaShareRtmp extends JObject
                         //$post['publish_up']           = '';
                         //$post['publish_down']         = '';
                         $post['modified_user_id']       = $user->id;
-                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                        $post['modified']               = $date->toSql();
                         //$post['hits']                 = '';
                         //$post['language']             = '';              
                 }
@@ -159,17 +161,17 @@ class hwdMediaShareRtmp extends JObject
                         //$post['id']                   = '';
                         //$post['asset_id']             = '';
                         //$post['ext_id']               = '';
-                        $post['media_type']             = (($type > 0) ? $type : '');
+                        $post['media_type']             = (($data['media_type'] > 0) ? $data['media_type'] : '');
                         $post['key']                    = $key;
-                        $post['title']                  = (empty($title) ? 'New media' : $title);
-                        $post['alias']                  = JFilterOutput::stringURLSafe($post['title']);
-                        //$post['description']          = '';
+                        $post['title']                  = (isset($data['title']) ? $data['title'] : basename($data['file']));
+                        $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
+                        $post['description']            = (isset($data['description']) ? $data['description'] : '');
                         $post['type']                   = 4; // Rtmp
                         $post['source']                 = '';
                         $post['storage']                = '';
                         //$post['duration']             = '';
-                        $post['streamer']               = $streamer;
-                        $post['file']                   = $file;
+                        $post['streamer']               = $noHtmlFilter->clean($data['streamer']);
+                        $post['file']                   = $noHtmlFilter->clean($data['file']);
                         $post['embed_code']             = '';
                         //$post['thumbnail']            = '';
                         //$post['thumbnail_ext_id']     = '';
@@ -179,66 +181,62 @@ class hwdMediaShareRtmp extends JObject
                         //$post['likes']                = '';
                         //$post['dislikes']             = '';
                         $post['status']                 = $status;
-                        $post['published']              = 0;
-                        $post['featured']               = 0;
+                        $post['published']              = (isset($data['published']) ? $data['published'] : 1);
+                        $post['featured']               = (isset($data['featured']) ? $data['featured'] : 0);
                         //$post['checked_out']          = '';
                         //$post['checked_out_time']     = '';
-                        $post['access']                 = 1;
+                        $post['access']                 = (isset($data['access']) ? $data['access'] : 1);
                         //$post['download']             = '';
                         //$post['params']               = '';
                         //$post['ordering']             = '';
                         $post['created_user_id']        = $user->id;
                         //$post['created_user_id_alias']= '';
-                        $post['created']                = $date->format('Y-m-d H:i:s');
-                        $post['publish_up']             = $date->format('Y-m-d H:i:s');
+                        $post['created']                = $date->toSql();
+                        $post['publish_up']             = $date->toSql();
                         $post['publish_down']           = '0000-00-00 00:00:00';
                         $post['modified_user_id']       = $user->id;
-                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                        $post['modified']               = $date->toSql();
                         $post['hits']                   = 0;
-                        $post['language']               = '*';
+                        $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                 }
 
-                // Bind it to the table
-                if (!$row->bind( $post ))
+                // Save the data to the database.
+                if (!$table->save($post))
                 {
-                        $this->setError($row->getError());
+                        $this->setError($table->getError());
                         return false; 
                 }
 
-                // Store it in the db
-                if (!$row->store())
-                {
-                        $this->setError($row->getError());
-                        return false; 
-                }
-                
-                $this->_id = $row->id;
-
-                hwdMediaShareUpload::assignAssociations($row);
-
-                hwdMediaShareFactory::load('events');
-                $events = hwdMediaShareEvents::getInstance();
-                $events->triggerEvent('onAfterMediaAdd', $row);
+                $properties = $table->getProperties(1);
+                $this->_item = JArrayHelper::toObject($properties, 'JObject');
 
                 return true;
         }
         
 	/**
-	 * Method to render a video
+	 * Method to render an rtmp stream in a player.
          * 
-         * @since   0.1
-	 **/
-	public function get($item)
+         * @access  public
+         * @static
+         * @param   object  $item   The object holding the media details.
+         * @return  boolean True on success.
+	 */
+	public static function getPlayer($item)
 	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Check for cloudfront services
-                if (strpos($item->streamer, '.cloudfront.net') !== false) {
-                    hwdMediaShareFactory::load('aws.cloudfront');
-                    $player = call_user_func(array('hwdMediaShareCloudfront', 'getInstance'));
-                    $item->file = urldecode($player->update_stream_name($item));
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Check for cloudfront services.
+                if (strpos($item->streamer, '.cloudfront.net') !== false)
+                {
+                        hwdMediaShareFactory::load('aws.cloudfront');
+                        $player = call_user_func(array('hwdMediaShareCloudfront', 'getInstance'));
+                        $item->file = urldecode($player->update_stream_name($item));
                 }
 
                 if ($item->streamer && $item->file)
@@ -247,12 +245,29 @@ class hwdMediaShareRtmp extends JObject
                         $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
 
                         $jpg = hwdMediaShareDownloads::jpgUrl($item);
+                        
+                        // Import HWD player plugin.
+                        if (file_exists($pluginPath))
+                        {
+                                JLoader::register($pluginClass, $pluginPath);
+                                $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
+                                
+                                // Setup parameters for player.
+                                $params = new JRegistry(array(
+                                    'streamer' => $item->streamer,
+                                    'file' => $item->file,
+                                    'jpg' => $jpg 
+                                ));
 
-                        // Import hwdMediaShare plugins
-                        JLoader::register($pluginClass, $pluginPath);
-                        $player = call_user_func(array($pluginClass, 'getInstance'));
-                        $params = new JRegistry('{"streamer":"'.$item->streamer.'","file":"'.$item->file.'","jpg":"'.$jpg.'"}');
-                        return $player->getRtmpPlayer($params);
+                                if ($player = $HWDplayer->getRtmpPlayer($params))
+                                {
+                                        return $player;
+                                }
+                                else
+                                {
+                                        return $utilities->printNotice($HWDplayer->getError());
+                                }
+                        }
                 }
 	} 
 }
