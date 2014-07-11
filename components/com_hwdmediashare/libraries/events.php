@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-class hwdMediaShareEvents
+class hwdMediaShareEvents extends JObject
 {
 	/**
 	 * Class constructor.
