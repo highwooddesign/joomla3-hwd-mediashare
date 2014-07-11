@@ -13,18 +13,22 @@ defined('_JEXEC') or die;
 class hwdMediaShareFavourites extends JObject
 {
 	/**
-	 * Library data
-	 * @var
+	 * The element type to use with this library.
+         * 
+         * @access      public
+	 * @var         string
 	 */
 	public $elementType = 1;
         
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @access	public
+         * @return      void
 	 */
-	public function __construct($config = array())
+	public function __construct()
 	{
+		parent::__construct();
 	}
 
 	/**
@@ -47,8 +51,11 @@ class hwdMediaShareFavourites extends JObject
 	}
         
 	/**
-	 * Method to add an item to a user's favourites
-         * @return	void
+	 * Method to add an item to a user's favourites.
+         * 
+         * @access  public
+         * @param   array   $pks    An array of record primary keys.
+         * @return  boolean True on success.
 	 */
 	public function addFavourite($pks)
 	{
@@ -117,8 +124,11 @@ class hwdMediaShareFavourites extends JObject
 	}
         
 	/**
-	 * Method to remove an item to a user's favourites
-         * @return	void
+	 * Method to remove an item to a user's favourites.
+         * 
+         * @access  public
+         * @param   array   $pks    An array of record primary keys.
+         * @return  boolean True on success.
 	 */
 	public function removeFavourite($pks)
 	{
@@ -170,8 +180,11 @@ class hwdMediaShareFavourites extends JObject
 	}
         
  	/**
-	 * Method to check if an item is in a user's favourites
-         * @return	void
+	 * Method to check if an item is in a user's favourites.
+         * 
+         * @access  public
+         * @param   integer $pk    The primary key to check.
+         * @return  boolean True if favourite.
 	 */
 	public function isFavourite($pk)
 	{
