@@ -13,18 +13,24 @@ defined('_JEXEC') or die;
 class hwdMediaShareSubscriptions extends JObject
 {
 	/**
-	 * Library data
-	 * @var
+	 * The element type to use with this library.
+         * 
+         * @access      public
+	 * @var         string
 	 */
 	public $elementType = 5;
 
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
@@ -47,8 +53,11 @@ class hwdMediaShareSubscriptions extends JObject
 	}
         
 	/**
-	 * Method to subscribe a user to an item
-         * @return	void
+	 * Method to subscribe a user to an item.
+         * 
+         * @access  public
+         * @param   array   $pks    An array of record primary keys.
+         * @return  boolean True on success.
 	 */
 	public function subscribe($pks)
 	{
@@ -103,7 +112,7 @@ class hwdMediaShareSubscriptions extends JObject
                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 $table = JTable::getInstance('Subscription', 'hwdMediaShareTable');    
 
-                                // Create an object to bind to the database
+                                // Create an object to bind to the database.
                                 $object = new StdClass;
                                 $object->element_type = $this->elementType;
                                 $object->element_id = $pk;
@@ -123,8 +132,11 @@ class hwdMediaShareSubscriptions extends JObject
 	}
 
 	/**
-	 * Method to unsubscribe a user to an item
-         * @return	void
+	 * Method to unsubscribe a user to an item.
+         * 
+         * @access  public
+         * @param   array   $pks    An array of record primary keys.
+         * @return  boolean True on success.
 	 */
 	public function unsubscribe($pks)
 	{
@@ -182,8 +194,11 @@ class hwdMediaShareSubscriptions extends JObject
 	}
 
  	/**
-	 * Method to check if a user is subscribed to an item
-         * @return	void
+	 * Method to check if a user is subscribed to an item.
+         * 
+         * @access  public
+         * @param   integer $pk    The primary key to check.
+         * @return  boolean True if favourite.
 	 */
 	public function isSubscribed($pk)
 	{
