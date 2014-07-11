@@ -23,12 +23,14 @@ class hwdMediaShareFavourites extends JObject
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct()
+	public function __construct($properties = null)
 	{
-		parent::__construct();
+		parent::__construct($properties);
 	}
 
 	/**
