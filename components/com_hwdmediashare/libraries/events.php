@@ -29,6 +29,8 @@ class hwdMediaShareEvents
 	 * Returns the hwdMediaShareEvents object, only creating it if it
 	 * doesn't already exist.
 	 *
+	 * @access  public
+         * @static
 	 * @return  hwdMediaShareEvents Object.
 	 */
 	public static function getInstance()
