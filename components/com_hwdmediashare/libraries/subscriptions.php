@@ -37,6 +37,8 @@ class hwdMediaShareSubscriptions extends JObject
 	 * Returns the hwdMediaShareSubscriptions object, only creating it if it
 	 * doesn't already exist.
 	 *
+	 * @access  public
+         * @static
 	 * @return  hwdMediaShareSubscriptions Object.
 	 */
 	public static function getInstance()
