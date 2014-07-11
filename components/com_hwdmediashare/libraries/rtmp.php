@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-class hwdMediaShareRtmp
+class hwdMediaShareRtmp extends JObject
 {        
 	/**
 	 * The variable to hold the item details.
@@ -221,7 +221,7 @@ class hwdMediaShareRtmp
          * @param   object  $item   The object holding the media details.
          * @return  boolean True on success.
 	 */
-	public static function getPlayer($item)
+	public static function display($item)
 	{
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
