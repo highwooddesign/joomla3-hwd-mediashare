@@ -12,13 +12,17 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareEvents
 {
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
@@ -42,23 +46,25 @@ class hwdMediaShareEvents
         
 	/**
 	 * Method to trigger a Joomla event.
-         * @return	void
+         * 
+         * @access  public
+         * @param   string  $event  The name of the event to trigger.
+         * @param   object  $action The action object.
+         * @param   object  $target The target object.
+	 * @return  array   An array of results from each function call.
 	 */
 	public function triggerEvent($event, $action, $target = null)
 	{
                 // Initialise variables.              
 		$dispatcher = JDispatcher::getInstance();
                 
-                // Load HWD activities
+                // Load HWD activities.
                 hwdMediaShareFactory::load('activities');
                 $HWDactivities = hwdMediaShareActivities::getInstance();
                 
                 // New activity.
                 $activity = new StdClass;
                 
-		// Avoid problem with php 5.3
-		if(is_null($action)) $action = new StdClass;
-
 		switch($event)
 		{
                         case 'onAfterMediaAdd':
@@ -176,13 +182,11 @@ class hwdMediaShareEvents
                 // Save the new activity.
                 $HWDactivities->save($activity);
 
-                // Load HWD plugins, and JomSocial plugins.
+                // Load HWD plugins.
                 JPluginHelper::importPlugin('hwdmediashare');
-                if (file_exists(JPATH_SITE.'/components/com_community/')) JPluginHelper::importPlugin('community');
-                
+
                 // Trigger the event.
-                jimport('joomla.utilities.arrayhelper');                
-                $results = $dispatcher->trigger($event, $action, $target);
+                $results = $dispatcher->trigger($event, array($action, $target));
 
 		return $results;
 	}
