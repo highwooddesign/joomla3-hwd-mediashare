@@ -13,19 +13,32 @@ defined('_JEXEC') or die;
 class hwdMediaShareEmbed extends JObject
 {        
 	/**
-	 * Library data
-	 * @var
+	 * The variable to hold the item details.
+         * 
+         * @access      public
+	 * @var         object
 	 */
 	public $_item;
+        
+	/**
+	 * The variable holding the host (retrieved from the embed code).
+         * 
+         * @access      public
+	 * @var         string
+	 */
         public $_host;
     
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
@@ -49,7 +62,9 @@ class hwdMediaShareEmbed extends JObject
     
 	/**
 	 * Method to process an embed code.
-         * @return	void
+         * 
+         * @access  public
+         * @return  boolean True on success.
 	 */
 	public function addEmbed()
 	{
