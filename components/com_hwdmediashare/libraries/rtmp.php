@@ -72,7 +72,7 @@ class hwdMediaShareRtmp extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Load HWD utiltiies.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();               
                 
