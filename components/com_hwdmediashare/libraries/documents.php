@@ -51,8 +51,8 @@ class hwdMediaShareDocuments extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $item   The object holding the media details.
-         * @return  boolean True on success.
+         * @param   object  $item   The media item.
+         * @return  string  The html to display the document.
 	 */
 	public static function display($item)
 	{
