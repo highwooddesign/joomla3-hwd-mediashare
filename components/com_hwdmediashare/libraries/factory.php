@@ -77,7 +77,7 @@ class hwdMediaShareFactory extends JObject
 
                 $name = array_pop($parts);
 
-                // Test if file really exists before php throws errors.
+                // Check if file exists.
 		$path = JPATH_ROOT.'/components/com_hwdmediashare/libraries/'.strtolower(str_replace('.', '/', $path)).'.php';
 
                 if(JFile::exists($path))
