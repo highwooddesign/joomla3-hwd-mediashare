@@ -1,41 +1,37 @@
 <?php
 /**
- * @version    SVN $Id: documents.php 1621 2013-08-14 13:57:27Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      06-Dec-2011 15:02:59
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework documents class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-abstract class hwdMediaShareDocuments
+
+defined('_JEXEC') or die;
+
+class hwdMediaShareDocuments extends JObject
 {
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
 	 * Returns the hwdMediaShareDocuments object, only creating it if it
 	 * doesn't already exist.
 	 *
+	 * @access  public
+         * @static
 	 * @return  hwdMediaShareDocuments A hwdMediaShareDocuments object.
-	 * @since   0.1
 	 */
 	public static function getInstance()
 	{
@@ -51,33 +47,43 @@ abstract class hwdMediaShareDocuments
 	}
         
 	/**
-	 * Method to render a document
+	 * Method to render a document.
          * 
-         * @since   0.1
-	 **/
-	public function get($item)
+         * @access  public
+         * @static
+         * @param   object  $item   The object holding the media details.
+         * @return  boolean True on success.
+	 */
+	public static function display($item)
 	{
-                hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('utilities');
-                hwdMediaShareFactory::load('files');
-                $utilities = hwdMediaShareUtilities::getInstance();
+                // Initialise variables.            
+                $app = JFactory::getApplication();
                 
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Load some libraries.
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('utilities');
+                hwdMediaShareFactory::load('files');
+
                 $width = $config->get('mediaitem_size', '500');
                 $height = (int) $config->get('mediaitem_height') ? $config->get('mediaitem_height') : $width*$config->get('video_aspect',0.75);
-                $autoplayNumerical = (JRequest::getInt('media_autoplay', $config->get('media_autoplay')) == 1 ? '1' : '0');
-                $autoplayBoolean = (JRequest::getInt('media_autoplay', $config->get('media_autoplay')) == 1 ? 'true' : 'false');
-                     
-                jimport( 'joomla.filesystem.file' );
+                $autoplayNumerical = ($app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0');
+                $autoplayBoolean = ($app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? 'true' : 'false');
+                
+                // Process a linked file.
                 if($item->type == 7)
                 {
-                        // Get extension of linked file
+                        // Get extension of linked file.
                         $item->ext = strtolower(JFile::getExt($item->source));
 
-                        // Check this extension is what we expect 
+                        // Check this extension is what we expect.
                         switch ($item->media_type)
                         {
                             case 1: // Audio
@@ -100,12 +106,12 @@ abstract class hwdMediaShareDocuments
                 {
                         if(!isset($item->ext))
                         {
-                                $item->ext = hwdMediaShareFiles::getExtension($item,1);
+                                $item->ext = hwdMediaShareFiles::getExtension($item, 1);
                         }
-                        $url = hwdMediaShareDownloads::url($item,1);
+                        $url = hwdMediaShareDownloads::url($item, 1);
                 }
 
-                // Check for cloudfront services
+                // Check for cloudfront services.
                 if (strpos($url, '.cloudfront.net') !== false) 
                 {
                         hwdMediaShareFactory::load('aws.cloudfront');
