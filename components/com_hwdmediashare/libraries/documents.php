@@ -47,7 +47,7 @@ class hwdMediaShareDocuments extends JObject
 	}
         
 	/**
-	 * Method to render a document.
+	 * Method to display a document.
          * 
          * @access  public
          * @static
