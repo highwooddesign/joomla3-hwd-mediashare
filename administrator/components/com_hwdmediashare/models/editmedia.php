@@ -142,7 +142,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			$data = $this->getItem();
 		}
 
-                // Tweak the thumbnail data to fit our framework
+                // Tweak the thumbnail data to fit our framework.
                 $data->thumbnail_remote = $data->thumbnail;
                 $data->thumbnail = '';
                 
@@ -369,7 +369,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			return false;
 		}
 
-                // Trigger onAfterMediaAdd
+                // Trigger onAfterMediaAdd event.
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
                 hwdMediaShareFactory::load('events');
@@ -382,7 +382,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         $HWDevents->triggerEvent('onAfterMediaAdd', $row); 
 		}
                 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
@@ -438,7 +438,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
@@ -590,7 +590,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         }
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
              
 		return true;
@@ -638,7 +638,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                                 }
                         }
                         
-                        // Load the media item
+                        // Load the media item.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('Media', 'hwdMediaShareTable');
                         $table->load($pk);
@@ -815,7 +815,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			return false;
 		}
 
-		// Clear the cache.
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;                
