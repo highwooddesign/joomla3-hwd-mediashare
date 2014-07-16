@@ -10,106 +10,95 @@
 
 defined('_JEXEC') or die;
 
-// Import Joomla table library
-jimport('joomla.database.table');
-
 class hwdMediaShareTableMedia extends JTable
 {
 	/**
-	 * Constructor.
-	 * @return	void
-	 */
-	function __construct($db)
+	 * Class constructor. Overridden to explicitly set the table and key fields.
+	 *
+	 * @access	public
+	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
+         * @return      void
+	 */ 
+	public function __construct($db)
 	{             
 		parent::__construct('#__hwdms_media', 'id', $db);
                 JObserverMapper::addObserverClassToClass('JTableObserverTags', 'hwdMediaShareTableMedia', array('typeAlias' => 'com_hwdmediashare.media'));                
 	}
         
 	/**
-	 * Overloaded bind function
+	 * Method to bind an associative array or object to the JTable instance.
 	 *
-	 * @param   array  $array   Named array to bind
-	 * @param   mixed  $ignore  An optional array or space separated list of properties to ignore while binding.
-	 *
-	 * @return  mixed  Null if operation was satisfactory, otherwise returns an error
+         * @access  public
+	 * @param   mixed   $src     An associative array or object to bind to the JTable instance.
+	 * @param   mixed   $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @return  boolean True on success.
+	 * @link    http://docs.joomla.org/JTable/bind
+	 * @throws  InvalidArgumentException
 	 */
-	public function bind($array, $ignore = '')
+	public function bind($src, $ignore = '')
 	{
 		// Convert the params fields to a string.
-                if (isset($array['params']) && is_array($array['params']))
+                if (isset($src['params']) && is_array($src['params']))
 		{
-                        // Get the password from the data array and unset
-                        $newPassword = $array['params']['password1'];
-                        unset($array['params']['password1']);
-
-			$registry = new JRegistry;
-			$registry->loadArray($array['params']);
-
-                        // We don't want to loose the existing password! So we check if a new one has been passed, then retain the old one if empty
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                        $table->load($array['id']);
-                        $properties = $table->getProperties(1);
-                        $row = JArrayHelper::toObject($properties, 'JObject');
-                        if (empty($newPassword))
-                        {                                
-                                $password = $row->params->get('password');                                
-                                if (!empty($password)) $registry->set('password', $password);
-                        }
-                        else
+                        // Check if a new password has been submitted.
+                        if (isset($src['params']['password1']) && !empty($src['params']['password1']))
                         {
-                                $password = md5($row->key . $newPassword);
-                                if (!empty($password)) 
+                                // Get the password from the data array and unset
+                                $newPassword = $src['params']['password1'];
+                                unset($src['params']['password1']);
+
+                                // We don't want to loose the existing password! So we check if a new one has been passed, then retain the old one if empty
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                $table->load($src['id']);
+                                $properties = $table->getProperties(1);
+                                $item = JArrayHelper::toObject($properties, 'JObject');
+                                if (property_exists($item, 'params'))
                                 {
-                                        $registry->set('password', $password);
-                                        $registry->set('password', $password);
+                                        $registry = new JRegistry;
+                                        $registry->loadString($item->params);
+                                        $item->params = $registry;
+                                }   
+
+                                $registry = new JRegistry;
+                                $registry->loadArray($src['params']);
+                                
+                                if (empty($newPassword))
+                                {                                
+                                        $password = $item->params->get('password');                                
+                                        if (!empty($password)) $registry->set('password', $password);
+                                }
+                                else
+                                {
+                                        $password = md5($item->key . $newPassword);
+                                        if (!empty($password)) 
+                                        {
+                                                $registry->set('password', $password);
+                                                $registry->set('password', $password);
+                                        }
                                 }
                         }
                         
-			$array['params'] = (string) $registry;
+			$src['params'] = (string) $registry;
 		}
+                
                 // Bind the rules. 
-		if (isset($array['rules']) && is_array($array['rules'])) 
+		if (isset($src['rules']) && is_array($src['rules'])) 
                 { 
-			$rules = new JRules($array['rules']); 
+			$rules = new JRules($src['rules']); 
 			$this->setRules($rules); 
 		}
-		return parent::bind($array, $ignore);
+                
+		return parent::bind($src, $ignore);
 	}
 
 	/**
-	 * Overloaded load function
+	 * Method to store a row in the database from the JTable instance properties.
 	 *
-	 * @param       int     $pk     primary key
-	 * @param       boolean $reset  reset data
-         * 
-	 * @return      boolean
-	 */
-	public function load($pk = null, $reset = true) 
-	{
-		if (parent::load($pk, $reset)) 
-		{
-                        // Convert the params string to an array.
-                        if (property_exists($this, 'params'))
-                        {
-                                $registry = new JRegistry;
-                                $registry->loadString($this->params);
-                                $this->params = $registry;
-                        }                    
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Overload store method
-	 *
-	 * @param   boolean   $updateNulls   Toggle whether null values should be updated.
-         * 
-	 * @return  boolean   True on success, false on failure.
+         * @access  public
+	 * @param   boolean  $updateNulls  True to update fields even if they are null.
+	 * @return  boolean  True on success.
+	 * @link    http://docs.joomla.org/JTable/store
 	 */
 	public function store($updateNulls = false)
 	{
@@ -119,10 +108,14 @@ class hwdMediaShareTableMedia extends JTable
                 $user = JFactory::getUser();
                 $isNew = false;
 
-                // Load HWD config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                                
 		if ($this->id)
 		{
 			// Existing item, so set modified details.
@@ -140,10 +133,10 @@ class hwdMediaShareTableMedia extends JTable
 		}
 		else
 		{
-			// New item
+			// New item.
                         $isNew = true;
                         
-                        // Set a unique key
+                        // Set a unique key.
                         if (empty($this->key))
                         {
                                 hwdMediaShareFactory::load('utilities');
@@ -163,7 +156,7 @@ class hwdMediaShareTableMedia extends JTable
                                 $this->access = 1;
                         } 
 
-                        // Set approval status
+                        // Set approval status.
                         $this->status = (!$app->isAdmin() && $config->get('approve_new_playlists') == 1) ? 2 : 1;
 
                         // The created and created_by fields can be set by the user,
@@ -178,20 +171,20 @@ class hwdMediaShareTableMedia extends JTable
 			}                      
 		}
 
-		// Set publish_up to null date if not set
+		// Set publish_up to null date if not set.
 		if (!$this->publish_up)
 		{
 			$this->publish_up = $this->_db->getNullDate();
 		}
 
-		// Set publish_down to null date if not set
+		// Set publish_down to null date if not set.
 		if (!$this->publish_down)
 		{
 			$this->publish_down = $this->_db->getNullDate();
 		}
 
-		// Verify that the alias is unique
-		$table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+		// Verify that the alias is unique.
+		$table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
 		if ($table->load(array('alias' => $this->alias)) && ($table->id != $this->id || $this->id == 0))
 		{
@@ -204,27 +197,21 @@ class hwdMediaShareTableMedia extends JTable
                 {
                         // Perform a few post-store tasks
 
-                        // Get the upload data
+                        // Get data from the request.
                         hwdMediaShareFactory::load('upload');
                         $data = hwdMediaShareUpload::getProcessedUploadData();                
                         
-                        // Add category data
+                        // Add category data.
                         if (isset($data['catid']))
                         {
-                                hwdMediaShareFactory::load('category');
                                 $catid = (array) $data['catid'];
-                                // Make sure the item ids are integers
-                                jimport('joomla.utilities.arrayhelper');
-                                JArrayHelper::toInteger($catid);
-                                $object = new StdClass;
-                                $object->elementId = $this->id;
-                                $object->categoryId = $catid;
+
+                                hwdMediaShareFactory::load('category');
                                 $HWDcategory = hwdMediaShareCategory::getInstance();
-                                $HWDcategory->elementType = 1;
-                                $HWDcategory->save($object);
+                                $HWDcategory->save($catid, $this->id);
                         }
 
-                        // Add custom field data
+                        // Add custom field data.
                         hwdMediaShareFactory::load('customfields');                
                         $object = new StdClass;
                         $object->elementId = $this->id;
@@ -232,7 +219,7 @@ class hwdMediaShareTableMedia extends JTable
                         $HWDcustomfields->elementType = 1;
                         $HWDcustomfields->save($object);
 
-                        // Add thumbnail
+                        // Add thumbnail.
                         hwdMediaShareFactory::load('upload');
                         $object = new StdClass;
                         $object->elementType = 1;
@@ -242,7 +229,7 @@ class hwdMediaShareTableMedia extends JTable
                         $HWDupload = hwdMediaShareUpload::getInstance();
                         $HWDupload->processThumbnail($object);
                         
-                        // If new and approved, trigger event
+                        // If new and approved then trigger onAfterMediaAdd event.
                         if ($isNew && $this->status == 1)
                         {                            
                                 $properties = $this->getProperties(1);
@@ -254,23 +241,23 @@ class hwdMediaShareTableMedia extends JTable
                                 hwdMediaShareUpload::assignAssociations($row);
                         }    
 
-                        // Send system notifications
+                        // Send system notifications.
                         if ($isNew && $config->get('notify_new_media') == 1) 
                         {
-                                if($row->status == 2){
+                                if ($row->status == 2)
+                                {
                                         ob_start();
                                         require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia_pending.php');
                                         $body = ob_get_contents();
                                         ob_end_clean();
                                 }
-                                else{
+                                else
+                                {
                                         ob_start();
                                         require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia.php');
                                         $body = ob_get_contents();
                                         ob_end_clean();
                                 }
-                                hwdMediaShareFactory::load('utilities');
-                                $utilities = hwdMediaShareUtilities::getInstance();
                                 $utilities->sendSystemEmail(JText::_('COM_HWDMS_EMAIL_SUBJECT_NEW_MEDIA'), $body);
                         }  
                 }        
@@ -279,20 +266,23 @@ class hwdMediaShareTableMedia extends JTable
 	}
         
 	/**
-	 * Overloaded check method to ensure data integrity.
+	 * Method to perform sanity checks on the JTable instance properties to ensure
+	 * they are safe to store in the database.
 	 *
-	 * @return  boolean  True on success.
+         * @access  public
+	 * @return  boolean  True if the instance is sane and able to be stored in the database.
+	 * @link    http://docs.joomla.org/JTable/check
 	 */
 	public function check()
 	{
- 		// Check for valid name
+ 		// Check for valid name.
 		if (trim($this->title) == '')
 		{
 			$this->setError(JText::_('COM_HWDMS_ERROR_SAVE_NO_TITLE'));
 			return false;
 		}
                 
-		// Check for valid alias
+		// Check for valid alias.
 		if (empty($this->alias))
 		{
 			$this->alias = $this->title;
@@ -315,10 +305,9 @@ class hwdMediaShareTableMedia extends JTable
         
 	/**
 	 * Method to compute the default name of the asset.
-	 * The default name is in the form `table_name.id`
-	 * where id is the value of the primary key of the table.
 	 *
-	 * @return	string
+	 * @access  protected
+	 * @return  string
 	 */
 	protected function _getAssetName()
 	{
@@ -329,7 +318,9 @@ class hwdMediaShareTableMedia extends JTable
 	/**
 	 * Method to return the title to use for the asset table.
 	 *
-	 * @return	string
+	 * @access  protected
+	 * @return  string  The string to use as the title in the asset table.
+	 * @link    http://docs.joomla.org/JTable/getAssetTitle
 	 */
 	protected function _getAssetTitle()
 	{
@@ -337,9 +328,11 @@ class hwdMediaShareTableMedia extends JTable
 	}
 
 	/**
-	 * Get the parent asset id for the record
+	 * Method to get the parent asset under which to register this one.
 	 *
-	 * @return	int
+	 * @access  protected
+	 * @param   JTable   $table  A JTable object for the asset parent.
+	 * @param   integer  $id     Id to look up
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
@@ -351,9 +344,9 @@ class hwdMediaShareTableMedia extends JTable
 	/**
 	 * Method to increment the likes/dislikes for a row if the necessary property/field exists.
 	 *
+	 * @access  public
 	 * @param   mixed    $pk     An optional primary key value to increment. If not set the instance property value is used.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True on success.
 	 */
 	public function like($pk = null, $value = 1)
@@ -408,9 +401,8 @@ class hwdMediaShareTableMedia extends JTable
 	/**
 	 * Method to update the viewed date for a row if the necessary property/field exists.
 	 *
+	 * @access  public
 	 * @param   mixed    $pk     An optional primary key value to increment. If not set the instance property value is used.
-	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True on success.
 	 */
 	public function view($pk = null)
