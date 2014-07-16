@@ -32,7 +32,7 @@ class HwdMediaShareControllerProcess extends JControllerLegacy
 		// Get items to process from the request.
 		$cid = $this->input->get('cid', array(), 'array');
                 
-                // Get the processes library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('processes');
                 $model = hwdMediaShareProcesses::getInstance();
 
