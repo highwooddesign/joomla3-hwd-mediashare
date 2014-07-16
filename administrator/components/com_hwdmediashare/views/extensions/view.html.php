@@ -35,6 +35,8 @@ class hwdMediaShareViewExtensions extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->filterForm = $this->get('FilterForm');
 
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('media');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
 
@@ -118,7 +120,6 @@ class hwdMediaShareViewExtensions extends JViewLegacy
 	 */
 	public function getMediaType($item)
 	{
-                hwdMediaShareFactory::load('media');
                 return hwdMediaShareMedia::getMediaType($item);
 	}         
 }
