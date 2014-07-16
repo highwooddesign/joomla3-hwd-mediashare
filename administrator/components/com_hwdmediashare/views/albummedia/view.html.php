@@ -35,6 +35,7 @@ class hwdMediaShareViewAlbumMedia extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->albumId = JFactory::getApplication()->input->get('album_id', '', 'int');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
 
                 // Check for errors.
