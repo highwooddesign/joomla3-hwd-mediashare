@@ -37,7 +37,7 @@ class JFormFieldDuration extends JFormField
                 $doc->addScript(JURI::root( true ).'/media/com_hwdmediashare/assets/javascript/bootstrap-timepicker.min.js');
                 
                 // Convert seconds into time object.
-                $duration = hwdMediaShareMedia::secondsToTime($this->value, true);
+                $duration = hwdMediaShareMedia::secondsToTime($this->value, true); 
 
                 // Start capturing output into a buffer.
                 ob_start();
