@@ -20,8 +20,10 @@ class hwdMediaShareControllerGet extends JControllerForm
 	 */
         public function file()
         {
+                // Load HWD libraries.
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
+                
                 hwdMediaShareDownloads::push();
 		JFactory::getApplication()->close();
         }
