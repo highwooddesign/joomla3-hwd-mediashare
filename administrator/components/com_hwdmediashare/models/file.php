@@ -80,10 +80,13 @@ class hwdMediaShareModelFile extends JModelAdmin
 		// Initialise variables.
                 $user = JFactory::getUser();
 		$db = JFactory::getDBO();
-        
-                // Load the file system library.
-                jimport('joomla.filesystem.file');
                 
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('files');
+                        
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
@@ -142,7 +145,6 @@ class hwdMediaShareModelFile extends JModelAdmin
                         $properties = $table->getProperties(1);
                         $item = JArrayHelper::toObject($properties, 'JObject');
                         
-                        hwdMediaShareFactory::load('files');
                         hwdMediaShareFiles::getLocalStoragePath();
 
                         $foldersSource = hwdMediaShareFiles::getFolders($item->key);
