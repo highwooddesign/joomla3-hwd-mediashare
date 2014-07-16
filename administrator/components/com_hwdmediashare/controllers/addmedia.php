@@ -74,7 +74,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 $upload = new stdClass();
                 $upload->input  = 'Filedata';
                 
-                // Get the upload library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
@@ -99,7 +99,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 */
         public function uber()
         {
-                // Get the upload library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
@@ -127,7 +127,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                // Get the remote library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('remote');
                 $model = hwdMediaShareRemote::getInstance();
 
@@ -164,7 +164,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                // Get the embed library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('embed');
                 $model = hwdMediaShareEmbed::getInstance();
 
@@ -192,7 +192,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                // Load the remote library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('remote');
                 $model = hwdMediaShareRemote::getInstance();
 
@@ -220,7 +220,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                // Load the rtmp library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('rtmp');
                 $model = hwdMediaShareRtmp::getInstance();
 
@@ -248,7 +248,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
-                // Load the remote library.
+                // Load HWD library.
                 hwdMediaShareFactory::load('remote');
                 $model = hwdMediaShareRemote::getInstance();
 
