@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewMedia extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -28,8 +28,10 @@ class hwdMediaShareViewMedia extends JViewLegacy
                 $this->filterForm = $this->get('FilterForm');
                 $this->batchForm = $this->get('BatchForm');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('media');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
@@ -55,6 +57,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -62,7 +65,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
 		$canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		// Get the toolbar object instance
+		// Get the toolbar object instance.
 		$bar = JToolBar::getInstance('toolbar');
                                 
 		JToolBarHelper::title(JText::_('COM_HWDMS_MEDIA'), 'video');
@@ -98,13 +101,13 @@ class hwdMediaShareViewMedia extends JViewLegacy
                         JToolBarHelper::trash('media.trash');
                         JToolBarHelper::divider();
 		}
-		// Add a batch button
+		// Add a batch button.
 		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
 		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
 
-			// Instantiate a new JLayoutFile instance and render the batch button
+			// Instantiate a new JLayoutFile instance and render the batch button.
 			$layout = new JLayoutFile('joomla.toolbar.batch');
 
 			$dhtml = $layout->render(array('title' => $title));
@@ -114,10 +117,11 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	}
 
 	/**
-	 * Method to get the icon for the media type
+	 * Method to get the icon for the media type.
 	 *
-	 * @param	object	$item   Media object
-	 * @return	string	Icon URL
+	 * @access  public
+	 * @para    object  $item   Media object
+	 * @return  string  Icon URL
 	 **/
 	public function getMediaTypeIcon($item)
 	{
@@ -154,42 +158,45 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	}
 
 	/**
-	 * Method to get the human readable media type
-	 *
+	 * Method to get the human readable media type.
+         * 
+         * @access      public
 	 * @param	object	$item   Media object
 	 * @return	string	Translated media type text
 	 **/
 	public function getMediaType($item)
 	{
-                hwdMediaShareFactory::load('media');
                 return hwdMediaShareMedia::getMediaType($item);
 	}
         
 	/**
-	 * Method to get the linked category list
+	 * Method to get the linked category list.
 	 *
+         * @access      public
 	 * @param	object	$item   Media object
-	 * @return	string	Linked, comma separated, category list
+	 * @return	string	The html for a category list
 	 **/
 	public function getCategories($item)
 	{
-                $href = '';
+                if (!isset($item))
+                {
+                        return false;
+                }
+
+                $links = array();
+                
                 if (count($item->categories) > 0)
                 {
-                        for($i = 0; $i < count($item->categories); $i++)
+                        foreach ($item->categories as $value)
                         {
-                                $value = $item->categories[$i];
-                                if ($i != 0) $href.= ', ';
-                                $href.= '<a href="index.php?option=com_hwdmediashare&view=media&filter_category_id='.$value->id.'">';
-                                $href.= $this->escape($value->title);
-                                $href.= '</a>';
-                        }                     
+                                $links[] = '<a href="'.JRoute::_('index.php?option=com_hwdmediashare&view=media&filter_category_id=' . $value->id).'">' . $value->title . '</a>';
+                        }
                 }
                 else
                 {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }
+                        return false;
+                }             
 
-                return $href;
+                return implode(", ", $links);
 	}      
 }
