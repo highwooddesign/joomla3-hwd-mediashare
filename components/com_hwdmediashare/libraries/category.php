@@ -239,6 +239,9 @@ class hwdMediaShareCategory extends JObject
                         $query->where('c.published IN (0,1)');
                 }
 
+   		// Group over the ID to prevent duplicates.
+                $query->group('cmap.element_id');
+                
                 try
                 {                
                         $db->setQuery($query);
