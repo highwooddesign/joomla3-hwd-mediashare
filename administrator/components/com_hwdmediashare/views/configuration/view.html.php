@@ -61,8 +61,6 @@ class hwdMediaShareViewConfiguration extends JViewLegacy
 	 */
 	protected function addToolBar()
 	{
-		JFactory::getApplication()->input->set('hidemainmenu', true);
-
 		$canDo = hwdMediaShareHelper::getActions();
 
 		JToolBarHelper::title(JText::_('COM_HWDMS_CONFIGURATION'), 'cog');
