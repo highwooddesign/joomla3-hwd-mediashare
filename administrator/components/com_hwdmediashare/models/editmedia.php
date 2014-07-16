@@ -49,10 +49,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         // Add the media categories.
                         hwdMediaShareFactory::load('category');
                         $HWDcategory = hwdMediaShareCategory::getInstance();
-                        $HWDcategory->elementType = 1;                      
-                        $item->catid = $HWDcategory->getInput($item);                      
+                        $item->catid = $HWDcategory->getInputValue($item);                      
                         
-                        // Add the media type
+                        // Add the media type.
                         hwdMediaShareFactory::load('media');
                         $item->media_type = hwdMediaShareMedia::loadMediaType($item);
                         
@@ -64,7 +63,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         $item->numlinkedpages = $this->getLinkedPagesCount($item);
                         $item->numresponses = $this->getResponseCount($item);
                         
-                        // Add the album thumbnail.
+                        // Add the thumbnail.
                         //$item->thumbnail = $this->getThumbnail($item);
                         $item->customthumbnail = $this->getThumbnail($item);
      
@@ -455,10 +454,11 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 */
 	public function assignCategory($pks, $categoryId = null)
 	{
-		// Initialise variables.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+                // Load HWD category library.
 		hwdMediaShareFactory::load('category');
                 $HWDcategory = hwdMediaShareCategory::getInstance();
 
@@ -494,7 +494,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         $object->elementType = 1;
 
                         // Attempt to associate this category with the media.
-                        if (!$HWDcategory->saveIndividual($object))
+                        if (!$HWDcategory->saveIndividual($categoryId, $pk))
                         {
                                 $this->setError($HWDcategory->getError());
                                 return false;
@@ -520,6 +520,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		// Initialise variables.
                 $db = JFactory::getDbo();
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
@@ -608,6 +609,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		// Initialise variables.
                 $user = JFactory::getUser();
 
+                // Load HWD processes library.
 		hwdMediaShareFactory::load('processes');
                 $HWDprocesses = hwdMediaShareProcesses::getInstance();
 
@@ -944,7 +946,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                 // Load file model.
                 $modelFile = JModelAdmin::getInstance('File','hwdMediaShareModel'); 
                 
-                // Load HWDFiles library.
+                // Load HWD files library.
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFiles::getLocalStoragePath();
                 $HWDfiles = hwdMediaShareFiles::getInstance();
