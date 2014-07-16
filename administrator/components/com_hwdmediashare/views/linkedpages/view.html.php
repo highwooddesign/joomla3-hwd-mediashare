@@ -27,6 +27,7 @@ class hwdMediaShareViewLinkedPages extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->mediaId = JFactory::getApplication()->input->get('media_id', '', 'int');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
 
                 // Check for errors.
