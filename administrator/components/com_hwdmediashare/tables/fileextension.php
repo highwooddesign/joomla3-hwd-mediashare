@@ -40,7 +40,7 @@ class hwdMediaShareTableFileExtension extends JTable
 
 		if ($this->id)
 		{
-			// Existing item
+			// Existing item.
 			$this->modified		= $date->toSql();
 			$this->modified_user_id	= $user->get('id'); 
 		}
