@@ -35,6 +35,7 @@ class hwdMediaShareViewPlaylistMedia extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->playlistId = JFactory::getApplication()->input->get('playlist_id', '', 'int');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
 
                 // Check for errors.
