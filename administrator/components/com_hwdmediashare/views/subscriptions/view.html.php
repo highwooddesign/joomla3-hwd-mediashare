@@ -35,6 +35,7 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->filterForm = $this->get('FilterForm');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
 
