@@ -35,6 +35,7 @@ class hwdMediaShareViewGroupMedia extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->groupId = JFactory::getApplication()->input->get('group_id', '', 'int');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
 
                 // Check for errors.
