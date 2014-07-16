@@ -38,6 +38,7 @@ class hwdMediaShareViewFiles extends JViewLegacy
                 $this->filterForm = $this->get('FilterForm');
                 $this->batchForm = $this->get('BatchForm');
 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
                 
@@ -106,7 +107,6 @@ class hwdMediaShareViewFiles extends JViewLegacy
 	 */
 	public function getFileType($item)
 	{
-                hwdMediaShareFactory::load('files');
                 return hwdMediaShareFiles::getFileType($item);
 	}
         
@@ -118,7 +118,6 @@ class hwdMediaShareViewFiles extends JViewLegacy
 	 */
 	public function getPath($item)
 	{
-                hwdMediaShareFactory::load('files');
                 hwdMediaShareFiles::getLocalStoragePath();
                 $folders = hwdMediaShareFiles::getFolders($item->key);
                 $filename = hwdMediaShareFiles::getFilename($item->key, $item->file_type);
@@ -135,7 +134,6 @@ class hwdMediaShareViewFiles extends JViewLegacy
 	 */
 	public function getExtension($item)
 	{
-                hwdMediaShareFactory::load('files');
                 return hwdMediaShareFiles::getExtension($item, $item->file_type);
 	}         
 }
