@@ -121,6 +121,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
 		// Initialise variables.
                 $db = JFactory::getDbo();
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
@@ -210,6 +211,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
 		$user = JFactory::getUser();
                 $date = JFactory::getDate();                
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
