@@ -30,7 +30,7 @@ class hwdMediaShareControllerUser extends JControllerForm
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
