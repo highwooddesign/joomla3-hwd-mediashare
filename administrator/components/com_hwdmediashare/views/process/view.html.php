@@ -35,6 +35,7 @@ class hwdMediaShareViewProcess extends JViewLegacy
 		$this->form	= $this->get('Form');
 		$this->items	= $this->get('Items');               
                 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('processes');
 
                 // Check for errors.
@@ -75,7 +76,6 @@ class hwdMediaShareViewProcess extends JViewLegacy
 	 */
 	public function getProcessType($item)
 	{
-                hwdMediaShareFactory::load('processes');
                 return hwdMediaShareProcesses::getType($item);
 	}         
 }
