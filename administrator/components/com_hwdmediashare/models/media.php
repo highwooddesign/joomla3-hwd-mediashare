@@ -76,11 +76,10 @@ class hwdMediaShareModelMedia extends JModelList
                         {
                                 if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
 
-                                // Load categories
+                                // Load categories.
                                 hwdMediaShareFactory::load('category');
                                 $HWDcategory = hwdMediaShareCategory::getInstance();
-                                $HWDcategory->elementType = 1;
-                                $items[$x]->categories = $HWDcategory->get($items[$x]);
+                                $items[$x]->categories = $HWDcategory->load($items[$x]);
                         }
                 }
 
