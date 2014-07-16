@@ -21,7 +21,7 @@ class hwdMediaShareViewDashboard extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-                // Get data from the model
+                // Get data from the model.
                 $this->media = $this->get('Media');
                 $this->activity = $this->get('Activity');
                 $this->version = $this->get('Version');
@@ -32,7 +32,7 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 $this->numchannels = $this->get('UserCount');
                 $this->numplaylists = $this->get('PlaylistCount');
                 
-                // Load HWD libaries.
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('activities');
                 
                 // Check for errors.
