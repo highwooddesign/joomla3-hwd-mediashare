@@ -307,11 +307,7 @@ defined('_JEXEC') or die;
                         <div class="control-group">
                             <div class="control-label"><?php echo $this->form->getLabel('mediaitem_description_tab'); ?></div>
                             <div class="controls"><?php echo $this->form->getInput('mediaitem_description_tab'); ?></div>
-                        </div>   
-                        <div class="control-group">
-                            <div class="control-label"><?php echo $this->form->getLabel('mediaitem_related_tab'); ?></div>
-                            <div class="controls"><?php echo $this->form->getInput('mediaitem_related_tab'); ?></div> 
-                        </div>   
+                        </div>    
                         <div class="control-group"> 
                             <div class="control-label"><?php echo $this->form->getLabel('mediaitem_location_tab'); ?></div>
                             <div class="controls"><?php echo $this->form->getInput('mediaitem_location_tab'); ?></div>
