@@ -21,6 +21,71 @@ class hwdMediaShareControllerEditMedia extends JControllerForm
     	protected $view_list = "media";
 
 	/**
+	 * Gets the URL arguments to append to an item redirect.
+	 *
+         * @access  protected
+	 * @param   integer     $recordId  The primary key id for the item.
+	 * @param   string      $urlVar    The name of the URL variable for the id.
+	 * @return  string      The arguments to append to the redirect URL.
+	 */
+	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
+	{
+		$append = parent::getRedirectToItemAppend($recordId, $urlVar);
+                        
+                $return = $this->input->get('return', null, 'base64');
+
+		if ($return)
+		{
+			$append .= '&return='.$return;
+		}
+
+		return $append;
+	}
+        
+        /**
+	 * Proxy for save.
+	 *
+	 * @access	public
+	 * @param       string  $key    The name of the primary key of the URL variable.
+	 * @param       string  $urlVar The name of the URL variable if different from the primary key (sometimes required to avoid router collisions).
+         * @return      void
+	 */
+	public function save($key = null, $urlVar = null)
+	{
+		$result = parent::save($key, $urlVar);
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+
+		if ($return && $this->task == 'save')
+		{
+                        $this->setRedirect($return);
+		}
+
+		return $result;
+        }
+        
+        /**
+	 * Proxy for cancel.
+	 *
+	 * @access	public
+	 * @param       string  $key  The name of the primary key of the URL variable.
+         * @return      void
+	 */
+	public function cancel($key = null)
+	{
+		$result = parent::cancel($key);
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+
+		if ($return)
+		{
+                        $this->setRedirect($return);
+		}
+
+		return $result;
+        }
+                
+	/**
 	 * Method to run batch operations.
 	 *
 	 * @access	public
