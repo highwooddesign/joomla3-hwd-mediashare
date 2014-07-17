@@ -17,10 +17,9 @@ defined('_JEXEC') or die;
 	</div>
 	<div class="modal-body modal-batch">
 		<div class="row-fluid">
-			<div class="control-group">
+			<div class="control-group span6">
 				<div class="controls">
-                                        <?php echo $this->batchForm->getLabel('downloadaccess'); ?>
-                                        <?php echo $this->batchForm->getInput('downloadaccess'); ?> 
+					<?php echo JHtml::_('batch.access'); ?>
 				</div>
 			</div>
 		</div>
