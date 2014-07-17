@@ -1,296 +1,362 @@
 <?php
 /**
- * @version    SVN $Id: edit.php 1516 2013-05-17 14:56:40Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.administrator
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-JHtml::_('behavior.tooltip');
+defined('_JEXEC') or die;
+
+// Include the component HTML helpers.
+JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
 JHtml::_('behavior.formvalidation');
-$params = $this->form->getFieldsets('params');
-$publishing = $this->form->getFieldsets('publishing');
+JHtml::_('behavior.keepalive');
+JHtml::_('behavior.tooltip');
 JHtml::_('behavior.modal');
+JHtml::_('behavior.tabstate');
+JHtml::_('formbehavior.chosen', 'select');
+
+$app = JFactory::getApplication();
+$input = $app->input;
+$isNew = $this->item->id == 0 ? true : false ; 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&layout=edit&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+<script type="text/javascript">
+	Joomla.submitbutton = function(task)
+	{
+		if (task == 'editmedia.cancel' || document.formvalidator.isValid(document.id('item-form')))
+		{
+			<?php echo $this->form->getField('description')->save(); ?>
+			Joomla.submitform(task, document.getElementById('item-form'));
+		}
+	}
+</script>
+<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=editmedia&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
 
-        <div class="width-60 fltlft">
+        <div class="btn-group pull-right">                         
+                <a class="btn btn-success modal" href="<?php echo 'index.php?option=com_hwdmediashare&view=addmedia&id='.$this->item->id.'&tmpl=component'; ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}" title="<?php echo JText::_('COM_HWDMS_UPDATE_MEDIA'); ?>"><span class="icon-upload"></span> <?php echo JText::_('COM_HWDMS_UPDATE_MEDIA'); ?></a>
+                <?php echo JHtml::_('HwdPopup.link', $this->item, '<span class="icon-search"></span> ' . JText::_('COM_HWDMS_VIEW_MEDIA'), array('class' => 'btn btn-primary')); ?>
+        </div>  
 
-                <fieldset class="adminform">
-                        <legend><?php echo JText::_( 'COM_HWDMS_MEDIA_DETAILS' ); ?></legend>
-                        <ul class="adminformlist">
-                                <div class="fltrt">
-                                <div class="button2-left">
-                                <div class="blank">
-                                <a class="modal" title="<?php echo JText::_( 'COM_HWDMS_UPDATE_MEDIA' ); ?>" href="<?php echo 'index.php?option=com_hwdmediashare&view=addmedia&id='.$this->item->id.'&tmpl=component'; ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}">
-                                <?php echo JText::_( 'COM_HWDMS_UPDATE_MEDIA' ); ?>
-                                </a>
+	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
+
+	<div class="form-horizontal">
+            
+		<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_HWDMS_MEDIA_DETAILS', true)); ?>
+		<div class="row-fluid">
+			<div class="span9">
+				<fieldset class="adminform">
+					<?php echo $this->form->getInput('description'); ?>
+				</fieldset>
+			</div>
+			<div class="span3">
+                            <div class="row-striped">
+                                <div class="row-fluid">
+                                    <div class="span5"><strong class="row-title"><?php echo JText::_('JGRID_HEADING_ID'); ?></strong></div>
+                                    <div class="span6"><span class="badge"><?php echo $this->form->getValue('id'); ?></span></div>
                                 </div>
+                                <div class="row-fluid">
+                                    <div class="span5"><strong class="row-title"><?php echo JText::_('COM_HWDMS_TYPE'); ?></strong></div>
+                                    <div class="span6"><span class="badge"><?php echo hwdMediaShareMedia::getType($this->item); ?></span></div>
                                 </div>
-                                </div>
-                                <div class="fltrt">
-                                <div class="button2-left">
-                                <div class="blank">
-                                <a class="modal" title="<?php echo JText::_( 'COM_HWDMS_VIEW_MEDIA' ); ?>" href="<?php echo 'index.php?option=com_hwdmediashare&task=editmedia.view&id='.$this->item->id.'&tmpl=component'; ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}">
-                                <?php echo JText::_( 'COM_HWDMS_VIEW_MEDIA' ); ?>
-                                </a>
-                                </div>
-                                </div>
-                                </div>
-                                <li><label for="jform_type"><?php echo JText::_( 'COM_HWDMS_TYPE' ); ?></label><input type="text" size="40" class="readonly" value="<?php echo $this->getType($this->item); ?>" id="jform_type"></li>  
+                                <?php if ($this->item->media_type > 0): ?>                                
+                                <div class="row-fluid">
+                                    <div class="span5"><strong class="row-title"><?php echo JText::_('COM_HWDMS_MEDIA_TYPE'); ?></strong></div>
+                                    <div class="span6"><span class="badge"><?php echo hwdMediaShareMedia::getMediaType($this->item); ?></span></div>
+                                </div>                                 
+                                <?php endif; ?>
                                 <?php if ($this->item->type == 2 || $this->item->type == 7): ?>
-                                    <li>
-                                        <label for="jform_source"><?php echo JText::_( 'COM_HWDMS_MEDIA_SOURCE_LABEL' ); ?></label>
-                                        <span class="readonly">
-                                            <a title="<?php echo JText::_( 'COM_HWDMS_VIEW_ORIGINAL' ); ?>" href="<?php echo $this->item->source; ?>" target="_blank"><?php echo $this->item->source; ?></a>
-                                        </span>
-                                    </li>
+                                <div class="row-fluid">
+                                    <div class="span12"><strong class="row-title"><?php echo JText::_('COM_HWDMS_MEDIA_SOURCE_LABEL'); ?></strong>
+                                                  <br /><a title="<?php echo JText::_('COM_HWDMS_VIEW_ORIGINAL'); ?>" href="<?php echo $this->item->source; ?>" target="_blank"><?php echo $this->item->source; ?></a></div>
+                                </div>  
                                 <?php endif; ?>
                                 <?php if ($this->item->type == 4): ?>
-                                    <li>
-                                        <label for="jform_streamer"><?php echo JText::_( 'COM_HWDMS_RTMP_STREAMER_LABEL' ); ?></label>
-                                        <span class="readonly">
-                                            <?php echo $this->item->streamer; ?></a>
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <label for="jform_file"><?php echo JText::_( 'COM_HWDMS_RTMP_FILE_LABEL' ); ?></label>
-                                        <span class="readonly">
-                                            <?php echo $this->item->file; ?></a>
-                                        </span>
-                                    </li>
+                                <div class="row-fluid">
+                                    <div class="span12"><strong class="row-title"><?php echo JText::_('COM_HWDMS_RTMP_STREAMER_LABEL'); ?></strong>
+                                                  <br /><span class="badge"><?php echo $this->item->streamer; ?></span></div>
+                                </div>  
+                                <div class="row-fluid">
+                                    <div class="span12"><strong class="row-title"><?php echo JText::_('COM_HWDMS_RTMP_FILE_LABEL'); ?></strong>
+                                                  <br /><span class="badge"><?php echo $this->item->file; ?></span></div>
+                                </div>
                                 <?php endif; ?>
-                                <?php if ($this->item->media_type > 0): ?>
-                                    <li><label for="jform_type"><?php echo JText::_( 'COM_HWDMS_MEDIA_TYPE' ); ?></label><input type="text" size="40" class="readonly" value="<?php echo $this->getMediaType($this->item); ?>" id="jform_type"></li>                            
-                                <?php endif; ?>
-                                <?php foreach($this->form->getFieldset('details') as $field): ?>
-                                        <?php if ($field->name == "jform[type]"): ?>
-                                        <?php elseif ($field->name == "jform[media_type]"): ?>
-                                            <?php if ($this->item->type == 3 || $this->item->type == 4): ?>
-                                                <li><?php echo $field->label;echo $field->input;?></li>
-                                            <?php endif; ?>
-                                        <?php elseif ($field->name == "jform[description]"): ?>
-                                            <div class="clr"></div>
-                                            <li><?php echo $field->input; ?></li>
-                                            <div class="clr"></div>
-                                        <?php else: ?>
-                                            <li><?php echo $field->label;echo $field->input;?></li>
-                                        <?php endif;?>
-                                <?php endforeach; ?>
-                        </ul>
-                </fieldset>
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        <?php echo JHtml::_('HwdPopup.link', $this->item, '<img src="' . JRoute::_(hwdMediaShareDownloads::thumbnail($this->item)) . '" border="0" alt="' . $this->escape($this->item->title) . '" style="max-width:218px;" />'); ?>                                      
+                                    </div>
+                                </div>
+                            </div>
+			</div>                  
+			<div class="span3">
+				<?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
+			</div>
+		</div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-                <?php foreach( $this->item->customfields['fields'] as $group => $groupFields ) : ?>
-                        <fieldset class="adminform">
-                        <legend><?php echo JText::_( $group ); ?></legend>
-                                <ul class="adminformlist">
-                                        <?php foreach( $groupFields as $field ) : 
-                                        $field = JArrayHelper::toObject ( $field );
-                                        $field->value = $this->escape( $field->value ); ?>
-                                                <li>
-                                                        <label title="<?php echo $this->escape($field->name);?>::<?php echo $this->escape($field->tooltip); ?>" class="hasTip" for="jform_<?php echo $field->id;?>" id="jform_<?php echo $field->id;?>-lbl"><?php echo JText::_( $field->name );?><?php if($field->required == 1) echo '<span class="star">&nbsp;*</span>'; ?></label>
-                                                        <?php echo hwdMediaShareCustomFields::getFieldHTML( $field , '' ); ?>
-                                                </li>
-                                                <div class="clr"></div>
-                                        <?php endforeach; ?>
-                                </ul>
-                        </fieldset>
-                <?php endforeach; ?>
-        </div>
+                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('COM_HWDMS_PUBLISHING', true)); ?>
+                        <div class="row-fluid form-horizontal-desktop">
+                                <div class="span6">
+                                        <?php echo JLayoutHelper::render('joomla.edit.publishingdata', $this); ?>
+                                </div>
+                                <div class="span6">
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('status'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('status'); ?>
+                                                </div>
+                                        </div> 
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('download'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('download'); ?>
+                                                </div>
+                                        </div> 
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('private'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('private'); ?>
+                                                </div>
+                                        </div>
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('likes'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('likes'); ?>
+                                                </div>
+                                        </div>                                
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('dislikes'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('dislikes'); ?>
+                                                </div>
+                                        </div>   
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('location'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('location'); ?>
+                                                </div>
+                                        </div>   
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <?php echo $this->form->getLabel('duration'); ?>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo $this->form->getInput('duration'); ?>
+                                                </div>
+                                        </div> 
+                                </div>
+                        </div>            
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
 
-	<div class="width-40 fltrt">
+		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-		<?php echo JHtml::_('sliders.start', 'hwdmediashare-slider'); ?>
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_CUSTOM_THUMBNAIL' ), 'thumbnail');?>
-                    <fieldset class="adminform">
-                             <ul class="adminformlist">
-                                    <li>
-                                            <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" style="max-width:300px;" />
-                                    </li>
-                                    <?php if ($this->item->customthumbnail) : ?>
-                                            <li><?php echo $this->form->getLabel('remove_thumbnail');echo $this->form->getInput('remove_thumbnail'); ?></li>
-                                    <?php endif; ?>  
-                                    <div class="clr"></div>
-                             </ul>
-                    </fieldset>
-
-                    <fieldset class="adminform" >
-                        <ul class="panelform">
-                            <li><?php echo $this->form->getLabel('thumbnail');echo $this->form->getInput('thumbnail'); ?></li>
-                        </ul>
-                        <ul class="panelform">
-                            <li><?php echo $this->form->getLabel('thumbnail_remote');echo $this->form->getInput('thumbnail_remote'); ?></li>
-                        </ul>                        
-                    </fieldset>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'thumbnail', JText::_('COM_HWDMS_CUSTOM_THUMBNAIL', true)); ?>
+                        <div class="pull-right">
+                                <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" style="max-width:300px;" />
+                        </div>
+                        <div class="pull-left">
+                                <?php if ($this->item->customthumbnail) : ?>
+                                <div class="control-group">
+                                        <div class="control-label">
+                                                <?php echo $this->form->getLabel('remove_thumbnail'); ?>
+                                        </div>
+                                        <div class="controls">
+                                                <?php echo $this->form->getInput('remove_thumbnail'); ?>
+                                        </div>
+                                </div>
+                                <?php endif; ?>  
+                                <div class="control-group">
+                                        <div class="control-label">
+                                                <?php echo $this->form->getLabel('thumbnail'); ?>
+                                        </div>
+                                        <div class="controls">
+                                                <?php echo $this->form->getInput('thumbnail'); ?>
+                                        </div>
+                                </div>
+                                <div class="control-group">
+                                        <div class="control-label">
+                                                <?php echo $this->form->getLabel('thumbnail_remote'); ?>
+                                        </div>
+                                        <div class="controls">
+                                                <?php echo $this->form->getInput('thumbnail_remote'); ?>
+                                        </div>
+                                </div>
+                        </div>
+		<?php echo JHtml::_('bootstrap.endTab'); ?>
             
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_PUBLISHING' ), 'publishing');?>
-                <fieldset class="adminform" >
-                        <ul class="panelform">
-                            <?php foreach($this->form->getFieldset('publishing') as $field): ?>
-                                <li><?php echo $field->label;echo $field->input;?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                </fieldset>
+                <?php if (!$isNew) : ?>            
+                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'associations', JText::_('JGLOBAL_FIELDSET_ASSOCIATIONS', true)); ?>
+                <div class="row-fluid">
+                    <div class="well well-small">
+                        <h2 class="module-title nav-header"><?php echo JText::_('COM_HWDMS_MEDIA_ASSOCIATED_WITH_FOLLOWING_ITEMS'); ?></h2>
+                        <div class="row-striped">
+                            <div class="row-fluid">
+                                <div class="span9">
+                                    <span class="badge"><?php echo $this->item->numalbums; ?></span>
+                                    <strong class="row-title">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedalbums&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_ALBUMS'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_ALBUMS'); ?>
+                                        </a>
+                                    </strong>
+                                </div>
+                                <div class="span3">
+                                    <div class="btn-group">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedalbums&tmpl=component&media_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_ALBUMS'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedalbums&tmpl=component&media_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_ADD_TO_ALBUMS'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_ADD_TO_ALBUMS'); ?></a>
+                                    </div>                                       
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span9">
+                                    <span class="badge"><?php echo $this->item->numplaylists; ?></span>
+                                    <strong class="row-title">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedplaylists&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_PLAYLISTS'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_PLAYLISTS'); ?>
+                                        </a>
+                                    </strong>
+                                </div>
+                                <div class="span3">
+                                    <div class="btn-group">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedplaylists&tmpl=component&media_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_PLAYLISTS'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedplaylists&tmpl=component&media_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_ADD_TO_PLAYLISTS'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_ADD_TO_PLAYLISTS'); ?></a>
+                                    </div>                                       
+                                </div>
+                            </div>                            
+                            <div class="row-fluid">
+                                <div class="span9">
+                                    <span class="badge"><?php echo $this->item->numgroups; ?></span>
+                                    <strong class="row-title">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedgroups&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_GROUPS'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_GROUPS'); ?>
+                                        </a>
+                                    </strong>
+                                </div>
+                                <div class="span3">
+                                    <div class="btn-group">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedgroups&tmpl=component&media_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_GROUPS'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedgroups&tmpl=component&media_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_ADD_TO_GROUPS'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_ADD_TO_GROUPS'); ?></a>
+                                    </div>                                       
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span9">
+                                    <span class="badge"><?php echo $this->item->numlinkedmedia; ?></span>
+                                    <strong class="row-title">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedmedia&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_MEDIA'); ?>
+                                        </a>
+                                    </strong>
+                                </div>
+                                <div class="span3">
+                                    <div class="btn-group">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedmedia&tmpl=component&media_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedmedia&tmpl=component&media_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_LINK_WITH_MEDIA'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_LINK_WITH_MEDIA'); ?></a>
+                                    </div>                                       
+                                </div>
+                            </div>
+                            <!--
+                            <div class="row-fluid">
+                                <div class="span9">
+                                    <span title="" class="badge badge- hasTooltip" data-original-title="Hits"><?php echo $this->item->numlinkedpages; ?></span>
+                                    <strong class="row-title">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedpages&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_LINKED_PAGES'); ?>
+                                        </a>
+                                    </strong>
+                                </div>
+                                <div class="span3">
+                                    <span class="small"><i class="icon-cog"></i> 
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedpages&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_MANAGE'); ?>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                            -->                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="well well-small">
+                        <h2 class="module-title nav-header"><?php echo JText::_('COM_HWDMS_RESPONSES_TO_THIS_MEDIA'); ?></h2>
+                        <div class="row-striped">
+                            <div class="row-fluid">
+                                <div class="span9">
+                                    <span class="badge"><?php echo $this->item->numresponses; ?></span>
+                                    <strong class="row-title">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedresponses&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_RESPONSES'); ?>" class="modal">
+                                            <?php echo JText::_('COM_HWDMS_RESPONSES'); ?>
+                                        </a>
+                                    </strong>
+                                </div>
+                                <div class="span3">
+                                    <div class="btn-group">
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedresponses&tmpl=component&media_id='.(int) $this->item->id.'&add=0'); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_RESPONSES'); ?>" class="modal btn"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_MANAGE'); ?></a>
+                                        <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedresponses&tmpl=component&media_id='.(int) $this->item->id.'&add=1'); ?>" title="<?php echo JText::_('COM_HWDMS_ADD_RESPONSES'); ?>" class="modal btn"><i class="icon-new"></i> <?php echo JText::_('COM_HWDMS_ADD_RESPONSES'); ?></a>
+                                    </div>                                       
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div> 
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif; ?>
 
-                <?php foreach ($params as $name => $fieldset): ?>
-                        <?php echo JHtml::_('sliders.panel', JText::_($fieldset->label), $name.'-params');?>
-                        <?php if (isset($fieldset->description) && trim($fieldset->description)): ?>
-                                <p class="tip"><?php echo $this->escape(JText::_($fieldset->description));?></p>
-                        <?php endif;?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <?php foreach ($this->form->getFieldset($name) as $field) : ?>
-                                                <li><?php echo $field->label; ?><?php echo $field->input; ?></li>
-                                        <?php endforeach; ?>
-                                </ul>
-                        </fieldset>
+                <?php foreach($this->item->customfields['fields'] as $group => $groupFields) : ?>
+                        <?php echo JHtml::_('bootstrap.addTab', 'myTab', $group, JText::_($group, true)); ?>
+                                <?php foreach($groupFields as $field) : 
+                                        $field = JArrayHelper::toObject($field);
+                                        $field->value = $this->escape($field->value); ?>
+                                        <div class="control-group">
+                                                <div class="control-label">
+                                                        <label title="<?php echo $this->escape($field->name);?>::<?php echo $this->escape($field->tooltip); ?>" class="hasTip" for="jform_<?php echo $field->id;?>" id="jform_<?php echo $field->id;?>-lbl"><?php echo JText::_($field->name);?><?php if($field->required == 1) echo '<span class="star">&nbsp;*</span>'; ?></label>
+                                                </div>
+                                                <div class="controls">
+                                                        <?php echo hwdMediaShareCustomFields::getFieldHTML($field , ''); ?>
+                                                </div>
+                                        </div>
+                                <?php endforeach; ?>
+                        <?php echo JHtml::_('bootstrap.endTab'); ?>
                 <?php endforeach; ?>
-
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_LINKED_ALBUMS' ), 'albums');?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <li>
-                                                <label title="<?php echo JText::_( 'COM_HWDMS_MANAGE_ALBUMS' ); ?>" class="hasTip" id="jform_managealbums-lbl"><?php echo JText::_( 'COM_HWDMS_ALBUMS' ); ?> (<?php echo $this->item->albumcount; ?>)</label>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedalbums&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_ALBUMS' ); ?>" class="modal">
-                                                        <?php echo JText::_( 'COM_HWDMS_MANAGE_ALBUMS_LINKED_WITH_THIS_MEDIA' ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                        </li>
-                                </ul>
-                        </fieldset>
-
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_LINKED_PLAYLISTS' ), 'playlists');?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <li>
-                                                <label title="<?php echo JText::_( 'COM_HWDMS_MANAGE_PLAYLISTS' ); ?>" class="hasTip" id="jform_manageplaylists-lbl"><?php echo JText::_( 'COM_HWDMS_PLAYLISTS' ); ?> (<?php echo $this->item->playlistcount; ?>)</label>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedplaylists&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_PLAYLISTS' ); ?>" class="modal">
-                                                        <?php echo JText::_( 'COM_HWDMS_MANAGE_PLAYLISTS_LINKED_WITH_THIS_MEDIA' ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                        </li>
-                                </ul>
-                        </fieldset>
-
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_LINKED_GROUPS' ), 'groups');?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <li>
-                                                <label title="<?php echo JText::_( 'COM_HWDMS_MANAGE_GROUPS' ); ?>" class="hasTip" id="jform_managegroups-lbl"><?php echo JText::_( 'COM_HWDMS_GROUPS' ); ?> (<?php echo $this->item->groupcount; ?>)</label>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedgroups&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_GROUPS' ); ?>" class="modal">
-                                                        <?php echo JText::_( 'COM_HWDMS_MANAGE_GROUPS_LINKED_WITH_THIS_MEDIA' ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                        </li>
-                                </ul>
-                        </fieldset>
-
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_LINKED_MEDIA' ), 'linked-media');?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <li>
-                                                <label title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="hasTip" id="jform_managemedia-lbl"><?php echo JText::_( 'COM_HWDMS_MEDIA' ); ?> (<?php echo $this->item->linkedmediacount; ?>)</label>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedmedia&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_MEDIA' ); ?>" class="modal">
-                                                        <?php echo JText::_( 'COM_HWDMS_MANAGE_OTHER_MEDIA_LINKED_WITH_THIS_MEDIA' ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                        </li>
-                                </ul>
-                        </fieldset>
-
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_LINKED_PAGES' ), 'linked-pages');?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <li>
-                                                <label title="<?php echo JText::_( 'COM_HWDMS_MANAGE_PAGES' ); ?>" class="hasTip" id="jform_managepages-lbl"><?php echo JText::_( 'COM_HWDMS_PAGES' ); ?> (<?php echo $this->item->linkedpagescount; ?>)</label>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedpages&tmpl=component&media_id='.(int) $this->item->id); ?>" title="<?php echo JText::_( 'COM_HWDMS_MANAGE_PAGES' ); ?>" class="modal">
-                                                        <?php echo JText::_( 'COM_HWDMS_MANAGE_PAGES_LINKED_WITH_THIS_MEDIA' ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                        </li>
-                                </ul>
-                        </fieldset>
-
-                <?php echo JHtml::_('sliders.panel', JText::_( 'COM_HWDMS_RESPONSES' ), 'responses');?>
-                        <fieldset class="panelform" >
-                                <ul class="adminformlist">
-                                        <li>
-                                                <label title="<?php echo JText::_( 'COM_HWDMS_MANAGE_RESPONSES' ); ?>" class="hasTip" id="jform_manageresponse-lbl">Response to...</label>
-                                                <?php foreach($this->item->responds as $i => $response): ?>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.(int) $response->media_id); ?>" title="Title">
-                                                        <?php echo $this->escape( $response->media_id ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                                <?php endforeach; ?>
-                                        </li>
-                                        <li>
-                                                <label title="Manage responses" class="hasTip" id="jform_manageresponses-lbl">Responses (<?php echo $this->item->responsescount; ?>)</label>
-                                                <div class="button2-left">
-                                                <div class="blank">
-                                                    <a rel="{handler: 'iframe', size: {x: 800, y: 500}}" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=linkedresponses&tmpl=component&media_id='.(int) $this->item->id); ?>" title="Manage responses" class="modal">
-                                                        <?php echo JText::_( 'COM_HWDMS_MANAGE_RESPONSES' ); ?>
-                                                    </a>
-                                                </div>
-                                                </div>
-                                        </li>
-                                </ul>
-                        </fieldset>
-
-		<?php echo JHtml::_('sliders.end'); ?>
-                                
+                        
                 <?php if (!empty($this->item->location)): ?>
-                <fieldset class="adminform">
-                        <legend><?php echo JText::_( 'COM_HWDMS_MAP' ); ?></legend>
-                        <ul class="adminformlist">
+                        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'maps', JText::_('COM_HWDMS_MAP', true)); ?>
                                 <?php echo $this->item->map; ?>
-                        </ul>
-                </fieldset>
-                <?php endif; ?>             
-	</div>
+                        <?php echo JHtml::_('bootstrap.endTab'); ?>
+                <?php endif; ?>   
+                        
+                <?php if (count($this->item->mediafiles)): ?>
+                    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'files', JText::_('COM_HWDMS_MEDIA_FILES', true)); ?>
+                        <table class="adminlist">
+                            <?php echo $this->loadTemplate('files');?>
+                        </table>
+                    <?php echo JHtml::_('bootstrap.endTab'); ?> 
+                <?php endif; ?>   
 
-        <div class="clr"> </div>
-
-        <h1><?php echo JText::_( 'COM_HWDMS_MEDIA_FILES' ); ?></h1>
-        <table class="adminlist">
-            <?php echo $this->loadTemplate('files');?>
-        </table>
-
-        <div class="clr"> </div>
-
-        <div class="width-100">
-            <fieldset class="adminform">
-                    <legend><?php echo JText::_('COM_HWDMS_PERMISSIONS'); ?></legend>
-                    <ul class="adminformlist">
-                        <li><?php echo $this->form->getLabel('rules'); ?>
-                        <?php echo $this->form->getInput('rules'); ?></li>                      
-                    </ul>
-            </fieldset>
-        </div>
-
-	<div>
+                <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('COM_HWDMS_PERMISSIONS', true)); ?>
+                        <?php echo $this->form->getInput('rules'); ?>
+                <?php echo JHtml::_('bootstrap.endTab'); ?>
+            
+		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 		<input type="hidden" name="task" value="" />
+		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
-	</div>
+        </div>
 </form>
