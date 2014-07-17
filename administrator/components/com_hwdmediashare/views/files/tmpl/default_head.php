@@ -16,7 +16,10 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 <tr>
         <th width="1%" class="center hidden-phone">
                 <?php echo JHtml::_('grid.checkall'); ?>
-        </th>       
+        </th> 
+        <th width="1%" style="min-width:55px" class="nowrap center">
+		<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+        </th>            
         <th width="10%" class="nowrap">
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_MEDIA', 'm.title', $listDirn, $listOrder); ?>
         </th> 
@@ -33,7 +36,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_FILE_SIZE', 'a.size', $listDirn, $listOrder); ?>
         </th>
         <th width="10%" class="nowrap hidden-phone">
-		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_DOWNLOAD', 'download_level', $listDirn, $listOrder); ?>
+		<?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'access_level', $listDirn, $listOrder); ?>
         </th>
         <th width="10%" class="nowrap hidden-phone">
 		<?php echo JHtml::_('searchtools.sort', 'JDATE', 'a.created', $listDirn, $listOrder); ?>

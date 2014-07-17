@@ -28,30 +28,35 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
         <td class="center hidden-phone">
                 <?php echo JHtml::_('grid.id', $i, $item->id); ?>
         </td>
+        <td class="center">
+                <div class="btn-group">
+                        <?php echo JHtml::_('jgrid.published', $item->published, $i, 'files.', $canChange, 'cb', $item->publish_up, $item->publish_down); ?>                  
+                </div>
+        </td>        
         <td class="nowrap">
                 <div class="pull-left">
                         <?php if ($canEdit) : ?>
-                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
-                                        <?php echo $this->escape(JHtmlString::truncate($item->title, 20, false, false)); ?></a>
+                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->element->id . '&return=' . $this->return); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
+                                        <?php echo $this->escape(JHtmlString::truncate($item->element->title, 20, false, false)); ?></a>
                         <?php else : ?>
-                                <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->title); ?></span>
+                                <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->element->alias)); ?>"><?php echo $this->escape($item->element->title); ?></span>
                         <?php endif; ?>                             
                 </div>
         </td>  
         <td class="has-context">
-                <a href="<?php echo hwdMediaShareDownloads::protectedUrl($item->element_id, $item->file_type, $item->element_type, 1); ?>"><?php echo $this->getPath($item); ?></a>
+                <a href="<?php echo hwdMediaShareDownloads::protectedUrl($item->element_id, $item->file_type, $item->element_type, 1); ?>"><?php echo $this->getPath($item->element, $item); ?></a>
         </td>        
         <td class="small hidden-phone">
-                <?php echo $this->getFileType($item); ?>
+                <?php echo hwdMediaShareFiles::getFileType($item); ?>
         </td>
         <td class="small hidden-phone">
-                <?php echo $this->getExtension($item); ?>
+                <?php echo hwdMediaShareFiles::getExtension($item->element, $item->file_type); ?>
         </td>
         <td class="nowrap small hidden-phone">
                 <?php echo JHtml::_('number.bytes', $item->size); ?>
         </td>
         <td class="small hidden-phone">
-                <?php echo $this->escape($item->download_level); ?>
+                <?php echo $this->escape($item->access_level); ?>
         </td>
         <td class="nowrap small hidden-phone">
                 <?php echo JHtml::_('date', $item->created, JText::_('DATE_FORMAT_LC4')); ?>
