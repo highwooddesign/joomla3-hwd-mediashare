@@ -54,7 +54,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		}
                 else
                 {              
-                        $this->jformdata = $this->get('processedUploadData'); 
+                        $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
                         $this->standardExtensions = $this->get('standardExtensions');
                         $this->largeExtensions = $this->get('largeExtensions');
                         $this->platformExtensions = $this->get('platformExtensions');
@@ -202,6 +202,10 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 $document = JFactory::getDocument();
                 $db = JFactory::getDBO();
 
+                // Import Joomla libraries.
+		jimport('joomla.filesystem.folder');
+		jimport('joomla.filesystem.file');
+                
 		// Required to initiate the MooTree functionality.
                 $document->addScriptDeclaration("
 		window.addEvent('domready', function() {
@@ -214,7 +218,6 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		$base = JPATH_SITE.'/media/'.$folder;
 
 		// Get the list of folders.
-		jimport('joomla.filesystem.folder');
 		$files = JFolder::files($base, '.', false, true);
 
 		$count = 0;
