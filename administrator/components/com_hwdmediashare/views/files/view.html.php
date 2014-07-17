@@ -37,6 +37,7 @@ class hwdMediaShareViewFiles extends JViewLegacy
 		$this->state = $this->get('State');
                 $this->filterForm = $this->get('FilterForm');
                 $this->batchForm = $this->get('BatchForm');
+                $this->return = base64_encode(JFactory::getURI()->toString());
 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
@@ -98,17 +99,6 @@ class hwdMediaShareViewFiles extends JViewLegacy
 		}
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
-
-	/**
-	 * Method to display a human readbale file type.
-	 *
-	 * @access  public
-	 * @return  string  The file type.
-	 */
-	public function getFileType($item)
-	{
-                return hwdMediaShareFiles::getFileType($item);
-	}
         
 	/**
 	 * Method to display the path of the file relative to the Joomla root directory.
@@ -116,24 +106,13 @@ class hwdMediaShareViewFiles extends JViewLegacy
 	 * @access  public
 	 * @return  string  The path.
 	 */
-	public function getPath($item)
+	public function getPath($element, $file)
 	{
                 hwdMediaShareFiles::getLocalStoragePath();
-                $folders = hwdMediaShareFiles::getFolders($item->key);
-                $filename = hwdMediaShareFiles::getFilename($item->key, $item->file_type);
-                $ext = hwdMediaShareFiles::getExtension($item, $item->file_type);
+                $folders = hwdMediaShareFiles::getFolders($element->key);
+                $filename = hwdMediaShareFiles::getFilename($element->key, $file->file_type);
+                $ext = hwdMediaShareFiles::getExtension($element, $file->file_type);
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                 return str_replace(JPATH_SITE, '', $path);
-	}
-        
-	/**
-	 * Method to display the file extension.
-	 *
-	 * @access  public
-	 * @return  string  The file extension.
-	 */
-	public function getExtension($item)
-	{
-                return hwdMediaShareFiles::getExtension($item, $item->file_type);
-	}         
+	}      
 }
