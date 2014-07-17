@@ -86,7 +86,7 @@ class hwdMediaShareModelFile extends JModelAdmin
 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('files');
-                        
+                                        
 		// Sanitize the ids.
 		$pks = (array) $pks;
 		JArrayHelper::toInteger($pks);
@@ -100,7 +100,7 @@ class hwdMediaShareModelFile extends JModelAdmin
 				unset($pks[$i]);
 				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 			}
-                        
+                                        
                         $table = JTable::getInstance('File', 'hwdMediaShareTable');
                         $table->load($pk);
                         $properties = $table->getProperties(1);
@@ -142,15 +142,16 @@ class hwdMediaShareModelFile extends JModelAdmin
                         }
                         
                         $element->load($file->element_id);
-                        $properties = $table->getProperties(1);
+                        $properties = $element->getProperties(1);
                         $item = JArrayHelper::toObject($properties, 'JObject');
-                        
+
                         hwdMediaShareFiles::getLocalStoragePath();
 
                         $foldersSource = hwdMediaShareFiles::getFolders($item->key);
                         $filenameSource = hwdMediaShareFiles::getFilename($item->key, $file->file_type);
                         $extSource = hwdMediaShareFiles::getExtension($item, $file->file_type);
                         $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
+
                         if (JFile::exists($pathSource)) 
                         {
                                 if(!JFile::delete($pathSource))
