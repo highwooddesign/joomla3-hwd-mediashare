@@ -29,19 +29,25 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	 */
 	public function display($tpl = null)
 	{
-                // Initialise variables
-                $hwdms = hwdMediaShareFactory::getInstance();
+                // Initialise variables.
 		$app = JFactory::getApplication();
                 $lang = JFactory::getLanguage();
                 $document = JFactory::getDocument();
 
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Import HWD libraries.
+		hwdMediaShareFactory::load('upload');
+                
                 // Get data from the model.
-		$this->config = $hwdms->getConfig();
+		$this->config = $config;
                 $this->state = $this->get('State');
 		$this->form = $this->get('Form');
                 $this->replace = ($app->input->get('id', '', 'int') > 0 ? $app->input->get('id', '0', 'int'): false);
 
-		// Determine if we need to show the form
+		// Determine if we need to show the form.
 		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace) 
 		{
 			$this->setLayout('form');
@@ -66,7 +72,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                                 }
                         }
 
-                        // Bulk import from server (unless we are updating an existing media)
+                        // Bulk import from server (unless we are updating an existing media).
                         if (!$this->replace) 
                         {
                                 $style = $app->getUserStateFromRequest('media.list.layout', 'layout', 'thumbs', 'word');
@@ -111,7 +117,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 			$this->sidebar = JHtmlSidebar::render();
 		}
                 
-		// Display the template
+		// Display the template.
 		parent::display($tpl);
                 
 		$document = JFactory::getDocument();
@@ -163,30 +169,6 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	}
         
  	/**
-	 * Method to get the human readable allowed media types.
-	 *
-	 * @access  protected
-	 * @return  void
-	 */
-	protected function getReadableAllowedMediaTypes($method=null)
-	{
-		hwdMediaShareFactory::load('upload');
-                return hwdMediaShareUpload::getReadableAllowedMediaTypes($method);
-	}
-        
- 	/**
-	 * Method to get the human readable allowed media extensions.
-	 *
-	 * @access  protected
-	 * @return  void
-	 */
-	protected function getReadableAllowedExtensions($extensions)
-	{
-		hwdMediaShareFactory::load('upload');
-                return hwdMediaShareUpload::getReadableAllowedExtensions($extensions);
-	}
-        
- 	/**
 	 * Method to get the folder level for the server driectory scan tool.
 	 *
 	 * @access  protected
@@ -220,7 +202,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 $document = JFactory::getDocument();
                 $db = JFactory::getDBO();
 
-		// Required to initiate the MooTree functionality
+		// Required to initiate the MooTree functionality.
                 $document->addScriptDeclaration("
 		window.addEvent('domready', function() {
 			window.parent.document.updateUploader();
@@ -228,10 +210,10 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 
                 $folder = $app->input->get('folder', '', 'path');
                         
-		// Get some paths from the request
+		// Get some paths from the request.
 		$base = JPATH_SITE.'/media/'.$folder;
 
-		// Get the list of folders
+		// Get the list of folders.
 		jimport('joomla.filesystem.folder');
 		$files = JFolder::files($base, '.', false, true);
 
@@ -242,7 +224,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                         // Retrieve file details.
                         $ext = strtolower(JFile::getExt($file));
 
-                        // Check if the file has an allowed extension
+                        // Check if the file has an allowed extension.
                         $query = $db->getQuery(true)
                                 ->select('id')
                                 ->from('#__hwdms_ext')
@@ -270,7 +252,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 $this->count = $count;
                 $this->folder = $folder;
 
-                // Display the view.
+		// Display the template.
                 parent::display('scan');
 	}        
 }
