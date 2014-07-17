@@ -97,12 +97,9 @@ class hwdMediaShareModelFiles extends JModelList
 
                                 $table->load($items[$x]->element_id);
                                 $properties = $table->getProperties(1);
-                                $row = JArrayHelper::toObject($properties, 'JObject');
+                                $element = JArrayHelper::toObject($properties, 'JObject');
 
-                                $items[$x]->title = (isset($row->title) ? $row->title : '');
-                                $items[$x]->ext_id = (isset($row->ext_id) ? $row->ext_id : '');
-                                $items[$x]->thumbnail_ext_id = (isset($row->thumbnail_ext_id) ? $row->thumbnail_ext_id : '');
-                                $items[$x]->key = (isset($row->key) ? $row->key : '');
+                                $items[$x]->element = $element;
                         }
                 }
 
@@ -126,20 +123,16 @@ class hwdMediaShareModelFiles extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.element_type, a.element_id, a.file_type, a.basename,' .
-				'a.ext, a.size, a.checked, a.created, a.hits'
+				'a.ext, a.size, a.checked, a.published, a.publish_up, a.publish_down, a.created, a.hits'
 			)
 		);
 
-                // From the files table
+                // From the files table.
                 $query->from('#__hwdms_files AS a');
 
-		// Join over the asset groups (for access).
+		// Join over the asset groups.
 		$query->select('ag.title AS access_level');
 		$query->join('LEFT', '#__viewlevels AS ag ON ag.id = a.access');
-
-		// Join over the asset groups (for download).
-		$query->select('dg.title AS download_level');
-		$query->join('LEFT', '#__viewlevels AS dg ON dg.id = a.download');
 
                 // Filter by access level.
 		if ($access = $this->getState('filter.access'))
@@ -147,7 +140,7 @@ class hwdMediaShareModelFiles extends JModelList
 			$query->where('a.access = '.(int) $access);
 		}
                 
-		// Filter by published state
+		// Filter by published state.
 		$published = $this->getState('filter.published');
 		if (is_numeric($published))
                 {
@@ -165,7 +158,7 @@ class hwdMediaShareModelFiles extends JModelList
 			$query->where('a.element_type = '.(int) $elementType);
 		} 
                 
-		// Filter by search in title
+		// Filter by search in title.
 		$search = $this->getState('filter.search');
 		if (!empty($search))
                 {
