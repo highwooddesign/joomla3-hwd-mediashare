@@ -37,7 +37,7 @@ jimport('joomla.html.html.number');
         <?php foreach($this->item->mediafiles as $i => $item): ?>
                 <tr class="row<?php echo $i % 2; ?>">
                         <td>
-                                <?php echo $this->getFileType($item); ?>
+                                <?php echo hwdMediaShareFiles::getFileType($item); ?>
                         </td>
                         <td>
                                 <?php echo $this->getPath($item); ?>
@@ -46,7 +46,7 @@ jimport('joomla.html.html.number');
                                 <a class="btn pull-right" href="<?php echo hwdMediaShareDownloads::url($this->item, $item->file_type, 1); ?>" target="_blank"><?php echo JText::_('COM_HWDMS_DOWNLOAD'); ?></a>
                         </td>                        
                         <td class="hidden-phone">
-                                <?php echo $this->getExtension($item); ?>
+                                <?php echo hwdMediaShareFiles::getExtension($this->item, $item->file_type); ?>
                         </td>
                         <td class="hidden-phone">
                                 <?php echo JHtml::_('number.bytes', $item->size); ?>
