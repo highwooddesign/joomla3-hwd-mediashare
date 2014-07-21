@@ -39,7 +39,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                
                 $db->setQuery( 'SHOW TABLES' );
                 $tables = $db->loadColumn();
 
@@ -297,13 +297,16 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                 {
                                         // Require hwdMediaShare factory
                                         JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                                        
+                                        hwdMediaShareFactory::load('utilities');
+                                        $utilities = hwdMediaShareUtilities::getInstance();
+                                        
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_media = JTable::getInstance('Media', 'hwdMediaShareTable');
 
                                         $data['id'] = $item->id;                                        
                                         //$data['id'] = 0;
-                                        $data['key'] = hwdMediaShareFactory::generateKey();
+                                        $data['key'] = $utilities->generateKey();
                                         $data['asset_id'] = '';
                                         $data['ext_id'] = $ext_id;
                                         $data['title'] = $item->title;
@@ -731,14 +734,17 @@ if (!$hwdms_media->load($profile->id))
                                 {
                                         // Require hwdMediaShare factory
                                         JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                                        
+                                        hwdMediaShareFactory::load('utilities');
+                                        $utilities = hwdMediaShareUtilities::getInstance();
+                                        
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Group', 'hwdMediaShareTable');
 
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = hwdMediaShareFactory::generateKey();
+                                        $data['key'] = $utilities->generateKey();
                                         $data['title'] = $item->group_name;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->group_name), 'hwdms_groups', 'media-');
                                         $data['description'] = $item->group_description;
@@ -874,14 +880,17 @@ if (!$hwdms_media->load($profile->id))
                                 {
                                         // Require hwdMediaShare factory
                                         JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                                        
+                                        hwdMediaShareFactory::load('utilities');
+                                        $utilities = hwdMediaShareUtilities::getInstance();
+                                        
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Playlist', 'hwdMediaShareTable');
 
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = hwdMediaShareFactory::generateKey();
+                                        $data['key'] = $utilities->generateKey();
                                         $data['title'] = $item->playlist_name;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->playlist_name), 'hwdms_playlists', 'media-');
                                         $data['description'] = $item->playlist_description;
@@ -1025,7 +1034,10 @@ if (!$hwdms_media->load($profile->id))
 
 					// Require hwdMediaShare factory
                                         JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                                        
+                                        hwdMediaShareFactory::load('utilities');
+                                        $utilities = hwdMediaShareUtilities::getInstance();
+                                        
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_media = JTable::getInstance('Media', 'hwdMediaShareTable');
 
@@ -1044,7 +1056,7 @@ if (!$hwdms_media->load($profile->id))
                                                 $data['asset_id'] = '';
                                                 $data['ext_id'] = (int) $ext_id;
                                                 $data['media_type'] = '';
-                                                $data['key'] = hwdMediaShareFactory::generateKey();
+                                                $data['key'] = $utilities->generateKey();
                                                 $data['title'] = (empty($item->title) ? 'Image' : $item->title);
                                                 $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->title), 'hwdms_media', 'media');
                                                 $data['description'] = $item->caption;
@@ -1362,14 +1374,17 @@ if (!$hwdms_media->load($profile->id))
                                 {
                                         // Require hwdMediaShare factory
                                         JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                                        
+                                        hwdMediaShareFactory::load('utilities');
+                                        $utilities = hwdMediaShareUtilities::getInstance();
+                                        
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Group', 'hwdMediaShareTable');
 
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = hwdMediaShareFactory::generateKey();
+                                        $data['key'] = $utilities->generateKey();
                                         $data['title'] = $item->group_name;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->group_name), 'hwdms_groups', 'media-');
                                         $data['description'] = $item->group_description;
@@ -1505,14 +1520,17 @@ if (!$hwdms_media->load($profile->id))
                                 {
                                         // Require hwdMediaShare factory
                                         JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-
+                                        
+                                        hwdMediaShareFactory::load('utilities');
+                                        $utilities = hwdMediaShareUtilities::getInstance();
+                                        
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Album', 'hwdMediaShareTable');
 
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = hwdMediaShareFactory::generateKey();
+                                        $data['key'] = $utilities->generateKey();
                                         $data['title'] = $item->title;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->title), 'hwdms_albums', 'media-');
                                         $data['description'] = $item->description;

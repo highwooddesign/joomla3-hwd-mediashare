@@ -32,10 +32,6 @@
                 <filename>hwdmigrator.php</filename>
                 <filename>index.html</filename>
 	</files>
-        <!-- Site language files -->
-	<languages folder="site">
-		<language tag="en-GB">language/en-GB.com_hwdmigrator.ini</language>
-	</languages>
         <!-- Administrator -->        
 	<administration>
                 <!-- Administrator menu -->
