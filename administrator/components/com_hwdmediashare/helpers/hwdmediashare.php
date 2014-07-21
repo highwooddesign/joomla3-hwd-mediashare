@@ -28,10 +28,15 @@ abstract class hwdMediaShareHelper
 			$submenu == 'dashboard'
 		);
 		JHtmlSidebar::addEntry(
+			JText::_('COM_HWDMS_UPLOAD'),
+			'index.php?option=com_hwdmediashare&view=addmedia',
+			$submenu == 'addmedia'
+		);                
+		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_MEDIA'),
 			'index.php?option=com_hwdmediashare&view=media',
 			$submenu == 'media'
-		);                
+		);
 		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_CATEGORIES'),
 			'index.php?option=com_categories&extension=com_hwdmediashare',
