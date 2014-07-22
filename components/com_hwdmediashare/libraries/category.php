@@ -201,7 +201,7 @@ class hwdMediaShareCategory extends JObject
 	 * Method to get categories of an item.
 	 *
 	 * @access  public
-	 * @param   integer $item   The item to check.
+	 * @param   object  $item   The item to check.
 	 * @return  array   An array of categories assigned to the item.
 	 */ 
         public function load($item)
@@ -260,7 +260,7 @@ class hwdMediaShareCategory extends JObject
 	 * Method to get categories of an item (in format for a form input).
 	 *
 	 * @access  public
-	 * @param   integer $item   The item to check.
+	 * @param   object  $item   The item to check.
 	 * @return  array   An array of categories assigned to the item.
 	 */ 
         public function getInputValue($item)
@@ -282,7 +282,7 @@ class hwdMediaShareCategory extends JObject
 	 *
 	 * @access  public
          * @static
-	 * @param   integer $item   The item.
+	 * @param   object  $item   The item.
 	 * @return  string  The HTML to display the categories.
 	 */ 
 	public static function renderCategories($item)
