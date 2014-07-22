@@ -1,19 +1,88 @@
 <?php
 /**
- * @version    SVN $Id: country.php 1148 2013-02-21 11:17:09Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  (C) 2008 by Slashes & Dots Sdn Bhd (JomSocial)
- * @copyright  (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-class hwdMediaShareFieldsCountry
+class hwdMediaShareFieldsCountry 
 {
+    	/**
+	 * Method to generate the input markup for the text field type.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+        public function getInput($field)
+	{
+		// Add the opening input tag and main attributes attributes.
+		$html = '<select id="field' . $field->id . '" name="field' . $field->id . '"';
+                                  
+                if ($field->required)
+                {
+			$html .= ' required aria-required="true"';
+                }
+
+                if ($field->params->get('disabled'))
+                {
+			$html .= ' disabled';
+                }
+
+                if ($field->params->get('multiple'))
+                {
+			$html .= ' multiple';
+                }
+                
+		$html .= '>';
+                
+		// Default option.
+                $html .= '<option value="">' . JText::_('COM_HWDMS_LIST_SELECT_COUNTRY') . '</option>';                            
+                                
+		jimport('joomla.filesystem.file');
+		$file = JPATH_ROOT.'/components/com_hwdmediashare/libraries/fields/countries.xml';
+		if(JFile::exists($file))
+		{
+                        $parser         = JFactory::getXML($file);                                        
+			$element	= $parser->countries;
+			$countries	= $element->children();
+                        
+                        foreach($countries as $country)
+                        {
+                                $selected = (trim($country->code) == trim($field->value) ? ' selected="selected"' : '');
+				$html .= '<option value="' . $country->code . '"' . $selected . '>' . JText::_($country->name) . '</option>';                            
+                        }
+                }
+                
+		$html .= '</select>';               
+                
+		return $html;
+	}
+	
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */ 
+	public function isValid($field, $value)
+	{
+		if($field->required && empty($value))
+		{
+			return false;
+		}
+                
+		return true;
+	}
+
+        
 	/**
 	 * Method to format the specified value for text type
 	 **/	 	
@@ -24,63 +93,6 @@ class hwdMediaShareFieldsCountry
 			return $value;
 		
 		return $value;
-	}
-	
-	public function getFieldHTML( $field , $required )
-	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                
-                // If maximum is not set, we define it to a default
-		$field->max = empty( $field->max ) ? 200 : $field->max;
-
-		$class = ($field->required == 1) ? ' required ' : '';
-		
-		jimport( 'joomla.filesystem.file' );
-		$file = JPATH_ROOT.'/components/com_hwdmediashare/libraries/fields/countries.xml';
-		
-		if( JFile::exists( $file ) )
-		{
-                        $parser         =& JFactory::getXML($file);                                        
-	
-			$element	=& $parser->countries;
-			$countries	= $element->children();
-
-			$tooltips	= !empty( $field->tooltip ) ? ' title="' . JText::_( $field->name ) . '::' . $utilities->escape( JText::_( $field->tooltip ) ) . '"' : '';
-
-                        ob_start();
-                        ?>
-			<select id="field<?php echo $field->id;?>" name="field<?php echo $field->id;?>" class="<?php echo !empty( $field->tooltip ) ? ' hasTip ' : '';?>select validate-country<?php echo $class;?> inputbox"<?php echo $tooltips;?>>
-				<option value=""<?php echo empty($field->value) ? ' selected="selected"' : '';?>><?php echo JText::_('COM_HWDMS_LIST_SELECT_COUNTRY');?></option>
-                                <?php
-                                foreach($countries as $country )
-                                {
-                                        $name	= $country->name;
-                                        ?>
-                                        <option value="<?php echo $name;?>"<?php echo ($field->value == $name) ? ' selected="selected"' : '';?>><?php echo JText::_($name);?></option>
-                                        <?php			
-                                }
-                                ?>
-			</select>
-			<span id="errfield<?php echo $field->id;?>msg" style="display:none;">&nbsp;</span>
-                        <?php
-			$html	= ob_get_contents();
-			ob_end_clean();
-		}
-		else
-		{
-			$html	= JText::_('Countries list not found');
-		}
-
-		return $html;
-	}
-	
-	public function isValid( $value , $required )
-	{
-		if( $value === 'selectcountry' && $required )
-			return false;
-			
-		return true;
-	}
+	}        
 
 }
