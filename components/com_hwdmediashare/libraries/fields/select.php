@@ -54,4 +54,22 @@ class hwdMediaShareFieldsSelect
                 
 		return $html;
 	}
+        
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */ 
+	public function isValid($field, $value)
+	{
+		if($field->required && empty($value))
+		{
+			return false;
+		}
+                
+		return true;
+	}        
 }
