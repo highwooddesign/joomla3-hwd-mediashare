@@ -319,17 +319,15 @@ $isNew = $this->item->id == 0 ? true : false ;
                 <?php echo JHtml::_('bootstrap.endTab'); ?>
                 <?php endif; ?>
 
-                <?php foreach($this->item->customfields['fields'] as $group => $groupFields) : ?>
+                <?php foreach($this->item->customfields->fields as $group => $fields) : ?>
                         <?php echo JHtml::_('bootstrap.addTab', 'myTab', $group, JText::_($group, true)); ?>
-                                <?php foreach($groupFields as $field) : 
-                                        $field = JArrayHelper::toObject($field);
-                                        $field->value = $this->escape($field->value); ?>
+                                <?php foreach($fields as $field) : ?>
                                         <div class="control-group">
                                                 <div class="control-label">
-                                                        <label title="<?php echo $this->escape($field->name);?>::<?php echo $this->escape($field->tooltip); ?>" class="hasTip" for="jform_<?php echo $field->id;?>" id="jform_<?php echo $field->id;?>-lbl"><?php echo JText::_($field->name);?><?php if($field->required == 1) echo '<span class="star">&nbsp;*</span>'; ?></label>
+                                                        <?php echo $this->item->customfields->getLabel($field); ?>
                                                 </div>
                                                 <div class="controls">
-                                                        <?php echo hwdMediaShareCustomFields::getFieldHTML($field , ''); ?>
+                                                        <?php echo $this->item->customfields->getInput($field); ?>
                                                 </div>
                                         </div>
                                 <?php endforeach; ?>
@@ -356,7 +354,7 @@ $isNew = $this->item->id == 0 ? true : false ;
             
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
+		<input type="hidden" name="return" value="<?php echo $input->get('return', null, 'base64'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
         </div>
 </form>
