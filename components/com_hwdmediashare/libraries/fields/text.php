@@ -1,47 +1,74 @@
 <?php
 /**
- * @version    SVN $Id: text.php 1452 2013-04-30 10:33:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  (C) 2008 by Slashes & Dots Sdn Bhd (JomSocial)
- * @copyright  (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class hwdMediaShareFieldsText
 {
-        public function getFieldHTML( $field , $required )
+    	/**
+	 * Method to generate the input markup for the text field type.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+        public function getInput($field)
 	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+		// Add the opening input tag and main attributes attributes.
+		$html = '<input type="' . $field->params->get('type', 'text') . '" id="field' . $field->id . '" name="field' . $field->id . '"';
                 
-		jimport( 'joomla.application.component.view' );
+		if (!empty($field->value))
+		{
+			$html .= ' value="' . htmlspecialchars($field->value, ENT_COMPAT, 'UTF-8') . '"';
+		}
+                  
+                if ($field->required)
+                {
+			$html .= ' required aria-required="true"';
+                }
+                
+                if ($field->params->get('readonly'))
+                {
+			$html .= ' readonly';
+                }
 
-                $params     = new JRegistry($field->params);
-		$readonly   = $params->get('readonly') ? ' readonly=""' : '';
-		$disabled   = $params->get('disabled') ? ' disabled=""' : '';
-		
-		// If maximum is not set, we define it to a default
-		$field->max = empty( $field->max ) ? 200 : $field->max;
+                if ($field->params->get('disabled'))
+                {
+			$html .= ' disabled';
+                }
+
+                if ($field->params->get('maxlength'))
+                {
+			$html .= ' maxlength="' . (int) $field->params->get('maxlength');
+                }
                 
-		$class	    = ($field->required == 1) ? ' required ' : '';
-		$class	   .= !empty( $field->tooltip ) ? ' hasTip ' : '';
-		$html	    = '<input title="' . JText::_( $field->name ) . '::'. $utilities->escape( JText::_( $field->tooltip ) ).'" type="text" value="' . $field->value . '" id="field' . $field->id . '" name="field' . $field->id . '" maxlength="' . $field->max . '" size="40" class="hasTip inputbox' . $class . '" '.$readonly.$disabled.' />';
-		$html      .= '<span id="errfield'.$field->id.'msg" style="display:none;">&nbsp;</span>';
-		
+		$html .= ' />';
+                
 		return $html;
 	}
-	
-	public function isValid( $value , $required )
+        
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */ 
+	public function isValid($field, $value)
 	{
-		if( $required && empty($value))
+		if($field->required && empty($value))
 		{
 			return false;
-		}		
+		}
+                
 		return true;
 	}
 }
