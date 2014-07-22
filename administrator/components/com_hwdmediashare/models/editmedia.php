@@ -37,9 +37,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $HWDfields = hwdMediaShareCustomFields::getInstance();
-                        $HWDfields->elementType = 1;
-                        $item->customfields = $HWDfields->get($item);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 1;
+                        $item->customfields = $HWDcustomfields->load($item);
                         
                         // Add the media files.
                         hwdMediaShareFactory::load('files');

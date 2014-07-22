@@ -31,7 +31,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
                         hwdMediaShareFactory::load('customfields');
                         $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
                         $HWDcustomfields->elementType = 3;
-                        $item->customfields = $HWDcustomfields->get($item);
+                        $item->customfields = $HWDcustomfields->load($item);
                         
                         // Add the number of media in the group.
                         $item->nummedia = $this->getMediaCount($item);
