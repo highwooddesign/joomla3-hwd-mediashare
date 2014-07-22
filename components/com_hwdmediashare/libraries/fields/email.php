@@ -1,19 +1,88 @@
 <?php
 /**
- * @version    SVN $Id: email.php 287 2012-03-30 13:33:27Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  (C) 2008 by Slashes & Dots Sdn Bhd (JomSocial)
- * @copyright  (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class hwdMediaShareFieldsEmail
 {
+    	/**
+	 * Method to generate the input markup for the text field type.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+        public function getInput($field)
+	{
+		// Add the opening input tag and main attributes attributes.
+		$html = '<input type="' . $field->params->get('type', 'text') . '" id="field' . $field->id . '" name="field' . $field->id . '"';
+                
+		if (!empty($field->value))
+		{
+			$html .= ' value="' . htmlspecialchars($field->value, ENT_COMPAT, 'UTF-8') . '"';
+		}
+                  
+                if ($field->required)
+                {
+			$html .= ' required aria-required="true"';
+                }
+                
+                if ($field->params->get('readonly'))
+                {
+			$html .= ' readonly';
+                }
+
+                if ($field->params->get('disabled'))
+                {
+			$html .= ' disabled';
+                }
+
+                if ($field->params->get('maxlength'))
+                {
+			$html .= ' maxlength="' . (int) $field->params->get('maxlength');
+                }
+                
+		$html .= ' />';
+                
+		return $html;
+	}
+	
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */         
+	public function isValid($field, $value)
+	{
+		if($field->required && empty($value))
+		{
+			return false;
+		}
+ 
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+		if (!$isValid = $utilities->validateEmail($value))
+		{
+			return false;
+		}
+
+		return true;
+	}
+        
+        
+        
+        
         /**
 	 * Method to format the specified value for text type
 	 **/	 	
@@ -36,46 +105,5 @@ class hwdMediaShareFieldsEmail
 		}
 			
 		return $link;
-	}
-	
-	public function getFieldHTML( $field , $required )
-	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                
-		// If maximum is not set, we define it to a default
-		$field->max = empty( $field->max ) ? 200 : $field->max;
-
-		$class	= ($field->required == 1) ? ' required ' : '';
-		$class .= !empty( $field->tooltip ) ? ' hasTip ' : '';
-		
-		ob_start();
-                ?>
-                        <input class="inputbox validate-profile-email<?php echo $class;?>" title="<?php echo JText::_( $field->name ) . '::'. $utilities->escape( JText::_( $field->tooltip ) );?>" type="text" value="<?php echo $field->value;?>" id="field<?php echo $field->id;?>" name="field<?php echo $field->id;?>" maxlength="<?php echo $field->max;?>" size="40" />
-                        <span id="errfield<?php echo $field->id;?>msg" style="display:none;">&nbsp;</span>
-                <?php
-		$html	= ob_get_contents();
-		ob_end_clean();
-
-		return $html;
-	}
-	
-	public function isValid( $value , $required )
-	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                
-		$isValid = $utilities->validateEmail( $value );
-
-		if( !empty($value) && $isValid )
-		{
-			return true;
-		}
-		else if( empty($value) && !$required )
-		{
-			return true;
-		}
-
-		return false; 
-	}
+	}        
 }
