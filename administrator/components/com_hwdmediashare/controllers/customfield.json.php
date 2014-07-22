@@ -48,28 +48,41 @@ class hwdMediaShareControllerCustomField extends JControllerForm
                                 return false;
                         }
 
-                        // Load params from database.
+                        // Load the customfield table.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $row = JTable::getInstance('CustomField', 'hwdMediaShareTable');
-                        $row->load($field);
+                        $table = JTable::getInstance('CustomField', 'hwdMediaShareTable');
                         
-                        // Bind params to form.
-                        $form->bind($row->params); 
+                        // Load the field.
+                        $table->load($field);
+                        
+                        // Convert params to registry and bind to the form. 
+                        if (property_exists($table, 'params'))
+                        {
+                                $registry = new JRegistry;
+                                $registry->loadString($table->params);
+                                $table->params = $registry;
+                                $form->bind($table->params); 
+                        }   
 
+                        /*
+                         * Returning the markup for the label and input isn't ideal, so 
+                         * this should be reviewed in the future. 
+                         */
+                        
+                        // Add the label and input to the return array.
                         foreach($form->getFieldset('details') as $field)
                         {
                                 $return[$field->name]['label'] = $field->label;
                                 $return[$field->name]['input'] = $field->input;
                         }
 		}
-
-
+                
                 // Set the MIME type for JSON output.
                 $document->setMimeEncoding( 'application/json' );
 
                 // Output the JSON data.      
                 echo json_encode($return);
-                
+
 		JFactory::getApplication()->close();
         }
 }
