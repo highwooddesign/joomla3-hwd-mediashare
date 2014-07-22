@@ -1,49 +1,86 @@
 <?php
 /**
- * @version    SVN $Id: textarea.php 1452 2013-04-30 10:33:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  (C) 2008 by Slashes & Dots Sdn Bhd (JomSocial)
- * @copyright  (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class hwdMediaShareFieldsTextarea
 {
-        public function getFieldHTML( $field , $required )
+    	/**
+	 * Method to generate the input markup for the text field type.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+        public function getInput($field)
 	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+		// Add the opening input tag and main attributes attributes.
+		$html = '<textarea id="field' . $field->id . '" name="field' . $field->id . '"';
+
+                if ($field->required)
+                {
+			$html .= ' required aria-required="true"';
+                }
                 
-		$params	        = new JRegistry($field->params);
-		$readonly       = $params->get('readonly') ? ' readonly=""' : '';
-		$disabled       = $params->get('disabled') ? ' disabled=""' : '';
-		
-                // If maximum is not set, we define it to a default
-		$field->max     = empty( $field->max ) ? 200 : $field->max;
-	 
-		$class	= ($field->required == 1) ? ' required ' : '';
-		$class .= !empty( $field->tooltip ) ? ' hasTip ' : '';
-		
-                $html	= '<textarea id="field' . $field->id . '" name="field' . $field->id . '" class="inputbox textarea' . $class . '" title="' . JText::_( $field->name ) . '::' . $utilities->escape( JText::_( $field->tooltip ) ) . '"'.$readonly.$disabled.'>' . $field->value . '</textarea>';
-		$html  .= '<span id="errfield'.$field->id.'msg" style="display:none;">&nbsp;</span>';
-		
-                // Validate max length
-                //$html  .= '<script type="text/javascript">cvalidate.setMaxLength("#field' . $field->id . '", "' . $field->max . '");</script>';
-		
-		return $html;
+                if ($field->params->get('readonly'))
+                {
+			$html .= ' readonly';
+                }
+
+                if ($field->params->get('disabled'))
+                {
+			$html .= ' disabled';
+                }
+
+                if ($field->params->get('maxlength'))
+                {
+			$html .= ' maxlength="' . (int) $field->params->get('maxlength') . '"';
+                }
+                
+                if ($field->params->get('rows'))
+                {
+			$html .= ' rows="' . (int) $field->params->get('rows') . '"';
+                }
+                
+                if ($field->params->get('cols'))
+                {
+			$html .= ' cols="' . (int) $field->params->get('cols') . '"';
+                }
+                
+		$html .= '>';
+                
+		if (!empty($field->value))
+		{
+			$html .= htmlspecialchars($field->value, ENT_COMPAT, 'UTF-8');
+		}
+                
+		$html .= '</textarea>';
+
+                return $html;
 	}
 	
-	public function isValid( $value , $required )
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */ 
+	public function isValid($field, $value)
 	{
-		if( $required && empty($value))
+		if($field->required && empty($value))
 		{
 			return false;
-		}		
+		}
+                
 		return true;
 	}
 }

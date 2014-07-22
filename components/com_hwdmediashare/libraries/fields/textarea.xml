@@ -1,20 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: textarea.xml 40 2011-10-15 17:02:47Z dhorsfall $ -->
-<config>
-	<params>
-		<param name="@spacer" type="spacer" default="" label="" description="" />
-		<param name="disabled" type="radio" default="0" label="Disabled" description="">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</param>
-		<param name="readonly" type="radio" default="0" label="Read Only" description="">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</param>
-		<param name="min_char" type="text" default="" label="Minimum Character" description="" />
-		<param name="max_char" type="text" default="" label="Maximum Character" description="" />
-		<param name="rows" type="text" default="2" label="Visible Rows" description="" />
-		<param name="cols" type="text" default="2" label="Visible Width" description="" />
-		<param name="style" type="text" default="" label="Style Atrribute" description="" />
-	</params>
-</config>
+<form>
+	<fieldset
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+                <field
+			name="disabled"
+			type="radio"
+			label="Disabled" 
+                        description=""
+			default="0"
+			class=""
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+                <field
+			name="readonly"
+			type="radio"
+			label="Read Only" 
+                        description=""
+			default="0"
+			class=""
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+                <field
+			name="maxlength"
+			type="text"
+			label="Maximum Length" 
+                        description=""
+			default=""
+		/>
+                <field
+			name="rows"
+			type="text"
+			label="Visible Rows" 
+                        description=""
+			default=""
+		/>
+                <field
+			name="cols"
+			type="text"
+			label="Visible Width" 
+                        description=""
+			default=""
+		/>
+       </fieldset> 
+</form>
