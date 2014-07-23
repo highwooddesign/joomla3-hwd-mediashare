@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsCountry 
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -82,17 +82,43 @@ class hwdMediaShareFieldsCountry
 		return true;
 	}
 
+    	/**
+	 * Method to get the type of filter for this field.
+	 *
+	 * @access  public
+	 * @return  string  The filter.
+	 */ 
+	public function getFilter()
+	{
+		return 'word';
+	}  
         
 	/**
-	 * Method to format the specified value for text type
-	 **/	 	
-	public function getFieldData( $field )
-	{
-		$value = $field['value'];
-		if( empty( $value ) )
-			return $value;
-		
-		return $value;
-	}        
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+		jimport('joomla.filesystem.file');
+		$file = JPATH_ROOT.'/components/com_hwdmediashare/libraries/fields/countries.xml';
+		if(JFile::exists($file))
+		{
+                        $parser         = JFactory::getXML($file);                                        
+			$element	= $parser->countries;
+			$countries	= $element->children();
 
+                        foreach($countries as $country)
+                        {
+                                if (trim($country->code) == trim($field->value))
+                                {
+                                        return $country->name;  
+                                }                        
+                        }
+                }
+                
+		return $field->value;         
+        }
 }
