@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsSelect
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -48,8 +48,9 @@ class hwdMediaShareFieldsSelect
 		{
 			foreach($field->options as $option)
 			{
-                                $selected = (trim($option) == trim($field->value) ? ' selected="selected"' : '');
-				$html .= '<option value="' . $option . '"' . $selected . '>' . JText::_($option) . '</option>';
+                                $optionValue = JFilterOutput::stringURLSafe($option);
+                                $selected = (trim($optionValue) == trim($field->value) ? ' selected="selected"' : '');
+				$html .= '<option value="' . $optionValue . '"' . $selected . '>' . JText::_($option) . '</option>';
 			}
 		}
                 
@@ -74,5 +75,29 @@ class hwdMediaShareFieldsSelect
 		}
                 
 		return true;
-	}        
+	}      
+        
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+		if(!empty($field->options))
+		{
+			foreach($field->options as $option)
+			{
+                                $optionValue = JFilterOutput::stringURLSafe($option);
+                                if (trim($optionValue) == trim($field->value))
+                                {
+                                        return $option;
+                                }
+			}
+		}
+
+		return $field->value;         
+        }
 }
