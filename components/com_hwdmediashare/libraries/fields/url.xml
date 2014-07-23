@@ -27,17 +27,6 @@
 			<option value="1">JYES</option>
 		</field>
                 <field
-			name="type"
-			type="radio"
-			label="Type" 
-                        description=""
-			default="text"
-			class=""
-		>
-			<option value="text">Text</option>
-			<option value="password">Password</option>
-		</field>
-                <field
 			name="maxlength"
 			type="text"
 			label="Maximum Length" 
