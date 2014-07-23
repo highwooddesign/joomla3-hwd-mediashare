@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: customfields.xml 40 2011-10-15 17:02:47Z dhorsfall $ -->
 <hwdmediashare>
 	<fields>
 		<field>
 			<type>text</type>
-			<name>Textbox</name>
+			<name>Text</name>
 		</field>
 		<field>
 			<type>textarea</type>
@@ -13,18 +12,10 @@
 		<field>
 			<type>select</type>
 			<name>Select</name>
-		</field>
-		<field>
-			<type>singleselect</type>
-			<name>Select - List</name>
 		</field>		
 		<field>
-			<type>list</type>
-			<name>Multiple Select</name>
-		</field>
-		<field>
 			<type>radio</type>
-			<name>Radio buttons</name>
+			<name>Radio</name>
 		</field>
 		<field>
 			<type>checkbox</type>
@@ -49,10 +40,6 @@
 		<field>
 			<type>url</type>
 			<name>URL</name>
-		</field>
-		<field>
-			<type>label</type>
-			<name>Label</name>
 		</field>
 	</fields>
 </hwdmediashare>
