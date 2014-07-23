@@ -41,6 +41,9 @@ class hwdMediaShareFieldsSelect
                 
 		$html .= '>';
                 
+                // Default value
+		$html .= '<option value="">' . JText::_('COM_HWDMS_LIST_SELECT_OPTION') . '</option>';
+                
 		if(!empty($field->options))
 		{
 			foreach($field->options as $option)
