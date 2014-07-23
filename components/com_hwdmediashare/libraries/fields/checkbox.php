@@ -1,105 +1,144 @@
 <?php
 /**
- * @version    SVN $Id: checkbox.php 564 2012-10-12 12:55:06Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  (C) 2008 by Slashes & Dots Sdn Bhd (JomSocial)
- * @copyright  (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class hwdMediaShareFieldsCheckbox
 {	
-        public function _translateValue( &$string )
+    	/**
+	 * Method to generate the input markup for the text field type.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+        public function getInput($field)
 	{
-		$string	= JText::_( $string );
-	}
+		$document = JFactory::getDocument();
+		$document->addStyleDeclaration('
+.checkbox-toolbar input[type="checkbox"] {
+    float:left;
+    vertical-align:middle;
+}
+.checkbox-toolbar label {
+    padding:2px 20px;
+}      
+');
+		$html	= '';
 
-	/**
-	 * Method to format the specified value for text type
-	 **/	 	
-	public function getFieldData( $field )
-	{
-                $value = $field['value'];
-		
-		// Since multiple select has values separated by commas, we need to replace it with <br />.
-		$fieldArray	= explode ( ',' , $value );
-		
-		array_walk($fieldArray, array('hwdMediaShareFieldsCheckbox', '_translateValue'));
-		
-		$fieldValue = implode('<br />', $fieldArray);				
-		return $fieldValue;
-	}	
-	
-	public function getFieldHTML( $field , $required )
-	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                
-		$class			= ($field->required == 1) ? ' required validate-custom-checkbox' : '';
-		$lists			= is_array( $field->value ) ? $field->value : explode(',', $field->value);
-		$html			= '';
-		$elementSelected	= 0;
-		$elementCnt	        = 0;
-
-		$cnt = 0;
-		
-		$class	= !empty( $field->tooltip ) ? ' hasTip ' : '';
-		$html	.= '<div class="' . $class . '" style="display: inline-block;" title="' . JText::_( $field->name ) . '::' . $utilities->escape( JText::_( $field->tooltip ) ). '">';
-				
-		if( is_array( $field->options ) )
+		if(!empty($field->options))
 		{
-			foreach( $field->options as $option )
+                        // Get an array of the saved values.
+                        $savedValues = explode(',', $field->value);
+                        
+                        // Build the checkbox fieldset.
+                        $html  .= '<fieldset class="checkbox-toolbar">';
+			foreach($field->options as $option)
 			{
-                                // Remove any line breaks
-                                $option = (string)str_replace(array("\r", "\r\n", "\n"), '', $option);                            
-				$selected = in_array( JString::trim( $option ) , $lists ) ? ' checked="checked"' : '';
-				
-				if( empty( $selected ) )
-				{
-					$elementSelected++;
-				}
-				
-				$html .= '<label class="lblradio-block">';
-				$html .= '<input type="checkbox" name="field' . $field->id . '[]" value="' . $option . '"' . $selected . ' class="checkbox '.$class.'" style="margin: 0 5px 5px 0;" />';
-				$html .= JText::_( $option ) . '</label>';
-				$elementCnt++;
+                                $optionValue = JFilterOutput::stringURLSafe($option);
+                                $selected = (in_array($optionValue, $savedValues) ? ' checked' : '');
+                                
+                                // Get the markup for the hour input.
+                                $html  .= '<input type="checkbox" id="' . $field->id . '-' . $optionValue . '" name="field' . $field->id . '[]" value="' . $optionValue . '"' . $selected;
+
+                                if ($field->params->get('disabled'))
+                                {
+                                        $html .= ' disabled';
+                                }
+
+                                $html  .= '><label id="' . $field->id . '-' . $optionValue . '-lbl" for="' . $field->id . '-' . $optionValue . '">' . $option . '</label>';                
 			}
+                        $html  .= '</fieldset>';
 		}
-		
-		$html   .= '<span id="errfield'.$field->id.'msg" style="display: none;">&nbsp;</span>';
-		$html	.= '</div>';		
-		
-		return $html;
+                
+                return $html;
 	}
-	
-	public function isValid( $value , $required )
+
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */ 
+	public function isValid($field, $value)
 	{
-		if( $required && empty($value))
+		if($field->required && empty($value))
 		{
 			return false;
-		}		
+		}
+                
 		return true;
 	}
-	
-	public function formatdata( $value )
-	{
+
+    	/**
+	 * Method to format the input value.
+	 *
+	 * @access  public
+	 * @param   mixed   $value  The valut to check.
+	 * @return  mixed   The formatted input value.
+	 */           
+	public function formatdata($value)
+	{  
+                // If the field value isn't an array then return an empty array.
+                if (!is_array($value)) return array();
+            
 		$finalvalue = '';
-		if(!empty($value))
-		{
-			foreach($value as $listValue)
-                        {
-				$finalvalue	.= $listValue . ',';
-			}
-		}	
-                
-                // Remove any line breaks
-                $finalvalue = (string)str_replace(array("\r", "\r\n", "\n"), '', $finalvalue);
-                                
-		return $finalvalue;	
+                        
+                foreach($value as &$item)
+                {
+                        $item = JFilterOutput::stringURLSafe($item);
+                }
+
+                return implode(',', $value);
 	}
+        
+    	/**
+	 * Method to get the type of filter for this field.
+	 *
+	 * @access  public
+	 * @return  string  The filter.
+	 */ 
+	public function getFilter()
+	{
+		return 'array';
+	}   
+
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+                $return = array();
+                
+                // Get an array of the saved values.
+                $savedValues = explode(',', $field->value);
+                        
+		if(!empty($field->options))
+		{
+			foreach($field->options as $option)
+			{
+                                $optionValue = JFilterOutput::stringURLSafe($option);
+                                if (in_array($optionValue, $savedValues))
+                                {
+                                        // Remove whitespaces and linebreaks.
+                                        $return[] = trim($option);
+                                }
+			}
+		}
+
+		return implode(', ', $return);  
+        } 
 }
