@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsUrl
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -79,19 +79,16 @@ class hwdMediaShareFieldsUrl
 
 		return true;
 	}
-	
         
-        
-        /**
-	 * Method to format the specified value for text type
-	 **/	 	
-	public function getFieldData( $field )
-	{
-		$value = $field['value'];
-		
-		if( empty( $value ) )
-			return $value;
-		
-		return '<a rel="nofollow" href="' . $value . '" target="_blank">' . $value . '</a>';
-	}        
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+		return '<a rel="nofollow" href="' . $field->value . '" target="_blank">' . $field->value . '</a>';
+        }     
 }
