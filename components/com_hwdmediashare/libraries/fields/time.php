@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsTime
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -30,10 +30,13 @@ class hwdMediaShareFieldsTime
 		if(!empty($field->value))
 		{
                         $value	= explode(':', $field->value);
-
-                        $hour 	= (int) $value[0] <= 24 ? sprintf("%02s", (int) $value[0]) : '00';
-                        $minute = (int) $value[1] <= 59 ? sprintf("%02s", (int) $value[1]) : '00';
-                        $second = (int) $value[2] <= 59 ? sprintf("%02s", (int) $value[2]) : '00';
+                        
+                        if (count($value) == 3)
+                        {
+                                $hour 	= (int) $value[0] <= 24 ? sprintf("%02s", (int) $value[0]) : '00';
+                                $minute = (int) $value[1] <= 59 ? sprintf("%02s", (int) $value[1]) : '00';
+                                $second = (int) $value[2] <= 59 ? sprintf("%02s", (int) $value[2]) : '00';
+                        }
 		}
 
                 // Get the markup for the hour input.
@@ -120,6 +123,13 @@ class hwdMediaShareFieldsTime
 		return true;
 	}
 
+    	/**
+	 * Method to format the input value.
+	 *
+	 * @access  public
+	 * @param   mixed   $value  The valut to check.
+	 * @return  mixed   The formatted input value.
+	 */           
 	public function formatdata($value)
 	{           
 		$finalvalue = '';
@@ -151,5 +161,17 @@ class hwdMediaShareFieldsTime
 	public function getFilter()
 	{
 		return 'array';
-	}        
+	}   
+
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+		return $field->value;         
+        }
 }
