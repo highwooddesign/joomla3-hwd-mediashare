@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsTextarea
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -83,4 +83,16 @@ class hwdMediaShareFieldsTextarea
                 
 		return true;
 	}
+        
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+		return '<div style="display:inline-block;vertical-align:top">' . nl2br($field->value) . '</div>';
+        }        
 }
