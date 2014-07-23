@@ -1,74 +1,110 @@
 <?php
 /**
- * @version    SVN $Id: radio.php 287 2012-03-30 13:33:27Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  (C) 2008 by Slashes & Dots Sdn Bhd (JomSocial)
- * @copyright  (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// no direct access
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class hwdMediaShareFieldsRadio
 {
-        public function getFieldHTML( $field , $required )
+    	/**
+	 * Method to generate the input markup for the field type.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+        public function getInput($field)
 	{
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+		$document = JFactory::getDocument();
+		$document->addStyleDeclaration('
+.radio-toolbar input[type="radio"] {
+    display:none;
+}
+.radio-toolbar label {
+    display:inline-block;
+    background-color:#ddd;
+    padding:4px 11px;
+}
+.radio-toolbar input[type="radio"]:checked + label {
+    background-color:#bbb;
+}          
+');
+		$html	= '';
 
-                $html			= '';
-		$selectedElement	= 0;		
-		$class			= ($field->required == 1) ? ' required validate-custom-radio' : '';
-		$elementSelected	= 0;
-		$elementCnt	        = 0;		
-
-		if (!empty($field->options))
-                {
-                        for( $i = 0; $i < count( $field->options ); $i++ )
-                        {
-                                $option		= $field->options[ $i ];
-                                $selected	= ( $option == $field->value ) ? ' checked="checked"' : '';
-
-                                if( empty( $selected ) )
+		if(!empty($field->options))
+		{
+                        $html  .= '<div class="radio-toolbar">';
+			foreach($field->options as $option)
+			{
+                                $optionValue = JFilterOutput::stringURLSafe($option);
+                                $selected = (trim($optionValue) == trim($field->value) ? ' checked' : '');
+                                
+                                // Get the markup for the hour input.
+                                $html  .= '<input type="radio" id="' . $field->id . '-' . $optionValue . '" name="field' . $field->id . '" value="' . $optionValue . '"' . $selected;
+                                
+                                if ($field->required)
                                 {
-                                        $elementSelected++;
-                                }			
-                                $elementCnt++;				
-                        }
-                }
-		
-		$cnt = 0;
+                                        $html .= ' required aria-required="true"';
+                                }
 
-		$class	= !empty( $field->tooltip ) ? ' hasTip ' : '';
-		$html  .= '<div class="' . $class . '" style="display: inline-block;" title="' . JText::_( $field->name ) . '::' . $utilities->escape( JText::_( $field->tooltip ) ). '">';
-		if (!empty($field->options))
-                {
-                        for( $i = 0; $i < count( $field->options ); $i++ )
-                        {
-                                $option	  = $field->options[ $i ];
+                                if ($field->params->get('disabled'))
+                                {
+                                        $html .= ' disabled';
+                                }
 
-                                $selected = ( $option == $field->value ) ? ' checked="checked"' : '';		    		    
-
-                                $html 	 .= '<label class="lblradio-block">';
-                                $html	 .= '<input type="radio" name="field' . $field->id . '" value="' . $option . '"' . $selected . '  class="radio" style="margin: 0 5px 0 0;" />';			
-                                $html	 .= JText::_( $option ) . '</label>';
-                        }
-                }
-		$html   .= '<span id="errfield'.$field->id.'msg" style="display: none;">&nbsp;</span>';
-		$html	.= '</div>';				
-		
-		return $html;
+                                $html  .= '><label id="' . $field->id . '-' . $optionValue . '-lbl" for="' . $field->id . '-' . $optionValue . '">' . $option . '</label>';                
+			}
+                        $html  .= '</div>';
+		}
+                
+                return $html;
 	}
-	
-	public function isValid( $value , $required )
+
+    	/**
+	 * Method to check field value is valid.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @param   mixed   $value  The valut to check.
+	 * @return  boolean True for valid, false for invalid.
+	 */ 
+	public function isValid($field, $value)
 	{
-		if($required && empty($value))
+		if($field->required && empty($value))
 		{
 			return false;
-		}		
+		}
+                
 		return true;
 	}
+
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+		if(!empty($field->options))
+		{
+			foreach($field->options as $option)
+			{
+                                $optionValue = JFilterOutput::stringURLSafe($option);
+                                if (trim($optionValue) == trim($field->value))
+                                {
+                                        return $option;
+                                }
+			}
+		}
+
+		return $field->value;        
+        }
 }
