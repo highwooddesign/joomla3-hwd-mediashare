@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsDate
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -67,6 +67,13 @@ class hwdMediaShareFieldsDate
 		return true;
 	}
 
+    	/**
+	 * Method to format the input value.
+	 *
+	 * @access  public
+	 * @param   mixed   $value  The valut to check.
+	 * @return  mixed   The formatted input value.
+	 */         
 	public function formatdata($value)
 	{
                 // Get a date object based on the input value.
@@ -75,24 +82,20 @@ class hwdMediaShareFieldsDate
                 // Transform the date string to a unix timestamp.
                 return $date->format('Y-m-d', false, false);
 	}
-
         
-        
-        
-        
-        /**
-	 * Method to format the specified value for text type
-	 **/
-	public function getFieldData( $field ) 
-	{
-                $value = $field['value'];
-		if( empty( $value ) )
-			return $value;
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+                // Get a date object based on the input value.
+                $date = JFactory::getDate($field->value);
                 
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                $date = JHtml::_('date', $value, $config->get('list_date_format'));
-
-		return $date;
-	}        
+                // Transform the date string to a unix timestamp.
+                return $date->format($field->params->get('date_format', 'Y-m-d'), false, false);        
+        }      
 }
