@@ -39,7 +39,7 @@ class hwdMediaShareFieldsRadio
 
 		if(!empty($field->options))
 		{
-                        $html  .= '<div class="radio-toolbar">';
+                        $html  .= '<fieldset class="radio-toolbar">';
 			foreach($field->options as $option)
 			{
                                 $optionValue = JFilterOutput::stringURLSafe($option);
@@ -60,7 +60,7 @@ class hwdMediaShareFieldsRadio
 
                                 $html  .= '><label id="' . $field->id . '-' . $optionValue . '-lbl" for="' . $field->id . '-' . $optionValue . '">' . $option . '</label>';                
 			}
-                        $html  .= '</div>';
+                        $html  .= '</fieldset>';
 		}
                 
                 return $html;
