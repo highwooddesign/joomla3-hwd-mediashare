@@ -1,90 +1,167 @@
 <?php
 /**
- * @version    SVN $Id: customfields.php 289 2012-03-31 19:02:58Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework custom fields class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-class hwdMediaShareCustomFields
+
+defined('_JEXEC') or die;
+
+class hwdMediaShareCustomFields extends JObject
 {
 	/**
-	 * Method to save custom fields from a form submission
+	 * The element type to use with this library.
          * 
-         * @since   0.1
-	 **/
-	public function save($params)
+         * @access      public
+	 * @var         string
+	 */
+	public $elementType = 1;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
+	 */
+	public function __construct($properties = null)
 	{
-                $app         = & JFactory::getApplication();
+		parent::__construct($properties);
+	}
 
-                // Process and save custom fields
-		$customField    = new hwdMediaShareCustomFields;
-		$profile	= $customField->get(null, $this->elementType);
-                $values = array();
+	/**
+	 * Returns the hwdMediaShareCustomFields object, only creating it if it
+	 * doesn't already exist.
+	 *
+	 * @access  public
+         * @static
+	 * @return  hwdMediaShareCustomFields Object.
+	 */ 
+	public static function getInstance()
+	{
+		static $instance;
+
+		if (!isset ($instance))
+                {
+			$c = 'hwdMediaShareCustomFields';
+                        $instance = new $c;
+		}
+
+		return $instance;
+	}
+        
+	/**
+	 * Method to save custom fields from a form submission.
+	 *
+	 * @access  public
+	 * @param   object  $item   The item to save.
+	 * @return  boolean True on success, false on fail.
+	 */    
+	public function save($item)
+	{
+                // Initialise variables.
+                $app            = JFactory::getApplication();
+                $db             = JFactory::getDBO();
+		$custom         = $this->load(null);
+                $values         = array();
                 
-		foreach( $profile['fields'] as $group => $fields )
+                // Loop through each field and validate associated inputs.
+		foreach($custom->fields as $group => $fields)
 		{
-			foreach( $fields as $data )
+			foreach($fields as $field)
 			{
-				// Get value from posted data and map it to the field.
-				// Here we need to prepend the 'field' before the id because in the form, the 'field' is prepended to the id.
-				$postData = JRequest::getVar( 'field' . $data['id'] , '' , 'POST' );
+                                // Skip fields that don't belong to this type of element.
+                                if ($field->element_type != $this->elementType) continue;
 
-				$values[ $data['id'] ]	= hwdMediaShareCustomFields::formatData( $data['type']  , $postData );
+				// Get the request filter type for this field.
+				$filter = $this->getFilter($field);
 
-				// @rule: Validate custom profile if necessary
-				if( !hwdMediaShareCustomFields::validateField( $data['id'], $data['type'] , $values[ $data['id'] ] , $data['required'] ) )
+				// Get the field value from the form submission.
+				$input = $app->input->get('field' . $field->id, '', $filter);
+ 
+                                // Format the data, and assign it ot the $values array.
+				$values[$field->id] = $this->formatData($field, $input);
+
+				// Validate custom field if necessary.
+				if(!$this->validateField($field, $values[$field->id]))
 				{
-					// If there are errors on the form, display to the user.
-					$message	= JText::sprintf('The field "%1$s" contain improper values' ,  $data['name'] );
-		
-                                        $return = JRequest::getVar('return', null, 'default', 'base64');
-                                        if (empty($return) || !JUri::isInternal(base64_decode($return))) 
-                                        {
-                                                $app->redirect( 'index.php?option=com_hwdmediashare&view=editmedia&layout=edit&id=' . $params->elementId , $message , 'error' );
-                                        }
-                                        else 
-                                        {
-                                                $app->redirect( base64_decode($return) , $message , 'error' );
-                                        }
-					return;
+					// If there are errors on the form, remove the value, and display to the user.
+                                        $app->enqueueMessage(JText::sprintf('COM_HWDMS_ERROR_CUSTOM_FIELD_IMPROPER_VALUE', $field->name));
+                                        unset($values[$field->id]);
 				}
 			}
 		}
+                
+                // Load the HWD table path.
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+ 
+                // Loop through each validated input and save.
+		foreach($values as $id => $value)
+		{
+                        // Check if the field exists, and get the ID to bind it during the save.
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_fields_values')
+                                ->where('element_type = ' . $db->quote($this->elementType))
+                                ->where('element_id = ' . $db->quote($item->id))
+                                ->where('field_id = ' . $db->quote($id));
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $result = $db->loadResult();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
 
-                hwdMediaShareCustomFields::saveFields($params, $values);
+                        // Load the table.
+                        $table = JTable::getInstance('FieldValue', 'hwdMediaShareTable');
+                        $table->reset();
+
+                        // Create an object to bind to the database.
+                        $object = new StdClass;
+                        $object->id = (int) $result;
+                        $object->element_type = $this->elementType;
+                        $object->element_id = $item->id;
+                        $object->field_id = $id;
+                        $object->value = isset($value) ? $value : '';
+                        $object->access = 1;
+
+                        // Attempt to save the details to the database.
+                        if (!$table->save($object))
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+		}
         }
 
 	/**
-	 * Method to get custom fields of an item
-         * 
-         * @since   0.1
-	 **/        
-	public function get($item = null , $elementType = null)
+	 * Method to get custom fields of an item.
+	 *
+	 * @access  public
+	 * @param   object  $item   The item to check.
+	 * @return  array   An array of categories assigned to the item.
+	 */       
+	public function load($item = null)
 	{
+		// Initialiase variables.
                 $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
-		$data		= array();
+                
+                $query = $db->getQuery(true)
+                        ->select('field.*')
+                        ->from('#__hwdms_fields AS field')
+                        ->where($db->quoteName('field.published'). '=' . $db->Quote('1'))
+                        ->where($db->quoteName('field.element_type') . '=' . $db->Quote($this->elementType))
+                        ->order($db->quoteName('field.ordering'));
 
-                if (empty($elementType))
-                    $elementType = $this->elementType;
-
-		// Attach custom fields into the user object
-                $query->select('field.*');
-                $query->from('#__hwdms_fields AS field');
-
-                // Only bind values if $item exists
+                // Only bind values $item exists.
                 if (isset($item->id))
                 {
                         $query->select('value.'.$db->quoteName('value').' , value.'.$db->quoteName('access'));
@@ -95,246 +172,247 @@ class hwdMediaShareCustomFields
                         $query->select('"" as value , "" as access');
                 }
 
- 		// Build proper query for multiple profile types.
-		$query->where('field.'.$db->quoteName('published').'=' . $db->Quote('1'));
-                $query->where('field.'.$db->quoteName('element_type').'=' . $db->Quote($elementType));
-		$query->order('field.'.$db->quoteName('ordering'));
+                try
+                {                
+                        $db->setQuery($query);
+                        // $result = $db->loadAssocList();
+                        $result = $db->loadObjectList();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
 
-                //$query.= ' GROUP BY field.'.$db->quoteName('id');
+                // Define new properties to hold the field values.
+                $this->values = new JRegistry;
+                $this->fields = array();
 
-		$db->setQuery( $query );
-
-		$result	= $db->loadAssocList();
-
-                if($db->getErrorNum())
+		// We have loaded the fields in the correct ordering. 
+		foreach($result as $field)
 		{
-			JError::raiseError( 500, $db->stderr());
-		}
-
-		$data['fields']	= array();
-		for($i = 0; $i < count($result); $i++)
-		{
-			// We know that the groups will definitely be correct in ordering.
-			if($result[$i]['type'] == 'group')
+			if ($field->type == 'group')
 			{
-				$group	= $result[$i]['name'];
+				$group	= $field->name;
 
-				// Group them up
-				if(!isset($data['fields'][$group]))
+				// Initialize groups.
+				if(!isset($this->fields[$group]))
 				{
-					// Initialize the groups.
-					$data['fields'][$group]	= array();
+					$this->fields[$group] = array();
 				}
 			}
+                        else
+                        {                  
+                                $this->values->set($field->fieldcode, $field->value); 
+                        }
 
-			// Re-arrange options to be an array by splitting them into an array
-			if(isset($result[$i]['options']) && $result[$i]['options'] != '')
+			// Convert options field to array.
+			if (isset($field->options) && $field->options != '')
 			{
-				$options	= $result[$i]['options'];
-				$options	= explode("\n", $options);
-
-				array_walk($options, array( 'JString' , 'trim' ) );
-
-				$result[$i]['options']	= $options;
-
+				$field->options = explode("\n", $field->options);         
 			}
 
-			// Only append non group type into the returning data as we don't
-			// allow users to edit or change the group stuffs.
-			if($result[$i]['type'] != 'group'){
+			// Convert params field to registry.
+			if (isset($field->params) && $field->params != '')
+			{
+                                $registry = new JRegistry;
+                                $registry->loadString($field->params);
+                                $field->params = $registry;             
+			}
+                        
+			// Add fields to groups.
+			if($field->type != 'group')
+                        {
 				if(!isset($group))
-                                        $data['fields'][JText::_('COM_HWDMS_UNGROUPED')][]   = $result[$i];
-				else
-					$data['fields'][$group][]                           = $result[$i];
+                                {
+                                        $this->fields[JText::_('COM_HWDMS_UNGROUPED')][] = $field;
+                                }
+                                else
+                                {
+					$this->fields[$group][] = $field;
+                                }
 			}
 		}
 
-                //$this->_dump($data);
-		return $data;
+		return $this;
 	}
         
 	/**
-	 * Method to render html for a field
-         * 
-         * @since   0.1
-	 **/
-	public function getFieldHTML( $field , $showRequired = '&nbsp; *' )
+	 * Method to generate the label markup for a custom field.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+	public function getLabel($field)
 	{
-		$fieldType	= strtolower( $field->type);
+		$label = '';
 
-		if(is_array($field))
+		// Get the label name.
+		$text = (string) $field->name;
+
+		// Build the class for the label.
+		$class = !empty($field->tooltip) ? 'hasTooltip' : '';
+		$class = $field->required == true ? $class . ' required' : $class;
+
+		// Add the opening label tag and main attributes attributes.
+		$label .= '<label id="' . $field->id . '-lbl" for="field' . $field->id . '" class="' . $class . '"';
+
+		// If a description is specified, use it to build a tooltip.
+		if (!empty($field->tooltip))
 		{
-			jimport( 'joomla.utilities.arrayhelper');
-			$field = JArrayHelper::toObject($field);
+			JHtml::_('bootstrap.tooltip');
+			$label .= ' title="' . JHtml::tooltipText($text, $field->tooltip, 0) . '"';
 		}
 
-		hwdMediaShareFactory::load('fields.'.$fieldType);
-
-		$class	= 'hwdMediaShareFields' . ucfirst( $fieldType );
-
-		if(is_object($field->options))
+		// Add the label text and closing tag.
+		if ($field->required)
 		{
-			$field->options = JArrayHelper::fromObject($field->options);
-		}
-
-		// Clean the options
-		if( !empty( $field->options ) && !is_array( $field->options ) )
-		{
-			array_walk( $field->options , array( 'JString' , 'trim' ) );
-		}
-
-		// Escape the field name
-		$field->name	= $this->escape($field->name);
-
-		if( !isset($field->value) )
-		{
-			$field->value	= '';
-		}
-
-		if( class_exists( $class ) )
-		{
-			$object	= new $class();
-
-			if( method_exists( $object, 'getFieldHTML' ) )
-			{
-				$html	= $object->getFieldHTML( $field , $showRequired );
-				return $html;
-			}
-		}
-
-		return JText::sprintf('COM_COMMUNITY_UNKNOWN_USER_PROFILE_TYPE' , $class , $fieldType );
-	}
-        
-	public function getFieldData( $field )
-	{
-		$fieldType	= strtolower( $field->type );
-
-		if(is_array($field))
-		{
-			jimport( 'joomla.utilities.arrayhelper');
-			$field = JArrayHelper::toObject($field);
-		}
-
-		hwdMediaShareFactory::load('fields.'.$fieldType);
-
-		$class	= 'hwdMediaShareFields' . ucfirst( $fieldType );
-
-		if(is_object($field->options))
-		{
-			$field->options = JArrayHelper::fromObject($field->options);
-		}
-
-		if( class_exists( $class ) )
-		{
-			$object	= new $class();
-			
-			if( method_exists( $object , 'getFieldData' ) )
-			{
-				return $object->getFieldData( JArrayHelper::fromObject($field) );
-			}
-		}
-		if($fieldType == 'select' || $fieldType == 'singleselect' || $fieldType == 'radio')
-		{
-			return JText::_($field->value);
-		}
-		else if($fieldType == 'textarea')
-		{
-			return nl2br($field->value);
+			$label .= '>' . $text . '<span class="star">&#160;*</span></label>';
 		}
 		else
-		{		
-			return $field->value;
+		{
+			$label .= '>' . $text . '</label>';
 		}
+
+		return $label;
 	}
         
+	/**
+	 * Method to generate the input markup for a custom field.
+	 *
+	 * @access  public
+	 * @param   object  $field  The field to show.
+	 * @return  string  The HTML markup.
+	 */ 
+	public function getInput($field)
+	{
+		// Attempt to load the field library.
+                hwdMediaShareFactory::load('fields.' . strtolower($field->type));
+
+		$class = 'hwdMediaShareFields' . ucfirst($field->type);
+
+		if(class_exists($class))
+		{
+			$HWDfield = new $class();
+			if(method_exists($HWDfield, 'getInput'))
+			{
+				return $HWDfield->getInput($field);
+			}
+		}
+
+		return JText::sprintf('COM_HWD_UNKNOWN_FIELD_TYPE', $field->type);
+	}
+                
 	/**
 	 * Method to validate any custom field in PHP. Javascript validation is not sufficient enough.
 	 * We also need to validate fields in PHP since if the user knows how to send POST data, then they
 	 * will bypass javascript validations.
-	 **/
-	public function validateField( $fieldId, $fieldType , $value , $required )
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @param   mixed   $value  The value to check.
+	 * @return  boolean True on success, false on fail.
+	 */ 
+	public function validateField($field, $value)
 	{
-		$fieldType	= strtolower( $fieldType );
+		// Attempt to load the field library.
+                hwdMediaShareFactory::load('fields.' . strtolower($field->type));
 
-                hwdMediaShareFactory::load('fields.'.$fieldType);
+		$class = 'hwdMediaShareFields' . ucfirst($field->type);
 
-		$class	= 'hwdMediaShareFields' . ucfirst( $fieldType );
-
-		if( class_exists( $class ) )
+		if(class_exists($class))
 		{
-			$object	= new $class();
-			$object->fieldId = $fieldId;
-			if( method_exists( $object, 'isValid' ) )
+			$HWDfield = new $class();
+			if(method_exists($HWDfield, 'isValid'))
 			{
-				return $object->isValid( $value , $required );
+				return $HWDfield->isValid($field, $value);
 			}
 		}
-		// Assuming there is no need for validation in these subclasses.
+                
+		// If no method exists, then there is no requirement for validation.
 		return true;
 	}
 
-        /**
-	 * Method to format field data in preparation for saving
-         * 
-         * @since   0.1
-	 **/
-	public function formatData( $fieldType , $value )
+	/**
+	 * Method to format field data in preparation for saving.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @param   mixed   $value  The value to check.
+	 * @return  mixed   The formatted input value.
+	 */ 
+	public function formatData($field, $value)
 	{
-		$fieldType = strtolower( $fieldType );
+		// Attempt to load the field library.
+                hwdMediaShareFactory::load('fields.' . strtolower($field->type));
 
-                hwdMediaShareFactory::load('fields.'.$fieldType);
+		$class = 'hwdMediaShareFields' . ucfirst($field->type);
 
-		$class	= 'hwdMediaShareFields' . ucfirst( $fieldType );
-
-		if( class_exists( $class ) )
+		if(class_exists($class))
 		{
-			$object	= new $class();
-
-			if( method_exists( $object, 'formatData' ) )
+			$HWDfield = new $class();
+			if(method_exists($HWDfield, 'formatData'))
 			{
-				return $object->formatData( $value );
+				return $HWDfield->formatData($value);
 			}
 		}
-		// Assuming there is no need for formatting in subclasses.
+                
+		// If no method exists, then there is no requirement for formatting.
 		return $value;
+	}
+
+	/**
+	 * Method to get the filter for a field type.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  mixed   The formatted input value.
+	 */ 
+	public function getFilter($field)
+	{
+		// Attempt to load the field library.
+                hwdMediaShareFactory::load('fields.' . strtolower($field->type));
+
+		$class = 'hwdMediaShareFields' . ucfirst($field->type);
+
+		if(class_exists($class))
+		{
+			$HWDfield = new $class();
+			if(method_exists($HWDfield, 'getFilter'))
+			{
+				return $HWDfield->getFilter();
+			}
+		}
+                
+		// If no method exists, then we will apply a string filter.
+		return 'string';
 	}
         
 	/**
-	 * Method to save custom fields after a form submission
-         * 
-         * @since   0.1
-	 **/
-	public function saveFields($params, $fields)
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
 	{
-		jimport('joomla.utilities.date');
-		$db = & JFactory::getDBO();
+		// Attempt to load the field library.
+                hwdMediaShareFactory::load('fields.' . strtolower($field->type));
 
-		foreach($fields as $id => $value)
+		$class = 'hwdMediaShareFields' . ucfirst($field->type);
+
+		if(class_exists($class))
 		{
-			$table	=& JTable::getInstance( 'FieldValue' , 'hwdMediaShareTable' );
-
-                        if( !$table->load( $this->elementType, $params->elementId, $id ) )
+			$HWDfield = new $class();
+			if(method_exists($HWDfield, 'display'))
 			{
-				$table->element_type	= $this->elementType;
-                                $table->element_id	= $params->elementId;
-				$table->field_id	= $id;
+				return $HWDfield->display($field);
 			}
-
-			if( is_object( $value ) )
-			{
-				$table->value	= $value->value;
-				$table->access	= $value->access;
-			}
-
-			if( is_string( $value ) )
-			{
-				$table->value	= $value;
-			}
-
-                        if (!$table->store())
-                        {
-                                JError::raiseError(500, $table->getError() );
-                        }
 		}
-	}
+                
+		// If no method exists, then we simply return the field value.
+		return $field->value;
+	}        
 }
