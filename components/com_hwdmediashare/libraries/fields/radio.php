@@ -100,7 +100,8 @@ class hwdMediaShareFieldsRadio
                                 $optionValue = JFilterOutput::stringURLSafe($option);
                                 if (trim($optionValue) == trim($field->value))
                                 {
-                                        return $option;
+                                        // Remove whitespaces and linebreaks.
+                                        return trim($option);
                                 }
 			}
 		}
