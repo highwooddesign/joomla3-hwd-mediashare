@@ -93,6 +93,6 @@ class hwdMediaShareFieldsTextarea
 	 */ 
 	public function display($field)
         {
-		return '<div style="display:inline-block;vertical-align:top">' . nl2br($field->value) . '</div>';
+		return '<div style="display:inline-block;vertical-align:top;">' . nl2br($field->value) . '</div>';
         }        
 }
