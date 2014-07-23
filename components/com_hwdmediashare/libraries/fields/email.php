@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsEmail
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -80,30 +80,26 @@ class hwdMediaShareFieldsEmail
 		return true;
 	}
         
-        
-        
-        
-        /**
-	 * Method to format the specified value for text type
-	 **/	 	
-	public function getFieldData( $field )
-	{
-		$value = $field['value'];
-
-		if( empty( $value ) )
-			return $value;
+	/**
+	 * Method to display a field value.
+         *
+	 * @access  public
+	 * @param   object  $field  The field to validate.
+	 * @return  string  The markup to display the field value.
+	 */ 
+	public function display($field)
+        {
+                // Trim the email value.
+		$email = JString::trim($field->value);
 		
-		$email = JString::trim( $value );
-		
-		// @rule: Process email cloaking by Joomla. If it fails,
-		// we will need to find another solution.
-		$link = JHTML::_( 'email.cloak', $email );
+                // Attempt to cloak the email.
+                $link = JHTML::_('email.cloak', $email);
 
 		if(empty($link))
 		{
 			$link	= '<a href="mailto:'.$email.'">'.$email.'</a>'; 	
 		}
 			
-		return $link;
-	}        
+		return $link;       
+        }     
 }
