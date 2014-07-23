@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareFieldsText
 {
     	/**
-	 * Method to generate the input markup for the text field type.
+	 * Method to generate the input markup for the field type.
 	 *
 	 * @access  public
 	 * @param   object  $field  The field to show.
@@ -70,5 +70,5 @@ class hwdMediaShareFieldsText
 		}
                 
 		return true;
-	}
+	}      
 }
