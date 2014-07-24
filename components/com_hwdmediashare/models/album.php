@@ -262,7 +262,7 @@ class hwdMediaShareModelAlbum extends JModelList
 	}
 
 	/**
-	 * Method to number of media in the album.
+	 * Method to get number of media in the album.
 	 *
          * @access  public
 	 * @return  integer The number of media.
