@@ -14,28 +14,43 @@ class hwdMediaShareModelCategories extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */    
 	public $context = 'com_hwdmediashare.categories';
 
 	/**
 	 * Model extension string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */ 
 	public $extension = 'com_hwdmediashare';
         
 	/**
-	 * Model data
-	 * @var array
-	 */
+	 * The node items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */ 
 	protected $_items = null;
+        
+	/**
+	 * The parent of this node.
+         * 
+         * @access      protected
+	 * @var         object
+	 */ 
 	protected $_parent = null;
 
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */  
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -44,6 +59,7 @@ class hwdMediaShareModelCategories extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -81,9 +97,9 @@ class hwdMediaShareModelCategories extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -97,7 +113,7 @@ class hwdMediaShareModelCategories extends JModelList
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
                 
-		// Define the extension filter
+		// Define the extension filter.
 		$this->setState('filter.extension', $this->extension);
 
 		// Get the parent id if defined.
@@ -134,6 +150,7 @@ class hwdMediaShareModelCategories extends JModelList
 	/**
 	 * Get the parent of this node
 	 *
+         * @access  public
 	 * @return  void
 	 */
 	public function getParent()
