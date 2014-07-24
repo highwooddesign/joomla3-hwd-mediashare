@@ -61,7 +61,7 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
+		// Attempt to load the table row.
 		$return = $table->load($pk);
 
 		// Attempt to load the table row.
