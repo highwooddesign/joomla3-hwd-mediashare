@@ -14,28 +14,83 @@ class hwdMediaShareModelGroup extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */ 
 	public $context = 'com_hwdmediashare.group';
 
 	/**
-	 * Model data
-	 * @var array
+	 * The group data.
+         * 
+         * @access      protected
+	 * @var         object
+	 */  
+	protected $_group;
+        
+	/**
+	 * The group items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */           
+	protected $_items;
+        
+	/**
+	 * The group media.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
+	protected $_media;
+        
+	/**
+	 * The group members.
+         * 
+         * @access      protected
+	 * @var         object
+	 */ 
+	protected $_members;
+        
+	/**
+	 * The group activity.
+         * 
+         * @access      protected
+	 * @var         object
+	 */ 
+	protected $_activities;
+        
+	/**
+	 * The model used for obtaining group items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
+	protected $_model;
+        
+	/**
+	 * The number of media in the group.
+         * 
+         * @access      protected
+	 * @var         integer
 	 */
-	protected $_group = null;
-	protected $_items = null;
-	protected $_media = null;
-	protected $_members = null;
-	protected $_activities = null;
-	protected $_model = null;
         protected $_numMedia = 0;
+        
+	/**
+	 * The number of members in the group.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */
         protected $_numMembers = 0;
 
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -57,12 +112,12 @@ class hwdMediaShareModelGroup extends JModelList
 	}
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Group', $prefix = 'hwdMediaShareTable', $config = array())
@@ -73,9 +128,9 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Method to get a single group.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getGroup($pk = null)
 	{
@@ -89,10 +144,10 @@ class hwdMediaShareModelGroup extends JModelList
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
+		// Attempt to load the table row.
 		$return = $table->load($pk);
 
 		// Check for a table object error.
@@ -159,10 +214,10 @@ class hwdMediaShareModelGroup extends JModelList
 			$registry->loadString($this->_group->params);
 			$this->_group->params = $registry;
 
-                        // Check if this album has a custom ordering.
+                        // Check if this group has a custom ordering.
                         if ($ordering = $this->_group->params->get('list_order_media')) 
                         {
-                                // Force this new ordering
+                                // Force this new ordering.
                                 $orderingParts = explode(' ', $ordering); 
                                 $app = JFactory::getApplication();
                                 $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
@@ -181,10 +236,10 @@ class hwdMediaShareModelGroup extends JModelList
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 3;
-                        $this->_group->customfields = $cf->get($this->_group);
-                        
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 3;
+                        $this->_group->customfields = $HWDcustomfields->load($this->_group);
+
                         // Add the number of media and members in the group.
                         $this->_group->nummedia = $this->_numMedia;
                         $this->_group->nummembers = $this->_numMembers;
@@ -225,6 +280,7 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Method to get a list of media associated with the group.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getMedia()
@@ -248,6 +304,7 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Method to get a list of members associated with the group.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getMembers()
@@ -268,6 +325,7 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Method to get a list of activities associated with this group.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getActivities()
@@ -290,6 +348,7 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+         * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -298,9 +357,10 @@ class hwdMediaShareModelGroup extends JModelList
 	}
 
 	/**
-	 * Method to number of media in the group.
+	 * Method to get number of media in the group.
 	 *
-	 * @return  JPagination  A JPagination object for the data set.
+         * @access  public
+	 * @return  integer The number of media.
 	 */
 	public function getNumMedia()
 	{
@@ -308,9 +368,10 @@ class hwdMediaShareModelGroup extends JModelList
 	}
 
 	/**
-	 * Method to number of members in the group.
+	 * Method to get number of members in the group.
 	 *
-	 * @return  JPagination  A JPagination object for the data set.
+         * @access  public
+	 * @return  integer The number of media.
 	 */
 	public function getNumMembers()
 	{
@@ -322,9 +383,9 @@ class hwdMediaShareModelGroup extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -342,11 +403,6 @@ class hwdMediaShareModelGroup extends JModelList
 		$id = $app->input->getInt('id');
 		$this->setState('filter.group_id', $id);
 
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		$this->setState('layout', $app->input->getString('layout'));                
-
 		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
 			// Limit to published for people who can't edit or edit.state.
@@ -363,7 +419,7 @@ class hwdMediaShareModelGroup extends JModelList
 			$this->setState('filter.status',	array(0,1,2,3));
                 }
 
-                // Only set these states when in the com_hwdmediashare.media context.
+                // Only set these states when in the com_hwdmediashare.group context.
                 if ($this->context == 'com_hwdmediashare.group')
                 {
                         // Load the display state.
@@ -390,8 +446,8 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Increment the hit counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk  Optional primary key of the record to increment.
-	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
@@ -414,9 +470,9 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Increment the like counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk     Optional primary key of the record to increment.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function like($pk = 0, $value = 1)
@@ -440,9 +496,9 @@ class hwdMediaShareModelGroup extends JModelList
 	/**
 	 * Method to change the published state of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks    A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
@@ -487,15 +543,17 @@ class hwdMediaShareModelGroup extends JModelList
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
 	}
 
 	/**
-	 * Method to report an object
-	 * @return  void
+	 * Method to report an group.
+         * 
+         * @access  public
+	 * @return  boolean True on success, false on failure.
 	 */
 	public function report()
 	{
@@ -504,9 +562,11 @@ class hwdMediaShareModelGroup extends JModelList
                 $date = JFactory::getDate();                
 		$input = JFactory::getApplication()->input;
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+                // Load HWD report table.
 		$table = $this->getTable('Report', 'hwdMediaShareTable');    
 
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
@@ -515,7 +575,7 @@ class hwdMediaShareModelGroup extends JModelList
                         return false;                    
                 }
                                         
-                // Create an object to bind to the database
+                // Create an object to bind to the database.
                 $object = new StdClass;
                 $object->element_type = 3;
                 $object->element_id = $input->get('id', 0, 'int');
@@ -535,8 +595,11 @@ class hwdMediaShareModelGroup extends JModelList
 	} 
         
 	/**
-	 * Method to report an object
-	 * @return  void
+	 * Method to add a member to a group.
+         * 
+         * @access  public
+	 * @param   array    $pks    A list of the primary keys.
+	 * @return  boolean  True on success.
 	 */
 	public function join($pks)
 	{
@@ -585,7 +648,7 @@ class hwdMediaShareModelGroup extends JModelList
                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 $table = JTable::getInstance('GroupMembers', 'hwdMediaShareTable');    
 
-                                // Create an object to bind to the database
+                                // Create an object to bind to the database.
                                 $object = new StdClass;
                                 $object->group_id = $pk;
                                 $object->member_id = $user->id;
@@ -615,8 +678,11 @@ class hwdMediaShareModelGroup extends JModelList
 	}
 
 	/**
-	 * Method to remove a user from a group.
-	 * @return  void
+	 * Method to remove a member to a group.
+         * 
+         * @access  public
+	 * @param   array    $pks    A list of the primary keys.
+	 * @return  boolean  True on success.
 	 */
 	public function leave($pks)
 	{
@@ -646,7 +712,6 @@ class hwdMediaShareModelGroup extends JModelList
                         {
                                 $query = $db->getQuery(true);
 
-                                // delete all custom keys for user 1001.
                                 $conditions = array(
                                     $db->quoteName('group_id') . ' = ' . $db->quote($pk), 
                                     $db->quoteName('member_id') . ' = ' . $db->quote($user->id)
@@ -680,12 +745,15 @@ class hwdMediaShareModelGroup extends JModelList
 	}
 
 	/**
-	 * Method to check if a user is a member of a group
-	 * @return  void
+	 * Method to check if a user is a member of a group.
+         * 
+         * @access  public
+	 * @param   array    $group     The group primary key to check.
+	 * @return  boolean  True on success.
 	 */
 	public function isMember($group)
 	{            
-                // Initialise variables
+                // Initialise variables.
                 $db = JFactory::getDBO();
                 $user = JFactory::getUser();
 
