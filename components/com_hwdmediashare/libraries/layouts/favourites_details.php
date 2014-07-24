@@ -10,10 +10,13 @@
 
 defined('_JEXEC') or die;
 
+// Include the component HTML helpers.
+JHtml::addIncludePath(JPATH_ROOT . '/administrator/components/com_hwdmediashare/helpers/html');
+
 $user = JFactory::getUser();
 JHtml::_('bootstrap.tooltip');
 ?>
-<?php foreach ($displayData->favourites as $id => $item) :
+<?php foreach ($displayData->items as $id => $item) :
 $rowcount = (((int)$id) % (int) $displayData->columns) + 1;
 $item->slug = $item->alias ? ($item->id . ':' . $item->alias) : $item->id;
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.media.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.media.'.$item->id) && ($item->created_user_id == $user->id)));
@@ -30,13 +33,13 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->
     <div class="media-item">
       <div class="media-aspect<?php echo $displayData->params->get('list_thumbnail_aspect'); ?>"></div>        
       <!-- Media Type -->
-      <?php if ($displayData->params->get('list_meta_thumbnail') != 'hide') :?>
-      <?php if ($displayData->params->get('list_meta_type_icon') != 'hide') :?>
+      <?php if ($displayData->params->get('list_meta_thumbnail') != '0') :?>
+      <?php if ($displayData->params->get('list_meta_type_icon') != '0') :?>
       <div class="media-item-format-1-<?php echo $item->media_type; ?>">
          <img src="<?php echo JHtml::_('hwdicon.overlay', '1-'.$item->media_type, $item); ?>" alt="<?php echo JText::_('COM_HWDMS_MEDIA_TYPE'); ?>" />
       </div>
       <?php endif; ?>
-      <?php if ($displayData->params->get('list_meta_duration') != 'hide' && $item->duration > 0) :?>
+      <?php if ($displayData->params->get('list_meta_duration') != '0' && $item->duration > 0) :?>
       <div class="media-duration">
          <?php echo hwdMediaShareMedia::secondsToTime($item->duration); ?>
       </div>
@@ -66,7 +69,7 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->
     </div>
     <?php endif; ?>
     <!-- Title -->
-    <?php if ($displayData->params->get('list_meta_title') != 'hide') :?>
+    <?php if ($displayData->params->get('list_meta_title') != '0') :?>
       <h<?php echo $displayData->params->get('list_item_heading'); ?> class="contentheading<?php echo ($displayData->params->get('list_tooltip_location') > '1' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($displayData->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $displayData->params->get('list_desc_truncate'), false, false) : '')); ?>">
         <?php if ($displayData->params->get('list_link_titles') == 1) :?><a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($item->slug)); ?>"><?php endif; ?>
           <?php echo $displayData->escape(JHtmlString::truncate($item->title, $displayData->params->get('list_title_truncate'), false, false)); ?> 
@@ -79,35 +82,51 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->
       <span class="label label-info"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></span>
     <?php endif; ?>
     <?php if ($item->status != 1) : ?>
-      <span class="label label-danger"><?php echo $displayData->utilities->getReadableStatus($item); ?></span>
+      <span class="label"><?php echo $displayData->utilities->getReadableStatus($item); ?></span>
     <?php endif; ?>
     <?php if ($item->published != 1) : ?>
-      <span class="label label-danger"><?php echo JText::_('COM_HWDMS_UNPUBLISHED'); ?></span>
+      <span class="label"><?php echo JText::_('COM_HWDMS_UNPUBLISHED'); ?></span>
     <?php endif; ?>        
     <!-- Clears Item and Information -->
     <div class="clear"></div>
-    <?php if ($displayData->params->get('list_meta_description') != 'hide' || $displayData->params->get('list_meta_category') != 'hide' || $displayData->params->get('list_meta_author') != 'hide' || $displayData->params->get('list_meta_created') != 'hide' || $displayData->params->get('list_meta_likes') != 'hide' || $displayData->params->get('list_meta_hits') != 'hide') : ?>
+    <?php if ($displayData->params->get('list_meta_description') != '0' || $displayData->params->get('list_meta_category') != '0' || $displayData->params->get('list_meta_author') != '0' || $displayData->params->get('list_meta_created') != '0' || $displayData->params->get('list_meta_likes') != '0' || $displayData->params->get('list_meta_hits') != '0') : ?>
     <!-- Item Meta -->
     <dl class="media-info">
       <dt class="media-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?> </dt>
-      <?php if ($displayData->params->get('list_meta_author') != 'hide' || $displayData->params->get('list_meta_created') != 'hide') : ?>
-        <dd class="media-info-createdby">
-          <?php if ($displayData->params->get('list_meta_author') != 'hide') : ?><?php echo JText::sprintf('COM_HWDMS_BY_X_USER', '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($item->created_user_id)).'">'.htmlspecialchars($item->author, ENT_COMPAT, 'UTF-8').'</a>'); ?><?php endif; ?><?php if ($displayData->params->get('list_meta_created') != 'hide') : ?>, <?php echo JHtml::_('date.relative', $item->created); ?><?php endif; ?>
-        </dd>
+      <?php if ($displayData->params->get('list_meta_author') != '0' || $displayData->params->get('list_meta_created') != '0') : ?>
+      <dd class="media-info-meta">
+        <?php if ($displayData->params->get('list_meta_author') != '0') : ?>
+          <span class="media-info-createdby">
+            <?php echo JText::sprintf('COM_HWDMS_BY_X_USER', '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($item->created_user_id)).'">'.htmlspecialchars($item->author, ENT_COMPAT, 'UTF-8').'</a>'); ?>
+          </span>
+        <?php endif; ?>
+        <?php if ($displayData->params->get('list_meta_created') != '0') : ?>
+          <span class="media-info-created">
+            <?php echo JHtml::_('hwddate.relative', $item->created); ?>
+          </span>
+        <?php endif; ?>
+      </dd>
+      <?php endif; ?>      
+      <div class="clearfix"></div>
+      <?php if ($displayData->params->get('list_meta_category') != '0' && $displayData->params->get('enable_categories') && (count($item->categories) > 0)) : ?>
+        <dd class="media-info-category"><?php echo JText::sprintf('COM_HWDMS_IN_X_CATEGORY', hwdMediaShareCategory::renderCategories($item)); ?></dd>
+      <?php endif; ?> 
+      <?php if ($displayData->params->get('list_meta_description') != '0') :?>
+        <dd class="media-info-description"><?php echo $displayData->escape(JHtmlString::truncate($item->description, $displayData->params->get('list_desc_truncate'), false, false)); ?></dd>
+      <?php endif; ?>      
+      <?php if ($displayData->params->get('list_meta_likes') != '0') :?>
+        <dd class="media-info-likes">
+	  <i class="icon-thumbs-up"></i> <span id="media-likes"><?php echo (int) $item->likes; ?></span>
+	  <i class="icon-thumbs-down"></i> <span id="media-dislikes"><?php echo (int) $item->dislikes; ?></span>
+	</dd>
       <?php endif; ?>
-      <?php if ($displayData->params->get('list_meta_category') != 'hide' && $displayData->params->get('enable_categories') && (count($item->categories) > 0)) : ?>
-        <dd class="media-info-category"><?php echo JText::sprintf('COM_HWDMS_IN_X_CATEGORY', $displayData->getCategories($item)); ?></dd>
-      <?php endif; ?>              
-      <?php if ($displayData->params->get('list_meta_description') != 'hide' && !empty($item->description)) :?>
-        <dd class="media-info-description"> <?php echo $displayData->escape(JHtmlString::truncate($item->description, $displayData->params->get('list_desc_truncate'), false, false)); ?> </dd>
-      <?php endif; ?>
-      <?php if ($displayData->params->get('list_meta_hits') != 'hide') :?>
+      <?php if ($displayData->params->get('list_meta_hits') != '0') :?>
         <dd class="media-info-hits"><?php echo JText::sprintf('COM_HWDMS_X_VIEWS', number_format((int) $item->hits)); ?></dd>
       <?php endif; ?>
     </dl>
     <?php endif; ?> 
   </div>
-<?php if (($rowcount == $displayData->columns) or (($id + 1) == count($displayData->favourites))): ?>
+<?php if (($rowcount == $displayData->columns) or (($id + 1) == count($displayData->items))): ?>
 </div>
 <?php endif; ?>
 <?php endforeach; ?>
