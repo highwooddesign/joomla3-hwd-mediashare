@@ -124,7 +124,7 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->
         <dd class="media-info-hits"><?php echo JText::sprintf('COM_HWDMS_X_VIEWS', number_format((int) $item->hits)); ?></dd>
       <?php endif; ?>
     </dl>
-    <?php endif; ?> 
+    <?php endif; ?>
   </div>
 <?php if (($rowcount == $displayData->columns) or (($id + 1) == count($displayData->items))): ?>
 </div>
