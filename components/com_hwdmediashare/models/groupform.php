@@ -20,9 +20,9 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -43,30 +43,28 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 		$return = $app->input->get('return', null, 'base64');
 		$this->setState('return_page', base64_decode($return));
 
-		$this->setState('layout', $app->input->getString('layout'));                
-
 		parent::populateState();               
 	}
 
 	/**
-	 * Method to get a single record.
+	 * Method to get a single item.
 	 *
-	 * @param   integer  $itemId  The id of the primary key.
-         * 
-	 * @return  mixed    Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
-	public function getItem($itemId = null)
+	public function getItem($pk = null)
 	{
 		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('group.id');
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('group.id');
 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
 		// Attempt to load the row.
-		$return = $table->load($itemId);
+		$return = $table->load($pk);
 
-		// Check for a table object error.
+		// Attempt to load the table row.
 		if ($return === false && $table->getError())
                 {
 			$this->setError($table->getError());
@@ -110,9 +108,9 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 		}
 
 		// Check edit state permission.
-		if ($itemId)
+		if ($pk)
 		{
-			// Existing item
+			// Existing item.
 			$value->attributes->set('access-change', $user->authorise('core.edit.state', $asset));
 		}
 		else
@@ -121,7 +119,7 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 			$value->attributes->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
 		}
 
-		if ($itemId)
+		if ($pk)
 		{
                         // Add the tags.
                         $value->tags = new JHelperTags;
@@ -129,9 +127,9 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 3;
-                        $value->customfields = $cf->get($value);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 3;
+                        $value->customfields = $HWDcustomfields->load($value);
                         
                         // Add thumbnail.
                         $value->thumbnail = $this->getThumbnail($value);
@@ -143,6 +141,7 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 	/**
 	 * Get the return URL.
 	 *
+         * @access  public
 	 * @return  string  The return URL.
 	 */
 	public function getReturnPage()
@@ -153,9 +152,7 @@ class hwdMediaShareModelGroupForm extends hwdMediaShareModelGroup
 	/**
 	 * Method for getting the report form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
+         * @access  public
 	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getReportForm()
