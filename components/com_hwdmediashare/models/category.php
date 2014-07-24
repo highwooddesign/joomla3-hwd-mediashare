@@ -14,28 +14,67 @@ class hwdMediaShareModelCategory extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */  
 	public $context = 'com_hwdmediashare.category';
 
 	/**
-	 * Model data
-	 * @var array
-	 */
+	 * The category data.
+         * 
+         * @access      protected
+	 * @var         object
+	 */  
 	protected $_category = null;
+        
+	/**
+	 * The category items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */
 	protected $_items = null;
-	protected $_subcategories = null;        
+        
+	/**
+	 * The category subcategories.
+         * 
+         * @access      protected
+	 * @var         object
+	 */
+	protected $_subcategories = null;  
+        
+	/**
+	 * The category featured item.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
 	protected $_feature = null;        
-	protected $_model = null;
+
+        /**
+	 * The media model used for obtaining category items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
+	protected $_model;
+
+	/**
+	 * The number of media in the category.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numMedia = 0;
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Category', $prefix = 'hwdMediaShareTable', $config = array())
@@ -46,9 +85,9 @@ class hwdMediaShareModelCategory extends JModelList
 	/**
 	 * Method to get a single category.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getCategory($pk = null)
 	{
@@ -81,7 +120,7 @@ class hwdMediaShareModelCategory extends JModelList
                                         }  
                                 }    
                                 
-                                // Add the number of media
+                                // Add the number of media.
                                 $this->_category->nummedia = $this->_numMedia;
                                 
                                 // Add the tags.
@@ -106,9 +145,9 @@ class hwdMediaShareModelCategory extends JModelList
         /**
 	 * Method to get a list of subcategories
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * @access  public
+	 * @param   integer	The id of the primary key.
+	 * @return  mixed	Object on success, false on failure.
 	 */
 	public function getSubcategories($pk = null)
 	{
@@ -125,9 +164,10 @@ class hwdMediaShareModelCategory extends JModelList
 	}
         
         /**
-	 * Method to get the feature record
+	 * Method to get the feature item.
          *
-	 * @return	mixed	Object on success, false on failure.
+         * @access  public
+	 * @return  mixed   Object on success, false on failure.
 	 */
 	public function getFeature()
 	{
@@ -167,6 +207,7 @@ class hwdMediaShareModelCategory extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -191,6 +232,7 @@ class hwdMediaShareModelCategory extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+         * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -199,9 +241,10 @@ class hwdMediaShareModelCategory extends JModelList
 	}
 
 	/**
-	 * Method to number of media in the category.
+	 * Method to number of media in the album.
 	 *
-	 * @return  JPagination  A JPagination object for the data set.
+         * @access  public
+	 * @return  integer The number of media.
 	 */
 	public function getNumMedia()
 	{
@@ -213,9 +256,9 @@ class hwdMediaShareModelCategory extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -233,21 +276,16 @@ class hwdMediaShareModelCategory extends JModelList
 		$id = $app->input->getInt('id');
 		$this->setState('filter.category_id', $id);
 
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		$this->setState('layout', $app->input->getString('layout'));                
-                
-                // Only set these states when in the com_hwdmediashare.media context.
+                // Only set these states when in the com_hwdmediashare.category context.
                 if ($this->context == 'com_hwdmediashare.category')
                 {              
                         // Load the display state.
-                        $display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                        $display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details'), 'word', false);
                         if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
                         $this->setState('media.display', $display);
 
                         // Load the featured state.
-                        $featured = $this->getUserStateFromRequest('category.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        $featured = $this->getUserStateFromRequest('category.show_featured', 'show_featured', $config->get('show_featured', 'show'), 'word', false);
                         if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
                         $this->setState('category.show_featured', $featured);
 
@@ -272,8 +310,8 @@ class hwdMediaShareModelCategory extends JModelList
 	/**
 	 * Increment the hit counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk  Optional primary key of the record to increment.
-	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
@@ -296,9 +334,9 @@ class hwdMediaShareModelCategory extends JModelList
 	/**
 	 * Increment the like counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk     Optional primary key of the record to increment.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function like($pk = 0, $value = 1)
@@ -322,9 +360,9 @@ class hwdMediaShareModelCategory extends JModelList
 	/**
 	 * Method to change the published state of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks    A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
@@ -369,49 +407,8 @@ class hwdMediaShareModelCategory extends JModelList
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
-
-		return true;
-	}
-
-	/**
-	 * Method to report an object
-	 * @return  void
-	 */
-	public function report()
-	{
-		// Initialiase variables.
-		$user = JFactory::getUser();
-                $date = JFactory::getDate();                
-		$input = JFactory::getApplication()->input;
-
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                
-		$table = $this->getTable('Report', 'hwdMediaShareTable');    
-
-                if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
-                {
-                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
-                        return false;                    
-                }
-                                        
-                // Create an object to bind to the database.
-                $object = new StdClass;
-                $object->element_type = 6;
-                $object->element_id = $input->get('id', 0, 'int');
-                $object->user_id = $user->id;
-                $object->report_id = $input->get('report_id', 0, 'int');
-                $object->description = $input->get('description', '', 'string');
-                $object->created = $date->toSql();
-                
-                // Attempt to save the report details to the database.
-                if (!$table->save($object))
-                {
-                        $this->setError($table->getError());
-                        return false;
-                }
 
 		return true;
 	}
