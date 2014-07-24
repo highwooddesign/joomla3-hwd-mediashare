@@ -109,7 +109,7 @@ class hwdMediaShareModelCategory extends JModelList
                                         // Check if this category has a custom ordering.
                                         if ($ordering = $this->_category->params->get('list_order_media')) 
                                         {
-                                                // Force this new ordering
+                                                // Force this new ordering.
                                                 $orderingParts = explode(' ', $ordering); 
                                                 $app = JFactory::getApplication();
                                                 $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
@@ -143,7 +143,7 @@ class hwdMediaShareModelCategory extends JModelList
 	}
 
         /**
-	 * Method to get a list of subcategories
+	 * Method to get a list of subcategories.
 	 *
          * @access  public
 	 * @param   integer	The id of the primary key.
