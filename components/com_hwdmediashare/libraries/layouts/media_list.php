@@ -23,7 +23,7 @@ $user = JFactory::getUser();
     $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.media.'.$item->id);
     $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.media.'.$item->id) && ($item->created_user_id == $user->id)));
     ?>
-    <tr class="cat-list-row<?php echo ($id % 2);?>">
+    <tr>
       <td>
         <div class="row-fluid">
           <div class="span2">
