@@ -16,8 +16,8 @@ require_once JPATH_SITE.'/components/com_hwdmediashare/models/user.php';
 class hwdMediaShareModelAccount extends hwdMediaShareModelUser
 {
 	/**
-	 * Method to set the filterFormName variable for the account pages, allowing
-         * different filters in different layouts.
+	 * Method to set the filterFormName variable for the account pages, 
+         * allowing different filters in different layouts.
          * 
          * @access  public
 	 * @return  void
