@@ -51,7 +51,7 @@ $user = JFactory::getUser();
           </div>  
           <div class="span2">
             <?php if ($displayData->params->get('list_meta_thumbnail') != '0') :?>
-            <div class="media-item pull-left">
+            <div class="media-item">
               <div class="media-aspect<?php echo $displayData->params->get('list_thumbnail_aspect'); ?>"></div>        
               <?php if ($displayData->params->get('list_meta_type_icon') != '0') :?>
               <div class="media-item-format-1-<?php echo $item->media_type; ?>">
