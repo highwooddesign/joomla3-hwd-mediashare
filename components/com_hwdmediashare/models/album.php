@@ -29,6 +29,14 @@ class hwdMediaShareModelAlbum extends JModelList
 	protected $_album;
         
 	/**
+	 * The album items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
+	protected $_items;
+        
+	/**
 	 * The media model used for obtaining album items.
          * 
          * @access      protected
