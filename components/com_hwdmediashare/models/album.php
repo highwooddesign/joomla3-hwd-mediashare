@@ -185,7 +185,7 @@ class hwdMediaShareModelAlbum extends JModelList
                         // Check if this album has a custom ordering.
                         if ($ordering = $this->_album->params->get('list_order_media')) 
                         {
-                                // Force this new ordering
+                                // Force this new ordering.
                                 $orderingParts = explode(' ', $ordering); 
                                 $app = JFactory::getApplication();
                                 $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
