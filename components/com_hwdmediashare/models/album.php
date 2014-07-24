@@ -14,24 +14,43 @@ class hwdMediaShareModelAlbum extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */   
 	public $context = 'com_hwdmediashare.album';
 
 	/**
-	 * Model data
-	 * @var array
+	 * The album data.
+         * 
+         * @access      protected
+	 * @var         object
+	 */  
+	protected $_album;
+        
+	/**
+	 * The media model used for obtaining album items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
+	protected $_model;
+        
+	/**
+	 * The number of media in the album.
+         * 
+         * @access      protected
+	 * @var         integer
 	 */
-	protected $_album = null;
-	protected $_items = null;
-	protected $_model = null;
         protected $_numMedia = 0;
         
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -53,12 +72,12 @@ class hwdMediaShareModelAlbum extends JModelList
 	}
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Album', $prefix = 'hwdMediaShareTable', $config = array())
@@ -69,9 +88,9 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Method to get a single album.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getAlbum($pk = null)
 	{
@@ -85,10 +104,10 @@ class hwdMediaShareModelAlbum extends JModelList
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
+		// Attempt to load the table row.
 		$return = $table->load($pk);
 
 		// Check for a table object error.
@@ -137,8 +156,8 @@ class hwdMediaShareModelAlbum extends JModelList
                         $view = $app->input->get('view');
                         if ($option == 'com_hwdmediashare' && $view == 'album') 
                         {
-                                JFactory::getApplication()->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
-                                JFactory::getApplication()->redirect( $config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($config->get('no_access_redirect')) : 'index.php' );
+                                $app->enqueueMessage( JText::_( 'COM_HWDMS_ERROR_ITEM_NOAUTHORISED' ) ); 
+                                $app->getApplication()->redirect( $config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($config->get('no_access_redirect')) : 'index.php' );
                         }
                         
                         $this->setError(JText::_('COM_HWDMS_ERROR_ITEM_NOAUTHORISED'));
@@ -177,10 +196,10 @@ class hwdMediaShareModelAlbum extends JModelList
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 2;
-                        $this->_album->customfields = $cf->get($this->_album);
-                        
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 2;
+                        $this->_album->customfields = $HWDcustomfields->load($this->_album);
+
                         // Add the number of media in the album.
                         $this->_album->nummedia = $this->_numMedia;
 
@@ -202,6 +221,7 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -225,6 +245,7 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+         * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -235,7 +256,8 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Method to number of media in the album.
 	 *
-	 * @return  JPagination  A JPagination object for the data set.
+         * @access  public
+	 * @return  integer The number of media.
 	 */
 	public function getNumMedia()
 	{
@@ -247,9 +269,9 @@ class hwdMediaShareModelAlbum extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -267,11 +289,6 @@ class hwdMediaShareModelAlbum extends JModelList
 		$id = $app->input->getInt('id');
 		$this->setState('filter.album_id', $id);
 
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		$this->setState('layout', $app->input->getString('layout'));                
-
 		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
 			// Limit to published for people who can't edit or edit.state.
@@ -288,7 +305,7 @@ class hwdMediaShareModelAlbum extends JModelList
 			$this->setState('filter.status',	array(0,1,2,3));
                 }
                 
-                // Only set these states when in the com_hwdmediashare.media context.
+                // Only set these states when in the com_hwdmediashare.album context.
                 if ($this->context == 'com_hwdmediashare.album')
                 {             
                         // Load the display state.
@@ -317,8 +334,8 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Increment the hit counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk  Optional primary key of the record to increment.
-	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
@@ -341,9 +358,9 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Increment the like counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk     Optional primary key of the record to increment.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function like($pk = 0, $value = 1)
@@ -367,9 +384,9 @@ class hwdMediaShareModelAlbum extends JModelList
 	/**
 	 * Method to change the published state of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks    A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
@@ -414,15 +431,17 @@ class hwdMediaShareModelAlbum extends JModelList
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
 	}
 
 	/**
-	 * Method to report an object
-	 * @return  void
+	 * Method to report an album.
+         * 
+         * @access  public
+	 * @return  boolean True on success, false on failure.
 	 */
 	public function report()
 	{
@@ -431,9 +450,11 @@ class hwdMediaShareModelAlbum extends JModelList
                 $date = JFactory::getDate();                
 		$input = JFactory::getApplication()->input;
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+                // Load HWD report table.
 		$table = $this->getTable('Report', 'hwdMediaShareTable');    
 
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
