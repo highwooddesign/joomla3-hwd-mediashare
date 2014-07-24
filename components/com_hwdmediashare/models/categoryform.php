@@ -16,12 +16,12 @@ require_once JPATH_ADMINISTRATOR.'/components/com_categories/models/category.php
 class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 {
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Category', $prefix = 'JTable', $config = array())
@@ -34,9 +34,9 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -57,28 +57,26 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 		$return = $app->input->get('return', null, 'base64');
 		$this->setState('return_page', base64_decode($return));
 
-		$this->setState('layout', $app->input->getString('layout'));                
-
 		parent::populateState();               
 	}
 
 	/**
-	 * Method to get a single record.
+	 * Method to get a single item.
 	 *
-	 * @param   integer  $itemId  The id of the primary key.
-         * 
-	 * @return  mixed    Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
-	public function getItem($itemId = null)
+	public function getItem($pk = null)
 	{
 		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('category.id');
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('category.id');
 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
-		$return = $table->load($itemId);
+		// Attempt to load the table row.
+		$return = $table->load($pk);
 
 		// Check for a table object error.
 		if ($return === false && $table->getError())
@@ -124,9 +122,9 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 		}
 
 		// Check edit state permission.
-		if ($itemId)
+		if ($pk)
 		{
-			// Existing item
+			// Existing item.
 			$value->attributes->set('access-change', $user->authorise('core.edit.state', $asset));
 		}
 		else
@@ -135,17 +133,11 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 			$value->attributes->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
 		}
 
-		if ($itemId)
+		if ($pk)
 		{
                         // Add the tags.
                         $value->tags = new JHelperTags;
                         $value->tags->getTagIds($value->id, 'com_hwdmediashare.category');
-
-                        // Add the custom fields.
-                        hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 6;
-                        $value->customfields = $cf->get($value);
 		}
 
 		return $value;
@@ -154,6 +146,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 	/**
 	 * Get the return URL.
 	 *
+         * @access  public
 	 * @return  string  The return URL.
 	 */
 	public function getReturnPage()
@@ -164,9 +157,7 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 	/**
 	 * Method for getting the report form.
 	 *
-	 * @param   array    $data      Data for the form.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
+         * @access  public
 	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getReportForm()
