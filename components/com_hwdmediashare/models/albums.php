@@ -14,21 +14,19 @@ class hwdMediaShareModelAlbums extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */   
 	public $context = 'com_hwdmediashare.albums';
 
 	/**
-	 * Model data
-	 * @var array
-	 */
-	protected $_items = null;
-        
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -51,6 +49,7 @@ class hwdMediaShareModelAlbums extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -69,10 +68,12 @@ class hwdMediaShareModelAlbums extends JModelList
 	/**
 	 * Method to get the database query.
 	 *
+	 * @access  protected
 	 * @return  JDatabaseQuery  database query
 	 */
         public function getListQuery()
         {
+                // Initialise variables.
 		$user	= JFactory::getUser();
 		$groups	= implode(',', $user->getAuthorisedViewLevels());
 
@@ -104,13 +105,12 @@ class hwdMediaShareModelAlbums extends JModelList
                         $query->where('a.access IN ('.$groups.')');
                 }
                 
-                // Restrict based on privacy access.
+                // Restrict based on privacy (listed/unlisted) access.
                 $query->where('(a.private = 0 OR (a.private = 1 && a.created_user_id = '.$user->id.'))');
                 
                 // Join over the users for the author, with value based on configuration.
-                $config->get('author') == 0 ? $query->select('CASE WHEN a.created_user_id_alias > ' . $db->Quote(' ') . ' THEN a.created_user_id_alias ELSE ua.name END AS author') : $query->select('CASE WHEN a.created_user_id_alias > ' . $db->Quote(' ') . ' THEN a.created_user_id_alias ELSE ua.username END AS author');
+                $config->get('author') == 0 ? $query->select('CASE WHEN a.created_user_id_alias > ' . $db->quote(' ') . ' THEN a.created_user_id_alias ELSE ua.name END AS author') : $query->select('CASE WHEN a.created_user_id_alias > ' . $db->quote(' ') . ' THEN a.created_user_id_alias ELSE ua.username END AS author');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.created_user_id');
-		$query->join('LEFT', '#__users AS uam ON uam.id = a.modified_user_id');
 
 		// Filter by published state.
 		$published = $this->getState('filter.published');
@@ -154,7 +154,7 @@ class hwdMediaShareModelAlbums extends JModelList
 			}
                         else
                         {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
+				$search = $db->quote('%'.$db->escape($search, true).'%');
 				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
@@ -162,7 +162,7 @@ class hwdMediaShareModelAlbums extends JModelList
 		// Filter on the language.
 		if ($this->getState('filter.language'))
                 {
-			$query->where('a.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('a.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}                
 
 		// Add the list ordering clause.
@@ -180,7 +180,7 @@ class hwdMediaShareModelAlbums extends JModelList
                         }                    
 		}    
 
-		// Filter by author
+		// Filter by author.
 		$authorId = $this->getState('filter.author_id');
 		$authorWhere = '';
 		if (is_numeric($authorId)) 
@@ -199,23 +199,23 @@ class hwdMediaShareModelAlbums extends JModelList
 			}
 		}
 
-		// Filter by start and end dates.
-		$nullDate = $db->Quote($db->getNullDate());
-		$nowDate = $db->Quote(JFactory::getDate()->toSql());
+		// Filter by published start and end dates.
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate = $db->quote(JFactory::getDate()->toSql());
 		if ($this->getState('filter.publish_date'))
                 {
 			$query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
 			$query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
 		}
 
-		// Filter by Date Range or Relative Date
+		// Filter by date range states.
 		$dateFiltering = $this->getState('filter.date_filtering', 'off');
 		$dateField = $this->getState('filter.date_field', 'a.created');
 		switch ($dateFiltering)
 		{
 			case 'range':
-				$startDateRange = $db->Quote($this->getState('filter.start_date_range', $nullDate));
-				$endDateRange = $db->Quote($this->getState('filter.end_date_range', $nullDate));
+				$startDateRange = $db->quote($this->getState('filter.start_date_range', $nullDate));
+				$endDateRange = $db->quote($this->getState('filter.end_date_range', $nullDate));
 				$query->where('('.$dateField.' >= '.$startDateRange.' AND '.$dateField . ' <= '.$endDateRange.')');
 				break;
 
@@ -248,7 +248,7 @@ class hwdMediaShareModelAlbums extends JModelList
 				break;
 		}                
 
-                // Filter by media.
+                // Filter by media (allowing the display of albums containing a specific media).
 		if ($mediaId = $this->getState('media.id'))
                 {
                         $query->join('LEFT', '#__hwdms_album_map AS amap ON amap.album_id = a.id AND amap.media_id = '.$mediaId);
@@ -264,9 +264,9 @@ class hwdMediaShareModelAlbums extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	public function populateState($ordering = null, $direction = null)
@@ -298,21 +298,21 @@ class hwdMediaShareModelAlbums extends JModelList
 
 		$this->setState('filter.language', $app->getLanguageFilter());
 
-                // Only set these states when in the com_hwdmediashare.media context.
+                // Only set these states when in the com_hwdmediashare.albums context.
                 if ($this->context == 'com_hwdmediashare.albums')
                 {                    
                         // Load the display state.
-                        $display = $this->getUserStateFromRequest('media.display_albums', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                        $display = $this->getUserStateFromRequest('media.display_albums', 'display', $config->get('list_default_display', 'details'), 'word', false);
                         if (!in_array(strtolower($display), array('details', 'list'))) $display = 'details';
                         $this->setState('media.display_albums', $display);
 
                         // Load the featured state.
-                        $featured = $this->getUserStateFromRequest('albums.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        $featured = $this->getUserStateFromRequest('albums.show_featured', 'show_featured', $config->get('show_featured', 'show'), 'word', false);
                         if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
                         $this->setState('albums.show_featured', $featured);
                         $this->setState('filter.featured', $featured);
 
-                        // Check for list inputs and set default values
+                        // Check for list inputs and set default values.
                         $orderingFull = $config->get('list_order_album', 'a.created DESC');
                         $orderingParts = explode(' ', $orderingFull); 
                         $ordering = $orderingParts[0];
