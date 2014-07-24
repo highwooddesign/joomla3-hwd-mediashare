@@ -262,7 +262,7 @@ class hwdMediaShareModelPlaylist extends JModelList
 	}
 
 	/**
-	 * Method to number of media in the playlist.
+	 * Method to get number of media in the playlist.
 	 *
          * @access  public
 	 * @return  integer The number of media.
