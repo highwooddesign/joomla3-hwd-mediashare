@@ -106,7 +106,7 @@ class hwdMediaShareModelCustomFields extends JModelList
 			}
                         else
                         {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
+				$search = $db->quote('%'.$db->escape($search, true).'%');
 				$query->where('(a.name LIKE '.$search.' OR a.tooltip LIKE '.$search.')');
 			}
 		}
