@@ -10,6 +10,9 @@
 
 defined('_JEXEC') or die;
 
+// Include the component HTML helpers.
+JHtml::addIncludePath(JPATH_ROOT . '/administrator/components/com_hwdmediashare/helpers/html');
+
 $user = JFactory::getUser();
 JHtml::_('bootstrap.tooltip');
 ?>
@@ -91,21 +94,37 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->
     <dl class="media-info">
       <dt class="media-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?> </dt>
       <?php if ($displayData->params->get('list_meta_author') != '0' || $displayData->params->get('list_meta_created') != '0') : ?>
-        <dd class="media-info-createdby">
-          <?php if ($displayData->params->get('list_meta_author') != '0') : ?><?php echo JText::sprintf('COM_HWDMS_BY_X_USER', '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($item->created_user_id)).'">'.htmlspecialchars($item->author, ENT_COMPAT, 'UTF-8').'</a>'); ?><?php endif; ?><?php if ($displayData->params->get('list_meta_created') != '0') : ?>, <?php echo JHtml::_('date.relative', $item->created); ?><?php endif; ?>
-        </dd>
-      <?php endif; ?>
+      <dd class="media-info-meta">
+        <?php if ($displayData->params->get('list_meta_author') != '0') : ?>
+          <span class="media-info-createdby">
+            <?php echo JText::sprintf('COM_HWDMS_BY_X_USER', '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($item->created_user_id)).'">'.htmlspecialchars($item->author, ENT_COMPAT, 'UTF-8').'</a>'); ?>
+          </span>
+        <?php endif; ?>
+        <?php if ($displayData->params->get('list_meta_created') != '0') : ?>
+          <span class="media-info-created">
+            <?php echo JHtml::_('hwddate.relative', $item->created); ?>
+          </span>
+        <?php endif; ?>
+      </dd>
+      <?php endif; ?>      
+      <div class="clearfix"></div>
       <?php if ($displayData->params->get('list_meta_category') != '0' && $displayData->params->get('enable_categories') && (count($item->categories) > 0)) : ?>
-        <dd class="media-info-category"><?php echo JText::sprintf('COM_HWDMS_IN_X_CATEGORY', $displayData->getCategories($item)); ?></dd>
-      <?php endif; ?>              
-      <?php if ($displayData->params->get('list_meta_description') != '0' && !empty($item->description)) :?>
-        <dd class="media-info-description"> <?php echo $displayData->escape(JHtmlString::truncate($item->description, $displayData->params->get('list_desc_truncate'), false, false)); ?> </dd>
+        <dd class="media-info-category"><?php echo JText::sprintf('COM_HWDMS_IN_X_CATEGORY', hwdMediaShareCategory::renderCategories($item)); ?></dd>
+      <?php endif; ?> 
+      <?php if ($displayData->params->get('list_meta_description') != '0') :?>
+        <dd class="media-info-description"><?php echo $displayData->escape(JHtmlString::truncate($item->description, $displayData->params->get('list_desc_truncate'), false, false)); ?></dd>
+      <?php endif; ?>      
+      <?php if ($displayData->params->get('list_meta_likes') != '0') :?>
+        <dd class="media-info-likes">
+	  <i class="icon-thumbs-up"></i> <span id="media-likes"><?php echo (int) $item->likes; ?></span>
+	  <i class="icon-thumbs-down"></i> <span id="media-dislikes"><?php echo (int) $item->dislikes; ?></span>
+	</dd>
       <?php endif; ?>
       <?php if ($displayData->params->get('list_meta_hits') != '0') :?>
         <dd class="media-info-hits"><?php echo JText::sprintf('COM_HWDMS_X_VIEWS', number_format((int) $item->hits)); ?></dd>
       <?php endif; ?>
     </dl>
-    <?php endif; ?> 
+    <?php endif; ?>
   </div>
 <?php if (($rowcount == $displayData->columns) or (($id + 1) == count($displayData->items))): ?>
 </div>
