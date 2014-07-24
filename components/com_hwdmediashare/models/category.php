@@ -26,7 +26,7 @@ class hwdMediaShareModelCategory extends JModelList
          * @access      protected
 	 * @var         object
 	 */  
-	protected $_category = null;
+	protected $_category;
         
 	/**
 	 * The category items.
@@ -34,7 +34,7 @@ class hwdMediaShareModelCategory extends JModelList
          * @access      protected
 	 * @var         object
 	 */
-	protected $_items = null;
+	protected $_items;
         
 	/**
 	 * The category subcategories.
@@ -42,7 +42,7 @@ class hwdMediaShareModelCategory extends JModelList
          * @access      protected
 	 * @var         object
 	 */
-	protected $_subcategories = null;  
+	protected $_subcategories;
         
 	/**
 	 * The category featured item.
@@ -50,7 +50,7 @@ class hwdMediaShareModelCategory extends JModelList
          * @access      protected
 	 * @var         object
 	 */        
-	protected $_feature = null;        
+	protected $_feature;
 
         /**
 	 * The media model used for obtaining category items.
