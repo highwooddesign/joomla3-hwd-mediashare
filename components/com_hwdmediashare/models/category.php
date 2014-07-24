@@ -241,7 +241,7 @@ class hwdMediaShareModelCategory extends JModelList
 	}
 
 	/**
-	 * Method to number of media in the album.
+	 * Method to number of media in the category.
 	 *
          * @access  public
 	 * @return  integer The number of media.
