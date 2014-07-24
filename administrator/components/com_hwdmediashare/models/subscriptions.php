@@ -81,7 +81,7 @@ class hwdMediaShareModelSubscriptions extends JModelList
 			}
                         else
                         {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
+				$search = $db->quote('%'.$db->escape($search, true).'%');
 				$query->where('(u.name LIKE '.$search.' OR u.username LIKE '.$search.')');
 			}
 		}
