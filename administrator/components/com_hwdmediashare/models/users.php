@@ -96,7 +96,7 @@ class hwdMediaShareModelUsers extends JModelList
 		$query->join('LEFT', '#__users AS u ON u.id=a.id');
 
                 // Join over the users for the title (if empty), with value based on configuration.
-                $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.username END AS title');
+                $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->quote(' ') . ' THEN a.title ELSE ua.username END AS title');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.id');
 
 		// Join over the asset groups.
@@ -147,7 +147,7 @@ class hwdMediaShareModelUsers extends JModelList
 			}
                         else
                         {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
+				$search = $db->quote('%'.$db->escape($search, true).'%');
 				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.' OR u.username LIKE '.$search.' OR u.name LIKE '.$search.')');
 			}
 		}
