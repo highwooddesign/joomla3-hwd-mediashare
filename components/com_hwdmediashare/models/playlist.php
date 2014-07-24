@@ -14,24 +14,51 @@ class hwdMediaShareModelPlaylist extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */ 
 	public $context = 'com_hwdmediashare.playlist';
 
 	/**
-	 * Model data
-	 * @var array
-	 */
-	protected $_playlist = null;
-	protected $_items = null;
-	protected $_model = null;
+	 * The playlist data.
+         * 
+         * @access      protected
+	 * @var         object
+	 */ 
+	protected $_playlist;
+        
+	/**
+	 * The playlist items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
+	protected $_items;
+        
+	/**
+	 * The media model used for obtaining playlist items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */        
+	protected $_model;
+        
+	/**
+	 * The number of media in the playlist.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numMedia = 0;
         
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -53,12 +80,12 @@ class hwdMediaShareModelPlaylist extends JModelList
 	}
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Playlist', $prefix = 'hwdMediaShareTable', $config = array())
@@ -69,9 +96,9 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Method to get a single playlist.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getPlaylist($pk = null)
 	{
@@ -85,10 +112,10 @@ class hwdMediaShareModelPlaylist extends JModelList
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
+		// Attempt to load the table row.
 		$return = $table->load($pk);
 
 		// Check for a table object error.
@@ -155,10 +182,10 @@ class hwdMediaShareModelPlaylist extends JModelList
 			$registry->loadString($this->_playlist->params);
 			$this->_playlist->params = $registry;
 
-                        // Check if this album has a custom ordering.
+                        // Check if this playlist has a custom ordering.
                         if ($ordering = $this->_playlist->params->get('list_order_media')) 
                         {
-                                // Force this new ordering
+                                // Force this new ordering.
                                 $orderingParts = explode(' ', $ordering); 
                                 $app = JFactory::getApplication();
                                 $list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array');
@@ -177,9 +204,9 @@ class hwdMediaShareModelPlaylist extends JModelList
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 4;
-                        $this->_playlist->customfields = $cf->get($this->_playlist);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 4;
+                        $this->_playlist->customfields = $HWDcustomfields->load($this->_playlist);
                         
                         // Add the number of media in the playlist.
                         $this->_playlist->nummedia = $this->_numMedia;
@@ -202,6 +229,7 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -225,6 +253,7 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+         * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -235,7 +264,8 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Method to number of media in the playlist.
 	 *
-	 * @return  JPagination  A JPagination object for the data set.
+         * @access  public
+	 * @return  integer The number of media.
 	 */
 	public function getNumMedia()
 	{
@@ -247,9 +277,9 @@ class hwdMediaShareModelPlaylist extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -267,11 +297,6 @@ class hwdMediaShareModelPlaylist extends JModelList
 		$id = $app->input->getInt('id');
 		$this->setState('filter.playlist_id', $id);
 
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		$this->setState('layout', $app->input->getString('layout'));                
-
 		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
 			// Limit to published for people who can't edit or edit.state.
@@ -288,7 +313,7 @@ class hwdMediaShareModelPlaylist extends JModelList
 			$this->setState('filter.status',	array(0,1,2,3));
                 }
                 
-                // Only set these states when in the com_hwdmediashare.media context.
+                // Only set these states when in the com_hwdmediashare.playlist context.
                 if ($this->context == 'com_hwdmediashare.playlist')
                 {    
                         // Load the display state.
@@ -315,8 +340,8 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Increment the hit counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk  Optional primary key of the record to increment.
-	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
@@ -339,9 +364,9 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Increment the like counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk     Optional primary key of the record to increment.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function like($pk = 0, $value = 1)
@@ -365,9 +390,9 @@ class hwdMediaShareModelPlaylist extends JModelList
 	/**
 	 * Method to change the published state of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks    A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
@@ -412,15 +437,17 @@ class hwdMediaShareModelPlaylist extends JModelList
 			return false;
 		}
 
-		// Clear the component's cache
+		// Clear the component's cache.
 		$this->cleanCache();
 
 		return true;
 	}
 
 	/**
-	 * Method to report an object
-	 * @return  void
+	 * Method to report a playlist.
+         * 
+         * @access  public
+	 * @return  boolean True on success, false on failure.
 	 */
 	public function report()
 	{
@@ -429,10 +456,12 @@ class hwdMediaShareModelPlaylist extends JModelList
                 $date = JFactory::getDate();                
 		$input = JFactory::getApplication()->input;
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-		$table = $this->getTable('Report', 'hwdMediaShareTable');    
+                // Load HWD report table.
+		$table = $this->getTable('Report', 'hwdMediaShareTable');   
 
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
                 {
