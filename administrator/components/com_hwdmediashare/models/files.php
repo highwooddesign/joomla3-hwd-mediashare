@@ -168,7 +168,7 @@ class hwdMediaShareModelFiles extends JModelList
 			}
                         else
                         {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
+				$search = $db->quote('%'.$db->escape($search, true).'%');
 				$query->where('(a.basename LIKE '.$search.')');
 			}
 		}
