@@ -88,11 +88,6 @@ class hwdMediaShareViewUserForm extends JViewLegacy
 	 */
 	protected function _prepareDocument()
 	{
-		$app = JFactory::getApplication();
-		$menus = $app->getMenu();
-		$pathway = $app->getPathway();
-		$title = null;
-
                 // Add page assets.
                 JHtml::_('bootstrap.framework');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
