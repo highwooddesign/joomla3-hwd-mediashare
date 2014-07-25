@@ -155,15 +155,15 @@
  		<field
                         name="thumbnail"
                         type="file"
-			label="COM_HWDMS_NEW_THUMBNAIL_LABEL"
-                        description="COM_HWDMS_NEW_THUMBNAIL_DESC"
+			label="COM_HWDMS_NEW_CHANNEL_ART_LABEL"
+                        description="COM_HWDMS_NEW_CHANNEL_ART_DESC"
                 />
  		<field
                         name="remove_thumbnail"
                         type="checkbox"
                         value="1"
-			label="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_LABEL"
-                        description="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_DESC"
+			label="COM_HWDMS_REMOVE_CURRENT_CHANNEL_ART_LABEL"
+                        description="COM_HWDMS_REMOVE_CURRENT_CHANNEL_ART_DESC"
                 />
         </fieldset>
         <fieldset
