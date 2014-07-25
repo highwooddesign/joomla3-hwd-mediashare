@@ -13,10 +13,10 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewReported extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
 	public function display($tpl = null)
@@ -46,7 +46,9 @@ class hwdMediaShareViewReported extends JViewLegacy
                         break;
                 }
                 
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
+                
                 $this->return = base64_encode(JFactory::getURI()->toString());
 
                 // Check for errors.
@@ -73,6 +75,7 @@ class hwdMediaShareViewReported extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -83,9 +86,12 @@ class hwdMediaShareViewReported extends JViewLegacy
 	}
         
 	/**
-	 * Method to get human readable report type
-	 * @return  void
-	 **/
+	 * Method to get the type of report in a human readable format. 
+	 *
+	 * @access  public
+         * @param   object  The report item.
+	 * @return  string  The report type.
+	 */
 	public function getReportType($item)
 	{
                 switch ($item->report_id) {
