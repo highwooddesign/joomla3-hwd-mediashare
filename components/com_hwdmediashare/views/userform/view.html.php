@@ -19,14 +19,17 @@ class hwdMediaShareViewUserForm extends JViewLegacy
 	protected $form;
 
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-        public function display($tpl = null)
+	public function display($tpl = null)
 	{
+		// Initialise variables.
+		$user = JFactory::getUser();
+                
                 // Get data from the model.
 		$this->state = $this->get('State');
 		$this->item = $this->get('Item');
@@ -34,10 +37,12 @@ class hwdMediaShareViewUserForm extends JViewLegacy
                 $this->return_page = $this->get('ReturnPage');
 		$this->params = $this->state->params;
 
-                // Load libraries.
+                // Register classes.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
                 JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                
+                // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
@@ -46,10 +51,7 @@ class hwdMediaShareViewUserForm extends JViewLegacy
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->isNew = $this->item->id == 0;
-                
-		// Initialise variables.
-		$user = JFactory::getUser();
-                
+
                 // Check access.
 		if (empty($this->item->id))
 		{
@@ -79,8 +81,9 @@ class hwdMediaShareViewUserForm extends JViewLegacy
 	}
         
 	/**
-	 * Prepares the document
+	 * Prepares the document.
 	 *
+         * @access  protected
 	 * @return  void
 	 */
 	protected function _prepareDocument()
@@ -97,21 +100,23 @@ class hwdMediaShareViewUserForm extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
                 
-		$this->params->set('page_heading', JText::sprintf( 'COM_HWDMS_EDIT_USERX', $this->escape($this->item->title)));
+		// Define the page title and headings. 
+		$this->params->set('page_heading', JText::sprintf('COM_HWDMS_EDIT_USERX', $this->escape($this->item->title)));
 		$this->document->setTitle($this->params->get('page_heading')); 
 	}
 
 	/**
-	 * Display the report view
+	 * Display the report view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function report($tpl = null)
+	public function report($tpl = null)
 	{
 		// Initialise variables.
 		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
                             
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
                 {
@@ -123,7 +128,7 @@ class hwdMediaShareViewUserForm extends JViewLegacy
                 
                 // Get data from the model.
                 $this->form = $this->get('ReportForm');
-                $this->id = JFactory::getApplication()->input->get('id', '', 'int');
+                $this->id = $app->input->get('id', '', 'int');
 
 		// Display the template.
 		parent::display('report');                
