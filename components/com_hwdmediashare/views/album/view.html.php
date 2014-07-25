@@ -109,7 +109,8 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		// If the menu item does not concern this view then add a breadcrumb.
 		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'album' || (int) @$menu->query['id'] != $this->album->id))
 		{
-			// Reset title and heading if menu item doesn't point directly.
+			// Reset title and heading if menu item doesn't point 
+                        // directly to this item.
 			if ($this->album->title) 
                         {
 				$title = $this->album->title;
