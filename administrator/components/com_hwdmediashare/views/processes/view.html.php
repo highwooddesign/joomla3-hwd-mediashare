@@ -80,7 +80,7 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 
                 JToolBarHelper::title(JText::_('COM_HWDMS_PROCESSES'), 'cog');
 
-                JToolBarHelper::custom('process.run', 'cog', 'cog', JText::_('COM_HWDMS_PROCESS'), true);
+                JToolBarHelper::custom('process.run', 'cog', 'cog', JText::_('COM_HWDMS_PROCESS_SELECTED'), true);
                 JToolBarHelper::custom('process.runall', 'cog', 'cog', JText::_('COM_HWDMS_PROCESS_ALL'), false);
 		if ($canDo->get('core.edit.state'))
                 {
@@ -157,5 +157,8 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 
                 // Display the template.
 		parent::display('run');
+
+		$document = JFactory::getDocument();
+		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");                
 	}        
 }
