@@ -41,6 +41,8 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 		$this->unnecessary = $this->get('Unnecessary');
                 $this->filterForm = $this->get('FilterForm');
 
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('processes');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
 
@@ -100,19 +102,7 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 }
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
-        
-	/**
-	 * Method to display a human readable process type.
-	 *
-	 * @access  public
-	 * @return  string  The process type.
-	 */
-	public function getProcessType($item)
-	{
-                hwdMediaShareFactory::load('processes');
-                return hwdMediaShareProcesses::getType($item);
-	}
-        
+                
 	/**
 	 * Method to display a human readable process status.
 	 *
