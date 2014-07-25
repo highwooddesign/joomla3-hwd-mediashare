@@ -22,7 +22,7 @@ JHtml::_('behavior.tooltip');
 JHtml::_('behavior.modal');
 JHtml::_('behavior.tabstate');
 //@TODO: Get the parameter AJAX update working with the chosen framework
-//JHtml::_('formbehavior.chosen', 'select');
+//JHtml::_('formbehavior.chosen', 'select'); 
 
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -170,6 +170,14 @@ $doc->addScriptDeclaration($ajax);
                                         </div>
                                         <div class="controls">
                                                 <?php echo $this->form->getInput('required'); ?>
+                                        </div>
+                                </div>
+                                <div class="control-group">
+                                        <div class="control-label">
+                                                <?php echo $this->form->getLabel('options'); ?>
+                                        </div>
+                                        <div class="controls">
+                                                <?php echo $this->form->getInput('options'); ?>
                                         </div>
                                 </div>
                                 <div class="control-group">
