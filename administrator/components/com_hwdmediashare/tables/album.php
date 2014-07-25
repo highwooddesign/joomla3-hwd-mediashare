@@ -155,18 +155,18 @@ class hwdMediaShareTableAlbum extends JTable
 		if ($return) 
                 {
                         /** Perform a few post-store tasks **/
-
+                        $properties = $this->getProperties(1);
+                        $album = JArrayHelper::toObject($properties, 'JObject');
+                                
                         // Get data from the request.
                         hwdMediaShareFactory::load('upload');
                         $data = hwdMediaShareUpload::getProcessedUploadData(); 
                         
                         // Add custom field data.
                         hwdMediaShareFactory::load('customfields');                
-                        $object = new StdClass;
-                        $object->elementId = $this->id;
                         $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
                         $HWDcustomfields->elementType = 2;
-                        $HWDcustomfields->save($object);
+                        $HWDcustomfields->save($album);
                         
                         // Add thumbnail.
                         hwdMediaShareFactory::load('upload');
@@ -180,9 +180,7 @@ class hwdMediaShareTableAlbum extends JTable
                         
                         // If new and approved then trigger onAfterAlbumAdd event.
                         if ($isNew && $this->status == 1)
-                        {                            
-                                $properties = $this->getProperties(1);
-                                $album = JArrayHelper::toObject($properties, 'JObject');                                
+                        {                                                           
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
                                 $events->triggerEvent('onAfterAlbumAdd', $album);
