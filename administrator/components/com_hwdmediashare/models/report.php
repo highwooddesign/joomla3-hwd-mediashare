@@ -36,14 +36,110 @@ class hwdMediaShareModelReport extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Get the form.
-		$form = $this->loadForm('com_hwdmediashare.configuration', 'configuration', array('control' => 'jform', 'load_data' => $loadData));
+		return false;
+	}    
+        
+	/**
+	 * Method to remove content that has been reported.
+	 *
+         * @access  public
+	 * @param   array    $pks   An array of record primary keys.
+	 * @return  boolean  True on success.
+	 */
+	public function remove($pks)
+	{
+		// Initialise variables.
+                $user = JFactory::getUser();
+                
+                // Create a new query object.
+                $db = JFactory::getDBO();
+                $query = $db->getQuery(true);
+                
+		// Sanitize the ids.
+		$pks = (array) $pks;
+		JArrayHelper::toInteger($pks);
 
-		if (empty($form))
+                // Access check.
+                if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
+                {
+			$this->setError(JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
+			return false;
+                }
+                
+		if (empty($pks))
 		{
+			$this->setError(JText::_('JGLOBAL_NO_ITEM_SELECTED'));
 			return false;
 		}
 
-		return $form;
-	}    
+		// Access checks.
+		foreach ($pks as $i => $id)
+		{
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Report', 'hwdMediaShareTable');
+                        
+                        // Attempt to load the table row.
+                        $return = $table->load($id);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+                
+                        $properties = $table->getProperties(1);
+                        $report = JArrayHelper::toObject($properties, 'JObject');                      
+                        
+                        switch ($report->element_type)
+                        {
+                                case 1:
+                                    // Media
+                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_media'));
+                                    break;
+                                case 2:
+                                    // Album
+                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_albums'));
+                                    break;
+                                case 3:
+                                    // Group
+                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_groups'));
+                                    break;
+                                case 4:
+                                    // Playlist
+                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_playlists'));
+                                    break;
+                                case 5:
+                                    // Channel
+                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_users'));
+                                    break;
+                        }
+                        
+                        try
+                        {
+                                // Complete the query to trash the content.
+                                $query->set('published = ' . $db->quote(-2))
+                                      ->where('id = ' . $db->quote($report->element_id));                            
+                                
+                                $db->setQuery($query);
+                                $db->execute();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+                        
+                        // Now we dismiss the report also.
+                        if (!parent::delete($pks))
+                        {
+                                return false;
+                        }
+		}
+
+		// Clear the component's cache.
+		$this->cleanCache();
+
+		return true;
+	}        
 }

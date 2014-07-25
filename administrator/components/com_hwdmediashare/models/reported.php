@@ -184,42 +184,45 @@ class hwdMediaShareModelReported extends JModelList
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
-	{                
-		$items = parent::getItems();
-
-                for ($x = 0, $count = count($items); $x < $count; $x++)
-                {
-                        if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+	{               
+		if ($items = parent::getItems())
+		{          
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        switch ($items[$x]->element_type)
+
+                        for ($x = 0, $count = count($items); $x < $count; $x++)
                         {
-                                case 1:
-                                    // Media
-                                    $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                    break;
-                                case 2:
-                                    // Album
-                                    $table = JTable::getInstance('Album', 'hwdMediaShareTable');
-                                    break;
-                                case 3:
-                                    // Group
-                                    $table = JTable::getInstance('Group', 'hwdMediaShareTable');
-                                    break;
-                                case 4:
-                                    // Playlist
-                                    $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                                    break;
-                                case 5:
-                                    // Channel
-                                    $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                                    break;
+                                if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
+                                
+                                switch ($items[$x]->element_type)
+                                {
+                                        case 1:
+                                            // Media
+                                            $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                            break;
+                                        case 2:
+                                            // Album
+                                            $table = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                            break;
+                                        case 3:
+                                            // Group
+                                            $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                            break;
+                                        case 4:
+                                            // Playlist
+                                            $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                            break;
+                                        case 5:
+                                            // Channel
+                                            $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                            break;
+                                }
+
+                                $table->load($items[$x]->element_id);
+                                $properties = $table->getProperties(1);
+                                $row = JArrayHelper::toObject($properties, 'JObject');
+
+                                $items[$x]->title = (isset($row->title) ? $row->title : '');                      
                         }
-
-                        $table->load($items[$x]->element_id);
-                        $properties = $table->getProperties(1);
-                        $row = JArrayHelper::toObject($properties, 'JObject');
-
-                        $items[$x]->title = (isset($row->title) ? $row->title : '');                      
                 }
 
 		return $items;
