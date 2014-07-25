@@ -19,15 +19,17 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 	public $state;
         
 	public $params;
+ 
+	public $filterForm;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->album = $this->get('Album');
@@ -37,10 +39,12 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
 
-                // Load libraries.
+                // Register classes.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
                 JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                
+                // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
@@ -70,8 +74,9 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 	}
         
 	/**
-	 * Prepares the document
+	 * Prepares the document.
 	 *
+         * @access  protected
 	 * @return  void
 	 */
 	protected function _prepareDocument()
@@ -88,34 +93,30 @@ class hwdMediaShareViewAlbum extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// Define the page title and headings. 
 		$menu = $menus->getActive();
 		if ($menu)
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+                        $title = $this->params->get('page_title');
+                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_ALBUM'));
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('COM_HWDMS_ALBUM'));
+                        $title = JText::_('COM_HWDMS_ALBUM');
+                        $heading = JText::_('COM_HWDMS_ALBUM');
 		}
-                // Due to the nature of this view, we are going to override the page heading
-                $this->params->set('page_heading', $this->album->title);
                 
-		$title = $this->params->get('page_title', '');
-
-		$id = (int) @$menu->query['id'];
-                
-		// If the menu item does not concern this item
-		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'album' || $id != $this->album->id))
+		// If the menu item does not concern this view then add a breadcrumb.
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'album' || (int) @$menu->query['id'] != $this->album->id))
 		{
-			// If this is not a single item menu item, set the page title to the item title
+			// Reset title and heading if menu item doesn't point directly.
 			if ($this->album->title) 
                         {
 				$title = $this->album->title;
+                                $heading = $this->album->title;                           
 			}      
                         
-                        // Breadcrumb support
+                        // Breadcrumb support.
 			$path = array(array('title' => $this->album->title, 'link' => ''));
                                                 
 			$path = array_reverse($path);
@@ -125,7 +126,11 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 			}                    
 		}
 
-		// Check for empty title and add site name if param is set
+		// Redefine the page title and headings. 
+                $this->params->set('page_title', $title);
+                $this->params->set('page_heading', $heading); 
+                
+		// Check for empty title and add site name when configured.
 		if (empty($title))
                 {
 			$title = $app->getCfg('sitename');
@@ -139,10 +144,7 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
                 
-		if (empty($title))
-		{
-			$title = $this->item->title;
-		}
+                // Set metadata.
 		$this->document->setTitle($title);
 
                 if ($this->album->params->get('meta_desc'))
@@ -184,18 +186,5 @@ class hwdMediaShareViewAlbum extends JViewLegacy
                 {
 			$this->document->setMetadata('author', $this->album->author);
                 }      
-	}
-        
-	/**
-	 * Prepares the category list
-	 *
-	 * @return  void
-	 */
-	public function getCategories($item)
-	{            
-                hwdMediaShareFactory::load('category');
-                $cat = hwdMediaShareCategory::getInstance();
-                $cat->elementType = 1;
-                return $cat->getCategories($item);
 	}
 }
