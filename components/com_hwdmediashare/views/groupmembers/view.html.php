@@ -19,13 +19,13 @@ class hwdMediaShareViewGroupMembers extends JViewLegacy
 	public $params;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -34,10 +34,12 @@ class hwdMediaShareViewGroupMembers extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->groupId = JFactory::getApplication()->input->get('group_id', '', 'int');
 
-                // Load libraries.
+                // Register classes.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
                 JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                
+                // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
@@ -57,47 +59,46 @@ class hwdMediaShareViewGroupMembers extends JViewLegacy
 	}
         
 	/**
-	 * Prepares the document
+	 * Prepares the document.
 	 *
+         * @access  protected
 	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app = JFactory::getApplication();
-		$menus = $app->getMenu();
-		$pathway = $app->getPathway();
-		$title = null;
-
                 // Add page assets.
                 JHtml::_('bootstrap.framework');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
                 if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
-                
-		$this->document->setTitle($title);  
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');  
 	}
 
 	/**
-	 * Display appropriate button to either link or unlink the member from the group.
-	 * @return  void
+	 * Display appropriate button to either link or unlink the media from the album.
+         * 
+         * @access  public
+         * @param   object  $item   The content item.
+         * @param   integer $i      The checkbox key.
+         * @return  string  The markup for the button.
 	 */
-	public function getButton($row, $i)
+	public function getButton($item, $i)
 	{
-                $task = $row->connection ? 'unlink' : 'link';
-                $buttonClass = $row->connection ? 'btn btn-danger' : 'btn';
+                $task = $item->connection ? 'unlink' : 'link';
+                $buttonClass = $item->connection ? 'btn btn-danger' : 'btn';
 
-                // Start output
+                // Start output buffer.
                 ob_start();
                 ?>
                 <div class="btn-wrapper pull-right">
                         <a class="<?php echo $buttonClass; ?>" href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>','groupmembers.<?php echo $task; ?>')">
-                                <?php echo ($row->connection ? JText::_('COM_HWDMS_BTN_REMOVE_MEMBER') : JText::_('COM_HWDMS_BTN_ADD_MEMBER')); ?>
+                                <?php echo ($item->connection ? JText::_('COM_HWDMS_BTN_REMOVE_MEMBER') : JText::_('COM_HWDMS_BTN_ADD_MEMBER')); ?>
                         </a>
                 </div>
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
+                
                 return $html;
 	}
 }
