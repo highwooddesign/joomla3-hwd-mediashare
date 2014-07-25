@@ -108,16 +108,17 @@ class hwdMediaShareViewPlaylistForm extends JViewLegacy
 	}
 
 	/**
-	 * Display the report view
+	 * Display the report view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function report($tpl = null)
+	public function report($tpl = null)
 	{
 		// Initialise variables.
 		$user = JFactory::getUser();
+		$app = JFactory::getApplication();
                             
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
                 {
@@ -129,9 +130,9 @@ class hwdMediaShareViewPlaylistForm extends JViewLegacy
                 
                 // Get data from the model.
                 $this->form = $this->get('ReportForm');
-                $this->id = JFactory::getApplication()->input->get('id', '', 'int');
+                $this->id = $app->input->get('id', '', 'int');
 
 		// Display the template.
-		parent::display('report');                
+		parent::display('report');              
 	}
 }
