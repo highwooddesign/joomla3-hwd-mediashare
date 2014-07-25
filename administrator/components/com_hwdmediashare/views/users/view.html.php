@@ -37,6 +37,7 @@ class hwdMediaShareViewUsers extends JViewLegacy
 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('thumbnails');
                 hwdMediaShareFactory::load('files');
 
                 // Check for errors.
