@@ -155,18 +155,18 @@ class hwdMediaShareTablePlaylist extends JTable
 		if ($return) 
                 {
                         /** Perform a few post-store tasks **/
-
+                        $properties = $this->getProperties(1);
+                        $playlist = JArrayHelper::toObject($properties, 'JObject'); 
+                                
                         // Get data from the request.
                         hwdMediaShareFactory::load('upload');
                         $data = hwdMediaShareUpload::getProcessedUploadData(); 
                         
                         // Add custom field data.
                         hwdMediaShareFactory::load('customfields');                
-                        $object = new StdClass;
-                        $object->elementId = $this->id;
                         $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
                         $HWDcustomfields->elementType = 4;
-                        $HWDcustomfields->save($object);
+                        $HWDcustomfields->save($playlist);
                         
                         // Add thumbnail.
                         hwdMediaShareFactory::load('upload');
@@ -180,9 +180,7 @@ class hwdMediaShareTablePlaylist extends JTable
 
                         // If new and approved then trigger onAfterPlaylistAdd event.
                         if ($isNew && $this->status == 1)
-                        {                            
-                                $properties = $this->getProperties(1);
-                                $playlist = JArrayHelper::toObject($properties, 'JObject');                                
+                        {                                                           
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
                                 $events->triggerEvent('onAfterPlaylistAdd', $playlist);
