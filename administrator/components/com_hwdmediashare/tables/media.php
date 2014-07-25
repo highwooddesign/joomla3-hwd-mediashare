@@ -195,8 +195,10 @@ class hwdMediaShareTableMedia extends JTable
                 $return = parent::store($updateNulls);
 		if ($return) 
                 {
-                        // Perform a few post-store tasks
-
+                        /** Perform a few post-store tasks **/
+                        $properties = $this->getProperties(1);
+                        $media = JArrayHelper::toObject($properties, 'JObject');  
+                                
                         // Get data from the request.
                         hwdMediaShareFactory::load('upload');
                         $data = hwdMediaShareUpload::getProcessedUploadData();                
@@ -213,11 +215,9 @@ class hwdMediaShareTableMedia extends JTable
 
                         // Add custom field data.
                         hwdMediaShareFactory::load('customfields');                
-                        $object = new StdClass;
-                        $object->elementId = $this->id;
                         $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
                         $HWDcustomfields->elementType = 1;
-                        $HWDcustomfields->save($object);
+                        $HWDcustomfields->save($media);
 
                         // Add thumbnail.
                         hwdMediaShareFactory::load('upload');
@@ -231,14 +231,12 @@ class hwdMediaShareTableMedia extends JTable
                         
                         // If new and approved then trigger onAfterMediaAdd event.
                         if ($isNew && $this->status == 1)
-                        {                            
-                                $properties = $this->getProperties(1);
-                                $row = JArrayHelper::toObject($properties, 'JObject');                                
+                        {                                                          
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
-                                $events->triggerEvent('onAfterMediaAdd', $row);
+                                $events->triggerEvent('onAfterMediaAdd', $media);
                                 
-                                hwdMediaShareUpload::assignAssociations($row);
+                                hwdMediaShareUpload::assignAssociations($media);
                         }    
 
                         // Send system notifications.
