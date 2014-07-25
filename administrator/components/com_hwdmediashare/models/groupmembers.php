@@ -66,7 +66,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
                 $app = JFactory::getApplication();
                 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
-                $this->model = JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->model = JModelLegacy::getInstance('Members', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->model->populateState();
                 $this->model->setState('filter.add_to_group', $app->input->get('add', '0', 'int'));
                 $this->model->setState('filter.group_id',  $app->input->get('group_id', '', 'int'));
