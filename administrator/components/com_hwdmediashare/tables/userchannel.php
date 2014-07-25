@@ -174,7 +174,7 @@ class hwdMediaShareTableUserChannel extends JTable
                         hwdMediaShareFactory::load('customfields');                
                         $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
                         $HWDcustomfields->elementType = 5;
-                        $HWDcustomfields->save($playlist);
+                        $HWDcustomfields->save($channel);
                         
                         // Add thumbnail.
                         hwdMediaShareFactory::load('upload');
@@ -191,7 +191,7 @@ class hwdMediaShareTableUserChannel extends JTable
                         {                                                           
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
-                                $events->triggerEvent('onAfterChannelAdd', $row);
+                                $events->triggerEvent('onAfterChannelAdd', $channel);
                         }                        
                 }        
                 
