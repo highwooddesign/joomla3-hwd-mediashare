@@ -65,9 +65,9 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                                 <blockquote><?php echo $this->escape($item->description); ?></blockquote> 
                                         </div>  
                                         <div class="btn-group">
-                                                <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.dismiss')" class="btn btn-mini"><i class="icon-trash"></i> Dismiss Report</a>                                            
-                                                <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.remove')" class="btn btn-mini"><i class="icon-trash"></i> Remove Media</a>                                            
-                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->element_id); ?>" target="_blank" class="btn btn-mini"><i class="icon-eye"></i> View Media</a>                                            
+                                                <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.dismiss')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_DISMISS_REPORT'); ?></a>                                            
+                                                <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.remove')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_REMOVE_MEDIA'); ?></a>                                            
+                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->element_id); ?>" target="_blank" class="btn btn-mini"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW_MEDIA'); ?></a>                                            
                                         </div>  
 				</td>
 				<td class="center">
