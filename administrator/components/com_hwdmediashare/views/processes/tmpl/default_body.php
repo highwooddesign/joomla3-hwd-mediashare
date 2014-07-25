@@ -39,9 +39,9 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                         <?php endif; ?>
                         <?php if ($canEdit) : ?>
                                 <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=process.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
-                                        <?php echo $this->getProcessType($item); ?></a>
+                                        <?php echo hwdMediaShareProcesses::getType($item); ?></a>
                         <?php else : ?>
-                                <?php echo $this->getProcessType($item); ?>
+                                <?php echo hwdMediaShareProcesses::getType($item); ?>
                         <?php endif; ?>   
                         <div class="small">
                                 <?php echo JText::sprintf('COM_HWDMS_FOR_MEDIA_N', '<a href="' . JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.(int) $item->media_id) . '">' . $this->escape($item->title) . '</a>'); ?>
