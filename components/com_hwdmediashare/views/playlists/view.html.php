@@ -18,14 +18,16 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
         
 	public $params;
         
+	public $filterForm;        
+	
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->items = $this->get('Items');
@@ -34,10 +36,12 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
 
-                // Load libraries.
+                // Register classes.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
                 JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                
+                // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
@@ -63,8 +67,9 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 	}
         
 	/**
-	 * Prepares the document
+	 * Prepares the document.
 	 *
+         * @access  protected
 	 * @return  void
 	 */
 	protected function _prepareDocument()
@@ -81,27 +86,26 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// Define the page title and headings. 
 		$menu = $menus->getActive();
 		if ($menu)
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+                        $title = $this->params->get('page_title');
+                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_PLAYLISTS'));
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('COM_HWDMS_PLAYLISTS'));
+                        $title = JText::_('COM_HWDMS_PLAYLISTS');
+                        $heading = JText::_('COM_HWDMS_PLAYLISTS');
 		}
 
-		$title = $this->params->get('page_title', '');
-
-		// If the menu item does not concern this item
+                $this->params->set('page_title', $title);
+                $this->params->set('page_heading', $heading);
+                
+		// If the menu item does not concern this view then add a breadcrumb.
 		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'playlists'))
 		{       
-			// If this is not a single item menu item, set the page title to the item title
-			$title = JText::_('COM_HWDMS_PLAYLISTS');    
-                        
-                        // Breadcrumb support
+                        // Breadcrumb support.
 			$path = array(array('title' => JText::_('COM_HWDMS_PLAYLISTS'), 'link' => ''));
                                                 
 			$path = array_reverse($path);
@@ -111,7 +115,7 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 			}                    
 		}
                 
-		// Check for empty title and add site name if param is set
+		// Check for empty title and add site name when configured.
 		if (empty($title))
                 {
 			$title = $app->getCfg('sitename');
@@ -125,6 +129,7 @@ class hwdMediaShareViewPlaylists extends JViewLegacy
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
                 
+                // Set metadata.
 		$this->document->setTitle($title);
 
                 if ($this->params->get('meta_desc'))
