@@ -164,23 +164,8 @@ class hwdMediaShareModelUsers extends JModelList
 
 		$query->order($db->escape($listOrder.' '.$listDirn));
 
-   		// Group over the ID to prevent duplicates.
+   		// Group over the key to prevent duplicates.
                 $query->group('a.id');
-                
-                // Additional filters
-                $groupId = $this->getState('filter.group_id');
-                if ($groupId > 0)
-                {
-                        // Join over the language
-                        $query->select('map.id AS mapid, map.group_id, IF(map.group_id = '.$groupId.', true, false) AS connection');
-                        $query->join('LEFT', '`#__hwdms_group_members` AS map ON map.member_id = a.id AND map.group_id = '.$groupId);
-
-                        $viewAll = $this->getState('filter.add_to_group') ? true : false;
-                        if (!$viewAll)
-                        {
-                                $query->where('map.group_id = ' . $db->quote($groupId));
-                        }
-                }
                 
 		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
