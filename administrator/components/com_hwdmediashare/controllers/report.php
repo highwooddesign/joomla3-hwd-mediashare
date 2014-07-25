@@ -78,6 +78,49 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 	}  
         
 	/**
+	 * Method to remove content that has been reported.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function remove()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = $this->input->get('cid', array(), 'array');
+
+		// Initialise variables.
+		if (!is_array($cid) || count($cid) < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Make sure the item ids are integers.
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Approve the items.
+			if ($model->remove($cid))
+			{
+				$this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+
+		// Redirect to the return page.
+		$this->setRedirect($this->getReturnPage());
+	}
+        
+	/**
 	 * Get the return URL, if a "return" variable has been 
          * passed in the request.
          * 
