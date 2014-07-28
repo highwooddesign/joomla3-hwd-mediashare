@@ -13,11 +13,16 @@ defined('_JEXEC') or die;
 class JHtmlHwdIcon
 {
 	/**
-	 * Method to like or dislike a single playlist.
-	 * @return	void
+	 * Method to return the icon url showing the media type.
+         * 
+         * @access  public
+         * @param   string  $type   The type of icon to display.
+         * @param   object  $item   The item being dsplayed.
+         * @return  string  The url of the icon.
 	 */
-	static function overlay($type, $item=null)
+	public static function overlay($type, $item = null)
 	{
+                // Check for specific file types.
                 if (isset($item->ext))
                 {
                         switch ($item->ext)
@@ -63,7 +68,7 @@ class JHtmlHwdIcon
                                 break;
                 }
                 
-                // Can't find any appropriate icon so this is remote media
+                // If no appropriate icon, assume a remote media.
                 return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/24/globe.png';
 	}
 }
