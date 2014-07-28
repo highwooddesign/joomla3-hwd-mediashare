@@ -9,27 +9,27 @@
  */
 
 defined('_JEXEC') or die;
-
-jimport('joomla.html.html.bootstrap');
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
-  <div id="hwd-container"> <a name="top" id="top"></a>
+  <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <!-- Media Navigation -->
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <h2 class="media-category-title"><?php echo JText::_('COM_HWDMS_CATEGORIES'); ?></h2>
+      <?php if ($this->params->get('item_meta_title') != '0') :?>
+        <h2 class="media-category-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php endif; ?> 
       <!-- Buttons -->
       <div class="btn-group pull-right">  
-        <?php if ($this->params->get('list_tree_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_TREE'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('tree')); ?>" class="btn"><i class="icon-tree-2"></i></a>
+        <?php if ($this->params->get('list_tree_button') != '0') : ?>
+          <a title="<?php echo JText::_('COM_HWDMS_TREE'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoriesRoute(array('display' => 'tree'))); ?>" class="btn"><i class="icon-tree-2"></i></a>
         <?php endif; ?>
-        <?php if ($this->params->get('list_details_button') != 'hide') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSelfRoute('details')); ?>" class="btn"><i class="icon-image"></i></a>
+        <?php if ($this->params->get('list_details_button') != '0') : ?>
+          <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoriesRoute(array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
       </div>    
       <div class="clear"></div>
-      <?php if ($this->params->get('category_list_quick_view') != 'hide' && count($this->items[$this->parent->id]) != 0) :?>
+      <?php if ($this->params->get('category_list_quick_view') != '0' && count($this->items[$this->parent->id]) != 0) :?>
 	<?php echo JHtml::_('bootstrap.startAccordion', 'slide-quickview', array('active' => '')); ?>
 	<?php echo JHtml::_('bootstrap.addSlide', 'slide-quickview', JText::_('COM_HWDMS_CATEGORY_QUICK_VIEW'), 'details'); ?>
         <div class="media-categories-lists">
