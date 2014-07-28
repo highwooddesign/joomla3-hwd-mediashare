@@ -13,10 +13,12 @@ defined('_JEXEC') or die;
 class hwdMediaShareCategories extends JCategories
 {
 	/**
-	 * Class constructor
+	 * Class constructor.
 	 *
-	 * @param   array  $options  Array of options
-	 */
+	 * @access	public
+	 * @param       array       $options    An optional associative array of options.
+         * @return      void
+	 */ 
         public function __construct($options = array())
 	{
 		$options['table'] = '#__hwdms_category_map';
