@@ -19,7 +19,7 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <?php if ($this->params->get('item_meta_title') != 'hide' && $this->params->get('show_page_heading', 1)) :?>
+      <?php if ($this->params->get('item_meta_title') != '0') :?>
         <h2 class="media-album-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
       <?php endif; ?>            
       <!-- Buttons -->
@@ -32,10 +32,10 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
         <?php else: ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>  
-        <?php if ($this->params->get('list_details_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_details_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
-        <?php if ($this->params->get('list_list_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_list_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute(array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
       </div>        
@@ -45,8 +45,14 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
       <div class="clear"></div>
     </div>
     <div class="media-<?php echo $this->display; ?>-view">
+      <?php if (empty($this->items)) : ?>
+        <div class="alert alert-no-items">
+          <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
+        </div>
+      <?php else : ?>
         <?php echo JLayoutHelper::render('albums_' . $this->display, $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
-    </div>  
+      <?php endif; ?>        
+    </div>    
     <!-- Pagination -->
     <div class="pagination"> <?php echo $this->pagination->getPagesLinks(); ?> </div>
   </div>
