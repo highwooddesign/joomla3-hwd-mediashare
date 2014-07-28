@@ -29,23 +29,23 @@ $class = ' class="first"';
       <?php if ($canEdit || $canDelete): ?>
       <div class="btn-group pull-right">
         <?php
-          // Create dropdown items
-          if ($canEdit) : 
-              JHtml::_('hwddropdown.edit', $item->id, 'categoryform'); 
-          endif;    
-          if ($canEditState) :
-              $action = $item->published == 1 ? 'unpublish' : 'publish';
-              JHtml::_('hwddropdown.' . $action, $item->id, 'categories'); 
-          endif; 
-          if ($canDelete && $item->published != -2) : 
-              JHtml::_('hwddropdown.delete', $item->id, 'categories'); 
-          endif;         
-          // Render dropdown list
-          echo JHtml::_('hwddropdown.render', $this->escape($item->title), ' btn-micro');
+        // Create dropdown items
+        if ($canEdit) : 
+          JHtml::_('hwddropdown.edit', $item->id, 'categoryform'); 
+        endif;    
+        if ($canEditState) :
+          $action = $item->published == 1 ? 'unpublish' : 'publish';
+          JHtml::_('hwddropdown.' . $action, $item->id, 'categories'); 
+        endif; 
+        if ($canDelete && $item->published != -2) : 
+          JHtml::_('hwddropdown.delete', $item->id, 'categories'); 
+        endif;         
+        // Render dropdown list
+        echo JHtml::_('hwddropdown.render', $this->escape($item->title), ' btn-micro');
         ?>                    
       </div>
       <?php endif; ?>        
-      <?php if ($this->params->get('list_meta_title') != 'hide') :?>
+      <?php if ($this->params->get('list_meta_title') != '0') :?>
         <span class="item-title<?php echo ($this->params->get('list_tooltip_location') > '1' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>">
         <?php if ($this->params->get('list_link_titles') == 1) :?><a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($item->slug)); ?>"><?php endif; ?>
           <?php echo $this->escape($item->title); ?>
@@ -57,9 +57,9 @@ $class = ' class="first"';
         <div class="media-item pull-left">
           <div class="media-aspect<?php echo $this->params->get('list_thumbnail_aspect'); ?>"></div>
           <!-- Media Type -->
-          <?php if ($this->params->get('list_meta_thumbnail') != 'hide') :?>
-          <?php if ($this->params->get('list_meta_type_icon') != 'hide') :?>
-          <div class="media-item-format-2">
+          <?php if ($this->params->get('list_meta_thumbnail') != '0') :?>
+          <?php if ($this->params->get('list_meta_type_icon') != '0') :?>
+          <div class="media-item-format-6">
              <img src="<?php echo JHtml::_('hwdicon.overlay', 6, $item); ?>" alt="<?php echo JText::_('COM_HWDMS_CATEGORY'); ?>" />
           </div>
           <?php endif; ?>
@@ -68,18 +68,18 @@ $class = ' class="first"';
           <?php if ($this->params->get('list_link_thumbnails') == 1) :?></a><?php endif; ?>
           <?php endif; ?>
         </div>
-        <?php if ($this->params->get('category_list_meta_category_desc') != 'hide') :?>
+        <?php if ($this->params->get('category_list_meta_category_desc') != '0') :?>
           <?php echo $this->escape(JHtmlString::truncate(strip_tags($item->description), $this->params->get('list_desc_truncate'))); ?>
         <?php endif; ?>
       </div>
       <!-- Item Meta -->
-      <?php if ($this->params->get('category_list_meta_subcategory_count') != 'hide' || $this->params->get('category_list_meta_media_count') != 'hide') :?>
+      <?php if ($this->params->get('category_list_meta_subcategory_count') != '0' || $this->params->get('category_list_meta_media_count') != '0') :?>
       <dl>
-        <?php if ($this->params->get('category_list_meta_media_count') != 'hide') :?>
+        <?php if ($this->params->get('category_list_meta_media_count') != '0') :?>
         <dt><?php echo JText::_('COM_HWDMS_MEDIA'); ?></dt>
         <dd>(<?php echo (int) $item->numitems; ?>)</dd>
         <?php endif; ?>
-        <?php if ($this->params->get('category_list_meta_subcategory_count') != 'hide' && count($item->getChildren()) > 0) :?>
+        <?php if ($this->params->get('category_list_meta_subcategory_count') != '0' && count($item->getChildren()) > 0) :?>
         <dt><?php echo JText::_('COM_HWDMS_SUBCATEGORIES'); ?></dt>
         <dd>(<?php echo (int) count($item->getChildren()); ?>)</dd>
         <?php endif; ?>
