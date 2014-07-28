@@ -14,12 +14,14 @@ $user = JFactory::getUser();
 $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
-  <div id="hwd-container"> <a name="top" id="top"></a>
+  <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <!-- Media Navigation -->
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <h2 class="media-group-title"><?php echo JText::_('COM_HWDMS_GROUPS'); ?></h2>
+      <?php if ($this->params->get('item_meta_title') != '0') :?>
+        <h2 class="media-group-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php endif; ?>  
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <?php if ($canAdd): ?>
@@ -30,10 +32,10 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
         <?php else: ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>  
-        <?php if ($this->params->get('list_details_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_details_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
-        <?php if ($this->params->get('list_list_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_list_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getGroupsRoute(array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
       </div>        
@@ -43,7 +45,13 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
       <div class="clear"></div>
     </div>
     <div class="media-<?php echo $this->display; ?>-view">
+      <?php if (empty($this->items)) : ?>
+        <div class="alert alert-no-items">
+          <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
+        </div>
+      <?php else : ?>
         <?php echo JLayoutHelper::render('groups_' . $this->display, $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+      <?php endif; ?>  
     </div>
     <!-- Pagination -->
     <div class="pagination"> <?php echo $this->pagination->getPagesLinks(); ?> </div>
