@@ -1,33 +1,38 @@
 <?php
 /**
- * @version    SVN $Id: module.php 576 2012-10-15 16:57:45Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      13-Dec-2011 09:36:10
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare Module Helper
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package	hwdMediaShare
- * @since       0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-abstract class hwdMediaShareHelperModule
+
+defined('_JEXEC') or die;
+
+class hwdMediaShareHelperModule
 {
-	protected static $modules = array();
+	/**
+	 * An array of module data.
+         * 
+         * @access      protected
+         * @static
+	 * @var         array
+	 */     
 	protected static $mods = array();
 
 	/**
-	 * @module	string	The module position to be displayed
-	 * @title	string	The module title
-	 * @style	string	The module style
+	 * This is always going to get the first instance of the module type unless
+	 * there is a title.
+	 *
+         * @access  public
+         * @static 
+	 * @param   string  $module  The module name.
+	 * @param   string  $title   The title of the module.
+	 * @param   string  $style   The style of the module.
+	 * @return  mixed
 	 */
-	public function _loadmod($module, $title = '', $style = 'none')
+	public static function _loadmod($module, $title = '', $style = 'none')
 	{
 		if (!isset(self::$mods[$module])) 
                 {
@@ -35,8 +40,9 @@ abstract class hwdMediaShareHelperModule
 			$document	= JFactory::getDocument();
 			$renderer	= $document->loadRenderer('module');
 			$mod		= JModuleHelper::getModule($module, $title);
-			// If the module without the mod_ isn't found, try it with mod_.
-			// This allows people to enter it either way in the content
+                        
+			// If the module without the mod_ isn't found, try it with mod_ prefix.
+			// This allows people to enter it either way.
 			if (!isset($mod))
                         {
 				$name = 'mod_'.$module;
@@ -49,38 +55,51 @@ abstract class hwdMediaShareHelperModule
 
 			self::$mods[$module] = ob_get_clean();
 		}
+                
 		return self::$mods[$module];
 	}
         
 	/**
-	 * @position	string	The module position to be displayed
-	 * @style	string	The module style
+	 * Method to load a module position.
+	 *
+         * @access  public
+         * @static 
+	 * @param   string  $position  The position assigned to the module
+	 * @param   string  $style     The style assigned to the module
+	 * @return  mixed
 	 */
-	public function _loadpos($position, $style = 'xhtml')
+	public static function _loadpos($position, $style = 'xhtml')
 	{
-                $document = &JFactory::getDocument();
-                $renderer   = $document->loadRenderer('modules');
-                $options   = array('style' => $style);
+                $document = JFactory::getDocument();
+                $renderer = $document->loadRenderer('modules');
+                $options = array('style' => $style);
                 echo $renderer->render($position, $options, null);
         }
 
 	/**
-	 * @position	string	The module position to be displayed
-	 * @style	string	The module style
+	 * Method to load a module position (media-tabs) and display each module
+         * in a (Bootstrap) tab.
+	 *
+         * @access  public
+         * @static 
+	 * @param   string  $position  The position assigned to the module
+	 * @param   string  $style     The style assigned to the module
+	 * @return  mixed
 	 */
-	public function _loadtab($position = 'media-tabs', $style = 'xhtml')
+	public static function _loadtab($position = 'media-tabs', $style = 'xhtml')
 	{
-                $document = &JFactory::getDocument();
-                $renderer   = $document->loadRenderer('module');
-                $params   = array('style' => $style);
+                $document = JFactory::getDocument();
+                $renderer = $document->loadRenderer('module');
+                $params = array('style' => $style);
                 
 		$buffer = '';
-
+          
 		foreach (JModuleHelper::getModules($position) as $mod)
 		{
                         $mod->showtitle = false;
-                        $buffer .= JHtml::_('tabs.panel', JText::_($mod->title), 'tab-'.$mod->title);
+                        $buffer .= JHtml::_('bootstrap.addTab', 'pane', 'tab-'.$mod->id, JText::_($mod->title));
 			$buffer .= $renderer->render($mod, $params);
+			$buffer .= JHtml::_('bootstrap.endTab');
 		}
                
 		return $buffer;
