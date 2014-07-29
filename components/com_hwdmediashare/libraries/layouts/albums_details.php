@@ -47,19 +47,19 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.album.'.$item->
     <?php if ($canEdit || $canDelete): ?>
     <div class="btn-group pull-right">
       <?php
-        // Create dropdown items
-        if ($canEdit) : 
-            JHtml::_('hwddropdown.edit', $item->id, 'albumform'); 
-        endif;    
-        if ($canEditState) :
-            $action = $item->published == 1 ? 'unpublish' : 'publish';
-            JHtml::_('hwddropdown.' . $action, $item->id, 'albums'); 
-        endif; 
-        if ($canDelete && $item->published != -2) : 
-            JHtml::_('hwddropdown.delete', $item->id, 'albums'); 
-        endif;         
-        // Render dropdown list
-        echo JHtml::_('hwddropdown.render', $this->escape($item->title), ' btn-micro');
+      // Create dropdown items
+      if ($canEdit) : 
+        JHtml::_('hwddropdown.edit', $item->id, 'albumform'); 
+      endif;    
+      if ($canEditState) :
+        $action = $item->published == 1 ? 'unpublish' : 'publish';
+        JHtml::_('hwddropdown.' . $action, $item->id, 'albums'); 
+      endif; 
+      if ($canDelete && $item->published != -2) : 
+        JHtml::_('hwddropdown.delete', $item->id, 'albums'); 
+      endif;         
+      // Render dropdown list
+      echo JHtml::_('hwddropdown.render', $this->escape($item->title), ' btn-micro');
       ?>                    
     </div>
     <?php endif; ?>
