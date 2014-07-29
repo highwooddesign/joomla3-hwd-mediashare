@@ -1,99 +1,143 @@
 <?php
 /**
- * @version    SVN $Id: edit.php 567 2012-10-12 13:42:51Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      26-Nov-2011 12:05:23
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
-
+JHtml::_('formbehavior.chosen', '.hwd-form-tags', null, array('placeholder_text_multiple' => 'Tags'));
+JHtml::_('formbehavior.chosen', 'select');
 ?>
+<script type="text/javascript">
+	Joomla.submitbutton = function(task)
+	{
+		if (task == 'categoryform.cancel' || document.formvalidator.isValid(document.getElementById('adminForm')))
+		{
+			<?php echo $this->form->getField('description')->save(); ?>
+			Joomla.submitform(task);
+		}
+	}
+</script>
 <div class="edit">
-<form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
-  <div id="hwd-container"> <a name="top" id="top"></a>
+<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
+  <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <!-- Media Navigation -->
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <h2 class="media-category-title"><?php echo JText::sprintf( 'COM_HWDMS_EDIT_CATEGORYX', $this->escape($this->item->title)); ?></h2>
-      <div class="clear"></div>
+      <h2 class="media-category-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
     </div>
-    <!-- Form -->
+    <div class="clear"></div>
     <fieldset>
-      <legend><?php echo JText::_('JEDITOR'); ?></legend>
-      <div class="formelm">
-        <?php echo $this->form->getLabel('title'); ?>
-        <?php echo $this->form->getInput('title'); ?>
-      </div>
-      <?php if (is_null($this->item->id)):?>
-        <div class="formelm">
-          <?php echo $this->form->getLabel('alias'); ?>
-          <?php echo $this->form->getInput('alias'); ?>
+      <div class="row-fluid">
+        <div class="span8">
+          <div class="control-group">
+            <div class="control-label hide">
+              <?php echo $this->form->getLabel('title'); ?>
+            </div>                  
+            <div class="controls">
+              <?php echo $this->form->getInput('title'); ?>
+            </div>
+          </div>          
+          <div class="control-group">
+            <div class="control-label hide">
+              <?php echo $this->form->getLabel('tags'); ?>
+            </div>              
+            <div class="controls">
+              <?php echo $this->form->getInput('tags'); ?>
+            </div>
+          </div>            
         </div>
-      <?php endif; ?>
-      <div class="formelm-buttons">
-        <button type="button" onclick="Joomla.submitbutton('categoryform.save')">
-          <?php echo JText::_('JSAVE') ?>
-        </button>
-        <button type="button" onclick="Joomla.submitbutton('categoryform.cancel')">
-          <?php echo JText::_('JCANCEL') ?>
-        </button>
-      </div>
+        <div class="span4">
+          <div class="btn-toolbar category-save-button row-fluid">
+            <button type="button" class="btn btn-primary btn-large span12" onclick="Joomla.submitbutton('categoryform.save')">
+              <?php echo JText::_('JSAVE') ?>
+            </button>
+          </div> 
+        </div>
+      </div>  
+    </fieldset>      
+    <?php echo JHtml::_('bootstrap.startTabSet', 'pane', array('active' => 'category')); ?>
+    <!-- Details -->
+    <?php echo JHtml::_('bootstrap.addTab', 'pane', 'category', JText::_('COM_HWDMS_CATEGORY', true)); ?>
+    <fieldset>
       <?php echo $this->form->getInput('description'); ?>
     </fieldset>
-    <!-- Publishing -->
+    <?php echo JHtml::_('bootstrap.endTab'); ?>
+    <?php if ($this->item->attributes->get('access-change')): ?>
+    <!-- Moderation -->
+    <?php echo JHtml::_('bootstrap.addTab', 'pane', 'moderation', JText::_('COM_HWDMS_MODERATION', true)); ?>
     <fieldset>
-      <legend><?php echo JText::_('COM_HWDMS_PUBLISHING'); ?></legend>
-      <?php if ($this->item->params->get('access-change')): ?>
-        <div class="formelm">
-          <?php echo $this->form->getLabel('published'); ?>
-          <?php echo $this->form->getInput('published'); ?>
+      <div class="row-fluid">
+        <div class="span8">
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('alias'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('alias'); ?>
+              </div>
+            </div>        
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('metadesc'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('metadesc'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('metakey'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('metakey'); ?>
+              </div>
+            </div>
         </div>
-      <?php else: ?>
-        <input type="hidden" name="jform[published]" value="1" />
-      <?php endif; ?>
-      <div class="formelm">
-        <?php echo $this->form->getLabel('access'); ?>
-        <?php echo $this->form->getInput('access'); ?>
-      </div>
-      <div class="formelm">
-        <?php echo $this->form->getLabel('language'); ?>
-        <?php echo $this->form->getInput('language'); ?>
-      </div>
-    </fieldset>
-    <!-- Meta -->
-    <fieldset>
-      <legend><?php echo JText::_('COM_HWDMS_METADATA'); ?></legend>
-      <div class="formelm">
-        <?php echo $this->form->getLabel('metadesc'); ?>
-        <?php echo $this->form->getInput('metadesc'); ?>
-      </div>
-      <div class="formelm">
-        <?php echo $this->form->getLabel('metakey'); ?>
-        <?php echo $this->form->getInput('metakey'); ?>
-      </div>
-      <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
-      <input type="hidden" name="task" value="" />
-      <input type="hidden" name="return" value="<?php echo $this->return_page;?>" />
-      <?php echo JHtml::_( 'form.token' ); ?>
-      <div class="formelm-buttons">
-        <button type="button" onclick="Joomla.submitbutton('categoryform.save')">
-          <?php echo JText::_('JSAVE') ?>
-        </button>
-        <button type="button" onclick="Joomla.submitbutton('categoryform.cancel')">
-          <?php echo JText::_('JCANCEL') ?>
-        </button>
-      </div>
-    </fieldset>
+        <div class="span4">
+            <div class="control-group">
+              <div class="control-label hide">
+                <?php echo $this->form->getLabel('published'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('published'); ?>
+              </div>
+            </div>          
+            <div class="control-group">
+              <div class="control-label hide">
+                <?php echo $this->form->getLabel('access'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('access'); ?>
+              </div>
+            </div> 
+            <div class="control-group">
+              <div class="control-label hide">
+                <?php echo $this->form->getLabel('language'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('language'); ?>
+              </div>
+            </div>  
+        </div>
+      </div>  
+    </fieldset> 
+    <?php endif; ?>
+    <?php echo JHtml::_('bootstrap.endTab'); ?>          
+    <?php echo JHtml::_('bootstrap.endTabSet'); ?>         
+    <input type="hidden" name="task" value="" />
+    <input type="hidden" name="return" value="<?php echo $this->return_page;?>" />
+    <?php echo JHtml::_( 'form.token' ); ?>
   </div>
 </form>
 </div>
