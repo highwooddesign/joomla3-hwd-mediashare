@@ -16,11 +16,11 @@ JHtml::addIncludePath(JPATH_ROOT . '/administrator/components/com_hwdmediashare/
 $user = JFactory::getUser();
 ?>
 <div class="btn-toolbar">
-        <div class="btn-group">
-                <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('media.unfavourite')">
-                        <i class="icon-ok"></i> <?php echo JText::_('COM_HWDMS_REMOVE'); ?>
-                </button>
-        </div>  
+  <div class="btn-group">
+    <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('media.unfavourite')">
+      <i class="icon-ok"></i> <?php echo JText::_('COM_HWDMS_REMOVE'); ?>
+    </button>
+  </div>  
 </div>
 <table class="table table-striped table-hover">
   <thead>
