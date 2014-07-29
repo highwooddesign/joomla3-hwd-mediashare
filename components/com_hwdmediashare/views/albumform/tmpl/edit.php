@@ -76,11 +76,11 @@ JHtml::_('formbehavior.chosen', 'select');
               <?php echo JText::_('JSAVE') ?>
             </button>
           </div> 
-          <div class="btn-toolbar row-fluid">
-            <?php if (!$this->isNew) : ?>
+          <?php if (!$this->isNew) : ?>
+            <div class="btn-toolbar row-fluid">
               <a class="btn span12 media-popup-iframe-page" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=albummedia&tmpl=component&album_id=' . $this->item->id); ?>" title="<?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?>"><?php echo JText::_('COM_HWDMS_MANAGE_MEDIA'); ?></a>
-            <?php endif; ?>
-          </div> 
+            </div> 
+          <?php endif; ?>  
         </div>
       </div>  
     </fieldset>     
