@@ -22,12 +22,15 @@
 			label="COM_HWDMS_TITLE_LABEL"
 			description="COM_HWDMS_TITLE_DESC"
 			required="true"
+			hint="COM_HWDMS_TITLE_LABEL"
+                        class="input-large-text hwd-form-title span12"                        
 		/>
                 <field
 			name="alias"
 			type="text"
 			label="COM_HWDMS_ALIAS_LABEL"
 			description="COM_HWDMS_ALIAS_DESC"
+			hint="COM_HWDMS_ALIAS_LABEL"
 		/>
 		<field 
                         name="description" 
@@ -43,6 +46,7 @@
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
                         multiple="true"
+                        class="hwd-form-tags span12"                        
 		>
 		</field>
 		<field 
@@ -55,15 +59,15 @@
                         validate="integer"
                         filter="integer"
 		>
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
+			<option value="1">COM_HWDMS_OPTION_FEATURED</option>
+			<option value="0">COM_HWDMS_OPTION_UNFEATURED</option>
 		</field>                
 		<field 
                         name="status" 
                         type="radio"
 			label="JSTATUS"
 			description="COM_HWDMS_STATUS_DESC"
-                        class="btn-group btn-group-yesno"
+                        class="btn-group btn-group-yesno btn-group-justified"
 			default="1"
                         validate="integer"
                         filter="integer"
@@ -95,16 +99,16 @@
                 />
                 <field
 			name="private"
-                        type="radio" 
+                        type="list" 
 			label="COM_HWDMS_PRIVATE_LABEL"
 			description="COM_HWDMS_PRIVATE_DESC"
-                        class="btn-group btn-group-yesno"
+                        class="hwd-form-private span12"
 			default="0"
                         validate="integer"
                         filter="integer"
 		>
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
+			<option value="1">COM_HWDMS_OPTION_UNLISTED</option>
+			<option value="0">COM_HWDMS_OPTION_LISTED</option>
 		</field> 
 		<field 
                         name="language" 
@@ -139,13 +143,19 @@
 			label="COM_HWDMS_NEW_THUMBNAIL_LABEL"
                         description="COM_HWDMS_NEW_THUMBNAIL_DESC"
                 />
- 		<field
-                        name="remove_thumbnail"
-                        type="checkbox"
-                        value="1"
+		<field 
+                        name="remove_thumbnail" 
+                        type="radio"
 			label="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_LABEL"
-                        description="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_DESC"
-                />                  
+			description="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_DESC"
+                        class="btn-group btn-group-yesno"
+			default="0"
+                        validate="integer"
+                        filter="integer"
+		>
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>                 
  	</fieldset>
         <fields name="params">
                 <fieldset
@@ -159,7 +169,8 @@
                                 description="COM_HWDMS_METADESC_DESC"
                                 filter="string"
                                 cols="55"
-                                rows="3" 
+                                rows="4" 
+                                class="span12"                        
                         />
                         <field
                                 name="meta_keys"
@@ -168,7 +179,8 @@
                                 description="COM_HWDMS_METAKEYS_DESC"
                                 filter="string"
                                 cols="55"
-                                rows="3"
+                                rows="4"
+                                class="span12"                        
                         />
                 </fieldset>
 	</fields>
