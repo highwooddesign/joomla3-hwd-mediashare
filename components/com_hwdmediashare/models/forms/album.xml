@@ -30,7 +30,6 @@
 			type="text"
 			label="COM_HWDMS_ALIAS_LABEL"
 			description="COM_HWDMS_ALIAS_DESC"
-			hint="COM_HWDMS_ALIAS_LABEL"
 		/>
 		<field 
                         name="description" 
