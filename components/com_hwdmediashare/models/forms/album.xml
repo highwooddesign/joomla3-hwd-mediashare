@@ -149,8 +149,6 @@
 			description="COM_HWDMS_REMOVE_CURRENT_THUMBNAIL_DESC"
                         class="btn-group btn-group-yesno"
 			default="0"
-                        validate="integer"
-                        filter="integer"
 		>
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
