@@ -10,10 +10,6 @@
 
 defined('_JEXEC') or die;
 
-// Include the component HTML helpers.
-JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
-JHtml::_('HwdPopup.form');
-
 $user = JFactory::getUser();
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.category.'.$this->category->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.category.'.$this->category->id) && ($this->category->created_user_id == $user->id)));
 $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.category.'.$this->category->id);
@@ -26,8 +22,8 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <?php if ($this->params->get('item_meta_title') != 'hide') :?>
-        <h2 class="media-category-title"><?php echo $this->escape($this->category->title); ?></h2>
+      <?php if ($this->params->get('item_meta_title') != '0') :?>
+        <h2 class="media-category-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
       <?php endif; ?> 
       <!-- Buttons -->
       <div class="btn-group pull-right">
@@ -39,16 +35,13 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
         <?php else: ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>           
-        <?php if ($this->params->get('item_meta_report') != 'hide' && $this->category->created_user_id != $user->id): ?>                  
-          <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-form"><i class="icon-warning"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
-        <?php endif; ?>    
-        <?php if ($this->params->get('list_details_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_details_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
         <?php endif; ?>
-        <?php if ($this->params->get('list_gallery_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_gallery_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_GALLERY'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('display' => 'gallery'))); ?>" class="btn"><i class="icon-grid"></i></a>
         <?php endif; ?>
-        <?php if ($this->params->get('list_list_button') != 'hide') : ?>
+        <?php if ($this->params->get('list_list_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_LIST'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('display' => 'list'))); ?>" class="btn"><i class="icon-list"></i></a>
         <?php endif; ?>
         <?php if ($canEdit || $canDelete): ?>
@@ -79,28 +72,32 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
       <div class="clear"></div>
     </div>
     <div class="media-<?php echo $this->display; ?>-view">
-      <?php echo JLayoutHelper::render('media_' . $this->display, $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+      <?php if (empty($this->items)) : ?>
+        <div class="alert alert-no-items">
+          <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
+        </div>
+      <?php else : ?>
+        <?php echo JLayoutHelper::render('media_' . $this->display, $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+      <?php endif; ?> 
     </div>      
     <!-- Pagination -->
     <div class="pagination"> <?php echo $this->pagination->getPagesLinks(); ?> </div>
     <div class="clear"></div>   
     <!-- Category Description -->
     <div class="well media-category-description">
-      <?php if ($this->params->get('item_meta_description') != 'hide') :?>
+      <?php if ($this->params->get('item_meta_description') != '0') :?>
         <?php echo JHtml::_('content.prepare', $this->category->description); ?>
       <?php endif; ?>            
-      <?php if ($this->params->get('item_meta_media_count') != 'hide' || $this->params->get('item_meta_hits') != 'hide') : ?>
+      <?php if ($this->params->get('item_meta_media_count') != '0' || $this->params->get('item_meta_hits') != '0') : ?>
       <dl class="media-info">
         <dt class="media-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?></dt>
-        <?php if ($this->params->get('item_meta_media_count') != 'hide') :?>
-          <dd class="media-info-count"><?php echo JText::_('COM_HWDMS_MEDIA'); ?> (<?php echo (int) $this->category->nummedia; ?>)</dd>
-        <?php endif; ?>          
-        <?php if ($this->params->get('item_meta_hits') != 'hide') :?>
-          <dd class="media-info-hits"><?php echo JText::_('COM_HWDMS_VIEWS'); ?> (<?php echo (int) $this->category->hits; ?>)</dd>
-        <?php endif; ?>
-        <?php if ($this->params->get('item_meta_report') != 'hide') :?>
-          <dd class="media-info-report"><a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=categoryform.report&id=' . $this->category->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="media-popup-form"><?php echo JText::_('COM_HWDMS_REPORT'); ?> </a> </dd>
-        <?php endif; ?>           
+        <?php if ($this->params->get('item_meta_hits') != '0') :?>
+          <dd class="media-info-hits label"><?php echo JText::sprintf('COM_HWDMS_X_VIEWS', number_format((int) $this->category->hits)); ?></dd>
+        <?php endif; ?>      
+        <?php if ($this->params->get('item_meta_media_count') != '0') :?>
+          <dd class="media-info-count label"><?php echo JText::plural('COM_HWDMS_X_MEDIA_COUNT', (int) $this->category->nummedia); ?></dd>
+        <?php endif; ?>  
+        <div class="clearfix"></div>        
       </dl>
       <?php endif; ?>
       <!-- Tags -->
