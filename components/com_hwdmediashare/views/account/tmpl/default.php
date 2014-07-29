@@ -38,8 +38,8 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
     </div>      
     <!-- Media Header -->
     <div class="media-header">
-      <?php if ($this->params->get('item_meta_title') != 'hide' && $this->params->get('show_page_heading', 1)) :?>
-        <h2 class="media-user-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php if ($this->params->get('item_meta_title') != '0') :?>
+        <h2 class="media-album-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
       <?php endif; ?>        
       <!-- Buttons -->
       <div class="btn-group pull-right">
