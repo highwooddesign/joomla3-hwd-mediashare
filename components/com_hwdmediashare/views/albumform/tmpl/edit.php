@@ -64,6 +64,9 @@ JHtml::_('formbehavior.chosen', 'select');
         </div>
         <div class="span4">
           <div class="control-group">
+            <div class="control-label hide">
+              <?php echo $this->form->getLabel('private'); ?>
+            </div>                 
             <div class="controls">
               <?php echo $this->form->getInput('private'); ?>
             </div>
