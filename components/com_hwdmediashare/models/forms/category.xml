@@ -22,6 +22,8 @@
 			label="COM_HWDMS_TITLE_LABEL"
 			description="COM_HWDMS_TITLE_DESC"
 			required="true"
+			hint="COM_HWDMS_TITLE_LABEL"
+                        class="input-large-text hwd-form-title span12"  
 		/>
                 <field
 			name="alias"
@@ -43,6 +45,7 @@
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
                         multiple="true"
+                        class="hwd-form-tags span12"                        
 		>
 		</field>
 		<field 
@@ -81,18 +84,20 @@
                         type="textarea"
                         label="COM_HWDMS_METADESC_LABEL"
                         description="COM_HWDMS_METADESC_DESC"
-                        class="inputbox" 
-                        rows="3" 
-                        cols="30" 
+                        filter="string"
+                        cols="55"
+                        rows="4" 
+                        class="span12"  
                 />
                 <field 
                         name="metakey" 
                         type="textarea"
                         label="COM_HWDMS_METAKEYS_LABEL"
                         description="COM_HWDMS_METAKEYS_DESC"
-                        class="inputbox" 
-                        rows="3" 
-                        cols="30" 
+                        filter="string"
+                        cols="55"
+                        rows="4"
+                        class="span12"   
                 />
  	</fieldset>
 </form>
