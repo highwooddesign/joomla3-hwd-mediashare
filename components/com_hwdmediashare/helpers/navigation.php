@@ -1,55 +1,54 @@
 <?php
 /**
- * @version    SVN $Id: navigation.php 1550 2013-06-11 10:54:58Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      14-Nov-2011 20:36:41
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare Navigation Helper
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package	hwdMediaShare
- * @since       0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-abstract class hwdMediaShareHelperNavigation
+
+defined('_JEXEC') or die;
+
+class hwdMediaShareHelperNavigation
 {
-        /**
-	 * Method to insert Javascript declaration for live site variable,
-	 *
-	 * @since	0.1
+	/**
+	 * Method to insert Javascript declaration for live site variable.
+         * 
+         * @access  public
+         * @static
+         * @return  void
 	 */
 	public static function setJavascriptVars()
 	{
-                $doc = & JFactory::getDocument();
+                $doc = JFactory::getDocument();
                 $js = array();
                 $js[] = 'var hwdms_live_site = "' . JURI::root() . 'index.php";';
                 $doc->addScriptDeclaration( implode("\n", $js) );
         }    
         
-        /**
+	/**
 	 * Method to insert internal navigation using hwdMediaShare Joomla menu,
-         * or fallback static menu
-	 *
-	 * @since	0.1
+         * or fallback static menu.
+         * 
+         * @access  public
+         * @static
+         * @return  string  The markup for the menu.
 	 */
 	public static function getInternalNavigation()
 	{
-                $app	= JFactory::getApplication();
-                $view   = JRequest::getWord('view');
-                $html   = '';
-                $tmpl   = JRequest::getWord( 'tmpl', '' );
+            	// Initialise variables.
+                $app = JFactory::getApplication();
                 
-                JHtml::_('behavior.modal');
-
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
+                
+                // Get request variables.
+                $view = $app->input('view', '', 'word');
+                $tmpl = $app->input('tmpl', '', 'word');
+                
+                $html = '';
 
                 if ($config->get('internal_navigation') != 0 && $tmpl != 'component')
                 {               
@@ -68,17 +67,15 @@ abstract class hwdMediaShareHelperNavigation
 
                         ob_start();
                         ?>
-                        <!-- Media Main Navigation -->
                         <div class="media-mediamenu">
-                            <?php
-                            if(count($list)) 
-                            {
-                                    require JModuleHelper::getLayoutPath('mod_menu', $params->get('layout', 'default'));
-                            }
-                            else
-                            {
-                            ?>
-                                <ul class="menu">
+                            <?php if(count($list)): ?>
+                                <ul class="nav nav-pills">
+                                    <?php foreach ($list as $i => $item): ?>
+                                        <li class=""><a href="<?php echo $item->flink; ?>"><?php echo $item->title; ?></a></li>
+                                    <?php endforeach; ?>
+                                </ul>                            
+                            <?php else: ?>
+                                <ul class="nav nav-pills">
                                     <li class="<?php echo ($view == 'discover' ? 'active ' : false); ?>media-medianav-discover"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=discover'); ?>"><?php echo JText::_('COM_HWDMS_DISCOVER'); ?></a></li>
                                     <li class="<?php echo (($view == 'media' || $view == 'mediaitem') ? 'active ' : false); ?>media-medianav-media"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media'); ?>"><?php echo JText::_('COM_HWDMS_MEDIA'); ?></a></li>
                                     <li class="<?php echo (($view == 'categories' || $view == 'category') ? 'active ' : false); ?>media-medianav-categories"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=categories'); ?>"><?php echo JText::_('COM_HWDMS_CATEGORIES'); ?></a></li>
@@ -90,202 +87,191 @@ abstract class hwdMediaShareHelperNavigation
                                     <li class="<?php echo ($view == 'account' ? 'active ' : false); ?>media-medianav-account"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account'); ?>"><?php echo JText::_('COM_HWDMS_MY_ACCOUNT'); ?></a></li>
                                     <li class="<?php echo ($view == 'search' ? 'active ' : false); ?>media-medianav-search"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=search'); ?>"><?php echo JText::_('COM_HWDMS_SEARCH'); ?></a></li>
                                 </ul>
-                            <?php
-                            }
-                            ?>
+                            <?php endif; ?>
                         </div>
                         <?php
                         $html = ob_get_contents();
                         ob_end_clean();
                 }
+                
 		return $html;
 	}
+        
 	/**
-	 * Method to insert accoutn navigation menu,
-	 *
-	 * @since	0.1
+	 * Method to return the cached navigation object.
+         * 
+         * @access  public
+         * @static
+         * @param   object  $current    The current media object.
+         * @param   object  $params     Parameter options.
+         * @return  object  The navigation object.
 	 */
-	public static function getAccountNavigation()
+	public static function pageNavigation($current, $params)
 	{
-                $user = JFactory::getUser();
-                $uri	= JFactory::getURI();
-                
-                // Load hwdMediaShare config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-
-                ob_start();
-                ?>                     
-                <!-- Media Main Navigation -->
-                <div class="media-accountmenu">
-                  <ul class="media-accountnav">
-                    <li class="media-accountnav-overview"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account'); ?>"><?php echo JText::_('COM_HWDMS_OVERVIEW'); ?></a></li>
-                    <li class="media-accountnav-profile"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=userform.edit&id='.$user->id.'&return='.base64_encode($uri)); ?>"><?php echo JText::_('COM_HWDMS_PROFILE'); ?></a></li>
-                    <li class="media-accountnav-media"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=media'); ?>"><?php echo JText::_('COM_HWDMS_MY_MEDIA'); ?></a></li>
-                    <li class="media-accountnav-favourites"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=favourites'); ?>"><?php echo JText::_('COM_HWDMS_MY_FAVOURITES'); ?></a></li>
-                    <?php if ($config->get('enable_albums')): ?><li class="media-accountnav-albums"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=albums'); ?>"><?php echo JText::_('COM_HWDMS_MY_ALBUMS'); ?></a></li><?php endif; ?>
-                    <?php if ($config->get('enable_groups')): ?><li class="media-accountnav-groups"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=groups'); ?>"><?php echo JText::_('COM_HWDMS_MY_GROUPS'); ?></a></li><?php endif; ?>
-                    <?php if ($config->get('enable_playlists')): ?><li class="media-accountnav-playlists"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=playlists'); ?>"><?php echo JText::_('COM_HWDMS_MY_PLAYLISTS'); ?></a></li><?php endif; ?>
-                    <?php if ($config->get('enable_subscriptions')): ?><li class="media-accountnav-subscriptions"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=subscriptions'); ?>"><?php echo JText::_('COM_HWDMS_MY_SUBSCRIPTIONS'); ?></a></li><?php endif; ?>
-                  </ul>
-                </div>
-                <?php
-                $html = ob_get_contents();
-                ob_end_clean();
-
-		return $html;
+                // We force method caching for this potentially complex query.
+                $cache = JFactory::getCache();
+                $cache->setCaching(1);
+                return $cache->call(array('hwdMediaShareHelperNavigation', 'cachedPageNavigation' ), $current, $params);                        
 	}
         
-        /**
-	 * @since	0.1
+	/**
+	 * Method to return the cached navigation object.
+         * 
+         * @access  public
+         * @static
+         * @param   object  $current    The current media object.
+         * @param   object  $params     Parameter options.
+         * @return  object  The navigation object.
 	 */
-	public function pageNavigation($row, $params, $page=0)
+	public static function cachedPageNavigation($current, $params)
 	{
-                // Get a reference to the global cache object.
-                $cache = & JFactory::getCache();
-                $cache->setCaching( 1 );
-                return $cache->call( array( 'hwdMediaShareHelperNavigation', 'cachedPageNavigation' ), $row, $params, $page );                        
-	}
-        
-        /**
-	 * @since	0.1
-	 */
-	public function cachedPageNavigation($row, $params, $page=0)
-	{
-		$view = JRequest::getCmd('view');
-		$print = JRequest::getBool('print');
+            	// Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
 
-                // Get hwdMediaShare config
+                // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Get additional filters
-		$category_id = JRequest::getInt('category_id');
-		$playlist_id = JRequest::getInt('playlist_id');
-		$album_id = JRequest::getInt('album_id');
-		$group_id = JRequest::getInt('group_id');
+                // Get request variables.
+		$view = $app->input->get('view', '', 'cmd');
+		$print = $app->input->get('print', '', 'bool');
+		$category_id = $app->input->get('category_id', '', 'int');
+		$playlist_id = $app->input->get('playlist_id', '', 'int');
+		$album_id = $app->input->get('album_id', '', 'int');
+		$group_id = $app->input->get('group_id', '', 'int');
 
 		if ($print)
                 {
 			return false;
 		}
 
-                $nav = new StdClass;
+                $nav = new JObject;
+                $nav->hasNav = false;
+                $nav->category = null;
+                $nav->playlist = null;
+                $nav->album = null;
+                $nav->group = null;
 
-                if ($view == 'mediaitem')
+                if ($view == 'mediaitem' && ($category_id || $playlist_id || $album_id || $group_id))
                 {
-			$db	= JFactory::getDbo();
-			$user	= JFactory::getUser();
-			$app	= JFactory::getApplication();
-			$lang	= JFactory::getLanguage();
-			$nullDate = $db->getNullDate();
-
-			$date	= JFactory::getDate();
-			$now	= $date->toSql();
-
-			$uid	= $row->id;
-
-                        // Get media model
+                        $nav->hasNav = true;
+                        
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                        $model =& JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                        $model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                        $model->context = 'com_hwdmediashare.navigation';
+                        $model->populateState();  
 
-                        // Set application parameters in model
-                        $app = JFactory::getApplication();
-                        $appParams = $app->getParams();
-                        $model->setState('params', $appParams);
-
-                        // Get all items     
-                        $model->setState('list.limit', 0);
-                        $model->setState('list.start', 0); 
-
-                        // Set other filters
-			$listOrder = 'a.created';
                         if ($category_id)
                         {
-                                $model->setState('filter.category_id', $category_id); 
-                                $listOrder = $app->getUserStateFromRequest('com_hwdmediashare.media.list.ordering', 'filter_order', JRequest::getCmd('filter_order', $config->get('list_order_media', 'a.created')));
+                                $model->setState('filter.category_id', $category_id);
+                                
+                                // Get ordering.
+                                if (!$list = $app->getUserStateFromRequest('com_hwdmediashare.category.list', 'list', array(), 'array'))
+                                {
+                                        $list['fullordering'] = $config->get('list_order_media', 'a.created DESC');
+                                }
+                                
+                                // Load category.
+				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/category.php';
+				$categoryModel = JModelLegacy::getInstance('category', 'hwdMediaShareModel', array('ignore_request' => true));
+				$categoryModel->getItems(); 
+				$nav->category = $categoryModel->getCategory((int) $category_id); 
                         }      
                         elseif ($playlist_id)
                         {
                                 $model->setState('filter.playlist_id', $playlist_id); 
-                                $listOrder = $app->getUserStateFromRequest('com_hwdmediashare.media.list.ordering', 'filter_order', JRequest::getCmd('filter_order', $config->get('list_order_media', 'a.created')));
+                                
+                                // Get ordering.
+                                if (!$list = $app->getUserStateFromRequest('com_hwdmediashare.playlist.list', 'list', array(), 'array'))
+                                {
+                                        $list['fullordering'] = $config->get('list_order_media', 'a.created DESC');
+                                }
+                                
+                                // Load playlist.
+				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/playlist.php';
+				$playlistModel = JModelLegacy::getInstance('playlist', 'hwdMediaShareModel', array('ignore_request' => true));
+				$nav->playlist = $playlistModel->getPlaylist((int) $playlist_id);                              
                         } 
                         elseif ($album_id)
                         {
-                                $model->setState('filter.album_id', $category_id);
-                                $listOrder = $app->getUserStateFromRequest('com_hwdmediashare.media.list.ordering', 'filter_order', JRequest::getCmd('filter_order', $config->get('list_order_media', 'a.created')));
+                                $model->setState('filter.album_id', $album_id);
+                                
+                                // Get ordering.
+                                if (!$list = $app->getUserStateFromRequest('com_hwdmediashare.album.list', 'list', array(), 'array'))
+                                {
+                                        $list['fullordering'] = $config->get('list_order_media', 'a.created DESC');
+                                }
+                                
+                                // Load album.
+				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/album.php';
+				$albumModel = JModelLegacy::getInstance('album', 'hwdMediaShareModel', array('ignore_request' => true));
+				$nav->album = $albumModel->getAlbum((int) $album_id);                                   
                         }
                         elseif ($group_id)
                         {
-                                $model->setState('filter.group_id', $group_id); 
-                                $listOrder = $app->getUserStateFromRequest('com_hwdmediashare.media.list.ordering', 'filter_order', JRequest::getCmd('filter_order', $config->get('list_order_media', 'a.created')));
+                                $model->setState('filter.group_id', $group_id);
+                                
+                                // Get ordering.
+                                if (!$list = $app->getUserStateFromRequest('com_hwdmediashare.group.list', 'list', array(), 'array'))
+                                {
+                                        $list['fullordering'] = $config->get('list_order_media', 'a.created DESC');
+                                } 
+
+                                // Load group.
+				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/group.php';
+				$groupModel = JModelLegacy::getInstance('group', 'hwdMediaShareModel', array('ignore_request' => true));
+				$nav->group = $groupModel->getGroup((int) $group_id);                                  
                         } 
 
-                        $listDirn = 'DESC';
-                        if (in_array(strtolower($listOrder), array('a.title', 'author', 'a.ordering')))
+                        // Set the ordering.
+                        $ordering = explode(' ', $list['fullordering']);   
+                        $model->setState('list.ordering', $ordering[0]);
+                        $model->setState('list.direction', $ordering[1]); 
+                              
+                        try
+                        {                
+                                $db->setQuery($model->getListQuery());
+                                $list = $db->loadObjectList('id');
+                        }
+                        catch (Exception $e)
                         {
-                                $listDirn = 'ASC';
+                                $this->setError($e->getMessage());
+                                return false;
                         }
 
-                        // Ordering
-                        $model->setState('com_hwdmediashare.media.list.ordering', $listOrder);
-                        $model->setState('com_hwdmediashare.media.list.direction', $listDirn);   
+                        if (count($list))
+                        {
+                                if (!is_array($list))
+                                {
+                                        $list = array();
+                                }
+
+                                reset($list);
+
+                                // Location of current item in array list.
+                                $location = array_search($current->id, array_keys($list));
+
+                                $navs = array_values($list);
+
+                                $nav->prev = null;
+                                $nav->next = null;
+
+                                if ($location -1 >= 0)	
+                                {
+                                        // The previous media item cannot be in the array position -1.
+                                        $nav->prev = $navs[$location-1];
+                                }
+
+                                if (($location +1) < count($navs)) 
+                                {
+                                        // The next media item cannot be in an array position greater than the number of array postions.
+                                        $nav->next = $navs[$location+1];
+                                }
+                        }
+                }
                 
-                        $user = JFactory::getUser();
-                        if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) &&  (!$user->authorise('core.edit', 'com_hwdmediashare')))
-                        {
-                                // Limit to published for people who can't edit or edit.state.
-                                $model->setState('filter.published',	1);
-                                $model->setState('filter.status',	1);
-
-                                // Filter by start and end dates.
-                                $model->setState('filter.publish_date', true);
-                        }
-                        else
-                        {
-                                // Limit to published for people who can't edit or edit.state.
-                                $model->setState('filter.published',	array(0,1));
-                                $model->setState('filter.status',	1);
-                        }
-                
-                        // Filter by language
-                        $model->setState('filter.language', $app->getLanguageFilter());
-
-			$query = $model->getListQuery();
-                        // @TODO: Needs urgent work
-                        $query.= ' LIMIT 0, 1000';                          
-                        $db->setQuery($query);
-			$list = $db->loadObjectList('id');
-
-			// This check needed if incorrect Itemid is given resulting in an incorrect result.
-			if (!is_array($list))
-                        {
-				$list = array();
-			}
-
-			reset($list);
-
-			// Location of current item in array list.
-			$location = array_search($uid, array_keys($list));
-
-			$navs = array_values($list);
-
-                        $nav->prev = null;
-			$nav->next = null;
-
-			if ($location -1 >= 0)	
-                        {
-				// The previous content item cannot be in the array position -1.
-				$nav->prev = $navs[$location -1];
-			}
-
-			if (($location +1) < count($navs)) 
-                        {
-				// The next content item cannot be in an array position greater than the number of array postions.
-				$nav->next = $navs[$location +1];
-			}
-		}
-
-		return $nav;
+                return $nav;
 	}        
 }
