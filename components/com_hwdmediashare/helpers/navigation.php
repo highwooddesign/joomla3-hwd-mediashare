@@ -98,7 +98,7 @@ class hwdMediaShareHelperNavigation
 	}
         
 	/**
-	 * Method to return the cached navigation object.
+	 * Method to return the cached page navigation object.
          * 
          * @access  public
          * @static
@@ -115,7 +115,7 @@ class hwdMediaShareHelperNavigation
 	}
         
 	/**
-	 * Method to return the cached navigation object.
+	 * Method to return the page navigation object.
          * 
          * @access  public
          * @static
