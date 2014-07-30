@@ -467,7 +467,7 @@ class hwdMediaShareHelperRoute
 			'upload'  => null
 		);
                 
-                return self::_buildUrl('index.php?option=com_hwdmediashare&view=account&layout=media', $params, $needles);
+                return self::_buildUrl('index.php?option=com_hwdmediashare&view=account&layout=media', array(), $needles);
 	}        
 
 	/**
