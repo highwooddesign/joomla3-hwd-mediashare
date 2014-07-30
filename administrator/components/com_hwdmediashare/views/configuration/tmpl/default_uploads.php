@@ -47,10 +47,10 @@ defined('_JEXEC') or die;
                         </div>  
                 </fieldset>
                 <fieldset class="form-horizontal">
-                        <legend><?php echo JText::_('COM_HWDMS_STANDARD_FILE_UPLOAD_CONFIG'); ?></legend>
+                        <legend><?php echo JText::_('COM_HWDMS_FILE_UPLOAD_CONFIG'); ?></legend>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('upload_tool_fancy'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('upload_tool_fancy'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('upload_tool'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('upload_tool'); ?></div>
                         </div>                       
                 </fieldset>
                 <fieldset class="form-horizontal">
