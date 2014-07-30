@@ -51,6 +51,10 @@ $input = $app->input;
 
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
+                <?php echo $this->form->getInput('album_id'); ?>
+                <?php echo $this->form->getInput('category_id'); ?>
+                <?php echo $this->form->getInput('group_id'); ?>
+                <?php echo $this->form->getInput('playlist_id'); ?>
 		<?php echo JHtml::_('form.token'); ?>
         </div>
 </form>
