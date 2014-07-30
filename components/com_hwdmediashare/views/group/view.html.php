@@ -25,18 +25,22 @@ class hwdMediaShareViewGroup extends JViewLegacy
 	public $state;
         
 	public $params;
+ 
+	public $filterForm;
         
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                
+                // Get the layout from the request.
                 $this->layout = $app->input->get('layout', 'media', 'word');
 
                 // Get data from the model.
@@ -61,10 +65,12 @@ class hwdMediaShareViewGroup extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
 
-                // Load libraries.
+                // Register classes.
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
                 JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                
+                // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
@@ -75,7 +81,7 @@ class hwdMediaShareViewGroup extends JViewLegacy
                 $this->group->nummembers = $this->get('numMembers');
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
-                $this->columns = (int) $this->params->get('list_columns', 3) - 1; // This view has columns, so we reduce the number of columns
+                $this->columns = (int) $this->params->get('list_columns', 3) - 1; // This view has a sidebar, so we reduce the number of columns.
                 $this->return = base64_encode(JFactory::getURI()->toString());
                 $this->display = $this->state->get('media.display', 'details');
 
@@ -96,8 +102,9 @@ class hwdMediaShareViewGroup extends JViewLegacy
 	}
         
 	/**
-	 * Prepares the document
+	 * Prepares the document.
 	 *
+         * @access  protected
 	 * @return  void
 	 */
 	protected function _prepareDocument()
@@ -115,32 +122,31 @@ class hwdMediaShareViewGroup extends JViewLegacy
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
                 if ($this->params->get('groupitem_media_map') != 'hide') $this->document->addScript('http://maps.googleapis.com/maps/api/js?key='.$this->params->get('google_maps_api_v3_key').'&sensor=false');
 
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// Define the page title and headings. 
 		$menu = $menus->getActive();
 		if ($menu)
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+                        $title = $this->params->get('page_title');
+                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_ALBUM'));
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('COM_HWDMS_GROUP'));
+                        $title = JText::_('COM_HWDMS_ALBUM');
+                        $heading = JText::_('COM_HWDMS_ALBUM');
 		}
-
-		$title = $this->params->get('page_title', '');
-
-		$id = (int) @$menu->query['id'];
                 
-		// If the menu item does not concern this item
-		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'group' || $id != $this->group->id))
+		// If the menu item does not concern this view then add a breadcrumb.
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'group' || (int) @$menu->query['id'] != $this->group->id))
 		{
-			// If this is not a single item menu item, set the page title to the item title
+			// Reset title and heading if menu item doesn't point 
+                        // directly to this item.
 			if ($this->group->title) 
                         {
 				$title = $this->group->title;
+                                $heading = $this->group->title;                           
 			}      
                         
-                        // Breadcrumb support
+                        // Breadcrumb support.
 			$path = array(array('title' => $this->group->title, 'link' => ''));
                                                 
 			$path = array_reverse($path);
@@ -150,7 +156,11 @@ class hwdMediaShareViewGroup extends JViewLegacy
 			}                    
 		}
 
-		// Check for empty title and add site name if param is set
+		// Redefine the page title and headings. 
+                $this->params->set('page_title', $title);
+                $this->params->set('page_heading', $heading); 
+                
+		// Check for empty title and add site name when configured.
 		if (empty($title))
                 {
 			$title = $app->getCfg('sitename');
@@ -164,10 +174,7 @@ class hwdMediaShareViewGroup extends JViewLegacy
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
                 
-		if (empty($title))
-		{
-			$title = $this->item->title;
-		}
+                // Set metadata.
 		$this->document->setTitle($title);
 
                 if ($this->group->params->get('meta_desc'))
@@ -212,37 +219,24 @@ class hwdMediaShareViewGroup extends JViewLegacy
 	}
         
 	/**
-	 * Prepares the category list
+	 * Prepares the commenting framework.
 	 *
-	 * @return  void
-	 */
-	public function getCategories($item)
-	{            
-                hwdMediaShareFactory::load('category');
-                $cat = hwdMediaShareCategory::getInstance();
-                $cat->elementType = 1;
-                return $cat->getCategories($item);
-	}
-
-	/**
-	 * Prepares the commenting framework
-	 *
-	 * @return  void
+         * @access  public
+         * @param   object  $group  The group object.
+	 * @return  string  The markup to show the commenting framework.
 	 */
 	public function getComments($group)
 	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
 
                 $pluginClass = 'plgHwdmediashare'.$config->get('commenting');
                 $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('commenting').'/'.$config->get('commenting').'.php';
-
-                // Import hwdMediaShare plugins
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
