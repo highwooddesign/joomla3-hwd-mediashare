@@ -15,8 +15,6 @@ class hwdMediaShareViewGroup extends JViewLegacy
 	public $group;
 
 	public $items;
-
-	public $media;
         
 	public $members;
         
@@ -45,7 +43,6 @@ class hwdMediaShareViewGroup extends JViewLegacy
 
                 // Get data from the model.
                 $this->group = $this->get('Group');
-                $this->media = $this->get('Media');
                 $this->members = $this->get('Members');
                 $this->activities = $this->get('Activities');
 
