@@ -188,8 +188,14 @@ class hwdMediaShareTableMedia extends JTable
 
 		if ($table->load(array('alias' => $this->alias)) && ($table->id != $this->id || $this->id == 0))
 		{
-			$this->setError(JText::_('COM_HWDMS_ERROR_UNIQUE_ALIAS'));
-			return false;
+                        // Append alias to make unique.
+			$this->alias .= JFactory::getDate()->format("Y-m-d-H-i-s");
+                    
+                        if ($table->load(array('alias' => $this->alias)) && ($table->id != $this->id || $this->id == 0))
+                        {
+                                $this->setError(JText::_('COM_HWDMS_ERROR_UNIQUE_ALIAS'));
+                                return false;
+                        }
 		}
 
                 $return = parent::store($updateNulls);
