@@ -2666,16 +2666,17 @@
                         <option value="0">JNO</option>
                 </field> 
                 <field
-			name="upload_tool_fancy"
+			name="upload_tool"
 			type="list"
-			label="COM_HWDMS_STANDARD_FILE_UPLOADER_LABEL"
-			description="COM_HWDMS_STANDARD_FILE_UPLOADER_DESC"
+			label="COM_HWDMS_FILE_UPLOADER_LABEL"
+			description="COM_HWDMS_FILE_UPLOADER_DESC"
 			default="1"
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="1">COM_HWDMS_FANCY</option>
-                        <option value="0">COM_HWDMS_STANDARD</option>
+                        <option value="0">COM_HWDMS_OPTION_STANDARD_UPLOADER</option>
+                        <option value="1">COM_HWDMS_OPTION_FANCY_UPLOADER</option>
+                        <option value="2">COM_HWDMS_OPTION_LARGE_UPLOADER</option>
                 </field>  
                 <field
 			name="upload_tool_perl"
@@ -2710,56 +2711,48 @@
 			type="list"
 			label="COM_HWDMS_AUDIO_UPLOADS_LABEL"
 			description="COM_HWDMS_AUDIO_UPLOADS_DESC"
-			default="2"
+			default="0"
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="0">COM_HWDMS_STANDARD_TOOL</option>
-                        <option value="1">COM_HWDMS_LARGE_TOOL</option>
-                        <option value="2">COM_HWDMS_STANDARD_AND_LARGE_TOOL</option>
-                        <option value="3">COM_HWDMS_PLATFORM_TOOL</option>
+                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
+                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
                 </field> 
                 <field
 			name="document_uploads"
 			type="list"
 			label="COM_HWDMS_DOCUMENT_UPLOADS_LABEL"
 			description="COM_HWDMS_DOCUMENT_UPLOADS_DESC"
-			default="2"
+			default="0"
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="0">COM_HWDMS_STANDARD_TOOL</option>
-                        <option value="1">COM_HWDMS_LARGE_TOOL</option>
-                        <option value="2">COM_HWDMS_STANDARD_AND_LARGE_TOOL</option>
-                        <option value="3">COM_HWDMS_PLATFORM_TOOL</option>
+                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
+                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
                 </field>    
                 <field
 			name="image_uploads"
 			type="list"
 			label="COM_HWDMS_IMAGE_UPLOADS_LABEL"
 			description="COM_HWDMS_IMAGE_UPLOADS_DESC"
-			default="2"
+			default="0"
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="0">COM_HWDMS_STANDARD_TOOL</option>
-                        <option value="1">COM_HWDMS_LARGE_TOOL</option>
-                        <option value="2">COM_HWDMS_STANDARD_AND_LARGE_TOOL</option>
-                        <option value="3">COM_HWDMS_PLATFORM_TOOL</option>
+                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
+                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
                 </field> 
                 <field
 			name="video_uploads"
 			type="list"
 			label="COM_HWDMS_VIDEO_UPLOADS_LABEL"
 			description="COM_HWDMS_VIDEO_UPLOADS_DESC"
-			default="2"
+			default="0"
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="0">COM_HWDMS_STANDARD_TOOL</option>
-                        <option value="1">COM_HWDMS_LARGE_TOOL</option>
-                        <option value="2">COM_HWDMS_STANDARD_AND_LARGE_TOOL</option>
-                        <option value="3">COM_HWDMS_PLATFORM_TOOL</option>
+                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
+                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
                 </field> 
 		<field
 			name="max_upload_filesize"
