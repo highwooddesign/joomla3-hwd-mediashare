@@ -55,18 +55,19 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 else
                 {              
                         $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
-                        $this->standardExtensions = $this->get('standardExtensions');
-                        $this->largeExtensions = $this->get('largeExtensions');
-                        $this->platformExtensions = $this->get('platformExtensions');
+                        $this->jformreg = new JRegistry($this->jformdata);
+
+                        $this->localExtensions = $this->get('localExtensions');
+                        $this->showPlatform = $this->get('platformStatus');
 
                         if ($this->config->get('enable_uploads_file') == 1) 
                         {
-                                if ($this->config->get('upload_tool_fancy') == 1 && !$this->replace && (is_array($this->standardExtensions) && count($this->standardExtensions) > 0)) 
+                                if ($this->config->get('upload_tool') == 1 && !$this->replace && count($this->localExtensions)) 
                                 {
                                         // Add assets to the document.
                                         $this->get('FancyUploadScript');
                                 }
-                                if ($this->config->get('upload_tool_perl') == 1) 
+                                elseif ($this->config->get('upload_tool') == 2 && $this->config->get('upload_tool_perl') == 1) 
                                 {
                                         $this->uberUploadHtml = $this->get('UberUploadScript');
                                 }
