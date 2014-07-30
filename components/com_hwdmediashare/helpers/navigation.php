@@ -45,8 +45,8 @@ class hwdMediaShareHelperNavigation
                 $config = $hwdms->getConfig();
                 
                 // Get request variables.
-                $view = $app->input('view', '', 'word');
-                $tmpl = $app->input('tmpl', '', 'word');
+                $view = $app->input->get('view', '', 'word');
+                $tmpl = $app->input->get('tmpl', '', 'word');
                 
                 $html = '';
 
