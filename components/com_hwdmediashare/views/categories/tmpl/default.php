@@ -16,9 +16,7 @@ defined('_JEXEC') or die;
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <?php if ($this->params->get('item_meta_title') != '0') :?>
-        <h2 class="media-category-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
-      <?php endif; ?> 
+      <h2 class="media-category-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
       <!-- Buttons -->
       <div class="btn-group pull-right">  
         <?php if ($this->params->get('list_tree_button') != '0') : ?>
