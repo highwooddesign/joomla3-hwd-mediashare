@@ -45,6 +45,7 @@ class hwdMediaShareViewUserForm extends JViewLegacy
                 // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('thumbnails');                
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
                 
