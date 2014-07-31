@@ -40,6 +40,9 @@ class hwdMediaShareTableMedia extends JTable
 		// Convert the params fields to a string.
                 if (isset($src['params']) && is_array($src['params']))
 		{
+                        $registry = new JRegistry;
+                        $registry->loadArray($src['params']);
+
                         // Check if a new password has been submitted.
                         if (isset($src['params']['password1']) && !empty($src['params']['password1']))
                         {
@@ -55,14 +58,11 @@ class hwdMediaShareTableMedia extends JTable
                                 $item = JArrayHelper::toObject($properties, 'JObject');
                                 if (property_exists($item, 'params'))
                                 {
-                                        $registry = new JRegistry;
-                                        $registry->loadString($item->params);
-                                        $item->params = $registry;
+                                        $reg = new JRegistry;
+                                        $reg->loadString($item->params);
+                                        $item->params = $reg;
                                 }   
 
-                                $registry = new JRegistry;
-                                $registry->loadArray($src['params']);
-                                
                                 if (empty($newPassword))
                                 {                                
                                         $password = $item->params->get('password');                                
@@ -78,8 +78,8 @@ class hwdMediaShareTableMedia extends JTable
                                         }
                                 }
                         }
-                        
-			$src['params'] = (string) $registry;
+
+			$src['params'] = (string) $registry;                        
 		}
                 
                 // Bind the rules. 
