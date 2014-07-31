@@ -20,9 +20,9 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -43,28 +43,26 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 		$return = $app->input->get('return', null, 'base64');
 		$this->setState('return_page', base64_decode($return));
 
-		$this->setState('layout', $app->input->getString('layout'));                
-
 		parent::populateState();               
 	}
 
 	/**
-	 * Method to get a single record.
+	 * Method to get a single item.
 	 *
-	 * @param   integer  $itemId  The id of the primary key.
-         * 
-	 * @return  mixed    Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
-	public function getItem($itemId = null)
+	public function getItem($pk = null)
 	{
 		// Initialise variables.
-		$itemId = (int) (!empty($itemId)) ? $itemId : $this->getState('media.id');
+		$pk = (int) (!empty($pk)) ? $pk : $this->getState('media.id');
 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
-		$return = $table->load($itemId);
+		// Attempt to load the table row.
+		$return = $table->load($pk);
 
 		// Check for a table object error.
 		if ($return === false && $table->getError())
@@ -110,9 +108,9 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 		}
 
 		// Check edit state permission.
-		if ($itemId)
+		if ($pk)
 		{
-			// Existing item
+			// Existing item.
 			$value->attributes->set('access-change', $user->authorise('core.edit.state', $asset));
 		}
 		else
@@ -121,26 +119,25 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 			$value->attributes->set('access-change', $user->authorise('core.edit.state', 'com_hwdmediashare'));
 		}
 
-		if ($itemId)
+		if ($pk)
 		{
                         // Add the tags.
                         $value->tags = new JHelperTags;
                         $value->tags->getTagIds($value->id, 'com_hwdmediashare.media');
 
-                        // Add the custom fields.
-                        hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 1;
-                        $value->customfields = $cf->get($value);
-                        
-                        // Add thumbnail.
-                        $value->customthumbnail = $this->getThumbnail($value);
-                        
                         // Add categories.
                         hwdMediaShareFactory::load('category');
                         $HWDcategories = hwdMediaShareCategory::getInstance();
-                        $HWDcategories->elementType = 1;
-                        $value->catid = $HWDcategories->getInput($value);                           
+                        $value->catid = $HWDcategories->getInputValue($value); 
+                        
+                        // Add the custom fields.
+                        hwdMediaShareFactory::load('customfields');
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 1;
+                        $value->customfields = $HWDcustomfields->load($value);
+                        
+                        // Add thumbnail.
+                        $value->customthumbnail = $this->getThumbnail($value);                          
 		}
 
 		return $value;
@@ -149,6 +146,7 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 	/**
 	 * Get the return URL.
 	 *
+         * @access  public
 	 * @return  string  The return URL.
 	 */
 	public function getReturnPage()
@@ -159,6 +157,7 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 	/**
 	 * Method for getting the report form.
 	 *
+         * @access  public
 	 * @return  mixed  A JForm object on success, false on failure
 	 */
 	public function getReportForm()
@@ -173,82 +172,4 @@ class hwdMediaShareModelMediaForm extends hwdMediaShareModelEditMedia
 
 		return $form;
 	}
-        
-	/**
-	 * Method for getting the sharing form.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 */
-	public function getShareForm()
-	{
-		// Get the form.
-                $form = JForm::getInstance('share', JPATH_SITE.'/components/com_hwdmediashare/models/forms/share.xml');
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
-	}
-        
-	/**
-	 * Method for getting the linking form.
-	 *
-	 * @return  mixed  A JForm object on success, false on failure
-	 */
-	public function getLinkForm($data = array(), $loadData = true)
-	{
-		// Get the form.
-                $form = JForm::getInstance('share', JPATH_SITE.'/components/com_hwdmediashare/models/forms/link.xml');
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
-	}
-        
-	/**
-	 * Method for getting the meta data associated with a media item.
-	 *
-	 * @return void
-	 */
-	public function getMeta()
-	{
-		// Initialise variables.
-		$app = JFactory::getApplication();
-                
-                $this->populateState();
-
-                $item = $this->getItem();
-
-                hwdMediaShareFactory::load('media');
-                $HWDmedia = hwdMediaShareMedia::getInstance();
-                $meta = $HWDmedia->getMeta($item);
-
-                return $meta;
-	}  
-                
-	/**
-	 * Method for getting the media files associated with a media item.
-	 *
-	 * @return void
-	 */
-	public function getDownloads()
-	{
-		// Initialise variables.
-		$app = JFactory::getApplication();
-                
-                $this->populateState();
-
-                $item = $this->getItem();
-
-                hwdMediaShareFactory::load('files');
-                $HWDfiles = hwdMediaShareFiles::getInstance();
-                $files = $HWDfiles->getMediaFiles($item);
-
-                return $files;
-	}        
 }
