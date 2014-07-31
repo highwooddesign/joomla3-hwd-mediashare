@@ -90,8 +90,8 @@
 		<field 
                         name="access" 
                         type="accesslevel" 
-                        label="JFIELD_ACCESS_LABEL"
-			description="JFIELD_ACCESS_DESC" 
+                        label="COM_HWDMS_VIEWING_ACCESS_LABEL"
+			description="COM_HWDMS_VIEWING_ACCESS_DESC"
 			default="1"
                         validate="integer"
                         filter="integer"
@@ -112,7 +112,7 @@
 		<field 
                         name="language" 
                         type="contentlanguage" 
-                        label="JFIELD_LANGUAGE_LABEL"
+                        label="COM_HWDMS_LANGUAGE_LABEL"
 			description="COM_HWDMS_LANGUAGE_DESC" 
                         class="inputbox"
 		>
@@ -167,7 +167,7 @@
                                 filter="string"
                                 cols="55"
                                 rows="4" 
-                                class="span12"                        
+                                class="span10"                         
                         />
                         <field
                                 name="meta_keys"
@@ -177,7 +177,7 @@
                                 filter="string"
                                 cols="55"
                                 rows="4"
-                                class="span12"                        
+                                class="span10"                       
                         />
                 </fieldset>
 	</fields>
