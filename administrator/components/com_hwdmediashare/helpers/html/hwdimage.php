@@ -17,7 +17,7 @@ abstract class JHtmlHwdImage
 	 *
 	 * @access  public
          * @static 
-	 * @param   integer  $userId    The ID of the user..
+	 * @param   integer  $userId    The ID of the user.
 	 * @param   integer  $size      The size of the avatar.
 	 * @param   mixed    $attribs   String or associative array of attribute(s) to use.
 	 * @return  string   The markup for the <img> element.
