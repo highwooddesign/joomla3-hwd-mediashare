@@ -85,7 +85,7 @@ class hwdMediaShareCategory extends JObject
 
                 $conditions = array(
                     $db->quoteName('element_type') . ' = ' . $db->quote($this->elementType), 
-                    $db->quoteName('element_id') . ' = ' . $db->quote($pk), 
+                    $db->quoteName('element_id') . ' = ' . $db->quote($value), 
                 );
                 
                 $query->delete($db->quoteName('#__hwdms_category_map'));
@@ -238,9 +238,6 @@ class hwdMediaShareCategory extends JObject
                 {
                         $query->where('c.published IN (0,1)');
                 }
-
-   		// Group over the ID to prevent duplicates.
-                $query->group('cmap.element_id');
                 
                 try
                 {                
