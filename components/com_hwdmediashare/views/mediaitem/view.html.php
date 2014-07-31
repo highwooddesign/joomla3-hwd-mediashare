@@ -117,7 +117,7 @@ class hwdMediaShareViewMediaItem extends JViewLegacy
                 // Add open graph tags (facebook support).
                 hwdMediaShareFactory::load('opengraph');
                 $HWDopengraph = hwdMediaShareOpenGraph::getInstance();
-                $HWDopengraph->get($this->item);
+                $HWDopengraph->addMediaItemTags($this->item);
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
