@@ -174,10 +174,15 @@ class hwdMediaShareHelperNavigation
                                 }
                                 
                                 // Load category.
-				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/category.php';
+				JLoader::register('hwdMediaShareModelCategory', JPATH_ROOT . '/components/com_hwdmediashare/models/category.php');
 				$categoryModel = JModelLegacy::getInstance('category', 'hwdMediaShareModel', array('ignore_request' => true));
 				$categoryModel->getItems(); 
 				$nav->category = $categoryModel->getCategory((int) $category_id); 
+                                if ($nav->category === false && $categoryModel->getError())
+                                {
+                                        $nav->hasNav = false;
+                                        return $nav;
+                                }                
                         }      
                         elseif ($playlist_id)
                         {
@@ -190,9 +195,14 @@ class hwdMediaShareHelperNavigation
                                 }
                                 
                                 // Load playlist.
-				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/playlist.php';
+				JLoader::register('hwdMediaShareModelPlaylist', JPATH_ROOT . '/components/com_hwdmediashare/models/playlist.php');
 				$playlistModel = JModelLegacy::getInstance('playlist', 'hwdMediaShareModel', array('ignore_request' => true));
-				$nav->playlist = $playlistModel->getPlaylist((int) $playlist_id);                              
+				$nav->playlist = $playlistModel->getPlaylist((int) $playlist_id); 
+                                if ($nav->playlist === false && $playlistModel->getError())
+                                {
+                                        $nav->hasNav = false;
+                                        return $nav;
+                                }                            
                         } 
                         elseif ($album_id)
                         {
@@ -205,9 +215,14 @@ class hwdMediaShareHelperNavigation
                                 }
                                 
                                 // Load album.
-				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/album.php';
+				JLoader::register('hwdMediaShareModelAlbum', JPATH_ROOT . '/components/com_hwdmediashare/models/album.php');
 				$albumModel = JModelLegacy::getInstance('album', 'hwdMediaShareModel', array('ignore_request' => true));
-				$nav->album = $albumModel->getAlbum((int) $album_id);                                   
+				$nav->album = $albumModel->getAlbum((int) $album_id);  
+                                if ($nav->album === false && $albumModel->getError())
+                                {
+                                        $nav->hasNav = false;
+                                        return $nav;
+                                }                                    
                         }
                         elseif ($group_id)
                         {
@@ -220,9 +235,14 @@ class hwdMediaShareHelperNavigation
                                 } 
 
                                 // Load group.
-				require_once JPATH_ROOT . '/components/com_hwdmediashare/models/group.php';
+				JLoader::register('hwdMediaShareModelGroup', JPATH_ROOT . '/components/com_hwdmediashare/models/group.php');
 				$groupModel = JModelLegacy::getInstance('group', 'hwdMediaShareModel', array('ignore_request' => true));
-				$nav->group = $groupModel->getGroup((int) $group_id);                                  
+				$nav->group = $groupModel->getGroup((int) $group_id); 
+                                if ($nav->group === false && $groupModel->getError())
+                                {
+                                        $nav->hasNav = false;
+                                        return $nav;
+                                }                                    
                         } 
 
                         // Set the ordering.
