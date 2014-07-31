@@ -1,240 +1,220 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 1568 2013-06-13 10:17:34Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
+class hwdMediaShareViewMediaItem extends JViewLegacy
+{
+        public $item;
 
-/**
- * HTML View class for the hwdMediaShare Component
- */
-class hwdMediaShareViewMediaItem extends JViewLegacy {
-        // Overwriting JView display method
-	function display($tpl = null)
+	public $state;
+        
+	public $params;
+        
+	/**
+	 * Display the view.
+	 *
+	 * @access  public
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @return  void
+	 */
+	public function display($tpl = null)
 	{
-                $app = & JFactory::getApplication();
-
-                $mobile = & hwdMediaShareHelperMobile::getInstance();
-
-                // Get the Data
-		$item = $this->get('Item');
-		$script = $this->get('Script');
-                $state = $this->get('State');
-                $related = $this->get('Related');              
-
-		// Temporary backwards compatibility
-                //jimport('joomla.html.pane');
-                //$pane = & JPane::getInstance('tabs');
-                //$this->pane = $pane;
-
-                // Download links
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get data from the model.
+                $this->item = $this->get('Item');
+		$this->state = $this->get('State');
+		$this->params = $this->state->params;
+                $this->activities = $this->get('Activities');
+                
+                // Register classes.
+                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
+                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                JLoader::register('hwdMediaShareHelperModule', JPATH_COMPONENT . '/helpers/module.php');  
+                
+                // Import HWD libraries.                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
-                hwdMediaShareFactory::load('utilities');
-                hwdMediaShareFactory::load('recaptcha.recaptchalib');
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                JLoader::register('hwdMediaShareHelperModule', JPATH_COMPONENT . '/helpers/module.php');
+		hwdMediaShareFactory::load('utilities');
+                hwdMediaShareFactory::load('activities'); 
+                hwdMediaShareFactory::load('mobile'); 
+                hwdMediaShareFactory::load('thumbnails'); 
+                
+                // Set JavaScript variables.
                 hwdMediaShareHelperNavigation::setJavascriptVars();
                 
-                // Check for errors.
-		if (count($errors = $this->get('Errors')))
-		{
-			JError::raiseError(500, implode('<br />', $errors));
-			return false;
-		}
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+                $this->mobile = hwdMediaShareMobile::getInstance();
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+                $this->columns = $this->params->get('list_columns', 3);
+                $this->return = base64_encode(JFactory::getURI()->toString());
+                $this->display = $this->state->get('media.display', 'details');
+                $this->media_tab_modules = $this->document->countModules('media-tabs') ? true : false;     
 
                 // Check for errors.
-		if (isset($item->agerestricted))
+                if (count($errors = $this->get('Errors')))
+                {
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
+
+                // Check for age restrictions.
+		if (isset($this->item->agerestricted))
 		{
-			$this->assign('dob', JFactory::getApplication()->getUserState( "media.dob" ));
+			$this->assign('dob', $app->getUserState( "media.dob" ));
                         $tpl = 'dob';                        
 		}
                 
-                // Check for errors.
-		if (isset($item->passwordprotected))
+                // Check for password protection.
+		if (isset($this->item->passwordprotected))
 		{
 			$tpl = 'password';                        
 		}
                 
-		$params = &$state->params;
-
-		// Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-
-                $this->assign('return',                 base64_encode(JFactory::getURI()->toString()));
-                $this->assign('mobile',                 $mobile);
-                $this->assign('columns',	        $params->get('list_columns', 3));
-                $this->assign('searchword',             $state->get('related.searchword'));     
-                
-                $this->assignRef('params',		$params);
-		$this->assignRef('parent',		$parent);
-		$this->assignRef('item',		$item);
-		$this->assignRef('state',		$state);
-                $this->assignRef('related',		$related);
-                $this->assignRef('utilities',		hwdMediaShareUtilities::getInstance());
-
                 $model = $this->getModel();
 		$model->hit();
 
 		$this->_prepareDocument();
-
-                // Display the view
-                parent::display($tpl);
+                
+		// Display the template.
+		parent::display($tpl);
 	}
+        
 	/**
-	 * Prepares the document
+	 * Prepares the document.
+	 *
+         * @access  protected
+	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app	= JFactory::getApplication();
-		$menus	= $app->getMenu();
+		$app = JFactory::getApplication();
+		$menus = $app->getMenu();
 		$pathway = $app->getPathway();
 		$title = null;
 
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                
+                // Add page assets.
+                JHtml::_('bootstrap.framework');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->state->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
+                // Add JavaScript assets.                
                 $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/hwd.min.js');
-                // Add image tag
-                $this->document->addCustomTag('<link rel="image_src" href="'.$utilities->relToAbs(JRoute::_(hwdMediaShareDownloads::thumbnail($this->item))).'"/>');
-                // Add open graph tags (facebook support)
-                hwdMediaShareFactory::load('opengraph.opengraph');
-                $openGraph = hwdMediaShareOpenGraph::getInstance();
-                $openGraph->get($this->item);
-
-                if(!isset($this->item->media_type))
-                {
-                        $this->item->media_type = hwdMediaShareMedia::loadMediaType($this->item);
-                }
                 
-                if ($this->item->media_type == 3)
-                {
-$url = 'index.php?option=com_hwdmediashare&task=get.url&id=' . $this->item->id . '&format=raw';
+                // Add open graph tags (facebook support).
+                hwdMediaShareFactory::load('opengraph.opengraph');
+                $HWDopengraph = hwdMediaShareOpenGraph::getInstance();
+                $HWDopengraph->get($this->item);
 
-$ajax = <<<EOD
-window.addEvent('domready', function() {
-
-                var size = $('media-item-image').getSize();
-
-		var a = new Request({
-                        url: '{$url}&width=' + size.x,
-                        method: 'get',
-                        onComplete: function( response )
-                        {
-                                var json = JSON.decode(response);
-                                var src = json['url'];
-
-                                if(src!='')
-                                {
-                                        $('media-item-image').setProperty('src',src);
-                                }
-                        }
-		}).send();
-});
-
-/*
-window.addEvent('resize', function(){
-  clearTimeout(window.timer);
-  window.timer= setTimeout(function(){
-
-  },500);
-});
-*/
-EOD;
-
-$doc = & JFactory::getDocument();
-//$doc->addScriptDeclaration( $ajax );
-                }
-
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// Define the page title and headings. 
 		$menu = $menus->getActive();
 		if ($menu)
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+                        $title = $this->params->get('page_title');
+                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_MEDIA'));
 		}
 		else
 		{
-			$this->params->def('page_heading', JText::_('COM_HWDMS_MEDIA'));
+                        $title = JText::_('COM_HWDMS_ALBUM');
+                        $heading = JText::_('COM_HWDMS_ALBUM');
 		}
-
-		$title = $this->params->get('page_title', '');
-
-		$id = (int) @$menu->query['id'];
-
-		// If the menu item does not concern this item
-		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'mediaitem' || $id != $this->item->id))
+                
+		// If the menu item does not concern this view then add a breadcrumb.
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'mediaitem' || (int) @$menu->query['id'] != $this->item->id))
 		{
-			// If this is not a single item menu item, set the page title to the item title
+			// Reset title and heading if menu item doesn't point 
+                        // directly to this item.
 			if ($this->item->title) 
                         {
 				$title = $this->item->title;
+                                $heading = $this->item->title;                           
 			}      
                         
-                        // Breadcrumb support
+                        // Breadcrumb support.
 			$path = array(array('title' => $this->item->title, 'link' => ''));
-                        
-                        // Category breadcrumb support
-                        if (isset($this->item->categories) && count($this->item->categories) == 1)
+
+                        /**
+                         * Category breadcrumb support.
+                         * 
+                         * We check if the media is associated with one category, then we add 
+                         * category breadcrumbs. However, we also check if the menu item is 
+                         * associated with that the category, in which case we don't include 
+                         * additional breadcrumbs because the Joomla menu breadcrumbs are likely 
+                         * to be sufficient. This is difficult to predict. 
+                         */
+                        if (count($this->item->categories) == 1)
                         {
-                                // Load JCategories
-                                jimport('joomla.application.categories');
-                                $category = JCategories::getInstance('hwdMediaShare')->get($this->item->categories[0]->id);                                
-                                while ($category && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] == 'mediaitem' || $id != $category->id) && $category->id > 1)
+                                $category = JCategories::getInstance('hwdMediaShare')->get(reset($this->item->categories)->id);        
+                                if ($category && $menu->query['view'] == 'mediaitem' || $menu->query['view'] == 'media')
                                 {
-                                        $path[] = array('title' => $category->title, 'link' => hwdMediaShareHelperRoute::getCategoryRoute($category->id));
-                                        $category = $category->getParent();
+                                        while ($category)
+                                        {
+                                                
+                                                $path[] = array('title' => $category->title, 'link' => hwdMediaShareHelperRoute::getCategoryRoute($category->id));
+                                                $category = $category->getParent();
+                                        }
+                                        
+                                        // Remove the last element, which will be the ROOT category.
+                                        array_pop($path);                                         
                                 }
                         }
-                        
+
 			$path = array_reverse($path);
 			foreach($path as $item)
 			{
 				$pathway->addItem($item['title'], $item['link']);
 			}                    
 		}
-
-		// Check for empty title and add site name if param is set
-		if (empty($title)) {
+                
+		// Redefine the page title and headings. 
+                $this->params->set('page_title', $title);
+                $this->params->set('page_heading', $heading); 
+                
+		// Check for empty title and add site name when configured.
+		if (empty($title))
+                {
 			$title = $app->getCfg('sitename');
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
+                {
 			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
 		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
+		elseif ($app->getCfg('sitename_pagetitles', 0) == 2)
+                {
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
-		if (empty($title)) {
+		if (empty($title))
+		{
 			$title = $this->item->title;
 		}
+                
+                // Set metadata.
 		$this->document->setTitle($title);
 
-		if ($this->item->params->get('meta_desc'))
+                if ($this->item->params->get('meta_desc'))
 		{
 			$this->document->setDescription($this->item->params->get('meta_desc'));
 		}
+                elseif ($this->item->description)
+                {                        
+			$this->document->setDescription($this->escape(JHtmlString::truncate($this->item->description, 160, true, false)));   
+                }                 
                 elseif ($this->params->get('meta_desc'))
                 {
 			$this->document->setDescription($this->params->get('meta_desc'));
-                }
-                else
-                {                        
-			$this->document->setDescription($this->escape(JHtmlString::truncate($this->item->description, $this->params->get('list_desc_truncate'), true, false)));   
                 }                
 
 		if ($this->item->params->get('meta_keys'))
@@ -248,7 +228,7 @@ $doc = & JFactory::getDocument();
 
 		if ($this->item->params->get('meta_rights'))
 		{
-			$this->document->setMetadata('copyright', $this->item->params->get('meta_rights'));
+			$this->document->setMetadata('keywords', $this->item->params->get('meta_rights'));
 		}
                 elseif ($this->params->get('meta_rights'))
                 {
@@ -262,349 +242,117 @@ $doc = & JFactory::getDocument();
                 elseif ($this->params->get('meta_author') == 1 && isset($this->item->author))
                 {
 			$this->document->setMetadata('author', $this->item->author);
-                }  
+                }      
 	}
-        
+
 	/**
-	 * DEPRECATED Method to get the publish status HTML
+	 * Method to check if current item has any downloads.
 	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getChannel( &$item )
-	{
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if ($this->item->created_user_id > 0)
-                {
-                        $href = '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getUserRoute($this->item->created_user_id)).'">'.JText::_($this->item->author).'</a>';
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }  
-                
-                return $href;
-	}
-        
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getCategories( &$item )
-	{
-                if (!isset($item))
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }
-
-                $href = '';
-                if (count($item->categories) > 0)
-                {
-                        foreach ($item->categories as $value)
-                        {
-                                $href.= '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($value->id)).'">' . $value->title . '</a> ';
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getActivities( &$item, $parent = true )
-	{
-                hwdMediaShareFactory::load('activities');
-                return hwdMediaShareActivities::getActivities($item, $parent);
-        }
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getLinkedAlbums( &$item )
-	{
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if (count($item->linkedalbums) > 0)
-                {
-                        foreach ($item->linkedalbums as $value)
-                        {
-                                $href.= '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($value->id)).'">' . $value->title . '</a> ';
-
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getLinkedGroups( &$item )
-	{
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if (count($item->linkedgroups) > 0)
-                {
-                        foreach ($item->linkedgroups as $value)
-                        {
-                                $href.= '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getGroupRoute($value->id)).'">' . $value->title . '</a> ';
-
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
-	}
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getLinkedPlaylists( &$item )
-	{
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if (count($item->linkedplaylists) > 0)
-                {
-                        foreach ($item->linkedplaylists as $value)
-                        {
-                                $href.= '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getPlaylistRoute($value->id)).'">' . $value->title . '</a> ';
-
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
-	}
-        
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getLinkedMedia( &$item )
-	{
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if (count($item->linkedmedia) > 0)
-                {
-                        foreach ($item->linkedmedia as $value)
-                        {
-                                $href.= '<a href="'.JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($value->id)).'">' . $value->title . '</a> ';
-
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
-	}
-        
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
-	public function getLinkedPages( &$item )
-	{
-                if (!isset($item))
-                {
-                        return;
-                }
-
-                $href = '';
-                if (count($item->linkedpages) > 0)
-                {
-                        foreach ($item->linkedpages as $value)
-                        {
-                                $href.= '<a href="#">' . $value->title . '</a> ';
-
-                        }
-                        unset($value);
-                }
-                else
-                {
-                        $href = JText::_('COM_HWDMS_NONE');
-                }             
-
-                return $href;
-	}
-        
-	/**
-	 * Method to get the publish status HTML
-	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
+         * @access  public
+	 * @return  boolean True if downloads, false if none.
+	 */
 	public function hasDownloads()
 	{
                 if ($this->item->type == 1 || $this->item->type == 5 || $this->item->type == 7)
                 {
-                        return true;
+                        if (count($this->item->mediafiles))
+                        {
+                                return true;
+                        }
                 }
+                
                 return false;
 	}
         
 	/**
-	 * Method to get the publish status HTML
+	 * Method to check if current item has meta potential.
 	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
+         * @access  public
+	 * @return  boolean True if downloads, false if none.
+	 */
 	public function hasMeta()
 	{
                 if ($this->item->type == 1 && ($this->item->media_type == 1 || $this->item->media_type == 3 || $this->item->media_type == 4))
                 {
                         return true;
                 }
+                
                 return false;
 	}
         
 	/**
-	 * Method to get the publish status HTML
+	 * Method to check and return video qualities.
 	 *
-	 * @param	object	Field object
-	 * @param	string	Type of the field
-	 * @param	string	The ajax task that it should call
-	 * @return	string	HTML source
-	 **/
+         * @access  public
+	 * @return  mixed   Array of available qualities or false if none.
+	 */
 	public function hasQualities()
 	{
                 if ($this->item->media_type == 4 && ($this->item->type == 1 || $this->item->type == 5))
                 {
-                        return true;
+                        if (count($this->item->mediafiles))
+                        {
+                                $types = array();
+                                foreach($this->item->mediafiles as $file)
+                                {
+                                        $types[] = $file->file_type;
+                                }  
+
+                                $qualities = array();
+                                if (array_intersect(array(11), $types)) {
+                                    $qualities[] = '240';
+                                }
+                                if (array_intersect(array(12, 14, 18, 22), $types)) {
+                                    $qualities[] = '360';
+                                }
+                                if (array_intersect(array(13, 15, 19, 23), $types)) {
+                                    $qualities[] = '480';
+                                }     
+                                if (array_intersect(array(16, 20, 24), $types)) {
+                                    $qualities[] = '720';
+                                }     
+                                if (array_intersect(array(17, 21, 25), $types)) {
+                                    $qualities[] = '1080';
+                                }    
+
+                                return $qualities;
+                        }
                 }
+                
                 return false;
 	}  
-        
-        
-        /**
-	 * Method to get a single record.
+
+	/**
+	 * Prepares the commenting framework.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * @access  public
+         * @param   object  $media  The media object.
+	 * @return  string  The markup to show the commenting framework.
 	 */
-	public function getRecaptcha()
+	public function getComments($media)
 	{
-                if ($this->params->get('recaptcha_public_key'))
-                {
-                        hwdMediaShareFactory::load('recaptcha.recaptchalib');
-                        return recaptcha_get_html($this->params->get('recaptcha_public_key'));
-                }
-                return;
-	}  
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getComments()
-	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+
                 $pluginClass = 'plgHwdmediashare'.$config->get('commenting');
                 $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('commenting').'/'.$config->get('commenting').'.php';
-
-                // Import hwdMediaShare plugins
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $comms = call_user_func(array($pluginClass, 'getInstance'));
-                        $params = new JRegistry('{}');
-                        return $comms->getComments($params);
+                        $HWDcomments = call_user_func(array($pluginClass, 'getInstance'));
+                        if ($comments = $HWDcomments->getComments($media))
+                        {
+                                return $comments;
+                        }
+                        else
+                        {
+                                return $utilities->printNotice($HWDcomments->getError());
+                        }
                 }
 	} 
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getCustomFieldData($field)
-	{
-                hwdMediaShareFactory::load('customfields');                
-                return hwdMediaShareCustomFields::getFieldData($field);
-	}         
 }
