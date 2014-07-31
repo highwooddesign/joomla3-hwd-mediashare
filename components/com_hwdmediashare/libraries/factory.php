@@ -93,49 +93,6 @@ class hwdMediaShareFactory extends JObject
 	}
         
 	/**
-	 * Method to allow caller to get a user object while
-         * it is not authenticated provided that it has a proper tokenid.
-         *
-         * @access  public
-         * @static
-         * @param   string  $tokenId    The token id.
-         * @param   integer $userId     The user id.
-         * @return  void
-	 */
-	public static function getUserFromTokenId($tokenId, $userId)
-	{
-                $db = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                        ->select('COUNT(*)')
-                        ->from('#__hwdms_upload_tokens')
-                        ->where('token = ' . $db->quote($tokenId))
-                        ->where('userid = ' . $db->quote($userId));
-                try
-                {
-                        $db->setQuery($query);
-                        $count	= $db->loadResult();
-                }
-                catch (RuntimeException $e)
-                {
-                        $this->setError($e->getMessage());
-                        return false;                            
-                }
-
-                // We assume that the user parsed in correct token and userid. So,
-		// we return them the proper user object.
-		if ($count > 0)
-		{
-			$user = JFactory::getUser($userId);
-                        return $user;
-		}
-                
-		// If it doesn't bypass our tokens, we assume they are really trying
-		// to hack or got in here somehow.
-		$user = JFactory::getUser(null);
-		return $user;
-	}
-        
-	/**
 	 * Method to load HWD MediaShare configuration.
          *
          * @access  public
@@ -190,33 +147,47 @@ class hwdMediaShareFactory extends JObject
 
                 return $this->_params;
         }
-        
+
 	/**
-	 * Method to get human readable element type.
+	 * Method to allow caller to get a user object while
+         * it is not authenticated provided that it has a proper tokenid.
          *
          * @access  public
          * @static
-         * @param   object  $item   The item to check.
-         * @return  string  The human readable element type.
+         * @param   string  $tokenId    The token id.
+         * @param   integer $userId     The user id.
+         * @return  void
 	 */
-        public static function getElementType($item)
-        {
-                switch ($item->element_type) {
-                    case 1:
-                        return JText::_('COM_HWDMS_MEDIA');
-                        break;
-                    case 2:
-                        return JText::_('COM_HWDMS_ALBUM');
-                        break;
-                    case 3:
-                        return JText::_('COM_HWDMS_GROUP');
-                        break;
-                    case 4:
-                        return JText::_('COM_HWDMS_PLAYLIST');
-                        break;
-                    case 5:
-                        return JText::_('COM_HWDMS_USER_CHANNEL');
-                        break;
+	public static function getUserFromTokenId($tokenId, $userId)
+	{
+                $db = JFactory::getDbo();
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_upload_tokens')
+                        ->where('token = ' . $db->quote($tokenId))
+                        ->where('userid = ' . $db->quote($userId));
+                try
+                {
+                        $db->setQuery($query);
+                        $count	= $db->loadResult();
                 }
-        } 
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+
+                // We assume that the user parsed in correct token and userid. So,
+		// we return them the proper user object.
+		if ($count > 0)
+		{
+			$user = JFactory::getUser($userId);
+                        return $user;
+		}
+                
+		// If it doesn't bypass our tokens, we assume they are really trying
+		// to hack or got in here somehow.
+		$user = JFactory::getUser(null);
+		return $user;
+	}
 }
