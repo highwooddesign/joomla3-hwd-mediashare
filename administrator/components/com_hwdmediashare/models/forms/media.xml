@@ -138,17 +138,16 @@
                 />          
                 <field
 			name="private"
-                        type="radio" 
+                        type="list" 
 			label="COM_HWDMS_PRIVATE_LABEL"
 			description="COM_HWDMS_PRIVATE_DESC"
-                        class="btn-group btn-group-yesno"
 			default="0"
                         validate="integer"
                         filter="integer"
 		>
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
-		</field>
+			<option value="1">COM_HWDMS_OPTION_UNLISTED</option>
+			<option value="0">COM_HWDMS_OPTION_LISTED</option>
+		</field> 
                 <field
 			name="hits"
 			type="text"
