@@ -1,51 +1,36 @@
 <?php
 /**
- * @version    SVN $Id: default_download.php 496 2012-08-29 13:26:32Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      18-Jan-2012 09:52:56
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-$listOrder	= $this->escape($this->state->get('list.ordering'));
-$listDirn	= $this->escape($this->state->get('list.direction'));
-JHtml::_('behavior.framework');
-
-$user = JFactory::getUser();
-$counter=0;
+defined('_JEXEC') or die;
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
-  <div id="hwd-container"> <a name="top" id="top"></a>
+  <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <div class="media-list-view">
-      <table class="category">
+      <table class="table">
         <thead>
-        <tr>
-            <th> <?php echo JHtml::_('grid.sort',  JText::_('COM_HWDMS_TYPE'), 'a.file_type', $listDirn, $listOrder); ?>
-            </th>     
-            <th> <?php echo JHtml::_('grid.sort',  JText::_('COM_HWDMS_EXTENSION'), 'a.ext', $listDirn, $listOrder); ?>
-            </th> 
-            <th> <?php echo JHtml::_('grid.sort',  JText::_('COM_HWDMS_SIZE'), 'a.size', $listDirn, $listOrder); ?>
-            </th> 
-        </tr>
+          <tr>
+            <th><?php echo JText::_('COM_HWDMS_TYPE'); ?></th>     
+            <th width="15%"><?php echo JText::_('COM_HWDMS_EXTENSION'); ?></th> 
+            <th width="15%"><?php echo JText::_('COM_HWDMS_SIZE'); ?> </th> 
+          </tr>
         </thead>
         <tbody>
-        <?php foreach ($this->items as $id => &$item) : ?>
-          <tr class="cat-list-row<?php echo ($counter % 2);?>">
-            <td><a href="<?php echo hwdMediaShareDownloads::url($this->item, $item->file_type); ?>"><?php echo $this->getFileType($item); ?></a></td>
-            <td><?php echo $this->escape($item->ext); ?></td>
+          <?php foreach ($this->downloads as $id => &$item) : ?>
+          <tr>
+            <td><a href="<?php echo hwdMediaShareDownloads::url($this->item, $item->file_type, 1); ?>"><?php echo hwdMediaShareFiles::getFileType($item); ?></a></td>
+            <td><?php echo $item->ext; ?></td>
             <td><?php echo JHtml::_('number.bytes', $item->size); ?></td>
           </tr>
-        <?php $counter++; ?>
-        <?php endforeach; ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
   </div>
-  <input type="hidden" name="task" value="mediaform.download" />
-  <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-  <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />    
 </form>
