@@ -112,12 +112,15 @@ class hwdMediaShareViewUserForm extends JViewLegacy
 		// Initialise variables.
 		$user = JFactory::getUser();
 		$app = JFactory::getApplication();
-                            
+                           
+                // Import HWD libraries.                
+		hwdMediaShareFactory::load('utilities');
+                
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+                
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
                 {
-                        hwdMediaShareFactory::load('utilities');
-                        $utilities = hwdMediaShareUtilities::getInstance();
-                        $utilities->printModalNotice('COM_HWDMS_NOTICE_NO_FEATURE_ACCESS', 'COM_HWDMS_NOTICE_NO_FEATURE_ACCESS_DESC'); 
+                        $this->utilities->printModalNotice('COM_HWDMS_NOTICE_NO_FEATURE_ACCESS', 'COM_HWDMS_NOTICE_NO_FEATURE_ACCESS_DESC'); 
                         return;
                 }
                 
