@@ -344,8 +344,8 @@
                         <field
                                 name="password_protect"
                                 type="radio"
-                                label="COM_HWDMS_PROTECT_LABEL"
-                                description="COM_HWDMS_PROTECT_DESC"
+                                label="COM_HWDMS_PASSWORD_PROTECT_LABEL"
+                                description="COM_HWDMS_PASSWORD_PROTECT_DESC"
                                 class="btn-group btn-group-yesno"
                                 default="0"
                                 validate="integer"
@@ -377,8 +377,8 @@
                         <field
                                 name="age"
                                 type="list"
-                                label="COM_HWDMS_AGE_LABEL"
-                                description="COM_HWDMS_AGE_DESC"
+                                label="COM_HWDMS_MINIMUM_AGE_LABEL"
+                                description="COM_HWDMS_MINIMUM_AGE_DESC"
                                 class="input-small"
                                 default="18"
                                 validate="integer"
