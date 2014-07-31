@@ -69,6 +69,33 @@ class hwdMediaShareModelCategory extends JModelList
         protected $_numMedia = 0;
         
 	/**
+	 * Class constructor. Defines a white list of column filters.
+	 *
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
+	public function __construct($config = array())
+	{
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'title', 'a.title',
+				'viewed', 'a.viewed',                            
+				'likes', 'a.likes',
+				'dislikes', 'a.dislikes',
+				'ordering', 'a.ordering', 'map.ordering', 'pmap.ordering',
+				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
+                                'created', 'a.created',
+				'modified', 'a.modified',
+				'hits', 'a.hits',
+                                'random', 'random',
+			);
+		}
+
+		parent::__construct($config);
+	}
+        
+	/**
 	 * Method to get a table object, and load it if necessary.
 	 *
 	 * @access  public
@@ -300,7 +327,7 @@ class hwdMediaShareModelCategory extends JModelList
                                 $list['fullordering'] = $orderingFull;
                                 $list['limit'] = $config->get('list_limit', 6);
                                 $app->setUserState($this->context . '.list', $list);
-                        }
+                        }                        
                 }
                 
                 // List state information.
