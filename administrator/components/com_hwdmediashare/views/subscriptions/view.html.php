@@ -38,6 +38,7 @@ class hwdMediaShareViewSubscriptions extends JViewLegacy
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('utilities');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
