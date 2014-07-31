@@ -283,12 +283,13 @@ class hwdMediaShareControllerMediaForm extends JControllerForm
 		$document	= JFactory::getDocument();
 		$vName		= 'mediaForm';
 		$vFormat	= 'html';
+		$mName		= 'mediaItem';
 
 		// Get and render the view.
 		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
+			$model = $this->getModel($mName, 'hwdMediaShareModel', array('ignore_request' => false));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
@@ -312,9 +313,10 @@ class hwdMediaShareControllerMediaForm extends JControllerForm
 		$document	= JFactory::getDocument();
 		$vName		= 'mediaForm';
 		$vFormat	= 'html';
+		$mName		= 'mediaItem';
 
 		// Get and render the view.
-		if ($view = $this->getView($vName, $vFormat))
+		if ($view = $this->getView($mName, $vFormat))
 		{
 			// Get the model for the view.
 			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
@@ -341,12 +343,13 @@ class hwdMediaShareControllerMediaForm extends JControllerForm
 		$document	= JFactory::getDocument();
 		$vName		= 'mediaForm';
 		$vFormat	= 'html';
+		$mName		= 'mediaItem';
 
 		// Get and render the view.
 		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
+			$model = $this->getModel($mName, 'hwdMediaShareModel', array('ignore_request' => false));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
@@ -370,12 +373,13 @@ class hwdMediaShareControllerMediaForm extends JControllerForm
 		$document	= JFactory::getDocument();
 		$vName		= 'mediaForm';
 		$vFormat	= 'html';
+		$mName		= 'mediaItem';
 
 		// Get and render the view.
 		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
+			$model = $this->getModel($mName, 'hwdMediaShareModel', array('ignore_request' => false));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
