@@ -327,31 +327,32 @@
                 <fieldset
                         name="access"
                         label="COM_HWDMS_ACCESS"
-                >
+                >                                
                         <field
                                 name="author_only"
-                                type="list"
+                                type="radio"
                                 label="COM_HWDMS_AUTHOR_ONLY_LABEL"
                                 description="COM_HWDMS_AGE_RESTRICTION_DESC"
+                                class="btn-group btn-group-yesno"
                                 default="0"
                                 validate="integer"
                                 filter="integer"
                         >
-                                <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL_USE_GLOBAL</option>
+                                <option value="0">JNO</option>
                         </field>
                         <field
                                 name="password_protect"
-                                type="list"
+                                type="radio"
                                 label="COM_HWDMS_PROTECT_LABEL"
                                 description="COM_HWDMS_PROTECT_DESC"
+                                class="btn-group btn-group-yesno"
                                 default="0"
                                 validate="integer"
                                 filter="integer"
                         >
-                                <option value="0">JNO</option>
                                 <option value="1">JYES</option>
+                                <option value="0">JNO</option>
                         </field>
                         <field
                                 name="password1"
@@ -362,22 +363,23 @@
                         />
                         <field
                                 name="age_restriction"
-                                type="list"
+                                type="radio"
                                 label="COM_HWDMS_AGE_RESTRICTION_LABEL"
                                 description="COM_HWDMS_AGE_RESTRICTION_DESC"
+                                class="btn-group btn-group-yesno"
                                 default="0"
                                 validate="integer"
                                 filter="integer"
                         >
-                                <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL_USE_GLOBAL</option>
+                                <option value="0">JNO</option>
                         </field>
                         <field
                                 name="age"
                                 type="list"
                                 label="COM_HWDMS_AGE_LABEL"
                                 description="COM_HWDMS_AGE_DESC"
+                                class="input-small"
                                 default="18"
                                 validate="integer"
                                 filter="integer"
@@ -401,42 +403,42 @@
                         </field>
                         <field
                                 name="allow_comments"
-                                type="list"
+                                type="radio"
                                 label="COM_HWDMS_ALLOW_COMMENTS_LABEL"
                                 description="COM_HWDMS_ALLOW_COMMENTS_DESC"
-                                default="0"
+                                class="btn-group btn-group-yesno"
+                                default="1"
                                 validate="integer"
                                 filter="integer"
                         >
-                                <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL_USE_GLOBAL</option>
+                                <option value="0">JNO</option>
                         </field>
                         <field
                                 name="allow_likes"
-                                type="list"
+                                type="radio"
                                 label="COM_HWDMS_ALLOW_LIKES_LABEL"
                                 description="COM_HWDMS_ALLOW_LIKES_DESC"
-                                default="0"
+                                class="btn-group btn-group-yesno"
+                                default="1"
                                 validate="integer"
                                 filter="integer"
                         >
-                                <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL_USE_GLOBAL</option>
+                                <option value="0">JNO</option>
                         </field>
                         <field
                                 name="allow_embedding"
-                                type="list"
+                                type="radio"
                                 label="COM_HWDMS_ALLOW_EMBEDDING_LABEL"
                                 description="COM_HWDMS_ALLOW_EMBEDDING_DESC"
-                                default="0"
+                                class="btn-group btn-group-yesno"
+                                default="1"
                                 validate="integer"
                                 filter="integer"
                         >
-                                <option value="0">JNO</option>
                                 <option value="1">JYES</option>
-                                <option value="2">JGLOBAL_USE_GLOBAL</option>
+                                <option value="0">JNO</option>
                         </field>
                 </fieldset>
 	</fields>
