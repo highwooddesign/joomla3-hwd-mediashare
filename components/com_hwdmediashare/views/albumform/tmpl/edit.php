@@ -18,7 +18,6 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', '.hwd-form-catid', null, array('placeholder_text_multiple' => 'Category'));
 JHtml::_('formbehavior.chosen', '.hwd-form-tags', null, array('placeholder_text_multiple' => 'Tags'));
 JHtml::_('formbehavior.chosen', 'select');
 ?>
