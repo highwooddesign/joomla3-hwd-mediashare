@@ -40,17 +40,19 @@ class hwdMediaShareTableMedia extends JTable
 		// Convert the params fields to a string.
                 if (isset($src['params']) && is_array($src['params']))
 		{
+                        // Check for new password then unset.
+                        if (isset($src['params']['password1']))
+                        {
+                                $newPassword = $src['params']['password1'];
+                                unset($src['params']['password1']);
+                        }
+
                         $registry = new JRegistry;
                         $registry->loadArray($src['params']);
 
-                        // Check if a new password has been submitted.
-                        if (isset($src['params']['password1']) && !empty($src['params']['password1']))
+                        // Retain existing parameters when not defined.
+                        if ($src['id'])
                         {
-                                // Get the password from the data array and unset
-                                $newPassword = $src['params']['password1'];
-                                unset($src['params']['password1']);
-
-                                // We don't want to loose the existing password! So we check if a new one has been passed, then retain the old one if empty
                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
                                 $table->load($src['id']);
@@ -60,26 +62,29 @@ class hwdMediaShareTableMedia extends JTable
                                 {
                                         $reg = new JRegistry;
                                         $reg->loadString($item->params);
-                                        $item->params = $reg;
-                                }   
+                                        $item->params = $reg->toArray();
+                                }  
 
-                                if (empty($newPassword))
-                                {                                
-                                        $password = $item->params->get('password');                                
-                                        if (!empty($password)) $registry->set('password', $password);
+                                foreach($item->params as $key => $param)
+                                {
+                                        if (!isset($src['params'][$key]))
+                                        {
+                                                $registry->set($key, $param);                                                
+                                        }
                                 }
-                                else
+                                
+                                // Check if a new password has been submitted.
+                                if (isset($newPassword))
                                 {
                                         $password = md5($item->key . $newPassword);
                                         if (!empty($password)) 
                                         {
                                                 $registry->set('password', $password);
-                                                $registry->set('password', $password);
                                         }
                                 }
                         }
 
-			$src['params'] = (string) $registry;                        
+			$src['params'] = (string) $registry;    
 		}
                 
                 // Bind the rules. 
