@@ -211,21 +211,21 @@ JHtml::_('formbehavior.chosen', 'select');
               </div>
             </div>            
             <div class="control-group">
-              <div class="control-label hide">
+              <div class="control-label">
                 <?php echo $this->form->getLabel('access'); ?>
               </div>
               <div class="controls">
                 <?php echo $this->form->getInput('access'); ?>
               </div>
-            </div> 
+            </div>           
             <div class="control-group">
-              <div class="control-label hide">
+              <div class="control-label">
                 <?php echo $this->form->getLabel('language'); ?>
               </div>
               <div class="controls">
                 <?php echo $this->form->getInput('language'); ?>
               </div>
-            </div>  
+            </div>
         </div>
       </div>  
     </fieldset> 
