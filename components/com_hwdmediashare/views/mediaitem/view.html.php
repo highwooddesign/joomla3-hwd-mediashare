@@ -115,7 +115,7 @@ class hwdMediaShareViewMediaItem extends JViewLegacy
                 $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/hwd.min.js');
                 
                 // Add open graph tags (facebook support).
-                hwdMediaShareFactory::load('opengraph.opengraph');
+                hwdMediaShareFactory::load('opengraph');
                 $HWDopengraph = hwdMediaShareOpenGraph::getInstance();
                 $HWDopengraph->get($this->item);
 
