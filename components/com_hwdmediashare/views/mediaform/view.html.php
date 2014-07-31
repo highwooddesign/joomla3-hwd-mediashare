@@ -263,7 +263,7 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 }
                 
                 // Check download access.
-                if (!in_array($config->get('default_download'), $groups) || ($item->download > 0 && !in_array($item->download, $groups))) 
+                if (!in_array($config->get('default_download'), $groups) || ($this->item->download > 0 && !in_array($this->item->download, $groups))) 
                 {
                         $this->utilities->printModalNotice('COM_HWDMS_NOTICE_NO_DOWNLOAD_ACCESS', 'COM_HWDMS_NOTICE_NO_DOWNLOAD_ACCESS_DESC'); 
                         return;
