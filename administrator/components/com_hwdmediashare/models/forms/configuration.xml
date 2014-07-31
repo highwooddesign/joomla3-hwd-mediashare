@@ -97,6 +97,18 @@
 			validate="integer"
                         filter="integer"
                 />
+		<field
+			name="download_action"
+			type="list"
+			label="COM_HWDMS_DOWNLOAD_ACTION_LABEL"
+			description="COM_HWDMS_DOWNLOAD_ACTION_DESC"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">COM_HWDMS_OPTION_DOWNLOAD_ALL_FILES</option>
+                        <option value="0">COM_HWDMS_OPTION_DOWNLOAD_ORIGINAL</option>
+                </field> 
                 <field
 			name="entice_mode"
 			type="radio"
