@@ -51,6 +51,10 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('default_download'); ?></div>
                         </div>
                         <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('download_action'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('download_action'); ?></div>
+                        </div>                        
+                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('entice_mode'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('entice_mode'); ?></div>
                         </div>
