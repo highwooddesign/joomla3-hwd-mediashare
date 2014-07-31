@@ -38,9 +38,7 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
     </div>      
     <!-- Media Header -->
     <div class="media-header">
-      <?php if ($this->params->get('item_meta_title') != '0') :?>
-        <h2 class="media-album-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
-      <?php endif; ?>        
+      <h2 class="media-account-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <a title="<?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getUserRoute($user->id)); ?>" class="btn"><i class="icon-user"></i> <?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?></a>
