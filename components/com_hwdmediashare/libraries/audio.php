@@ -135,6 +135,7 @@ class hwdMediaShareAudio extends JObject
                 {
                         // Create file object.
                         $file = new JObject;
+                        $file->local = true;
                         $file->path = $path;
                         $file->url = hwdMediaShareDownloads::url($item, $fileType);
                         $file->size = filesize($path);
@@ -169,6 +170,7 @@ class hwdMediaShareAudio extends JObject
                 {
                         // Create file object.
                         $file = new JObject;
+                        $file->local = true;
                         $file->path = $path;
                         $file->url = hwdMediaShareDownloads::url($item, $fileType);
                         $file->size = filesize($path);
