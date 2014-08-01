@@ -84,7 +84,7 @@ class hwdMediaShareImages extends JObject
          * @access  public
          * @static
          * @param   object  $item   The media item.
-         * @return  mixed   The jpg file object, false on fail.
+         * @return  mixed   The file object, false on fail.
 	 */
 	public static function getJpg($item)
 	{
