@@ -225,7 +225,7 @@ class hwdMediaShareAudio extends JObject
          * @param   object  $process    The process item.
          * @param   integer $fileType   The API value for the type of file being generated, used
          *                              in generation of filename. 
-         * @return  mixed   The path to the ogg file, false on fail.
+         * @return  object  The log data.
 	 */
 	public function processMp3($process, $fileType)
 	{
@@ -347,7 +347,7 @@ class hwdMediaShareAudio extends JObject
          * @param   object  $process    The process item.
          * @param   integer $fileType   The API value for the type of file being generated, used
          *                              in generation of filename. 
-         * @return  mixed   The path to the ogg file, false on fail.
+         * @return  object  The log data.
 	 */
 	public function processOgg($process, $fileType)
 	{
