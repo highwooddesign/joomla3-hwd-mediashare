@@ -117,7 +117,7 @@ class hwdMediaShareViewGroup extends JViewLegacy
                 if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
-                if ($this->params->get('groupitem_media_map') != '0') $this->document->addScript('http://maps.googleapis.com/maps/api/js?key='.$this->params->get('google_maps_api_v3_key').'&sensor=false');
+                if ($this->params->get('groupitem_media_map') != 0) $this->document->addScript('http://maps.googleapis.com/maps/api/js?key='.$this->params->get('google_maps_api_v3_key').'&sensor=false');
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
