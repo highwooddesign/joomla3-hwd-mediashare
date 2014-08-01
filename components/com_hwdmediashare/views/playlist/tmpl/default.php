@@ -49,7 +49,7 @@ $canManageMedia = ($this->playlist->created_user_id == $user->id);
           <div class="btn btn-danger"><i class="icon-unpublish"></i> <?php echo JText::_('COM_HWDMS_UNPUBLISHED'); ?></div>
         <?php endif; ?>           
         <a title="<?php echo JText::_('COM_HWDMS_PLAY_NOW'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSlideshowRoute(null, array('playlist_id' => $this->playlist->id), false)); ?>" class="btn"><i class="icon-play"></i> <?php echo JText::_('COM_HWDMS_PLAY_NOW'); ?></a>            
-        <?php if ($this->params->get('item_meta_report') != 'hide'): ?>  
+        <?php if ($this->params->get('item_meta_report') != '0'): ?>  
           <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=playlistform.report&id=' . $this->playlist->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-iframe-form"><i class="icon-flag"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>
         <?php if ($canEdit || $canDelete): ?>
@@ -89,10 +89,10 @@ $canManageMedia = ($this->playlist->created_user_id == $user->id);
     <div class="clear"></div>
     <!-- Description -->
     <div class="well media-playlist-description"> 
-      <?php if ($this->params->get('item_meta_description') != 'hide') :?>
+      <?php if ($this->params->get('item_meta_description') != '0') :?>
         <?php echo JHtml::_('content.prepare', $this->playlist->description); ?>
       <?php endif; ?>         
-      <?php if ($this->params->get('item_meta_author') != 'hide' || $this->params->get('item_meta_created') != 'hide' || $this->params->get('item_meta_hits') != 'hide' || $this->params->get('item_meta_likes') != 'hide' || $this->params->get('item_meta_report') != 'hide') : ?>
+      <?php if ($this->params->get('item_meta_author') != '0' || $this->params->get('item_meta_created') != '0' || $this->params->get('item_meta_hits') != '0' || $this->params->get('item_meta_likes') != '0' || $this->params->get('item_meta_report') != '0') : ?>
       <dl class="media-info">
         <dt class="media-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?> </dt>
         <?php if ($this->params->get('list_meta_likes') != '0') :?>
@@ -115,18 +115,18 @@ $canManageMedia = ($this->playlist->created_user_id == $user->id);
           <?php endif; ?>
         </dd>
         <?php endif; ?>
-        <?php if ($this->params->get('item_meta_hits') != 'hide') :?>
+        <?php if ($this->params->get('item_meta_hits') != '0') :?>
           <dd class="media-info-hits label"><?php echo JText::sprintf('COM_HWDMS_X_VIEWS', number_format((int) $this->playlist->hits)); ?></dd>
         <?php endif; ?>      
-        <?php if ($this->params->get('item_meta_media_count') != 'hide') :?>
+        <?php if ($this->params->get('item_meta_media_count') != '0') :?>
           <dd class="media-info-count label"><?php echo JText::plural('COM_HWDMS_X_MEDIA_COUNT', (int) $this->playlist->nummedia); ?></dd>
         <?php endif; ?>        
         <div class="clearfix"></div>
-        <?php if ($this->params->get('item_meta_likes') != 'hide') :?>
+        <?php if ($this->params->get('item_meta_likes') != '0') :?>
           <dd class="media-info-like"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=playlists.like&id=' . $this->playlist->id . '&return=' . $this->return . '&tmpl=component&'.JSession::getFormToken().'=1'); ?>"><?php echo JText::_('COM_HWDMS_LIKE'); ?></a></dd>
           <dd class="media-info-dislike"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=playlists.dislike&id=' . $this->playlist->id . '&return=' . $this->return . '&tmpl=component&'.JSession::getFormToken().'=1'); ?>"><?php echo JText::_('COM_HWDMS_DISLIKE'); ?></a></dd>
         <?php endif; ?>   
-        <?php if ($this->params->get('item_meta_report') != 'hide') :?>
+        <?php if ($this->params->get('item_meta_report') != '0') :?>
           <dd class="media-info-report"><a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=playlistform.report&id=' . $this->playlist->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="media-popup-iframe-form"><?php echo JText::_('COM_HWDMS_REPORT'); ?></a></dd>
         <?php endif; ?>          
       </dl>
