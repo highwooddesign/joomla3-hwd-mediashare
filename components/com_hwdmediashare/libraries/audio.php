@@ -111,6 +111,19 @@ class hwdMediaShareAudio extends JObject
                 // Check for generated mp3.
                 $fileType = 8;
  
+                // If CDN, let the CDN framework return the data.
+                if ($item->type == 5 && $item->storage)
+		{
+                        $pluginClass = 'plgHwdmediashare'.$item->storage;
+                        $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$item->storage.'/'.$item->storage.'.php';
+                        if (file_exists($pluginPath))
+                        {
+                                JLoader::register($pluginClass, $pluginPath);
+                                $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
+                                return $HWDcdn->publicUrl($item, $fileType);
+                        }
+                } 
+                
                 hwdMediaShareFactory::load('files');
                 $folders = hwdMediaShareFiles::getFolders($item->key);
                 $filename = hwdMediaShareFiles::getFilename($item->key, $fileType);
@@ -170,6 +183,19 @@ class hwdMediaShareAudio extends JObject
                 // Check for generated ogg.
                 $fileType = 9;
  
+                // If CDN, let the CDN framework return the data.
+                if ($item->type == 5 && $item->storage)
+		{
+                        $pluginClass = 'plgHwdmediashare'.$item->storage;
+                        $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$item->storage.'/'.$item->storage.'.php';
+                        if (file_exists($pluginPath))
+                        {
+                                JLoader::register($pluginClass, $pluginPath);
+                                $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
+                                return $HWDcdn->publicUrl($item, $fileType);
+                        }
+                } 
+                
                 hwdMediaShareFactory::load('files');
                 $folders = hwdMediaShareFiles::getFolders($item->key);
                 $filename = hwdMediaShareFiles::getFilename($item->key, $fileType);
