@@ -104,7 +104,7 @@ class hwdMediaShareAudio extends JObject
          * @access  public
          * @static
          * @param   object  $item   The media item.
-         * @return  mixed   The path to the mp3 file, false on fail.
+         * @return  mixed   The mp3 file object, false on fail.
 	 */
 	public static function getMp3($item)
 	{
