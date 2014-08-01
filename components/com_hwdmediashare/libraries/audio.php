@@ -1,42 +1,38 @@
 <?php
 /**
- * @version    SVN $Id: audio.php 1508 2013-05-13 13:35:49Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      19-Jan-2012 15:23:50
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework audio class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-abstract class hwdMediaShareAudio
-{
+
+defined('_JEXEC') or die;
+
+class hwdMediaShareAudio extends JObject
+{        
 	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
 	 * Returns the hwdMediaShareAudio object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareAudio A hwdMediaShareAudio object.
-	 * @since   0.1
-	 */
+	 * @access  public
+         * @static
+	 * @return  hwdMediaShareAudio Object.
+	 */ 
 	public static function getInstance()
 	{
 		static $instance;
@@ -51,47 +47,68 @@ abstract class hwdMediaShareAudio
 	}
         
 	/**
-	 * Method to render an audio
+	 * Method to display an audio track.
          * 
-         * @since   0.1
-	 **/
-	public function get($item)
+         * @access  public
+         * @static
+         * @param   object  $item   The media item.
+         * @return  string  The html to display the document.
+	 */
+	public static function display($item)
 	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Get HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
                 $mp3 = hwdMediaShareAudio::getMp3($item);
                 $ogg = hwdMediaShareAudio::getOgg($item);
-                $jpg = hwdMediaShareDownloads::jpgUrl($item);
 
                 if ($mp3 && $ogg)
                 {
                         $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
                         $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
-
-                        // Import hwdMediaShare plugins
                         if (file_exists($pluginPath))
-                        {                            
+                        {
                                 JLoader::register($pluginClass, $pluginPath);
-                                $player = call_user_func(array($pluginClass, 'getInstance'));
-                                $params = new JRegistry('{"mp3":"'.$mp3.'","ogg":"'.$ogg.'","jpg":"'.$jpg.'"}');
-                                return $player->getAudioPlayer($params);
+                                $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
+                                
+                                // Setup parameters for player.
+                                $params = new JRegistry(array(
+                                    'mp3' => $mp3,
+                                    'ogg' => $ogg
+                                ));
+
+                                if ($player = $HWDplayer->getAudioPlayer($item, $params))
+                                {
+                                        return $player;
+                                }
+                                else
+                                {
+                                        return $utilities->printNotice($HWDplayer->getError());
+                                }
                         }
                 }
 
-                // Default to document
+                // Fallback to document display.
                 hwdMediaShareFactory::load('documents');
-                return hwdMediaShareDocuments::get($item);
+                return hwdMediaShareDocuments::display($item);
 	}
+        
 	/**
-	 * Method to render a video
+	 * Method to check if an mp3 file has been generated and return file data.
          * 
-         * @since   0.1
-	 **/
-	public function getMp3($item, $override = false)
+         * @access  public
+         * @static
+         * @param   object  $item   The media item.
+         * @return  mixed   The path to the mp3 file, false on fail.
+	 */
+	public static function getMp3($item)
 	{
-                // Check for generated MP3
+                // Check for generated mp3.
                 $fileType = 8;
  
                 hwdMediaShareFactory::load('files');
@@ -105,7 +122,7 @@ abstract class hwdMediaShareAudio
                         return hwdMediaShareDownloads::url($item, $fileType);
                 }
 
-                // Check for original MP3
+                // Check if the original is an mp3.
                 $fileType = 1;
 
                 hwdMediaShareFactory::load('files');
@@ -116,19 +133,31 @@ abstract class hwdMediaShareAudio
  
                 if ($ext == 'mp3' && file_exists($path))
                 {
-                        return hwdMediaShareDownloads::url($item, $fileType);
+                        // Create file object.
+                        $file = new JObject;
+                        $file->path = $path;
+                        $file->url = hwdMediaShareDownloads::url($item, $fileType);
+                        $file->size = filesize($path);
+                        $file->ext = $ext;
+                        $file->type = 'audio/mpeg';
+                  
+                        return $file;
                 }
 
                 return false;
 	} 
         
 	/**
-	 * Method to render a video
+	 * Method to check if an ogg file has been generated and return the path.
          * 
-         * @since   0.1
-	 **/
-	public function getOgg($item, $override = false)
+         * @access  public
+         * @static
+         * @param   object  $item   The media item.
+         * @return  mixed   The path to the ogg file, false on fail.
+	 */
+	public static function getOgg($item)
 	{
+                // Check for generated ogg.
                 $fileType = 9;
  
                 hwdMediaShareFactory::load('files');
@@ -138,37 +167,54 @@ abstract class hwdMediaShareAudio
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                 if (file_exists($path))
                 {
-                        return hwdMediaShareDownloads::url($item, $fileType);
+                        // Create file object.
+                        $file = new JObject;
+                        $file->path = $path;
+                        $file->url = hwdMediaShareDownloads::url($item, $fileType);
+                        $file->size = filesize($path);
+                        $file->ext = $ext;
+                        $file->type = 'audio/ogg';
+                  
+                        return $file;
                 }
                  
                 return false;
 	} 
         
         /**
-	 * Method to generate an image
+	 * Method to process a media to generate an mp3.
          * 
-	 * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process    The process item.
+         * @param   integer $fileType   The API value for the type of file being generated, used
+         *                              in generation of filename. 
+         * @return  mixed   The path to the ogg file, false on fail.
+	 */
 	public function processMp3($process, $fileType)
 	{
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Setup log
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('files');
+                
+                // Setup log.
                 $log = new StdClass;
                 $log->process_id = $process->id;
                 $log->input = '';
                 $log->output = '';
                 $log->status = 3;
 
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
+                JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
 
                 $properties = $table->getProperties(1);
                 $item = JArrayHelper::toObject($properties, 'JObject');
-
-                hwdMediaShareFactory::load('files');
 
                 hwdMediaShareFiles::getLocalStoragePath();
 
@@ -204,7 +250,7 @@ abstract class hwdMediaShareAudio
                                 {
                                         $log->status = 3;
 
-                                        // Add process log
+                                        // Add process log.
                                         hwdMediaShareProcesses::addLog($log);
                                         return $log;
                                 }
@@ -215,18 +261,17 @@ abstract class hwdMediaShareAudio
                                         {
                                                 $log->status = 3;
 
-                                                // Add process log
+                                                // Add process log.
                                                 hwdMediaShareProcesses::addLog($log);
                                                 return $log;
                                         }
                                 }
                         
-                                jimport( 'joomla.filesystem.file' );
                                 if (file_exists($pathDest) && filesize($pathDest) > 0)
                                 {
                                         $log->status = 2;
                                 }
-                                else if (file_exists($pathDest) && filesize($pathDest) == 0)
+                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
                                 {
                                         JFile::delete($pathDest);
                                 }
@@ -236,11 +281,11 @@ abstract class hwdMediaShareAudio
                                 $log->output = $e->getMessage();
                         }
 
-                        // Add process log
+                        // Add process log.
                         hwdMediaShareProcesses::addLog($log);
                         if (file_exists($pathDest) && filesize($pathDest) > 0)
                         {
-                                // Add file to database
+                                // Add file to database.
                                 hwdMediaShareFactory::load('files');
                                 hwdMediaShareFiles::add($item,$fileType);
                                 return $log;
@@ -253,31 +298,42 @@ abstract class hwdMediaShareAudio
                         $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
                 }
 
-                // Add process log
+                // Add process log.
                 hwdMediaShareProcesses::addLog($log);
                 return $log;                                              
 	}
         
         /**
-	 * Method to generate an image
+	 * Method to process a media to generate an ogg.
          * 
-	 * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process    The process item.
+         * @param   integer $fileType   The API value for the type of file being generated, used
+         *                              in generation of filename. 
+         * @return  mixed   The path to the ogg file, false on fail.
+	 */
 	public function processOgg($process, $fileType)
 	{
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Setup log
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('files');
+                
+                // Setup log.
                 $log = new StdClass;
                 $log->process_id = $process->id;
                 $log->input = '';
                 $log->output = '';
                 $log->status = 3;
 
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
+                JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
 
                 $properties = $table->getProperties(1);
                 $item = JArrayHelper::toObject($properties, 'JObject');
@@ -318,7 +374,7 @@ abstract class hwdMediaShareAudio
                                 {
                                         $log->status = 3;
 
-                                        // Add process log
+                                        // Add process log.
                                         hwdMediaShareProcesses::addLog($log);
                                         return $log;
                                 }
@@ -329,18 +385,17 @@ abstract class hwdMediaShareAudio
                                         {
                                                 $log->status = 3;
 
-                                                // Add process log
+                                                // Add process log.
                                                 hwdMediaShareProcesses::addLog($log);
                                                 return $log;
                                         }
                                 }
                                 
-                                jimport( 'joomla.filesystem.file' );
                                 if (file_exists($pathDest) && filesize($pathDest) > 0)
                                 {
                                         $log->status = 2;
                                 }
-                                else if (file_exists($pathDest) && filesize($pathDest) == 0)
+                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
                                 {
                                         JFile::delete($pathDest);
                                 }
@@ -350,11 +405,11 @@ abstract class hwdMediaShareAudio
                                 $log->output = $e->getMessage();
                         }
 
-                        // Add process log
+                        // Add process log.
                         hwdMediaShareProcesses::addLog($log);
                         if (file_exists($pathDest) && filesize($pathDest) > 0)
                         {
-                                // Add file to database
+                                // Add file to database.
                                 hwdMediaShareFactory::load('files');
                                 hwdMediaShareFiles::add($item,$fileType);
                                 return $log;
@@ -367,61 +422,72 @@ abstract class hwdMediaShareAudio
                         $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
                 }
 
-                // Add process log
+                // Add process log.
                 hwdMediaShareProcesses::addLog($log);
                 return $log;              
 	}
         
         /**
-	 * Method to render an image
+	 * Method to extract the metadata from an audio file.
          * 
-	 * @since   0.1
-	 **/
-	public function getMeta($item)
+         * @access  public
+         * @param   object  $item   The media item.
+         * @return  mixed   An array of metadata, false on fail.
+	 */
+	public static function getMeta($item)
 	{
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
+              
+                // Define path to metadata file.
+                jimport( 'joomla.filesystem.file');
+                $ini = JPATH_CACHE . '/metadata' . $item->id . '.ini';
                 
-                hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('downloads');                
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
-
-                $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
-
-                // Check if the variable is set and if the file itself exists before continuing
-                if (file_exists($pathSource) && filesize($pathSource) > 0)
+                // If the file does not exist, then attempt to create.
+                if (!file_exists($ini))
                 {
-                        try
+                        hwdMediaShareFactory::load('files');
+                        hwdMediaShareFactory::load('downloads');                
+                        $foldersSource = hwdMediaShareFiles::getFolders($item->key);
+                        $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
+                        $extSource = hwdMediaShareFiles::getExtension($item, 1);
+
+                        $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
+
+                        // Check the source file exists.
+                        if (file_exists($pathSource) && filesize($pathSource) > 0)
                         {
-                                // Get information on original
-                                if(substr(PHP_OS, 0, 3) == "WIN")
+                                try
                                 {
-                                        $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
-                                        exec($command, $output);
+                                        // Extract metadata.
+                                        if(substr(PHP_OS, 0, 3) == "WIN")
+                                        {
+                                                $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
+                                                exec($command, $output);
+                                        }
+                                        else
+                                        {
+                                                $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
+                                                exec($command, $output);
+                                        }  
                                 }
-                                else
+                                catch(Exception $e)
                                 {
-                                        $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
-                                        exec($command, $output);
-                                }  
-                        }
-                        catch(Exception $e)
-                        {
-                                $log->output = $e->getMessage();
-                        }
-                        
-                        // Load data
-                        jimport( 'joomla.filesystem.file');
-                        $ini	= JPATH_CACHE.'/metadata'.$item->id.'.ini';
-                        $data	= JFile::read($ini);
-                        
+                                        $log = $e->getMessage();
+                                }
+                        } 
+                }
+
+                // If the file exists, then return the data.
+                if (file_exists($ini))
+                {
+                        $data = JFile::read($ini);
                         $registry = new JRegistry;
 			$registry->loadString($data);
-			return $registry->toArray();
-                } 
-
+			return $registry->toArray();                        
+                }
+                
                 return false;
 	}
 }
