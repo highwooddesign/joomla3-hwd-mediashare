@@ -118,8 +118,17 @@ class hwdMediaShareAudio extends JObject
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
        
                 if (file_exists($path))
-                { 
-                        return hwdMediaShareDownloads::url($item, $fileType);
+                {
+                        // Create file object.
+                        $file = new JObject;
+                        $file->local = true;
+                        $file->path = $path;
+                        $file->url = hwdMediaShareDownloads::url($item, $fileType);
+                        $file->size = filesize($path);
+                        $file->ext = $ext;
+                        $file->type = 'audio/mpeg';
+                  
+                        return $file;
                 }
 
                 // Check if the original is an mp3.
