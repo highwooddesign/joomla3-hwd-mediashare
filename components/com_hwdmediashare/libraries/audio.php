@@ -60,7 +60,7 @@ class hwdMediaShareAudio extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
