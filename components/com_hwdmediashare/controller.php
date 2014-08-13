@@ -13,27 +13,18 @@ defined('_JEXEC') or die;
 class hwdMediaShareController extends JControllerLegacy
 {
 	/**
-	 * Method to display a view.
+	 * Proxy view method for MVC based architecture.
 	 *
-	 * @param   boolean         If true, the view output will be cached
-	 * @param   array           An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
-	 *
-	 * @return  JController     This object to support chaining.
+	 * @access	public
+	 * @param       boolean     $cachable       If true, the view output will be cached
+	 * @param       array       $urlparams      An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @return      object      A JControllerLegacy object to support chaining.
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
 		// Set the default view name.
 		$view = $this->input->get('view', 'media');
                 $this->input->set('view', $view);
-
-                // Override caching if set.
-                if (!$cachable)
-                {
-                        // Get HWD config.
-                        $hwdms = hwdMediaShareFactory::getInstance();
-                        $config = $hwdms->getConfig();
-                        $cachable = $config->get('caching', JFactory::getConfig()->get( 'caching' ));
-                }
 
                 $safeurlparams = array('catid'=>'INT',
                                        'id'=>'INT',
@@ -49,7 +40,7 @@ class hwdMediaShareController extends JControllerLegacy
                                        'filter_order'=>'STRING',
                                        'filter_tag'=>'STRING',
                                        'filter_order_Dir'=>'CMD',
-                                       'filter-search'=>'STRING',
+                                       'filter_search'=>'STRING',
                                        'print'=>'BOOLEAN',
                                        'lang'=>'CMD');
 
