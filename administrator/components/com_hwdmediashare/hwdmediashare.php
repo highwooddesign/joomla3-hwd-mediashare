@@ -28,5 +28,5 @@ $controller = JControllerLegacy::getInstance('hwdMediaShare');
 // Perform the task.
 $controller->execute(JFactory::getApplication()->input->get('task'));
 
-// Redirect if set by the controller
+// Redirect if set by the controller.
 $controller->redirect();
