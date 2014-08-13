@@ -132,12 +132,20 @@ class hwdMediaShareViewAlbums extends JViewLegacy
                 // Set metadata.
 		$this->document->setTitle($title);
 
-                if ($this->params->get('meta_desc'))
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'albums' && $this->params->get('menu-meta_description'))
+                {
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+                } 
+                elseif ($this->params->get('meta_desc'))
                 {
 			$this->document->setDescription($this->params->get('meta_desc'));
-                }              
+                }   
 
-		if ($this->params->get('meta_keys'))
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'albums' && $this->params->get('menu-meta_keywords'))
+                {
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+                } 
+		elseif ($this->params->get('meta_keys'))
                 {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
                 }
