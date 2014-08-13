@@ -155,17 +155,25 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
                 elseif ($this->playlist->description)
                 {                        
 			$this->document->setDescription($this->escape(JHtmlString::truncate($this->playlist->description, 160, true, false)));   
-                }                 
+                }
+                elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'playlist' && (int) @$menu->query['id'] == $this->playlist->id && $this->params->get('menu-meta_description'))
+                {
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+                } 
                 elseif ($this->params->get('meta_desc'))
                 {
 			$this->document->setDescription($this->params->get('meta_desc'));
-                }                
+                }
 
 		if ($this->playlist->params->get('meta_keys'))
 		{
 			$this->document->setMetadata('keywords', $this->playlist->params->get('meta_keys'));
 		}
-                elseif ($this->params->get('meta_keys'))
+                elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'playlist' && (int) @$menu->query['id'] == $this->playlist->id && $this->params->get('menu-meta_keywords'))
+                {
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+                } 
+		elseif ($this->params->get('meta_keys'))
                 {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
                 }
