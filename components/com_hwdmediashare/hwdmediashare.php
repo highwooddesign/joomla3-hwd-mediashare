@@ -10,10 +10,10 @@
 
 defined('_JEXEC') or die;
 
-// Require hwdMediaShare factory.
+// Register HWD factory.
 JLoader::register('hwdMediaShareFactory', dirname(__FILE__).'/libraries/factory.php');
 
-// Require helper files.
+// Register helper files.
 JLoader::register('hwdMediaShareHelperRoute', dirname(__FILE__).'/helpers/route.php');
 JLoader::register('hwdMediaShareHelperNavigation', dirname(__FILE__).'/helpers/navigation.php');
 JLoader::register('hwdMediaShareHelperModule', dirname(__FILE__).'/helpers/module.php');
@@ -21,11 +21,11 @@ JLoader::register('hwdMediaShareHelperModule', dirname(__FILE__).'/helpers/modul
 // Access check.
 hwdMediaShareHelperRoute::entry();
 
-// Get an instance of the controller prefixed by hwdMediaShare.
+// Get an instance of the controller.
 $controller = JControllerLegacy::getInstance('hwdMediaShare');
 
 // Perform the task.
 $controller->execute(JFactory::getApplication()->input->get('task'));
 
-// Redirect if set by the controller
+// Redirect if set by the controller.
 $controller->redirect();
