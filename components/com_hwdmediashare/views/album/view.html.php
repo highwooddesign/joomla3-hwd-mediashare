@@ -156,6 +156,10 @@ class hwdMediaShareViewAlbum extends JViewLegacy
                 {                        
 			$this->document->setDescription($this->escape(JHtmlString::truncate($this->album->description, 160, true, false)));   
                 }                 
+                elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'album' && (int) @$menu->query['id'] == $this->album->id && $this->params->get('menu-meta_description'))
+                {
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+                } 
                 elseif ($this->params->get('meta_desc'))
                 {
 			$this->document->setDescription($this->params->get('meta_desc'));
@@ -165,7 +169,11 @@ class hwdMediaShareViewAlbum extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->album->params->get('meta_keys'));
 		}
-                elseif ($this->params->get('meta_keys'))
+                elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'album' && (int) @$menu->query['id'] == $this->album->id && $this->params->get('menu-meta_keywords'))
+                {
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+                } 
+		elseif ($this->params->get('meta_keys'))
                 {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
                 }
