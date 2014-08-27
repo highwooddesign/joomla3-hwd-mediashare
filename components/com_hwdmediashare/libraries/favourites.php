@@ -171,7 +171,7 @@ class hwdMediaShareFavourites extends JObject
                         try
                         {
                                 $db->setQuery($query);
-                                $result = $db->query();
+                                $result = $db->execute();
                         }
                         catch (Exception $e)
                         {
