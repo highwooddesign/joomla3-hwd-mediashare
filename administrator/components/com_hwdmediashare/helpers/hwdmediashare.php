@@ -22,16 +22,28 @@ abstract class hwdMediaShareHelper
 	 */
 	public static function addSubmenu($submenu)
 	{
+                // Get HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
 		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_DASHBOARD'),
 			'index.php?option=com_hwdmediashare&view=dashboard',
 			$submenu == 'dashboard'
 		);
 		JHtmlSidebar::addEntry(
-			JText::_('COM_HWDMS_UPLOAD'),
+			JText::_('COM_HWDMS_ADD_NEW_MEDIA'),
 			'index.php?option=com_hwdmediashare&view=addmedia',
 			$submenu == 'addmedia'
-		);                
+		);
+                if ($config->get('enable_uploads_remote') == 1)
+                {
+                        JHtmlSidebar::addEntry(
+                                JText::_('COM_HWDMS_ADD_REMOTE_MEDIA'),
+                                'index.php?option=com_hwdmediashare&view=addmedia&method=remote',
+                                $submenu == 'addmedia'
+                        );  
+                }
 		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_MEDIA'),
 			'index.php?option=com_hwdmediashare&view=media',
