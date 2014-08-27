@@ -121,9 +121,9 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
 		// Initialise variables.
                 $db = JFactory::getDbo();
 
-                // Load HWD utilities.
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+                // Load HWD authorise library.
+                hwdMediaShareFactory::load('authorise');
+                $HWDauthorise = hwdMediaShareAuthorise::getInstance();
                 
 		$table = $this->getTable();    
                 
@@ -156,7 +156,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
                         {
                                 if ($table->load($row))
                                 {
-                                        if ($utilities->authoriseAlbumAction('unlink', $pk, $mediaId))
+                                        if ($HWDauthorise->authoriseAlbumAction('unlink', $pk, $mediaId))
                                         {
                                                 if (!$table->delete($row))
                                                 {
@@ -211,9 +211,9 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
 		$user = JFactory::getUser();
                 $date = JFactory::getDate();                
 
-                // Load HWD utilities.
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+                // Load HWD authorise library.
+                hwdMediaShareFactory::load('authorise');
+                $HWDauthorise = hwdMediaShareAuthorise::getInstance();
                 
 		$table = $this->getTable();    
 
@@ -226,7 +226,7 @@ class hwdMediaShareModelLinkedAlbums extends JModelList
 		{
 			$table->reset();
 
-                        if (!$utilities->authoriseAlbumAction('link', $pk, $mediaId))
+                        if (!$HWDauthorise->authoriseAlbumAction('link', $pk, $mediaId))
                         {
                                 // Prune items that you can't change.
                                 unset($pks[$i]);
