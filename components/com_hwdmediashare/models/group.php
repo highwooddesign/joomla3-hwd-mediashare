@@ -722,7 +722,7 @@ class hwdMediaShareModelGroup extends JModelList
 
                                 $db->setQuery($query);
 
-                                $result = $db->query();
+                                $result = $db->execute();
                         }
                         catch (Exception $e)
                         {
