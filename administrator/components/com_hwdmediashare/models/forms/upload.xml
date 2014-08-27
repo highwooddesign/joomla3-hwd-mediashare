@@ -149,8 +149,7 @@
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
                         multiple="true"
-		>
-		</field>
+		/>  
 		<field 
                         name="featured" 
                         type="radio"
