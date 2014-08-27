@@ -90,7 +90,7 @@ class hwdMediaShareTableUserChannel extends JTable
 			$this->modified_user_id	= $user->get('id'); 
 
                         // Only allow users with permission to edit states.
-                        if (!$user->authorise('core.edit.state', 'com_hwdmediashare.playlist.'. (int) $this->id))
+                        if (!$user->authorise('core.edit.state', 'com_hwdmediashare.user.'. (int) $this->id))
                         {
                                 unset($this->published);
                                 unset($this->status);
@@ -119,7 +119,7 @@ class hwdMediaShareTableUserChannel extends JTable
                         if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
                         {
                                 $this->published = 1;
-                                $this->featured = 1;
+                                $this->featured = 0;
                                 $this->access = 1;
                         } 
                         
