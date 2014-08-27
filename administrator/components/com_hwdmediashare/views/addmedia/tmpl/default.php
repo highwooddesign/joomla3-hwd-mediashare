@@ -206,6 +206,7 @@ JHtml::_('formbehavior.chosen', 'select');
                 </div>
         </div>
         <input type="hidden" name="task" value="" />
+	<input type="hidden" name="return" value="<?php echo $this->return; ?>" />
         <?php if ($this->replace) : ?><input type="hidden" name="jform[id]" value="<?php echo $this->replace; ?>" /><?php endif; ?>
         <?php if ($this->replace) : ?><input type="hidden" name="jform_id" value="<?php echo $this->replace; ?>" /><?php endif; ?>
         <?php foreach($this->jformdata as $name => $value): ?>
