@@ -111,7 +111,7 @@ class hwdMediaShareTableAlbum extends JTable
                         if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
                         {
                                 $this->published = 1;
-                                $this->featured = 1;
+                                $this->featured = 0;
                                 $this->access = 1;
                         } 
                         
