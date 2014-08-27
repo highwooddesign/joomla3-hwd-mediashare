@@ -253,7 +253,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                         $db->setQuery($query);
                         try
                         {
-                                $db->query(); 
+                                $db->execute(); 
                                 $ext_id = $db->loadResult();                   
                         }
                         catch (RuntimeException $e)
