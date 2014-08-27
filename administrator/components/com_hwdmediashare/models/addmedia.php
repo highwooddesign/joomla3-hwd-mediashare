@@ -69,45 +69,38 @@ class hwdMediaShareModelAddMedia extends JModelAdmin
 	}
 
 	/**
-	 * Method to get a list of extensions allowed by the standard upload tool.
+	 * Method to get a list of extensions allowed for local uploads, 
+         * and also set state to access later.
 	 *
 	 * @access  public
          * @return  object  The object of extensions.
 	 */
-	public function getStandardExtensions()
+	public function getLocalExtensions()
 	{
 		hwdMediaShareFactory::load('upload');
-                $standardExtensions = hwdMediaShareUpload::getAllowedExtensions('standard');
-                $this->setState('standardExtensions', $standardExtensions);
-                return $standardExtensions;
+                $extensions = hwdMediaShareUpload::getAllowedExtensions();
+                $this->setState('allowedExtensions', $extensions);
+                return $extensions;
 	}
 
 	/**
-	 * Method to get a list of extensions allowed by the large upload tool.
+	 * Method to check if we should show the platform upload tool.
 	 *
 	 * @access  public
-         * @return  object  The object of extensions.
+         * @return  boolean True if show, false if hide.
 	 */
-	public function getLargeExtensions()
+	public function getPlatformStatus()
 	{
-		hwdMediaShareFactory::load('upload');
-                $largeExtensions = hwdMediaShareUpload::getAllowedExtensions('large');
-                $this->setState('largeExtensions', $largeExtensions);
-                return $largeExtensions;
-	}
-
-	/**
-	 * Method to get a list of extensions allowed by the platform upload tool.
-	 *
-	 * @access  public
-         * @return  object  The object of extensions.
-	 */
-	public function getPlatformExtensions()
-	{
-		hwdMediaShareFactory::load('upload');
-                $platformExtensions = hwdMediaShareUpload::getAllowedExtensions('platform');
-                $this->setState('platformExtensions', $platformExtensions);
-                return $platformExtensions;
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                            
+                if ($config->get('audio_uploads') == 3 && $config->get('enable_audio')) return true;
+                if ($config->get('document_uploads') == 3 && $config->get('enable_documents')) return true;
+                if ($config->get('image_uploads') == 3 && $config->get('enable_images')) return true;
+                if ($config->get('video_uploads') == 3 && $config->get('enable_videos')) return true;
+                
+                return false;
 	}
 
 	/**
@@ -363,7 +356,7 @@ EOD;
                 // Load HWD libraries.
                 hwdMediaShareFactory::load('upload');
 
-                $largeExtensions = $this->getState('largeExtensions');
+                $largeExtensions = $this->getState('allowedExtensions');
                 $largeExtensionString = '';
                 if (is_array($largeExtensions))
                 {
@@ -527,6 +520,7 @@ EOD;
 
                     <!-- Start Upload Form -->
                     <p><?php echo JText::_('COM_HWDMS_SUPPORTED_FORMATS_LABEL'); ?> <?php echo hwdMediaShareUpload::getReadableAllowedExtensions($largeExtensions); ?></p>
+                    <p><?php echo JText::sprintf('COM_HWDMS_MAXIMUM_UPLOAD_SIZE_X', hwdMediaShareUpload::getMaximumUploadSize('large')); ?></p>
                     <fieldset class="adminform" id="hwd-upload-fallback">
                         <noscript><p><?php echo JText::_('COM_HWDMS_PLEASE_ENABLE_JAVASCRIPT'); ?></p></noscript>
                         <div id="upload_slots">
