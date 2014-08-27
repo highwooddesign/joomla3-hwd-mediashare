@@ -56,6 +56,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		$this->form = $this->get('Form');
                 $this->replace = ($app->input->get('id', '', 'int') > 0 ? $app->input->get('id', '0', 'int'): false);
                 $this->method = ($app->input->get('method', '', 'word') ? $app->input->get('method', '', 'word') : false);
+                $this->return = base64_encode(JFactory::getURI()->toString());
 
 		// Determine if we need to show the form.
 		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace && $this->method != 'remote') 
