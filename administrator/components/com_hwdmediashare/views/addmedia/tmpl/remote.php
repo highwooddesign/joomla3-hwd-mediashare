@@ -54,6 +54,7 @@ JHtml::_('formbehavior.chosen', 'select');
                 </div>
         </div>
         <input type="hidden" name="task" value="" />
+	<input type="hidden" name="return" value="<?php echo $this->return; ?>" />
         <?php foreach($this->jformdata as $name => $value): ?>
                 <?php if (in_array($name, array("catid", "tags", "published", "featured", "access", "language"))) continue; // We remove any inputs which have been included with the joomla.edit.global layout file ?>
                 <?php if (is_array($value)) : ?>
