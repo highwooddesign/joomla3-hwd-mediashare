@@ -174,7 +174,7 @@ class hwdMediaShareControllerGroups extends JControllerForm
 		// Check for request forgeries.
 		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
 
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
