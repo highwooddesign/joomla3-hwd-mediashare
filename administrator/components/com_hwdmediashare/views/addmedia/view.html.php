@@ -16,10 +16,18 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	 * The show form view variable.
          * 
          * @access      public
-	 * @var         string
+	 * @var         boolean
 	 */
 	public $show_form = true;
 
+	/**
+	 * The upload method view variable.
+         * 
+         * @access      public
+	 * @var         mixed
+	 */
+	public $method = false;
+        
 	/**
 	 * Display the view.
 	 *
@@ -40,20 +48,22 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 
                 // Import HWD libraries.
 		hwdMediaShareFactory::load('upload');
+		hwdMediaShareFactory::load('remote');
                 
                 // Get data from the model.
 		$this->config = $config;
                 $this->state = $this->get('State');
 		$this->form = $this->get('Form');
                 $this->replace = ($app->input->get('id', '', 'int') > 0 ? $app->input->get('id', '0', 'int'): false);
+                $this->method = ($app->input->get('method', '', 'word') ? $app->input->get('method', '', 'word') : false);
 
 		// Determine if we need to show the form.
-		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace) 
+		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace && $this->method != 'remote') 
 		{
 			$this->setLayout('form');
-		}
+		}             
                 else
-                {              
+                {
                         $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
                         $this->jformreg = new JRegistry($this->jformdata);
 
@@ -73,6 +83,11 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                                 }
                         }
 
+                        if ($this->method == 'remote' && $this->config->get('enable_uploads_remote') == 1 && !$this->replace) 
+                        {
+                                $this->setLayout('remote');
+                        }   
+                
                         // Bulk import from server (unless we are updating an existing media).
                         if (!$this->replace) 
                         {
@@ -137,9 +152,9 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 $canDo = hwdMediaShareHelper::getActions();
 		$user  = JFactory::getUser();
                 
-		JToolBarHelper::title(JText::_('COM_HWDMS_ADD_NEW_MEDIA'), 'upload');
+		JToolBarHelper::title($this->method == 'remote' && $this->config->get('enable_uploads_remote') == 1 && !$this->replace ? JText::_('COM_HWDMS_ADD_REMOTE_MEDIA') : JText::_('COM_HWDMS_ADD_NEW_MEDIA'), 'upload');
 
-                if ($this->config->get('upload_workflow') == 0 && $this->show_form && $canDo->get('core.create'))
+                if ($this->config->get('upload_workflow') == 0 && $this->show_form && $this->method != 'remote' && $canDo->get('core.create'))
 		{
                         JToolBarHelper::custom('addmedia.processform', 'save-new', 'save-new', 'COM_HWDMS_TOOLBAR_SAVE_AND_UPLOAD', false);
 		}
