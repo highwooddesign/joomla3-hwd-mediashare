@@ -110,13 +110,14 @@
         </fieldset>
 	<fieldset 
                 name="details"
+                label="COM_HWDMS_DETAILS"
         >
                 <field
 			name="title"
 			type="text"
 			label="COM_HWDMS_TITLE_LABEL"
 			description="COM_HWDMS_TITLE_DESC"
-			class="inputbox input-xxlarge input-large-text"
+			class="input-xxlarge input-large-text"
 			required="true"
 		/>
                 <field
@@ -137,9 +138,9 @@
                         name="catid"
                         type="category"
                         extension="com_hwdmediashare"
-                        default=""
                         label="COM_HWDMS_CATEGORY_LABEL"
-                        description="COM_HWDMS_CATEGORY_DESC"
+                        description="COM_HWDMS_CATEGORY_DESC"                        
+                        default=""
                         multiple="multiple"
                 />
                 <field
@@ -151,14 +152,25 @@
 		>
 		</field>
 		<field 
+                        name="featured" 
+                        type="radio"
+			label="JFEATURED"
+			description="COM_HWDMS_FEATURED_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+                        validate="integer"
+                        filter="integer"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>                     
+		<field 
                         name="published" 
                         type="list" 
                         label="JPUBLISHED"
-			description="JFIELD_PUBLISHED_DESC" 
-                        class="inputbox"
-			filter="intval" 
-                        size="1" 
-                        default="1"
+			description="JFIELD_PUBLISHED_DESC"
+                        class="chzn-color-state"                        
+			default="1"
 		>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
@@ -166,30 +178,19 @@
 			<option value="-2">JTRASHED</option>
 		</field>
 		<field 
-                        name="featured" 
-                        type="radio"
-			label="JFEATURED"
-			description="COM_HWDMS_FEATURED_DESC"
-			class="btn-group btn-group-yesno"
-			default="0"
-		>
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		<field 
                         name="access" 
                         type="accesslevel" 
                         label="JFIELD_ACCESS_LABEL"
 			description="JFIELD_ACCESS_DESC" 
-                        class="inputbox" 
-                        size="1" 
+			default="1"
+                        validate="integer"
+                        filter="integer"
                 />
 		<field 
                         name="language" 
                         type="contentlanguage" 
                         label="JFIELD_LANGUAGE_LABEL"
 			description="COM_HWDMS_LANGUAGE_DESC" 
-                        class="inputbox"
 		>
 			<option value="*">JALL</option>
 		</field>
