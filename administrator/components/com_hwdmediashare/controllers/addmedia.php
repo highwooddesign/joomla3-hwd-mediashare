@@ -293,7 +293,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 			$view->scan();
 		}
         }
-        
+
 	/**
 	 * Method to process two part upload process.
 	 *
