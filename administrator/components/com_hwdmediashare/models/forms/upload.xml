@@ -21,12 +21,14 @@
                         type="text" 
 			label="COM_HWDMS_REMOTE_MEDIA_LINK_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINK_DESC"
+			class="input-xxlarge input-large-text"
                 />
 		<field 
                         name="remotes" 
                         type="textarea" 
 			label="COM_HWDMS_REMOTE_MEDIA_LINKS_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINKS_DESC"
+			class="input-xxlarge"
                 />
         </fieldset>
 	<fieldset
