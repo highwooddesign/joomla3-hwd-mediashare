@@ -56,8 +56,7 @@
 			description="COM_HWDMS_TAGS_DESC"
                         multiple="true"
                         class="hwd-form-tags span12"                        
-		>
-		</field>
+		/>
 		<field 
                         name="featured" 
                         type="radio"

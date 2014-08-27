@@ -45,9 +45,8 @@
 			label="COM_HWDMS_TAGS_LABEL"
 			description="COM_HWDMS_TAGS_DESC"
                         multiple="true"
-                        class="hwd-form-tags span12"                           
-		>
-		</field>
+                        class="hwd-form-tags span12"                        
+		/>
 		<field 
                         name="featured" 
                         type="radio"
