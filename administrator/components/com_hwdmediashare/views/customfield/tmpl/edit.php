@@ -198,7 +198,7 @@ $doc->addScriptDeclaration($ajax);
 		<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
+		<input type="hidden" name="return" value="<?php echo $input->get('return', null, 'base64'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
         </div>
 </form>
