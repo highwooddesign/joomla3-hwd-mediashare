@@ -81,4 +81,88 @@ class hwdMediaShareThumbnails extends JObject
                 
                 return JURI::root( true ).'/media/com_hwdmediashare/assets/images/default-channel.png';
         }
+        
+	/**
+	 * Method to get the avatar for a user.
+	 *
+	 * @access  public
+         * @static
+	 * @param   object  $user   The user to display.
+	 * @return  string  The url of the avatar.
+	 */ 
+        public static function getAvatar($user)
+        {
+		// Initialiase variables.
+                $db = JFactory::getDBO();
+                
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
+                if (!$user)
+                {
+                        return JURI::root( true ) . '/media/com_hwdmediashare/assets/images/default-avatar.png';
+                }
+                elseif ($config->get('community_avatar') == 'cb' && file_exists(JPATH_ROOT.'/components/com_comprofiler'))
+                {           
+                        $query = $db->getQuery(true)
+                                ->select('avatar')
+                                ->from('#__comprofiler')
+                                ->where('user_id = ' . $db->quote($user->id));
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $avatar = $db->loadResult();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }                    
+
+                        if (!empty($avatar) && file_exists(JPATH_ROOT.'/images/comprofiler/tn'.$cbAvatar))
+                        {
+                                return JURI::root( true ).'/images/comprofiler/tn'.$cbAvatar;
+                        }
+                        elseif (!empty($avatar) && file_exists(JPATH_ROOT.'/images/comprofiler/'.$cbAvatar))
+                        {
+                                return JURI::root( true ).'/images/comprofiler/'.$cbAvatar;
+                        }                        
+                }
+                elseif ($config->get('community_avatar') == 'jomsocial' && file_exists(JPATH_ROOT.'/components/com_community'))
+                {
+                        include_once(JPATH_ROOT.'/components/com_community/libraries/core.php');
+                        $JSUser = CFactory::getUser($user->id);
+                        return $JSUser->getThumbAvatar();
+                }
+                elseif ($config->get('community_avatar') == 'easysocial' && file_exists(JPATH_ROOT.'/components/com_easysocial'))
+                {
+                        require_once(JPATH_ADMINISTRATOR . '/components/com_easysocial/includes/foundry.php');
+                        $user = Foundry::user($user->id);
+                        return $user->getAvatar();                    
+                }              
+                elseif ($config->get('community_avatar') == 'gravatar' && isset($user->email))
+                {
+                        return "http://www.gravatar.com/avatar/".md5(strtolower(trim($user->email)));                    
+                }
+                elseif ($config->get('community_avatar') == 'jomwall' && file_exists(JPATH_ROOT.'/components/com_awdwall/helpers/user.php'))
+                {
+                        include_once (JPATH_ROOT.'/components/com_awdwall/helpers/user.php');
+                        return AwdwallHelperUser::getBigAvatar51($user->id);	
+                }
+
+                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/default-avatar.png';
+        }        
+
+	/**
+	 * Method to get the channel art url for a channel.
+	 *
+	 * @access  public
+         * @static
+	 * @param   object  $item   The media to display.
+	 * @return  string  The url of the video preview image.
+	 */ 
+        public static function getVideoPreview($item)
+	{
+        }       
 }
