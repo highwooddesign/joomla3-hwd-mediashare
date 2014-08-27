@@ -87,7 +87,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 else
                 {
                         $this->setMessage($model->getError());
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                        $this->setRedirect($this->getReturnPage());
                 }
         }
 
@@ -112,7 +112,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 else
                 {
                         $this->setMessage($model->getError());
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                        $this->setRedirect($this->getReturnPage());
                 }
         }
 
@@ -149,7 +149,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 else
                 {
                         $this->setMessage($model->getError());
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                        $this->setRedirect($this->getReturnPage());
                 }        
         }
 
@@ -177,7 +177,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 else
                 {
                         $this->setMessage($model->getError());
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                        $this->setRedirect($this->getReturnPage());
                 }
         }
         
@@ -205,7 +205,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 else
                 {
                         $this->setMessage($model->getError());
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                        $this->setRedirect($this->getReturnPage());
                 }
         }
         
@@ -233,7 +233,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 else
                 {
                         $this->setMessage($model->getError());
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view, false));
+                        $this->setRedirect($this->getReturnPage());
                 }
         }
         
@@ -323,4 +323,25 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 			$view->display();
 		}
         }
+        
+	/**
+	 * Get the return URL, if a "return" variable has been 
+         * passed in the request.
+         * 
+	 * @access	protected
+         * @return      string      The return URL.
+	 */
+	protected function getReturnPage()
+	{
+		$return = $this->input->get('return', null, 'base64');
+
+		if (empty($return) || !JUri::isInternal(base64_decode($return)))
+		{
+			return JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view);
+		}
+		else
+		{
+			return base64_decode($return);
+		}
+	}        
 }
