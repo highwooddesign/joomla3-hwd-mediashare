@@ -33,12 +33,9 @@ $input = $app->input;
 	}
 </script>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=addmedia'); ?>" method="post" name="adminForm" id="item-form" class="form-validate" enctype="multipart/form-data">
-
 	<?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
-    
-	<div class="form-horizontal">
-            
-		<div class="row-fluid">
+    	<div class="form-horizontal">
+                <div class="row-fluid">
 			<div class="span9">
 				<fieldset class="adminform">
 					<?php echo $this->form->getInput('description'); ?>
@@ -48,9 +45,12 @@ $input = $app->input;
 				<?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>
 			</div>
 		</div>
-
+                <?php // These need to be set when submitted, but they are also validated later. ?>    
+                <input type="hidden" name="jform[published]" value="1" />
+                <input type="hidden" name="jform[status]" value="1" />
+                <input type="hidden" name="jform[featured]" value="0" />
+                <input type="hidden" name="jform[access]" value="1" /> 
 		<input type="hidden" name="task" value="" />
-		<input type="hidden" name="return" value="<?php echo $input->getCmd('return'); ?>" />
                 <?php echo $this->form->getInput('album_id'); ?>
                 <?php echo $this->form->getInput('category_id'); ?>
                 <?php echo $this->form->getInput('group_id'); ?>
