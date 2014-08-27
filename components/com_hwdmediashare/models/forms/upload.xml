@@ -1,55 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: upload.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
 <form
-	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+        addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        addrulepath="/administrator/components/com_hwdmediashare/models/rules"  
 >
 	<fieldset
+                name="local"
+        >
+		<field 
+                        name="Filedata" 
+                        type="file" 
+			label="COM_HWDMS_UPLOAD_A_FILE" 
+                        description="COM_HWDMS_UPLOAD_A_FILE"
+                />
+        </fieldset>    
+	<fieldset
                 name="remote"
-                label="COM_HWDMS_DETAILS"
         >
 		<field 
                         name="remote" 
+                        type="text" 
+			label="COM_HWDMS_REMOTE_MEDIA_LINK_LABEL" 
+                        description="COM_HWDMS_REMOTE_MEDIA_LINK_DESC"
+                        class="input-large-text hwd-form-title span12"                        
+                />
+		<field 
+                        name="remotes" 
                         type="textarea" 
-                        class="inputbox"
-			label="COM_HWDMS_REMOTE_LINK_LABEL" 
-                        description="COM_HWDMS_REMOTE_LINK_DESC"
+			label="COM_HWDMS_REMOTE_MEDIA_LINKS_LABEL" 
+                        description="COM_HWDMS_REMOTE_MEDIA_LINKS_DESC"
+                        class="span12"                        
                 />
         </fieldset>
-        <fieldset
+	<fieldset 
                 name="details"
                 label="COM_HWDMS_DETAILS"
         >
                 <field
+			name="title"
+			type="text"
+			label="COM_HWDMS_TITLE_LABEL"
+			description="COM_HWDMS_TITLE_DESC"
+			required="true"
+			hint="COM_HWDMS_TITLE_LABEL"
+                        class="input-large-text hwd-form-title span12"  
+		/>
+		<field 
+                        name="description" 
+                        type="hwdeditor" 
+			label="COM_HWDMS_DESCRIPTION_LABEL" 
+                        description="COM_HWDMS_DESCRIPTION_DESC"
+			filter="safehtml" 
+                        buttons="true"
+                />
+                <field
                         name="catid"
                         type="category"
                         extension="com_hwdmediashare"
-                        class="inputbox"
                         default=""
                         label="COM_HWDMS_CATEGORY_LABEL"
                         description="COM_HWDMS_CATEGORY_DESC"
                         multiple="multiple"
-                >
-                        <option value="0">JOPTION_SELECT_CATEGORY</option>
-                </field>
+                        class="hwd-form-catid span12"
+                />   
+                <field
+			name="tags"
+			type="tag"
+			label="COM_HWDMS_TAGS_LABEL"
+			description="COM_HWDMS_TAGS_DESC"
+                        multiple="true"
+                        class="hwd-form-tags span12"                        
+		>
+		</field>
+                <field
+			name="private"
+                        type="list" 
+			label="COM_HWDMS_PRIVATE_LABEL"
+			description="COM_HWDMS_PRIVATE_DESC"
+                        class="hwd-form-private span12"
+			default="0"
+                        validate="integer"
+                        filter="integer"
+		>
+			<option value="1">COM_HWDMS_OPTION_UNLISTED</option>
+			<option value="0">COM_HWDMS_OPTION_LISTED</option>
+		</field>              
  		<field
                         name="album_id"
-                        type="album"
-			label="COM_HWDMS_ALBUM_LABEL"
-                        description="COM_HWDMS_ALBUM_DESC"
+                        type="hidden"
                 />
  		<field
-                        name="playlist_id"
-                        type="playlist"
-			label="COM_HWDMS_PLAYLIST_LABEL"
-                        description="COM_HWDMS_PLAYLIST_DESC"
-
- 		/>
+                        name="category_id"
+                        type="hidden"
+                />
                 <field
                         name="group_id"
-                        type="group"
-			label="COM_HWDMS_GROUP_LABEL"
-                        description="COM_HWDMS_GROUP_DESC"
-                />
-        </fieldset>
+                        type="hidden"
+                />                   
+ 		<field
+                        name="playlist_id"
+                        type="hidden"
+ 		/>
+	</fieldset>
 </form>
-
