@@ -454,9 +454,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 */
 	public function assignCategory($pks, $categoryId = null)
 	{
-                // Load HWD utilities.
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+                // Load HWD authorise library.
+                hwdMediaShareFactory::load('authorise');
+                $HWDauthorise = hwdMediaShareAuthorise::getInstance();
                 
                 // Load HWD category library.
 		hwdMediaShareFactory::load('category');
@@ -469,7 +469,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		// Iterate through the items to process each one.
 		foreach ($pks as $i => $pk)
 		{
-                        if (!$utilities->authoriseCategoryAction('link', $categoryId, $pk))
+                        if (!$HWDauthorise->authoriseCategoryAction('link', $categoryId, $pk))
                         {
                                 // Prune items that you can't change.
                                 unset($pks[$i]);
@@ -520,9 +520,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		// Initialise variables.
                 $db = JFactory::getDbo();
 
-                // Load HWD utilities.
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+                // Load HWD authorise library.
+                hwdMediaShareFactory::load('authorise');
+                $HWDauthorise = hwdMediaShareAuthorise::getInstance();
                 
 		$table = $this->getTable('CategoryMap', 'hwdMediaShareTable');    
 
@@ -556,7 +556,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         {
                                 if ($table->load($row))
                                 {
-                                        if ($utilities->authoriseCategoryAction('unlink', $categoryId, $pk))
+                                        if ($HWDauthorise->authoriseCategoryAction('unlink', $categoryId, $pk))
                                         {
                                                 if (!$table->delete($row))
                                                 {
