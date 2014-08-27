@@ -169,11 +169,6 @@ class hwdMediaShareModelAddMedia extends JModelAdmin
                         $windowLocation = null;
                 }
                 
-                // Retrieve filtered jform data.
-                hwdMediaShareFactory::load('upload');
-                $data = hwdMediaShareUpload::getProcessedUploadData();
-                $dataJson = http_build_query($data);               
-                
                 $js = <<<EOD
 //<![CDATA[
 /**
@@ -202,7 +197,7 @@ window.addEvent('domready', function() {
                 //         'Media ($standardExtensionstring1)': '$standardExtensionstring2'
                 // },
 
-                data: '$dataJson',
+                data: '',
 
                 timeLimit: 30,
                 limitFiles: $limitFiles,
@@ -249,11 +244,9 @@ window.addEvent('domready', function() {
                 onBeforeStart: function() {
                     var listSize = this.fileList.length;
                     for (var i=0; i < listSize; i++){
+                        // Pass the jform with the upload request
                         //alert(JSON.encode($('adminForm').toQueryString().parseQueryString()));
-                        var adminFormData = '';
-                        if (adminFormData) {
-                            //this.fileList[i].setOptions({data: adminFormData.parseQueryString()});
-                        }
+                        this.fileList[i].setOptions({data: $('adminForm').toQueryString()});
                     }
                 },
 
