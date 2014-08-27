@@ -44,7 +44,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                                 <?php echo hwdMediaShareProcesses::getType($item); ?>
                         <?php endif; ?>   
                         <div class="small">
-                                <?php echo JText::sprintf('COM_HWDMS_FOR_MEDIA_N', '<a href="' . JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.(int) $item->media_id) . '">' . $this->escape($item->title) . '</a>'); ?>
+                                <?php echo JText::sprintf('COM_HWDMS_FOR_MEDIA_N', '<a href="' . JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id='.(int) $item->media_id . '&return=' . $this->return) . '">' . $this->escape($item->title) . '</a>'); ?>
                         </div>  
                 </div>
         </td>     
