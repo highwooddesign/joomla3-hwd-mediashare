@@ -40,6 +40,7 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 		$this->successful = $this->get('Successful');
 		$this->unnecessary = $this->get('Unnecessary');
                 $this->filterForm = $this->get('FilterForm');
+                $this->return = base64_encode(JFactory::getURI()->toString());
 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('processes');
