@@ -265,7 +265,6 @@ class hwdMediaShareAudio extends JObject
                 if (!file_exists($pathSource))
                 {
                         // Log fail (no source file).
-                        $log->status = 3;
                         $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
                         $HWDprocesses->addLog($log);
                         return $log;  
@@ -306,7 +305,6 @@ class hwdMediaShareAudio extends JObject
                         if (empty($output))
                         {
                                 // Log fail (empty ffmpeg output).
-                                $log->status = 3;
                                 $HWDprocesses->addLog($log);
                                 return $log;
                         }
@@ -316,7 +314,6 @@ class hwdMediaShareAudio extends JObject
                                 if ($pos !== false)
                                 {
                                         // Log fail (ffmpeg not accessible).
-                                        $log->status = 3;
                                         $HWDprocesses->addLog($log);
                                         return $log;
                                 }
@@ -326,7 +323,6 @@ class hwdMediaShareAudio extends JObject
                         {
                                 // Log fail (empty output file).
                                 JFile::delete($pathDest);
-                                $log->status = 3;
                                 $HWDprocesses->addLog($log);
                                 return $log;                                        
                         }
@@ -335,7 +331,6 @@ class hwdMediaShareAudio extends JObject
                 {
                         // Log fail (caught error).
                         JFile::delete($pathDest);
-                        $log->status = 3;
                         $log->output = $e->getMessage();
                         $HWDprocesses->addLog($log);
                         return $log;                             
@@ -353,7 +348,6 @@ class hwdMediaShareAudio extends JObject
                 }
 
                 // Log fail (unknown).
-                $log->status = 3;
                 $HWDprocesses->addLog($log);
                 return $log;                                              
 	}
@@ -407,7 +401,6 @@ class hwdMediaShareAudio extends JObject
                 if (!file_exists($pathSource))
                 {
                         // Log fail (no source file).
-                        $log->status = 3;
                         $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
                         $HWDprocesses->addLog($log);
                         return $log;  
@@ -448,7 +441,6 @@ class hwdMediaShareAudio extends JObject
                         if (empty($output))
                         {
                                 // Log fail (empty ffmpeg output).
-                                $log->status = 3;
                                 $HWDprocesses->addLog($log);
                                 return $log;
                         }
@@ -458,7 +450,6 @@ class hwdMediaShareAudio extends JObject
                                 if ($pos !== false)
                                 {
                                         // Log fail (ffmpeg not accessible).
-                                        $log->status = 3;
                                         $HWDprocesses->addLog($log);
                                         return $log;
                                 }
@@ -468,7 +459,6 @@ class hwdMediaShareAudio extends JObject
                         {
                                 // Log fail (empty output file).
                                 JFile::delete($pathDest);
-                                $log->status = 3;
                                 $HWDprocesses->addLog($log);
                                 return $log;                                        
                         }
@@ -477,7 +467,6 @@ class hwdMediaShareAudio extends JObject
                 {
                         // Log fail (caught error).
                         JFile::delete($pathDest);
-                        $log->status = 3;
                         $log->output = $e->getMessage();
                         $HWDprocesses->addLog($log);
                         return $log;                             
@@ -495,7 +484,6 @@ class hwdMediaShareAudio extends JObject
                 }
 
                 // Log fail (unknown).
-                $log->status = 3;
                 $HWDprocesses->addLog($log);
                 return $log;                
 	}
