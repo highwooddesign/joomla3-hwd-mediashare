@@ -195,26 +195,21 @@ class hwdMediaShareModelReported extends JModelList
                                 
                                 switch ($items[$x]->element_type)
                                 {
-                                        case 1:
-                                            // Media
-                                            $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                            break;
-                                        case 2:
-                                            // Album
-                                            $table = JTable::getInstance('Album', 'hwdMediaShareTable');
-                                            break;
-                                        case 3:
-                                            // Group
-                                            $table = JTable::getInstance('Group', 'hwdMediaShareTable');
-                                            break;
-                                        case 4:
-                                            // Playlist
-                                            $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                                            break;
-                                        case 5:
-                                            // Channel
-                                            $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                                            break;
+                                        case 1: // Media
+                                                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                        break;
+                                        case 2: // Album
+                                                $table = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                        break;
+                                        case 3: // Group
+                                                $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                        break;
+                                        case 4: // Playlist
+                                                $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                        break;
+                                        case 5: // Channel
+                                                $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                        break;
                                 }
 
                                 $table->load($items[$x]->element_id);
@@ -300,25 +295,25 @@ class hwdMediaShareModelReported extends JModelList
                 
                 switch ($layout) 
                 {
-                    case 'media':
-                        $this->setState('filter.element_type', 1);
-                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        case 'media':
+                                $this->setState('filter.element_type', 1);
+                                $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break;                    
-                    case 'albums':
-                        $this->setState('filter.element_type', 2);
-                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        case 'albums':
+                                $this->setState('filter.element_type', 2);
+                                $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break;    
-                    case 'groups':
-                        $this->setState('filter.element_type', 3);
-                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        case 'groups':
+                                $this->setState('filter.element_type', 3);
+                                $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break;   
-                    case 'playlists':
-                        $this->setState('filter.element_type', 4);
-                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        case 'playlists':
+                                $this->setState('filter.element_type', 4);
+                                $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break;                      
-                    case 'users':
-                        $this->setState('filter.element_type', 5);
-                        $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
+                        case 'users':
+                                $this->setState('filter.element_type', 5);
+                                $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break; 
                 }
 
