@@ -108,30 +108,24 @@ class hwdMediaShareModelFile extends JModelAdmin
 
                         switch ($file->element_type)
                         {
-                                case 1:
-                                    // Media
-                                    $element = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                    break;
-                                case 2:
-                                    // Album
-                                    $element = JTable::getInstance('Album', 'hwdMediaShareTable');
-                                    break;
-                                case 3:
-                                    // Group
-                                    $element = JTable::getInstance('Group', 'hwdMediaShareTable');
-                                    break;
-                                case 4:
-                                    // Playlist
-                                    $element = JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                                    break;
-                                case 5:
-                                    // Channel
-                                    $element = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                                    break;
-                                case 6:
-                                    // Category
-                                    $element = JTable::getInstance('Category', 'hwdMediaShareTable');
-                                    break;
+                                case 1: // Media
+                                        $element = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                break;
+                                case 2: // Album
+                                        $element = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                break;
+                                case 3: // Group
+                                        $element = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                break;
+                                case 4: // Playlist
+                                        $element = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                break;
+                                case 5: // Channel
+                                        $element = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                break;
+                                case 6: // Category
+                                        $element = JTable::getInstance('Category', 'hwdMediaShareTable');
+                                break;
                         }
                         
                         if (!is_object($element))
