@@ -233,11 +233,16 @@ class hwdMediaShareAudio extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                
                 // Import Joomla libraries.
                 jimport('joomla.filesystem.file');
-
-                // Import HWD libraries.
-                hwdMediaShareFactory::load('files');
                 
                 // Setup log.
                 $log = new StdClass;
@@ -261,82 +266,86 @@ class hwdMediaShareAudio extends JObject
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                        $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                        $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
+                        // Log fail (no source file).
+                        $log->status = 3;
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                
+                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
 
-                        $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
-                        try
+                try
+                {
+                        if(substr(PHP_OS, 0, 3) == "WIN")
                         {
-                                if(substr(PHP_OS, 0, 3) == "WIN")
-                                {
-                                        $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -f mp3 -acodec libmp3lame -ac 2 -vn $pathDest 2>&1";
-                                        exec($log->input, $log->output);
-                                }
-                                else
-                                {
-                                        $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -f mp3 -acodec libmp3lame -ac 2 -vn $pathDest 2>&1";
-                                        exec($log->input, $log->output);
-                                } 
-     
-                                $flatoutput = is_array($log->output) ? implode("\n",$log->output) : $log->output;
-                                if (empty($flatoutput))
-                                {
-                                        $log->status = 3;
-
-                                        // Add process log.
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                                else
-                                {
-                                        $pos = strpos($flatoutput, "No such file or directory");
-                                        if ($pos !== false)
-                                        {
-                                                $log->status = 3;
-
-                                                // Add process log.
-                                                hwdMediaShareProcesses::addLog($log);
-                                                return $log;
-                                        }
-                                }
-                        
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        $log->status = 2;
-                                }
-                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                {
-                                        JFile::delete($pathDest);
-                                }
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -f mp3 -acodec libmp3lame -ac 2 -vn $pathDest 2>&1";
+                                exec($log->input, $log->output);
                         }
-                        catch(Exception $e)
+                        else
                         {
-                                $log->output = $e->getMessage();
-                        }
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -f mp3 -acodec libmp3lame -ac 2 -vn $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        } 
 
-                        // Add process log.
-                        hwdMediaShareProcesses::addLog($log);
-                        if (file_exists($pathDest) && filesize($pathDest) > 0)
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
                         {
-                                // Add file to database.
-                                hwdMediaShareFactory::load('files');
-                                hwdMediaShareFiles::add($item,$fileType);
+                                // Log fail (empty ffmpeg output).
+                                $log->status = 3;
+                                $HWDprocesses->addLog($log);
                                 return $log;
                         }
+                        else
+                        {
+                                $pos = strpos($output, "No such file or directory");
+                                if ($pos !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $log->status = 3;
+                                        $HWDprocesses->addLog($log);
+                                        return $log;
+                                }
+                        }
 
-                        $log->output = JText::_('COM_HWDMS_ERROR_DESTINATION_MEDIA_NOT_EXIST');
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $log->status = 3;
+                                $HWDprocesses->addLog($log);
+                                return $log;                                        
+                        }
                 }
-                else
+                catch(Exception $e)
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->status = 3;
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        return $log;                             
                 }
 
-                // Add process log.
-                hwdMediaShareProcesses::addLog($log);
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        $HWDfiles->addFile($item, $fileType);
+                        return $log;  
+                }
+
+                // Log fail (unknown).
+                $log->status = 3;
+                $HWDprocesses->addLog($log);
                 return $log;                                              
 	}
         
@@ -355,11 +364,16 @@ class hwdMediaShareAudio extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                
                 // Import Joomla libraries.
                 jimport('joomla.filesystem.file');
-
-                // Import HWD libraries.
-                hwdMediaShareFactory::load('files');
                 
                 // Setup log.
                 $log = new StdClass;
@@ -385,83 +399,87 @@ class hwdMediaShareAudio extends JObject
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                        $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                        $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
+                        // Log fail (no source file).
+                        $log->status = 3;
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
 
-                        $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
 
-                        try
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+
+                try
+                {
+                        if(substr(PHP_OS, 0, 3) == "WIN")
                         {
-                                if(substr(PHP_OS, 0, 3) == "WIN")
-                                {
-                                        $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -f ogg -acodec libvorbis -ac 2 -vn $pathDest 2>&1";
-                                        exec($log->input, $log->output);
-                                }
-                                else
-                                {
-                                        $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -f ogg -acodec libvorbis -ac 2 -vn $pathDest 2>&1";
-                                        exec($log->input, $log->output);
-                                } 
-                                
-                                $flatoutput = is_array($log->output) ? implode("\n",$log->output) : $log->output;
-                                if (empty($flatoutput))
-                                {
-                                        $log->status = 3;
-
-                                        // Add process log.
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                                else
-                                {
-                                        $pos = strpos($flatoutput, "No such file or directory");
-                                        if ($pos !== false)
-                                        {
-                                                $log->status = 3;
-
-                                                // Add process log.
-                                                hwdMediaShareProcesses::addLog($log);
-                                                return $log;
-                                        }
-                                }
-                                
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        $log->status = 2;
-                                }
-                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                {
-                                        JFile::delete($pathDest);
-                                }
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -f ogg -acodec libvorbis -ac 2 -vn $pathDest 2>&1";
+                                exec($log->input, $log->output);
                         }
-                        catch(Exception $e)
+                        else
                         {
-                                $log->output = $e->getMessage();
-                        }
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -f ogg -acodec libvorbis -ac 2 -vn $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        } 
 
-                        // Add process log.
-                        hwdMediaShareProcesses::addLog($log);
-                        if (file_exists($pathDest) && filesize($pathDest) > 0)
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
                         {
-                                // Add file to database.
-                                hwdMediaShareFactory::load('files');
-                                hwdMediaShareFiles::add($item,$fileType);
+                                // Log fail (empty ffmpeg output).
+                                $log->status = 3;
+                                $HWDprocesses->addLog($log);
                                 return $log;
                         }
+                        else
+                        {
+                                $pos = strpos($output, "No such file or directory");
+                                if ($pos !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $log->status = 3;
+                                        $HWDprocesses->addLog($log);
+                                        return $log;
+                                }
+                        }
 
-                        $log->output = JText::_('COM_HWDMS_ERROR_DESTINATION_MEDIA_NOT_EXIST');
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $log->status = 3;
+                                $HWDprocesses->addLog($log);
+                                return $log;                                        
+                        }
                 }
-                else
+                catch(Exception $e)
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->status = 3;
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        return $log;                             
                 }
 
-                // Add process log.
-                hwdMediaShareProcesses::addLog($log);
-                return $log;              
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        $HWDfiles->addFile($item, $fileType);
+                        return $log;  
+                }
+
+                // Log fail (unknown).
+                $log->status = 3;
+                $HWDprocesses->addLog($log);
+                return $log;                
 	}
         
         /**
@@ -481,7 +499,7 @@ class hwdMediaShareAudio extends JObject
                 jimport( 'joomla.filesystem.file');
                 $ini = JPATH_CACHE . '/metadata' . $item->id . '.ini';
                 
-                // If the file does not exist, then attempt to create.
+                // Attempt to create metadata file.
                 if (!file_exists($ini))
                 {
                         hwdMediaShareFactory::load('files');
@@ -492,12 +510,10 @@ class hwdMediaShareAudio extends JObject
 
                         $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                        // Check the source file exists.
                         if (file_exists($pathSource) && filesize($pathSource) > 0)
                         {
                                 try
                                 {
-                                        // Extract metadata.
                                         if(substr(PHP_OS, 0, 3) == "WIN")
                                         {
                                                 $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
@@ -511,12 +527,13 @@ class hwdMediaShareAudio extends JObject
                                 }
                                 catch(Exception $e)
                                 {
-                                        $log = $e->getMessage();
+                                        // $this->setError($e->getMessage());
+                                        return false;
                                 }
                         } 
                 }
 
-                // If the file exists, then return the data.
+                // Return an array of metadata.
                 if (file_exists($ini))
                 {
                         $data = JFile::read($ini);
