@@ -48,13 +48,13 @@ class hwdMediaShareViewGroup extends JViewLegacy
 
                 switch ($this->layout)
                 {
-                    case 'members':
-                        $this->items = $this->get('Members');
-                        $this->pagination = $this->get('Pagination');
+                        case 'members':
+                                $this->items = $this->get('Members');
+                                $this->pagination = $this->get('Pagination');
                         break;
-                    default:
-                        $this->items = $this->get('Media');
-                        $this->pagination = $this->get('Pagination');
+                        default:
+                                $this->items = $this->get('Media');
+                                $this->pagination = $this->get('Pagination');
                         break;
                 }
                 
