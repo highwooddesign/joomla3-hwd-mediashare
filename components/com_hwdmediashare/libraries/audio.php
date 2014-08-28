@@ -252,13 +252,13 @@ class hwdMediaShareAudio extends JObject
                 $table->load($process->media_id);
 
                 $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
+                $media = JArrayHelper::toObject($properties, 'JObject');
 
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
@@ -270,9 +270,9 @@ class hwdMediaShareAudio extends JObject
                         return $log;  
                 }
                 
-                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
 
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
@@ -343,7 +343,7 @@ class hwdMediaShareAudio extends JObject
                         $log->status = 2;
                         $HWDprocesses->addLog($log);
                         // Add file.
-                        $HWDfiles->addFile($item, $fileType);
+                        $HWDfiles->addFile($media, $fileType);
                         return $log;  
                 }
 
@@ -386,15 +386,15 @@ class hwdMediaShareAudio extends JObject
                 $table->load($process->media_id);
 
                 $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
+                $media = JArrayHelper::toObject($properties, 'JObject');
 
                 hwdMediaShareFactory::load('files');
 
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
@@ -406,9 +406,9 @@ class hwdMediaShareAudio extends JObject
                         return $log;  
                 }
 
-                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
 
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
@@ -479,7 +479,7 @@ class hwdMediaShareAudio extends JObject
                         $log->status = 2;
                         $HWDprocesses->addLog($log);
                         // Add file.
-                        $HWDfiles->addFile($item, $fileType);
+                        $HWDfiles->addFile($media, $fileType);
                         return $log;  
                 }
 
