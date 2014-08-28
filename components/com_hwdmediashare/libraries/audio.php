@@ -283,6 +283,18 @@ class hwdMediaShareAudio extends JObject
 
                 try
                 {
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+                        
                         if(substr(PHP_OS, 0, 3) == "WIN")
                         {
                                 $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -f mp3 -acodec libmp3lame -ac 2 -vn $pathDest 2>&1";
@@ -417,6 +429,18 @@ class hwdMediaShareAudio extends JObject
 
                 try
                 {
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+                        
                         if(substr(PHP_OS, 0, 3) == "WIN")
                         {
                                 $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -f ogg -acodec libvorbis -ac 2 -vn $pathDest 2>&1";
