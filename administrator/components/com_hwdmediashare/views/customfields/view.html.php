@@ -134,20 +134,20 @@ class hwdMediaShareViewCustomFields extends JViewLegacy
 	{
                 switch ($element)
                 {
-                    case "1":
-                        return JText::_('COM_HWDMS_MEDIA');
+                        case "1":
+                                return JText::_('COM_HWDMS_MEDIA');
                         break;
-                    case "2":
-                        return JText::_('COM_HWDMS_ALBUM');
+                        case "2":
+                                return JText::_('COM_HWDMS_ALBUM');
                         break;
-                    case "3":
-                        return JText::_('COM_HWDMS_GROUP');
+                        case "3":
+                                return JText::_('COM_HWDMS_GROUP');
                         break;
-                    case "4":
-                        return JText::_('COM_HWDMS_PLAYLIST');
+                        case "4":
+                                return JText::_('COM_HWDMS_PLAYLIST');
                         break;
-                    case "5":
-                        return JText::_('COM_HWDMS_CHANNEL');
+                        case "5":
+                                return JText::_('COM_HWDMS_CHANNEL');
                         break;
                 }
 	}         
