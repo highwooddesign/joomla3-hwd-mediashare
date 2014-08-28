@@ -217,16 +217,11 @@ class hwdMediaShareModelAlbums extends JModelList
 				$startDateRange = $db->quote($this->getState('filter.start_date_range', $nullDate));
 				$endDateRange = $db->quote($this->getState('filter.end_date_range', $nullDate));
 				$query->where('('.$dateField.' >= '.$startDateRange.' AND '.$dateField . ' <= '.$endDateRange.')');
-				break;
-
+			break;
 			case 'relative':
 				$relativeDate = (int) $this->getState('filter.relative_date', 0);
 				$query->where($dateField.' >= DATE_SUB('.$nowDate.', INTERVAL ' . $relativeDate.' DAY)');
-				break;
-
-			case 'off':
-			default:
-				break;
+			break;
 		}
 
 		// Filter by featured state.
@@ -235,17 +230,10 @@ class hwdMediaShareModelAlbums extends JModelList
 		{
 			case 'hide':
 				$query->where('a.featured = 0');
-				break;
-
+			break;
                         case 'only':
 				$query->where('a.featured = 1');
-				break;
-                            
-			case 'show':
-			default:
-				// Normally we do not discriminate
-				// between featured/unfeatured items.
-				break;
+			break;
 		}                
 
                 // Filter by media (allowing the display of albums containing a specific media).
