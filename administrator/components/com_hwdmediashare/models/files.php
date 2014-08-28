@@ -69,30 +69,24 @@ class hwdMediaShareModelFiles extends JModelList
                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 switch ($items[$x]->element_type)
                                 {
-                                        case 1:
-                                            // Media
-                                            $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                            break;
-                                        case 2:
-                                            // Album
-                                            $table = JTable::getInstance('Album', 'hwdMediaShareTable');
-                                            break;
-                                        case 3:
-                                            // Group
-                                            $table = JTable::getInstance('Group', 'hwdMediaShareTable');
-                                            break;
-                                        case 4:
-                                            // Playlist
-                                            $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                                            break;
-                                        case 5:
-                                            // Channel
-                                            $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                                            break;
-                                        case 6:
-                                            // Category
-                                            $table = JTable::getInstance('Category', 'hwdMediaShareTable');
-                                            break;
+                                        case 1: // Media
+                                                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                                        break;
+                                        case 2: // Album
+                                                $table = JTable::getInstance('Album', 'hwdMediaShareTable');
+                                        break;
+                                        case 3: // Group
+                                                $table = JTable::getInstance('Group', 'hwdMediaShareTable');
+                                        break;
+                                        case 4: // Playlist
+                                                $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
+                                        break;
+                                        case 5: // Channel
+                                                $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                        break;
+                                        case 6: // Category
+                                                $table = JTable::getInstance('Category', 'hwdMediaShareTable');
+                                        break;
                                 }
 
                                 $table->load($items[$x]->element_id);
