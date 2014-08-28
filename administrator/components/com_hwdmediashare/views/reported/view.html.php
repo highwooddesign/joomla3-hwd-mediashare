@@ -94,30 +94,31 @@ class hwdMediaShareViewReported extends JViewLegacy
 	 */
 	public function getReportType($item)
 	{
-                switch ($item->report_id) {
-                    case 1:
-                        return JText::_('COM_HWDMS_SEXUAL_CONTENT');
+                switch ($item->report_id)
+                {
+                        case 1:
+                                return JText::_('COM_HWDMS_SEXUAL_CONTENT');
                         break;
-                    case 2:
-                        return JText::_('COM_HWDMS_VIOLENT_OR_REPULSIVE_CONTENT');
+                        case 2:
+                                return JText::_('COM_HWDMS_VIOLENT_OR_REPULSIVE_CONTENT');
                         break;
-                    case 3:
-                        return JText::_('COM_HWDMS_HATEFUL_OR_ABUSIVE_CONTENT');
+                        case 3:
+                                return JText::_('COM_HWDMS_HATEFUL_OR_ABUSIVE_CONTENT');
                         break;
-                    case 4:
-                        return JText::_('COM_HWDMS_HARMFUL_ACTS');
+                        case 4:
+                                return JText::_('COM_HWDMS_HARMFUL_ACTS');
                         break;
-                    case 5:
-                        return JText::_('COM_HWDMS_CHILD_ABUSE');
+                        case 5:
+                                return JText::_('COM_HWDMS_CHILD_ABUSE');
                         break;
-                    case 6:
-                        return JText::_('COM_HWDMS_SPAM');
+                        case 6:
+                                return JText::_('COM_HWDMS_SPAM');
                         break;
-                    case 7:
-                        return JText::_('COM_HWDMS_INFRINGES_MY_RIGHTS');
-                        break;                    
-                    case 8:
-                        return JText::_('COM_HWDMS_BROKEN_MEDIA');
+                        case 7:
+                                return JText::_('COM_HWDMS_INFRINGES_MY_RIGHTS');
+                        break;
+                        case 8:
+                                return JText::_('COM_HWDMS_BROKEN_MEDIA');
                         break;
                 }
 	}
