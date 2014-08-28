@@ -70,40 +70,40 @@ class hwdMediaShareViewAccount extends JViewLegacy
 
                 switch ($this->layout)
                 {
-                    case 'albums':
-                        $this->items = $this->get('Albums');
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_ALBUMS');
+                        case 'albums':
+                                $this->items = $this->get('Albums');
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_ALBUMS');
                         break;
-                    case 'favourites':
-                        $this->items = $this->get('Favourites');
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_FAVOURITES');
+                        case 'favourites':
+                                $this->items = $this->get('Favourites');
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_FAVOURITES');
                         break;
-                    case 'groups':
-                        $this->items = $this->get('Groups');
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_GROUPS');
+                        case 'groups':
+                                $this->items = $this->get('Groups');
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_GROUPS');
                         break;
-                    case 'memberships':
-                        $this->items = $this->get('Memberships'); 
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_MEMBERSHIPS');
+                        case 'memberships':
+                                $this->items = $this->get('Memberships'); 
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_MEMBERSHIPS');
                         break;
-                    case 'playlists':
-                        $this->items = $this->get('Playlists');
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_PLAYLISTS');
+                        case 'playlists':
+                                $this->items = $this->get('Playlists');
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_PLAYLISTS');
                         break;
-                    case 'subscriptions':
-                        $this->items = $this->get('Subscriptions'); 
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_SUBSCRIPTIONS');
+                        case 'subscriptions':
+                                $this->items = $this->get('Subscriptions'); 
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_SUBSCRIPTIONS');
                         break;
-                    default:
-                        $this->items = $this->get('Media');
-                        $this->pagination = $this->get('Pagination');
-                        $this->page_heading = JText::_('COM_HWDMS_MY_MEDIA');
+                        default:
+                                $this->items = $this->get('Media');
+                                $this->pagination = $this->get('Pagination');
+                                $this->page_heading = JText::_('COM_HWDMS_MY_MEDIA');
                         break;
                 }
 
