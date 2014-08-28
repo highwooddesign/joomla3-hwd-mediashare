@@ -28,21 +28,21 @@ class hwdMediaShareViewReported extends JViewLegacy
                 // Get data from the model based on layout.
                 switch ($layout)
                 {
-                    case 'media':
-                    case 'albums':
-                    case 'groups':
-                    case 'playlists':
-                    case 'users':
-                        $this->items = $this->get('Items');
-                        $this->pagination = $this->get('Pagination');
-                        $this->state	= $this->get('State');
+                        case 'media':
+                        case 'albums':
+                        case 'groups':
+                        case 'playlists':
+                        case 'users':
+                                $this->items = $this->get('Items');
+                                $this->pagination = $this->get('Pagination');
+                                $this->state = $this->get('State');
                         break;                     
-                    default:
-                        $this->media = $this->get('media');
-                        $this->albums = $this->get('albums');
-                        $this->groups = $this->get('groups');
-                        $this->playlists = $this->get('playlists');
-                        $this->users = $this->get('users');
+                        default:
+                                $this->media = $this->get('media');
+                                $this->albums = $this->get('albums');
+                                $this->groups = $this->get('groups');
+                                $this->playlists = $this->get('playlists');
+                                $this->users = $this->get('users');
                         break;
                 }
                 
