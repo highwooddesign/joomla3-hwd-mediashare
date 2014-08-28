@@ -102,12 +102,13 @@ class hwdMediaShareControllerPlaylists extends JControllerForm
 			// Publish/unpublish the playlists.
 			if ($model->publish($cid, $value))
 			{
-                                switch ($task) {
-                                    case 'delete':
-                                        $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+                                switch ($task) 
+                                {
+                                        case 'delete':
+                                                $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
                                         break;
-                                    default:
-                                        $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
+                                        default:
+                                                $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
                                 }
 			}
 			else
