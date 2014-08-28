@@ -245,7 +245,7 @@ class hwdMediaShareAudio extends JObject
                 jimport('joomla.filesystem.file');
                 
                 // Setup log.
-                $log = $HWDprocesses->resetLog();
+                $log = $HWDprocesses->resetLog($process);
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
@@ -379,7 +379,7 @@ class hwdMediaShareAudio extends JObject
                 jimport('joomla.filesystem.file');
                 
                 // Setup log.
-                $log = $HWDprocesses->resetLog();
+                $log = $HWDprocesses->resetLog($process);
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
