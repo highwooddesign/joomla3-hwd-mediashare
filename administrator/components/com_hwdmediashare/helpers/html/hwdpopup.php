@@ -228,64 +228,43 @@ abstract class JHtmlHwdPopup
                         
                 switch ($item->type) 
                 {
-                    case 1: // Local
-                    case 4: // RTMP
-                    case 7: // Linked file
-                        switch ($item->media_type) {
-                            case 1:
-                                // Audio
-                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
-                                $class = 'media-popup-ajax-audio';
-                                JHtml::_('HwdPopup.ajax', 'audio'); 
-                                break;
-                            case 2:
-                                // Document
-                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
-                                $class = 'media-popup-ajax-document';
-                                JHtml::_('HwdPopup.ajax', 'document'); 
-                                break;
-                            case 3:
-                                // Image
-                                $url = hwdMediaShareDownloads::url($item);    
-                                $class = 'media-popup-image';
-                                JHtml::_('HwdPopup.image', 'image');                                
-                                break;
-                            case 4:
-                                // Video
-                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
-                                $class = 'media-popup-ajax-video';
-                                JHtml::_('HwdPopup.ajax', 'video'); 
-                                break;
-                        }
-                        
-                    case 2:
-                        // Remote
-                        $lib = hwdMediaShareRemote::getInstance();
-                        $lib->_url = $item->source;
-                        $host = $lib->getHost();                       
-                        $remotePluginClass = $lib->getRemotePluginClass($host);
-                        $remotePluginPath = $lib->getRemotePluginPath($host);
-                        $remotePluginHost = preg_replace('/[^a-zA-Z0-9\s]/', '', $host);
-                        $type = 0;
-
-                        // Import HWD plugins.
-                        JLoader::register($remotePluginClass, $remotePluginPath);
-                        if (class_exists($remotePluginClass))
-                        {
-                                $HWDremote = call_user_func(array($remotePluginClass, 'getInstance'));
-                                if (method_exists($HWDremote, 'getDirectDisplayLocation'))
+                        case 1: // Local
+                        case 4: // RTMP
+                        case 7: // Linked file
+                                switch ($item->media_type) 
                                 {
-                                        $url = $HWDremote->getDirectDisplayLocation($item);
+                                        case 1: // Audio
+                                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                                $class = 'media-popup-ajax-audio';
+                                                JHtml::_('HwdPopup.ajax', 'audio'); 
+                                        break;
+                                        case 2: // Document
+                                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                                $class = 'media-popup-ajax-document';
+                                                JHtml::_('HwdPopup.ajax', 'document'); 
+                                        break;
+                                        case 3: // Image
+                                                $url = hwdMediaShareDownloads::url($item);    
+                                                $class = 'media-popup-image';
+                                                JHtml::_('HwdPopup.image', 'image');                                
+                                        break;
+                                        case 4: // Video
+                                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                                $class = 'media-popup-ajax-video';
+                                                JHtml::_('HwdPopup.ajax', 'video'); 
+                                        break;
                                 }
-                                if ($url && method_exists($HWDremote, 'getDirectDisplayType'))
-                                {
-                                        $type = $HWDremote->getDirectDisplayType($item);
-                                }  
-                        }
-                        else
-                        {
-                                $remotePluginClass = $lib->getRemotePluginClass($lib->getDomain());
-                                $remotePluginPath = $lib->getRemotePluginPath($lib->getDomain());
+                                break;
+                        case 2: // Remote
+                                $lib = hwdMediaShareRemote::getInstance();
+                                $lib->_url = $item->source;
+                                $host = $lib->getHost();                       
+                                $remotePluginClass = $lib->getRemotePluginClass($host);
+                                $remotePluginPath = $lib->getRemotePluginPath($host);
+                                $remotePluginHost = preg_replace('/[^a-zA-Z0-9\s]/', '', $host);
+                                $type = 0;
+
+                                // Import HWD plugins.
                                 JLoader::register($remotePluginClass, $remotePluginPath);
                                 if (class_exists($remotePluginClass))
                                 {
@@ -298,41 +277,51 @@ abstract class JHtmlHwdPopup
                                         {
                                                 $type = $HWDremote->getDirectDisplayType($item);
                                         }  
-                                }                          
-                        }
-                        switch ($type) 
-                        {
-                            case 1:
-                                // Audio
-                                $class = 'media-popup-iframe-audio-' . $remotePluginHost;
-                                JHtml::_('HwdPopup.iframe', 'audio', $remotePluginHost);
-                            case 2:
-                                // Document
-                                $class = 'media-popup-iframe-document-' . $remotePluginHost;
-                                JHtml::_('HwdPopup.iframe', 'document', $remotePluginHost);
+                                }
+                                else
+                                {
+                                        $remotePluginClass = $lib->getRemotePluginClass($lib->getDomain());
+                                        $remotePluginPath = $lib->getRemotePluginPath($lib->getDomain());
+                                        JLoader::register($remotePluginClass, $remotePluginPath);
+                                        if (class_exists($remotePluginClass))
+                                        {
+                                                $HWDremote = call_user_func(array($remotePluginClass, 'getInstance'));
+                                                if (method_exists($HWDremote, 'getDirectDisplayLocation'))
+                                                {
+                                                        $url = $HWDremote->getDirectDisplayLocation($item);
+                                                }
+                                                if ($url && method_exists($HWDremote, 'getDirectDisplayType'))
+                                                {
+                                                        $type = $HWDremote->getDirectDisplayType($item);
+                                                }  
+                                        }                          
+                                }
+                                switch ($type) 
+                                {
+                                        case 1: // Audio
+                                                $class = 'media-popup-iframe-audio-' . $remotePluginHost;
+                                                JHtml::_('HwdPopup.iframe', 'audio', $remotePluginHost);
+                                        break; 
+                                        case 2: // Document
+                                                $class = 'media-popup-iframe-document-' . $remotePluginHost;
+                                                JHtml::_('HwdPopup.iframe', 'document', $remotePluginHost);
+                                        break; 
+                                        case 3: // Image
+                                                $class = 'media-popup-iframe-image-' . $remotePluginHost;
+                                                JHtml::_('HwdPopup.image', 'image', $remotePluginHost);
+                                        break; 
+                                        case 4: // Video
+                                                $class = 'media-popup-iframe-video-' . $remotePluginHost;
+                                                JHtml::_('HwdPopup.iframe', 'video', $remotePluginHost);
+                                        break; 
+                                }
                                 break;
-                            case 3:
-                                // Image
-                                $class = 'media-popup-iframe-image-' . $remotePluginHost;
-                                JHtml::_('HwdPopup.image', 'image', $remotePluginHost);
-                                break;
-                            case 4:
-                                // Video
-                                $class = 'media-popup-iframe-video-' . $remotePluginHost;
-                                JHtml::_('HwdPopup.iframe', 'video', $remotePluginHost);
-                                break;
-                        }
+                        case 3: // Embed code
+                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                $class = 'media-popup-ajax-embed';
+                                JHtml::_('HwdPopup.ajax', 'embed'); 
                         break;
-                    
-                    case 3:
-                        // Embed code
-                        $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
-                        $class = 'media-popup-ajax-embed';
-                        JHtml::_('HwdPopup.ajax', 'embed'); 
-                        break;
-                    
-                    case 6:
-                        // Platform
+                        case 6: // Platform
                         break;
                 }
         
