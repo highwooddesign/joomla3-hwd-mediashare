@@ -128,32 +128,32 @@ class hwdMediaShareViewMedia extends JViewLegacy
                 switch ($item->media_type) 
                 {
                         case 1:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/audio.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/audio.png';
+                        break;
                         case 2:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/document.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/document.png';
+                        break;
                         case 3:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/image.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/image.png';
+                        break;
                         case 4:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/video.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/video.png';
+                        break;
                 }
                 switch ($item->type) 
                 {
                         case 2:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/remote.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/remote.png';
+                        break;
                         case 3:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/embed.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/embed.png';
+                        break;
                         case 4:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/rtmp.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/rtmp.png';
+                        break;
                         case 4:
-                            return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/cdn.png';
-                            break;
+                                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/icons/32/cdn.png';
+                        break;
                 }
 	}
 
