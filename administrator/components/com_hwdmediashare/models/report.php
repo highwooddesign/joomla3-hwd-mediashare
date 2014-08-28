@@ -93,26 +93,21 @@ class hwdMediaShareModelReport extends JModelAdmin
                         
                         switch ($report->element_type)
                         {
-                                case 1:
-                                    // Media
-                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_media'));
-                                    break;
-                                case 2:
-                                    // Album
-                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_albums'));
-                                    break;
-                                case 3:
-                                    // Group
-                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_groups'));
-                                    break;
-                                case 4:
-                                    // Playlist
-                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_playlists'));
-                                    break;
-                                case 5:
-                                    // Channel
-                                    $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_users'));
-                                    break;
+                                case 1: // Media
+                                        $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_media'));
+                                break;
+                                case 2: // Album
+                                        $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_albums'));
+                                break;
+                                case 3: // Group
+                                        $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_groups'));
+                                break;
+                                case 4: // Playlist
+                                        $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_playlists'));
+                                break;
+                                case 5: // Channel
+                                        $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_users'));
+                                break;
                         }
                         
                         try
