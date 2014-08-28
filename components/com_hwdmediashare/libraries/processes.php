@@ -1,45 +1,62 @@
 <?php
 /**
- * @version    SVN $Id: processes.php 1457 2013-04-30 10:48:55Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework processes class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareProcesses extends JObject
 {
-	var $_total;
-	var $_complete;
+	/**
+	 * The total number of queued processes.
+         * 
+         * @access      public
+	 * @var         integer
+	 */    
+	public $_total;
         
-        /**
+	/**
+	 * The flag for completion.
+         * 
+         * @access      public
+	 * @var         boolean
+	 */    
+	public $_complete;
+        
+	/**
+	 * The output from the process.
+         * 
+         * @access      public
+	 * @var         string
+	 */    
+	public $_output;
+        
+	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
 	 * Returns the hwdMediaShareProcesses object, only creating it if it
 	 * doesn't already exist.
-	 *
-	 * @return  hwdMediaShareProcesses A hwdMediaShareProcesses object.
-	 * @since   0.1
-	 */
+         * 
+	 * @access  public
+         * @static
+	 * @return  hwdMediaShareProcesses Object.
+	 */  
 	public static function getInstance()
 	{
 		static $instance;
@@ -54,70 +71,80 @@ class hwdMediaShareProcesses extends JObject
 	}
         
 	/**
-	 * Method to add a process
+	 * Method to add a process for a media.
          * 
-         * @since   0.1
-	 **/
-	public function add( $media , $processType = null )
+         * @access  public
+         * @param   object   $media        The associated media.
+         * @param   integer  $processType  The API value for the type of process.
+         * @return  mixed    Process ID on true, false on fail.
+	 */
+	public function addProcess($media, $processType = null)
 	{
-                $date =& JFactory::getDate();
+                // Initialise variables.                        
+                $date = JFactory::getDate();
+                $user =  JFactory::getUser();
 
+                // Load the process table.
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $row =& JTable::getInstance('Process', 'hwdMediaShareTable');
-
+                $table = JTable::getInstance('Process', 'hwdMediaShareTable');
+                
+                // Define a new entry.
                 $post                    = array();
                 $post['process_type']    = $processType;
                 $post['media_id']        = $media->id;
-                $post['status']          = '1';
-                $post['attempts']        = '0';
-                $post['created_user_id'] = '';
-                $post['created']         = $date->format('Y-m-d H:i:s');
+                $post['status']          = 1;
+                $post['attempts']        = 0;
+                $post['created_user_id'] = $user->id;
+                $post['created']         = $date->toSql();
 
-                // Bind it to the table
-                if (!$row->bind( $post ))
+                // Attempt to save the details to the database.
+                if (!$table->save($post))
                 {
-                        return JError::raiseWarning( 500, $row->getError() );
-                }
-
-                // Store it in the db
-                if (!$row->store())
-                {
-                        return JError::raiseError(500, $row->getError() );
+                        $this->setError($table->getError());
+                        return false;
                 }
                 
-                return $row->id;
+                return $table->id;
 	}
-        
+
 	/**
-	 * Method to select and run a queued process
+	 * Method to select and run a queued process.
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   array   $array      An array of processes.
+         * @return  boolean True on success.
+	 */
 	public function run($cids = array())
 	{
-                // Create a new query object.
+                // Initialise variables. 
                 $db = JFactory::getDBO();
                 
-                // Get total queued tasks
-                $this->_total = hwdMediaShareProcesses::getQueue();
+                // Attempt to increase MySQL timeout.
+                $db->setQuery('SET SESSION wait_timeout = 28800');
+                $db->execute();
                 
-                // Get next task
-                $task = hwdMediaShareProcesses::getTask($cids);
-
-                if ($task)
+                // Get total number of queued processes.
+                $this->_total = $this->countQueue();
+                
+                // Select the next process from the queue.
+                if ($process = $this->nextProcess($cids))
                 {
-                        if (isset($task->process_type))
+                        if (isset($process->process_type))
                         {
-                                if (method_exists('hwdMediaShareProcesses', 'process'.$task->process_type))
+                                $method = 'process' . $process->process_type;
+                                if (method_exists($this, $method))
                                 {
-                                        $method = "process$task->process_type";
-                                        $result = hwdMediaShareProcesses::$method($task);
+                                        // Set the modified date for the process.
+                                        $this->setModified($process);
 
-                                        // Ping the SQL database to check connection hasn't timed out.
+                                        // Run the process.
+                                        $result = $this->$method($process);
+
+                                        // Ping the database to check connection hasn't timed out.
                                         $db->connected();
         
-                                        // Update task
-                                        hwdMediaShareProcesses::update($task, $result);
+                                        // Update process.
+                                        $this->update($process, $result);
 
                                         if ($result->status == 3)
                                         {
@@ -146,282 +173,311 @@ class hwdMediaShareProcesses extends JObject
 	}
         
 	/**
-	 * Method to get a queued task
+	 * Method to select the next queued process.
          * 
-         * @since   0.1
-	 **/
-	public function getTask($cids = array())
+         * @access  public
+         * @param   array   $cids   An array of processes.
+         * @return  object  The process.
+	 */
+	public function nextProcess($cids = array())
 	{
-                // Create a new query object.
+                // Initialise variables. 
                 $db = JFactory::getDBO();
-
-                // Attempt to increase MySQL timeout
-                $query = 'SET SESSION wait_timeout = 28800';
-                $db->setQuery($query);
-                $db->query($query);
-                                
+                                    
+                $query = $db->getQuery(true)
+                        ->select('a.*, ext.media_type')
+                        ->from('#__hwdms_processes AS a')
+                        ->join('LEFT', '#__hwdms_media AS media ON media.id = a.media_id')
+                        ->join('LEFT', '#__hwdms_ext AS ext ON ext.id = media.ext_id')
+                        ->where('a.status = ' . $db->quote(1) . ' || a.status = ' . $db->quote(3))
+                        ->where('a.attempts < ' . $db->quote(5))
+                        ->order('a.modified ASC');
+                
+                // When passed an array of IDs, then we can only select one of these.
                 if (count($cids) > 0)
                 {
-                        foreach($cids as $key => $cid)
-                        {
-                                // Setup query
-                                $query = $db->getQuery(true);
-
-                                // Select the required fields from the table.
-                                $query->select('a.*');
-                                $query->select('ext.media_type');
-                                $query->from('#__hwdms_processes AS a');
-                                $query->join('LEFT', '`#__hwdms_media` AS media ON media.id = a.media_id');
-                                $query->join('LEFT', '`#__hwdms_ext` AS ext ON ext.id = media.ext_id');
-                                $query->where('(a.status = 1 || a.status = 3)');
-                                $query->where('a.attempts < 5');
-                                $query->where('a.id = '.$cid);
-                                
-                                // If we are running over CLI then don't allow multiple executions
-                                $args = @$GLOBALS['argv'];
-                                if ($args[1] == 'process')
-                                {
-                                        $query->where('a.modified < DATE_SUB(SYSDATE(), INTERVAL 1 MINUTE)');
-                                }
-                                
-                                $db->setQuery($query);
-                                $task = $db->loadObject();
-                                if (isset($task->id))
-                                {
-                                        return $task;
-                                }
-                        }
-                        return false;
+                        $query->where('a.id IN ('.implode(', ', $cids).')');
                 }
-                    
-                // Setup query
-                $query = $db->getQuery(true);
-
-                // Select the required fields from the table.
-                $query->select('a.*');
-                $query->select('ext.media_type');
-
-                $query->from('#__hwdms_processes AS a');
-                $query->join('LEFT', '`#__hwdms_media` AS media ON media.id = a.media_id');
-                $query->join('LEFT', '`#__hwdms_ext` AS ext ON ext.id = media.ext_id');
-
-                $query->where('(a.status = 1 || a.status = 3)');
-                $query->where('a.attempts < 5');
-                $query->order('a.modified ASC');
                 
-                // If we are running over CLI then don't allow multiple executions
+                // If we are running over CLI then try to prevent multiple executions of the same process.
                 $args = @$GLOBALS['argv'];
                 if ($args[1] == 'process')
                 {
                         $query->where('a.modified < DATE_SUB(SYSDATE(), INTERVAL 1 MINUTE)');
+                }                
+
+                try
+                {                
+                        $db->setQuery($query);
+                        return $db->loadObject();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+	}
+        
+	/**
+	 * Method to count all queued processes.
+         * 
+         * @access  public
+         * @return  integer The number of processes.
+	 */
+	public function countQueue()
+	{
+                // Initialise variables. 
+                $db = JFactory::getDBO();
+                
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_processes')
+                        ->where('status = ' . $db->quote(1) . ' || status = ' . $db->quote(3))
+                        ->where('attempts < ' . $db->quote(5));
+                try
+                {                
+                        $db->setQuery($query);
+                        return $db->loadResult();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+	}
+        
+	/**
+	 * Method to set the modified date for a process.
+         * 
+         * @access  public
+         * @param   object  $process    The process being updated.
+         * @return  boolean True on success.
+	 */
+	public function setModified($process)
+	{
+                // Initialise variables. 
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
+                $user = JFactory::getUser();
+
+                // Create an object for updating the record.
+                $object = new stdClass();
+                $object->id = $process->id;
+                $object->modified = $date->toSql();
+                $object->modified_user_id = $user->id;
+                
+                try
+                {                
+                        $result = $db->updateObject('#__hwdms_processes', $object, 'id');
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
                 }
                 
-                $db->setQuery($query);
-                return $db->loadObject();
-	}
+                return true;
+	}        
         
 	/**
-	 * Method to get all queued tasks
+	 * Method to update a process, after execution.
          * 
-         * @since   0.1
-	 **/
-	public function getQueue()
+         * @access  public
+         * @param   object  $process    The process being updated.
+         * @param   object  $result     The result of the execution.
+         * @return  boolean True on success.
+	 */
+	public function update($process, $result)
 	{
-                // Create a new query object.
+                // Initialise variables. 
                 $db = JFactory::getDBO();
-                $query = $db->getQuery(true);
+                $date = JFactory::getDate();
+                $user = JFactory::getUser();
 
-		// Select the required fields from the table.
-		$query->select('COUNT(*)');
-                $query->from('#__hwdms_processes AS a');
-		$query->where('a.status = 1 || a.status = 3');
-                $query->where('a.attempts < 5');
+                // Create an object for updating the record.
+                $object = new stdClass();
+                $object->id = $process->id;
+                $object->status = isset($result->status) ? $result->status : 3;
+                $object->modified = $date->toSql();
+                $object->modified_user_id = $user->id;
+                $object->attempts = $process->attempts + 1;
 
-                $db->setQuery($query);
-                return $db->loadResult();
-	}
-        
-	/**
-	 * Method to update a process (post-run)
-         * 
-         * @since   0.1
-	 **/
-	public function update($task, $result)
-	{
-                $date =& JFactory::getDate();
-                $user = & JFactory::getUser();
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Process', 'hwdMediaShareTable');
-                $table->load( $task->id );
-
-                $properties = $table->getProperties(1);
-                $row = JArrayHelper::toObject($properties, 'JObject');
-
-                $data = array();
-                $data['id'] = $row->id;
-                $data['status'] = isset($result->status) ? $result->status : 3;
-                $data['modified'] = $date->format('Y-m-d H:i:s');
-                $data['modified_user_id'] = $user->id;
-                $data['attempts'] = $row->attempts+1;
-
-                if (!$table->bind( $data )) {
-                        return JError::raiseWarning( 500, $row->getError() );
+                try
+                {                
+                        $result = $db->updateObject('#__hwdms_processes', $object, 'id');
                 }
-                if (!$table->store()) {
-                        JError::raiseError(500, $row->getError() );
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
                 }
 	}
 
 	/**
-	 * Method to add a log
+	 * Method to add a process log.
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $item   The log data.
+         * @return  boolean True on success.
+	 */
 	public function addLog($item)
 	{
-                $date =& JFactory::getDate();
-                $user = & JFactory::getUser();
+                // Initialise variables.                        
+                $date = JFactory::getDate();
+                $user = JFactory::getUser();
 
+                // Load the processlog table.
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('ProcessLog', 'hwdMediaShareTable');
-
-                jimport( 'joomla.filter.filterinput' );
+                $table = JTable::getInstance('ProcessLog', 'hwdMediaShareTable');
+                
+                // Load the Joomla filters.
+                jimport('joomla.filter.filterinput');
                 $safeFilter = JFilterInput::getInstance();
                 
-                $input = $safeFilter->clean($item->input);
+                // Clean, trim and truncate the log data.
+                $input = $safeFilter->clean(trim($item->input));
                 $output = is_array($item->output) ? implode("\n",$item->output) : $item->output;
-                $output = $safeFilter->clean($output);
-  
-                $data = array();
-                $data['process_id'] = $item->process_id;
-                $data['input'] = $input;
-                $data['output'] = $output;
-                $data['status'] = $item->status;
-                $data['created_user_id'] = $user->id;
-                $data['created'] = $date->format('Y-m-d H:i:s');
+                $output = $safeFilter->clean(trim($output));
+                $output = JHtmlString::truncate($output, 5120, false, false);
+                
+                // Define a new entry.
+                $post                       = array();
+                $post['process_id']         = $item->process_id;
+                $post['input']              = $input;
+                $post['output']             = $output;
+                $post['status']             = $item->status;
+                $post['created_user_id']    = $user->id;
+                $post['created']            = $date->toSql();
 
-                if (!$table->bind( $data ))
+                // Attempt to save the details to the database.
+                if (!$table->save($post))
                 {
-                        return JError::raiseWarning( 500, $table->getError() );
+                        $this->setError($table->getError());
+                        return false;
                 }
-                if (!$table->store())
-                {
-                        JError::raiseError(500, $table->getError() );
-                }             
+                
+                return true;
 	}
         
 	/**
-	 * Method to get human readable process type
+	 * Method to get human readable process type.
          * 
-         * @since   0.1
-	 **/
-	public function getType($item)
+         * @access  public
+         * @static
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
+	public static function getType($process)
 	{
-                switch ($item->process_type) {
-                    case 1:
-                        return JText::_('COM_HWDMS_GENERATE_JPG_75_LABEL');
-                        break;
-                    case 2:
-                        return JText::_('COM_HWDMS_GENERATE_JPG_100_LABEL');
-                        break;
-                    case 3:
-                        return JText::_('COM_HWDMS_GENERATE_JPG_240_LABEL');
-                        break;
-                    case 4:
-                        return JText::_('COM_HWDMS_GENERATE_JPG_500_LABEL');
-                        break;
-                    case 5:
-                        return JText::_('COM_HWDMS_GENERATE_JPG_640_LABEL');
-                        break;
-                    case 6:
-                        return JText::_('COM_HWDMS_GENERATE_JPG_1024_LABEL');
-                        break;
-                    case 7:
-                        return JText::_('COM_HWDMS_GENERATE_AUDIO_MP3_LABEL');
-                        break;
-                    case 8:
-                        return JText::_('COM_HWDMS_GENERATE_AUDIO_OGG_LABEL');
-                        break;  
-                    case 9:
-                        return JText::_('COM_HWDMS_GENERATE_FLV_240_LABEL');
+                switch ($process->process_type)
+                {
+                        case 1:
+                                return JText::_('COM_HWDMS_GENERATE_JPG_75_LABEL');
                         break; 
-                    case 10:
-                        return JText::_('COM_HWDMS_GENERATE_FLV_360_LABEL');
+                        case 2:
+                                return JText::_('COM_HWDMS_GENERATE_JPG_100_LABEL');
                         break; 
-                    case 11:
-                        return JText::_('COM_HWDMS_GENERATE_FLV_480_LABEL');
+                        case 3:
+                                return JText::_('COM_HWDMS_GENERATE_JPG_240_LABEL');
                         break; 
-                    case 12:
-                        return JText::_('COM_HWDMS_GENERATE_MP4_360_LABEL');
+                        case 4:
+                                return JText::_('COM_HWDMS_GENERATE_JPG_500_LABEL');
                         break; 
-                    case 13:
-                        return JText::_('COM_HWDMS_GENERATE_MP4_480_LABEL');
+                        case 5:
+                                return JText::_('COM_HWDMS_GENERATE_JPG_640_LABEL');
                         break; 
-                    case 14:
-                        return JText::_('COM_HWDMS_GENERATE_MP4_720_LABEL');
+                        case 6:
+                                return JText::_('COM_HWDMS_GENERATE_JPG_1024_LABEL');
                         break; 
-                    case 15:
-                        return JText::_('COM_HWDMS_GENERATE_MP4_1080_LABEL');
+                        case 7:
+                                return JText::_('COM_HWDMS_GENERATE_AUDIO_MP3_LABEL');
                         break; 
-                    case 16:
-                        return JText::_('COM_HWDMS_GENERATE_WEBM_360_LABEL');
+                        case 8:
+                                return JText::_('COM_HWDMS_GENERATE_AUDIO_OGG_LABEL');
                         break; 
-                    case 17:
-                        return JText::_('COM_HWDMS_GENERATE_WEBM_480_LABEL');
+                        case 9:
+                                return JText::_('COM_HWDMS_GENERATE_FLV_240_LABEL');
                         break; 
-                    case 18:
-                        return JText::_('COM_HWDMS_GENERATE_WEBM_720_LABEL');
+                        case 10:
+                                return JText::_('COM_HWDMS_GENERATE_FLV_360_LABEL');
                         break; 
-                    case 19:
-                        return JText::_('COM_HWDMS_GENERATE_WEBM_1080_LABEL');
+                        case 11:
+                                return JText::_('COM_HWDMS_GENERATE_FLV_480_LABEL');
                         break; 
-                    case 20:
-                        return JText::_('COM_HWDMS_INJECT_METADATA_LABEL');
+                        case 12:
+                                return JText::_('COM_HWDMS_GENERATE_MP4_360_LABEL');
                         break; 
-                    case 21:
-                        return JText::_('COM_HWDMS_MOVE_MOOV_ATOM_LABEL');
+                        case 13:
+                                return JText::_('COM_HWDMS_GENERATE_MP4_480_LABEL');
                         break; 
-                    case 22:
-                        return JText::_('COM_HWDMS_GET_DURATION_LABEL');
+                        case 14:
+                                return JText::_('COM_HWDMS_GENERATE_MP4_720_LABEL');
                         break; 
-                    case 23:
-                        return JText::_('COM_HWDMS_GET_TITLE_LABEL');
+                        case 15:
+                                return JText::_('COM_HWDMS_GENERATE_MP4_1080_LABEL');
                         break; 
-                    case 24:
-                        return JText::_('COM_HWDMS_GENERATE_OGG_360_LABEL');
+                        case 16:
+                                return JText::_('COM_HWDMS_GENERATE_WEBM_360_LABEL');
                         break; 
-                    case 25:
-                        return JText::_('COM_HWDMS_GENERATE_OGG_480_LABEL');
+                        case 17:
+                                return JText::_('COM_HWDMS_GENERATE_WEBM_480_LABEL');
                         break; 
-                    case 26:
-                        return JText::_('COM_HWDMS_GENERATE_OGG_720_LABEL');
+                        case 18:
+                                return JText::_('COM_HWDMS_GENERATE_WEBM_720_LABEL');
                         break; 
-                    case 27:
-                        return JText::_('COM_HWDMS_GENERATE_OGG_1080_LABEL');
+                        case 19:
+                                return JText::_('COM_HWDMS_GENERATE_WEBM_1080_LABEL');
+                        break; 
+                        case 20:
+                                return JText::_('COM_HWDMS_INJECT_METADATA_LABEL');
+                        break; 
+                        case 21:
+                                return JText::_('COM_HWDMS_MOVE_MOOV_ATOM_LABEL');
+                        break; 
+                        case 22:
+                                return JText::_('COM_HWDMS_GET_DURATION_LABEL');
+                        break; 
+                        case 23:
+                                return JText::_('COM_HWDMS_GET_TITLE_LABEL');
+                        break; 
+                        case 24:
+                                return JText::_('COM_HWDMS_GENERATE_OGG_360_LABEL');
+                        break; 
+                        case 25:
+                                return JText::_('COM_HWDMS_GENERATE_OGG_480_LABEL');
+                        break; 
+                        case 26:
+                                return JText::_('COM_HWDMS_GENERATE_OGG_720_LABEL');
+                        break; 
+                        case 27:
+                                return JText::_('COM_HWDMS_GENERATE_OGG_1080_LABEL');
                         break; 
                 }
 	}
         
 	/**
-	 * Method to get human readable process status
+	 * Method to get human readable process status.
          * 
-         * @since   0.1
-	 **/
-	public function getStatus($item)
+         * @access  public
+         * @static
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
+	public static function getStatus($process)
 	{
-                switch ($item->status) {
-                    case 1:
-                        return JText::_('COM_HWDMS_QUEUED');
+                switch ($process->status) 
+                {
+                        case 1:
+                                return JText::_('COM_HWDMS_QUEUED');
                         break;
-                    case 2:
-                        return JText::_('COM_HWDMS_SUCCESSFUL');
+                        case 2:
+                                return JText::_('COM_HWDMS_SUCCESSFUL');
                         break;
-                    case 3:
-                        return JText::_('COM_HWDMS_FAILED');
+                        case 3:
+                                return JText::_('COM_HWDMS_FAILED');
                         break;
-                    case 4:
-                        return JText::_('COM_HWDMS_UNNECESSARY');
+                        case 4:
+                                return JText::_('COM_HWDMS_UNNECESSARY');
                         break;
                 }
                 return ;
@@ -431,19 +487,23 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 1:
          * Create square image (75x75)
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process1($process)
 	{
                 if ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::processImage($process, 2, 75, true);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->processImage($process, 2, 75, true);
                 }
                 else
                 {
                         hwdMediaShareFactory::load('images');
-                        return hwdMediaShareImages::processImage($process, 2, 75, true);
+                        $HWDimages = hwdMediaShareImages::getInstance();
+                        return $HWDimages->processImage($process, 2, 75, true);
                 }
 	}
         
@@ -451,19 +511,23 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 2:
          * Create thumbnail image (100px maximum)
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process2($process)
 	{
                 if ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::processImage($process, 3, 100);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->processImage($process, 3, 100);
                 }
                 else
                 {
                         hwdMediaShareFactory::load('images');
-                        return hwdMediaShareImages::processImage($process, 3, 100);
+                        $HWDimages = hwdMediaShareImages::getInstance();
+                        return $HWDimages->processImage($process, 3, 100);
                 }
 	}
 
@@ -471,19 +535,23 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 3:
          * Create small image (240px maximum)
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process3($process)
 	{
                 if ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::processImage($process, 4, 240);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->processImage($process, 4, 240);
                 }
                 else
                 {
                         hwdMediaShareFactory::load('images');
-                        return hwdMediaShareImages::processImage($process, 4, 240);
+                        $HWDimages = hwdMediaShareImages::getInstance();
+                        return $HWDimages->processImage($process, 4, 240);
                 }
 	}
 
@@ -491,19 +559,23 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 4:
          * Create medium (500) image (500px maximum)
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process4($process)
 	{
                 if ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::processImage($process, 5, 500);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->processImage($process, 5, 500);
                 }
                 else
                 {
                         hwdMediaShareFactory::load('images');
-                        return hwdMediaShareImages::processImage($process, 5, 500);
+                        $HWDimages = hwdMediaShareImages::getInstance();
+                        return $HWDimages->processImage($process, 5, 500);
                 }
 	}
 
@@ -511,19 +583,23 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 5:
          * Create medium (640) image (640px maximum)
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process5($process)
 	{
                 if ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::processImage($process, 6, 640);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->processImage($process, 6, 640);
                 }
                 else
                 {
                         hwdMediaShareFactory::load('images');
-                        return hwdMediaShareImages::processImage($process, 6, 640);
+                        $HWDimages = hwdMediaShareImages::getInstance();
+                        return $HWDimages->processImage($process, 6, 640);
                 }
 	}
 
@@ -531,19 +607,23 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 6:
          * Create large image (1024px maximum)
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process6($process)
 	{
                 if ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::processImage($process, 7, 1024);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->processImage($process, 7, 1024);
                 }
                 else
                 {
                         hwdMediaShareFactory::load('images');
-                        return hwdMediaShareImages::processImage($process, 7, 1024);
+                        $HWDimages = hwdMediaShareImages::getInstance();
+                        return $HWDimages->processImage($process, 7, 1024);
                 }
 	}
 
@@ -556,138 +636,170 @@ class hwdMediaShareProcesses extends JObject
 	public function process7($process)
 	{
                 hwdMediaShareFactory::load('audio');
-                return hwdMediaShareAudio::processMp3($process, 8);
+                $HWDaudio = hwdMediaShareAudio::getInstance();
+                return $HWDaudio->processMp3($process, 8);
 	}
         
 	/**
 	 * Method to run process type 8:
          * Create ogg audio
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process8($process)
 	{
                 hwdMediaShareFactory::load('audio');
-                return hwdMediaShareAudio::processOgg($process, 9);
+                $HWDaudio = hwdMediaShareAudio::getInstance();
+                return $HWDaudio->processOgg($process, 9);
 	}       
 
 	/**
 	 * Method to run process type 9, 10 & 11:
          * Create flv video
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process9($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processFlv($process, 11, 240);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processFlv($process, 11, 240);
 	}   
 	public function process10($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processFlv($process, 12, 360);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processFlv($process, 12, 360);
 	}  
 	public function process11($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processFlv($process, 13, 480);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processFlv($process, 13, 480);
 	} 
         
 	/**
 	 * Method to run process type 12, 13, 14 & 15:
          * Create mp4 video
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process12($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processMp4($process, 14, 360);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processMp4($process, 14, 360);
 	}   
 	public function process13($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processMp4($process, 15, 480);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processMp4($process, 15, 480);
 	}   
 	public function process14($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processMp4($process, 16, 720);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processMp4($process, 16, 720);
 	}   
 	public function process15($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processMp4($process, 17, 1080);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processMp4($process, 17, 1080);
 	}   
         
 	/**
 	 * Method to run process type 16, 17, 18 & 19:
          * Create webm video
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process16($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processWebm($process, 18, 360);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processWebm($process, 18, 360);
 	}   
 	public function process17($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processWebm($process, 19, 480);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processWebm($process, 19, 480);
 	}   
 	public function process18($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processWebm($process, 20, 720);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processWebm($process, 20, 720);
 	}   
 	public function process19($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processWebm($process, 21, 1080);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processWebm($process, 21, 1080);
 	} 
         
         /**
 	 * Method to run process type 20:
          * Inject metadata
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process20($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::injectMetaData($process);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->injectMetaData($process);
 	} 
         
         /**
 	 * Method to run process type 21:
          * Move moov atom
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process21($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::checkMoovAtoms($process);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->checkMoovAtoms($process);
 	} 
         
 	/**
 	 * Method to run process type 22:
          * Get duration
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process22($process)
 	{
                 if ($process->media_type == 1)
                 {
+                        // We can use the video method for audio too.                 
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::getDuration($process);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->getDuration($process);
                 }
-                else if ($process->media_type == 4)
+                elseif ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::getDuration($process);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->getDuration($process);
                 }
 	}
         
@@ -695,19 +807,24 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 23:
          * Get title
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process23($process)
 	{
                 if ($process->media_type == 1)
                 {
+                        // We can use the video method for audio too.                 
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::getTitle($process);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->getTitle($process);
                 }
-                else if ($process->media_type == 4)
+                elseif ($process->media_type == 4)
                 {
                         hwdMediaShareFactory::load('videos');
-                        return hwdMediaShareVideos::getTitle($process);
+                        $HWDvideos = hwdMediaShareVideos::getInstance();
+                        return $HWDvideos->getTitle($process);
                 }
 	}
         
@@ -715,26 +832,32 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 23, 24, 25 & 26:
          * Create ogg video
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object  $process   The process.
+         * @return  boolean True on success.
+	 */
 	public function process24($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processOgg($process, 22, 360);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processOgg($process, 22, 360);
 	}   
 	public function process25($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processOgg($process, 23, 480);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processOgg($process, 23, 480);
 	}   
 	public function process26($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processOgg($process, 24, 720);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processOgg($process, 24, 720);
 	}   
 	public function process27($process)
 	{
                 hwdMediaShareFactory::load('videos');
-                return hwdMediaShareVideos::processOgg($process, 25, 1080);
+                $HWDvideos = hwdMediaShareVideos::getInstance();
+                return $HWDvideos->processOgg($process, 25, 1080);
 	} 
 }
