@@ -339,6 +339,7 @@ class hwdMediaShareAudio extends JObject
                         // Log success.
                         $log->status = 2;
                         $HWDprocesses->addLog($log);
+                        // Add file.
                         $HWDfiles->addFile($item, $fileType);
                         return $log;  
                 }
@@ -472,6 +473,7 @@ class hwdMediaShareAudio extends JObject
                         // Log success.
                         $log->status = 2;
                         $HWDprocesses->addLog($log);
+                        // Add file.
                         $HWDfiles->addFile($item, $fileType);
                         return $log;  
                 }
