@@ -397,7 +397,7 @@ class hwdMediaShareImages extends JObject
                         {
                                 // Log fail (empty ffmpeg output).
                                 $HWDprocesses->addLog($log);
-                                return $log;
+                                $log = $HWDprocesses->resetLog($process);                        
                         }
                         else
                         {
@@ -408,7 +408,7 @@ class hwdMediaShareImages extends JObject
                                 {
                                         // Log fail (ffmpeg not accessible).
                                         $HWDprocesses->addLog($log);
-                                        return $log;
+                                        $log = $HWDprocesses->resetLog($process);                        
                                 }
                         }
 
@@ -417,7 +417,7 @@ class hwdMediaShareImages extends JObject
                                 // Log fail (empty output file).
                                 JFile::delete($pathDest);
                                 $HWDprocesses->addLog($log);
-                                return $log;                                        
+                                $log = $HWDprocesses->resetLog($process);                        
                         }
                 }
                 catch(Exception $e)
@@ -484,7 +484,7 @@ class hwdMediaShareImages extends JObject
                         {
                                 // Log fail (empty ffmpeg output).
                                 $HWDprocesses->addLog($log);
-                                return $log;
+                                $log = $HWDprocesses->resetLog($process);                        
                         }
                         else
                         {
@@ -495,7 +495,7 @@ class hwdMediaShareImages extends JObject
                                 {
                                         // Log fail (ffmpeg not accessible).
                                         $HWDprocesses->addLog($log);
-                                        return $log;
+                                        $log = $HWDprocesses->resetLog($process);                        
                                 }
                         }
 
@@ -504,7 +504,7 @@ class hwdMediaShareImages extends JObject
                                 // Log fail (empty output file).
                                 JFile::delete($pathDest);
                                 $HWDprocesses->addLog($log);
-                                return $log;                                        
+                                $log = $HWDprocesses->resetLog($process);                        
                         }
                 }
                 catch(Exception $e)
