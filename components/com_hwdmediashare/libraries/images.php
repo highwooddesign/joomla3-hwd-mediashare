@@ -420,18 +420,6 @@ class hwdMediaShareImages extends JObject
                  */  
                 try
                 {
-                        // Check we can use the exec function.
-                        if (TRUE !== is_callable('exec'))
-                        {
-                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
-                        }
-
-                        // Check we can use the exec function.
-                        if (TRUE !== function_exists('exec'))
-                        {
-                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
-                        } 
-
                         // Initialise variables.
                         $wxh = $size.'x'.$size;
 
