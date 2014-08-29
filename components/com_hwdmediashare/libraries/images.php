@@ -361,7 +361,7 @@ class hwdMediaShareImages extends JObject
                                 throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
                         } 
 
-                        // Define variables for the command.
+                        // Initialise variables.
                         $wxh = $size.'x'.$size;
 
                         if(substr(PHP_OS, 0, 3) == "WIN")
@@ -432,7 +432,7 @@ class hwdMediaShareImages extends JObject
                                 throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
                         } 
 
-                        // Define variables for the command.
+                        // Initialise variables.
                         $wxh = $size.'x'.$size;
 
                         if(substr(PHP_OS, 0, 3) == "WIN")
