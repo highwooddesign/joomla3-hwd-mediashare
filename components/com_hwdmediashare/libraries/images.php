@@ -553,12 +553,8 @@ class hwdMediaShareImages extends JObject
                 hwdMediaShareFactory::load('processes');
                 $HWDprocesses = hwdMediaShareProcesses::getInstance();
                 
-                // Load HWD files library.
-                hwdMediaShareFactory::load('files');
-                $HWDfiles = hwdMediaShareFiles::getInstance();
-                
                 // Import Joomla libraries.
-                jimport( 'joomla.filesystem.file' );
+                jimport('joomla.filesystem.file');
                 
                 // Setup log.
                 $log = $HWDprocesses->resetLog($process);
