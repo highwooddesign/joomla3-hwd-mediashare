@@ -512,7 +512,7 @@ class hwdMediaShareAudio extends JObject
                 $config = $hwdms->getConfig();
               
                 // Define path to metadata file.
-                jimport( 'joomla.filesystem.file');
+                jimport('joomla.filesystem.file');
                 $ini = JPATH_CACHE . '/metadata' . $item->id . '.ini';
                 
                 // Attempt to create metadata file.
