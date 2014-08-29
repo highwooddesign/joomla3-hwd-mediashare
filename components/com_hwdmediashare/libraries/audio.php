@@ -310,8 +310,10 @@ class hwdMediaShareAudio extends JObject
                         }
                         else
                         {
-                                $pos = strpos($output, "No such file or directory");
-                                if ($pos !== false)
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
                                 {
                                         // Log fail (ffmpeg not accessible).
                                         $HWDprocesses->addLog($log);
@@ -446,8 +448,10 @@ class hwdMediaShareAudio extends JObject
                         }
                         else
                         {
-                                $pos = strpos($output, "No such file or directory");
-                                if ($pos !== false)
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
                                 {
                                         // Log fail (ffmpeg not accessible).
                                         $HWDprocesses->addLog($log);
