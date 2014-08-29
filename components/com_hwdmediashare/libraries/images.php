@@ -92,6 +92,10 @@ class hwdMediaShareImages extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('documents');
+                hwdMediaShareFactory::load('downloads');
+                                
                 // Get maximum media size.
                 $size = $config->get('mediaitem_size');
 
@@ -213,270 +217,274 @@ class hwdMediaShareImages extends JObject
 	 */
 	public function processImage($process, $fileType, $size, $crop = false)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
                 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
                 $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
-                hwdMediaShareFactory::load('files');
+                $media = JArrayHelper::toObject($properties, 'JObject');
 
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        // Get information on original
-                        list($width, $height) = getimagesize($pathSource); 
+                        // Log fail (no source file).
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                
+                // Get information on original
+                list($width, $height) = getimagesize($pathSource); 
 
-                        if (max($width, $height) < $size)
+                if (max($width, $height) < $size)
+                {
+                        // Log fail (unnecessary).                    
+                        $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
+                        $log->status = 4;
+                        $HWDprocesses->addLog($log);
+                        return $log;
+                }
+
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
+
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+
+                /**
+                 * Attempt image manipulation firstly with the ImageMagick PHP 
+                 * extension. There is more overhead associated with command line 
+                 * tool. Built in extensions will be faster and use less memory.
+                 */                
+                try
+                {
+                        // Try ImageMagick PHP extension.
+                        $log->input = "Imagemagick::cropThumbnailImage()";
+
+                        // Check we can perform the magick.
+                        if (TRUE !== extension_loaded('imagick'))
                         {
-                                $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
-                                $log->status = 4;
-                                
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_IMAGICK_EXTENSION_NOT_LOADED'));
+                        }
+
+                        // Check we can perform the magick.
+                        if (TRUE !== class_exists('Imagick'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_IMAGICK_CLASS_NOT_EXIST'));
+                        } 
+
+                        // New imagick object.
+                        $im = new imagick( $pathSource );
+
+                        // Convert to jpg.
+                        $im->setImageColorspace(imagick::COLORSPACE_RGB);
+                        $im->setCompression(Imagick::COMPRESSION_JPEG);
+                        $im->setCompressionQuality(60);
+                        $im->setImageFormat('jpeg');
+
+                        // Resize.
+                        if ($crop)
+                        {
+                                $im->cropThumbnailImage($size, $size);
                         }
                         else
                         {
-                                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
-
-                                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
-
-                                // Try ImageMagick PHP extension
-                                try
-                                {
-                                        $log->input = "Imagemagick::cropThumbnailImage()\n";
-
-                                        // Let's check whether we can perform the magick.
-                                        if (TRUE !== extension_loaded('imagick'))
-                                        {
-                                            throw new Exception(JText::_('COM_HWDMS_ERROR_IMAGICK_EXTENSION_NOT_LOADED'));
-                                        }
-
-                                        // This check is an alternative to the previous one.
-                                        // Use the one that suits you better.
-                                        if (TRUE !== class_exists('Imagick'))
-                                        {
-                                            throw new Exception(JText::_('COM_HWDMS_ERROR_IMAGICK_CLASS_NOT_EXIST'));
-                                        } 
-
-                                        // New imagick object
-                                        $im = new imagick( $pathSource );
-
-                                        // Convert to jpg
-                                        $im->setImageColorspace(imagick::COLORSPACE_RGB);
-                                        $im->setCompression(Imagick::COMPRESSION_JPEG);
-                                        $im->setCompressionQuality(60);
-                                        $im->setImageFormat('jpeg');
-
-                                        // Resize
-                                        if ($crop)
-                                        {
-                                                $im->cropThumbnailImage($size, $size);
-                                        }
-                                        else
-                                        {
-                                                $im->resizeImage($size, $size, imagick::FILTER_LANCZOS, 1, true);
-                                        }
-
-                                        // Write image on server
-                                        $im->writeImage($pathDest);
-
-                                        $im->clear();
-                                        $im->destroy();
-
-                                        if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
-                                        {
-                                                $log->status = 2;
-                                        }
-                                }
-                                catch(Exception $e)
-                                {
-                                        $log->output = $e->getMessage();
-                                }
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
-                                {
-                                        // Add watermark
-                                        hwdMediaShareImages::processWatermark($process, $fileType);
-                                                                        
-                                        // Add file to database
-                                        hwdMediaShareFactory::load('files');
-                                        hwdMediaShareFiles::add($item,$fileType);
-                                        return $log;
-                                }
-
-                                // Try ImageMagick command line
-                                try
-                                {
-                                        // Let's check whether we can perform the magick.
-                                        if (TRUE !== is_callable('exec'))
-                                        {
-                                            throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
-                                        }
-
-                                        // This check is an alternative to the previous one.
-                                        // Use the one that suits you better.
-                                        if (TRUE !== function_exists('exec'))
-                                        {
-                                            throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
-                                        } 
-
-                                        $wxh = $size.'x'.$size;
-                                        // Resize
-                                        if(substr(PHP_OS, 0, 3) == "WIN")
-                                        {
-                                                if ($crop)
-                                                {
-                                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -thumbnail 75x75^ -gravity center -extent 75x75 $pathSource $pathDest 2>&1";
-                                                }
-                                                else
-                                                {
-                                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -resize $wxh $pathSource $pathDest 2>&1";
-                                                }
-                                                exec($log->input, $log->output);
-                                        }
-                                        else
-                                        {
-                                                if ($crop)
-                                                {
-                                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose -thumbnail 75x75^ -gravity center -extent 75x75 $pathSource $pathDest 2>&1";
-                                                }
-                                                else
-                                                {
-                                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose -resize $wxh $pathSource $pathDest 2>&1";
-                                                }
-                                                exec($log->input, $log->output);
-                                        }
-                                        
-                                        if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
-                                        {
-                                                $log->status = 2;
-                                        }
-                                }
-                                catch(Exception $e)
-                                {
-                                        $log->output = $e->getMessage();
-                                }       
-        
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
-                                {
-                                        // Add watermark
-                                        hwdMediaShareImages::processWatermark($process, $fileType);
-                                    
-                                        // Add file to database
-                                        hwdMediaShareFactory::load('files');
-                                        hwdMediaShareFiles::add($item,$fileType);
-                                        return $log;
-                                }
-                                
-                                // As of IM v6.3.8-3 the special resize option flag '^' was added to make this easier.
-				// Before IM v6.3.8-3 when this special flag was added, you would have needed some very complex trickiness to achieve the same result.
-				// See Resizing to Fill a Given Space for details: http://www.imagemagick.org/Usage/resize/#space_fill
-                                // Try older ImageMagick command line
-                                try
-                                {
-                                        // Let's check whether we can perform the magick.
-                                        if (TRUE !== is_callable('exec'))
-                                        {
-                                            throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
-                                        }
-
-                                        // This check is an alternative to the previous one.
-                                        // Use the one that suits you better.
-                                        if (TRUE !== function_exists('exec'))
-                                        {
-                                            throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
-                                        }
-
-                                        $wxh = $size.'x'.$size;
-                                        // Resize
-                                        if(substr(PHP_OS, 0, 3) == "WIN")
-                                        {
-                                                if ($crop)
-                                                {
-                                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -thumbnail 75x75 -gravity center -extent 75x75 $pathSource $pathDest 2>&1";
-                                                }
-                                                else
-                                                {
-                                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -resize $wxh $pathSource $pathDest 2>&1";
-                                                }
-                                                exec($log->input, $log->output);
-                                        }
-                                        else
-                                        {
-                                                if ($crop)
-                                                {
-                                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose $pathSource -resize x140 -resize '140x<' -resize 50% -gravity center  -crop 75x75+0+0 +repage $pathDest 2>&1";
-                                                }
-                                                else
-                                                {
-                                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -resize $wxh $pathSource $pathDest 2>&1";
-                                                }
-                                                exec($log->input, $log->output);
-                                        }
-
-                                        if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                        {
-                                                $log->status = 2;
-                                        }
-                                }
-                                catch(Exception $e)
-                                {
-                                        $log->output = $e->getMessage();
-                                }
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        // Add watermark
-                                        hwdMediaShareImages::processWatermark($process, $fileType);
-                                    
-                                        // Add file to database
-                                        hwdMediaShareFactory::load('files');
-                                        hwdMediaShareFiles::add($item,$fileType);
-                                        return $log;
-                                }
+                                $im->resizeImage($size, $size, imagick::FILTER_LANCZOS, 1, true);
                         }
-                        
-                        $log->output = JText::_('COM_HWDMS_ERROR_DESTINATION_MEDIA_NOT_EXIST');
+
+                        // Write image on server
+                        $im->writeImage($pathDest);
+
+                        $im->clear();
+                        $im->destroy();
                 }
-                else
+                catch(Exception $e)
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process);                        
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        return $log;  
+                }
+
+                /**
+                 * If PHP extension has failed to generate an image, then
+                 * attempt image manipulation with the ImageMagick command
+                 * line "convert" tool. 
+                 */  
+                try
+                {
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+
+                        // Define variables for the command.
+                        $wxh = $size.'x'.$size;
+
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                if ($crop)
+                                {
+                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -thumbnail 75x75^ -gravity center -extent 75x75 $pathSource $pathDest 2>&1";
+                                }
+                                else
+                                {
+                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -resize $wxh $pathSource $pathDest 2>&1";
+                                }
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                if ($crop)
+                                {
+                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose -thumbnail 75x75^ -gravity center -extent 75x75 $pathSource $pathDest 2>&1";
+                                }
+                                else
+                                {
+                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose -resize $wxh $pathSource $pathDest 2>&1";
+                                }
+                                exec($log->input, $log->output);
+                        }
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process);                        
+                }       
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        return $log;  
                 }
                 
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                /**
+                 * Try older ImageMagick command line parameters: As of IM v6.3.8-3 the special 
+                 * resize option flag '^' was added to make this easier. Before IM v6.3.8-3 when
+                 * this special flag was added, you would have needed some very complex trickiness
+                 * to achieve the same result. See Resizing to Fill a Given Space for details:
+                 * http://www.imagemagick.org/Usage/resize/#space_fill
+                 */  
+                try
+                {
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+
+                        // Define variables for the command.
+                        $wxh = $size.'x'.$size;
+
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                if ($crop)
+                                {
+                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -thumbnail 75x75 -gravity center -extent 75x75 $pathSource $pathDest 2>&1";
+                                }
+                                else
+                                {
+                                        $log->input = "\"".$config->get('path_imagemagick', '/usr/bin/convert')."\" -verbose -resize $wxh $pathSource $pathDest 2>&1";
+                                }
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                if ($crop)
+                                {
+                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose $pathSource -resize x140 -resize '140x<' -resize 50% -gravity center -crop 75x75+0+0 +repage $pathDest 2>&1";
+                                }
+                                else
+                                {
+                                        $log->input = $config->get('path_imagemagick', '/usr/bin/convert')." -verbose -resize $wxh $pathSource $pathDest 2>&1";
+                                }
+                                exec($log->input, $log->output);
+                        }
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process);                        
+                }       
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        return $log;  
+                }
+
+                // Log fail (unknown).
+                $HWDprocesses->addLog($log);
+                return $log; 
 	}
 
         /**
@@ -490,116 +498,131 @@ class hwdMediaShareImages extends JObject
 	 */
 	public function processWatermark($process, $fileType)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+                
+                // Import Joomla libraries.
+                jimport( 'joomla.filesystem.file' );
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
 
+                // Only proceed if watermarking is enabled.
 		if ($config->get('process_watermark') == 0 || $config->get('watermark_path') == '') return;
 
-                // Only process watermark if the image being generated is larger than 500 pixels
+                // Only process watermark if the image being generated is larger than 500 pixels.
                 if (!in_array($fileType, array(5,6,7))) return;
-                
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
 
                 $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
-                hwdMediaShareFactory::load('files');
+                $media = JArrayHelper::toObject($properties, 'JObject');
 
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                $extSource = hwdMediaShareFiles::getExtension($item, $fileType);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extSource = hwdMediaShareFiles::getExtension($media, $fileType);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                        $filenameDest = hwdMediaShareFiles::getFilename($item->key, 26);
-                        $extDest = hwdMediaShareFiles::getExtension($item, 26);
-
-                        $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
-
-                        $logo = JPATH_SITE.'/'.$config->get('watermark_path');
-
-                        switch ($config->get('watermark_position'))
-                        {
-                            case 1:
-                                // Top left
-                                $gravity = 'northwest';
-                                break;
-                            case 2:
-                                // Top right
-                                $gravity = 'northeast';
-                                break;
-                            case 4:
-                                // Bottom left
-                                $gravity = 'southwest';
-                                break;
-                            default:
-                                // Bottom right
-                                $gravity = 'southeast';
-                                break;
-                        }
-
-                        try
-                        {
-                                if(substr(PHP_OS, 0, 3) == "WIN")
-                                {
-                                        $logo = preg_replace('|^([a-z]{1}):|i', '', $logo); //Strip out windows drive letter if it's there.
-                                        $logo = str_replace('\\', '/', $logo); //Windows path sanitisation
-                                        $log->input = "\"".$config->get('path_composite', 'C:\Program Files (x86)\ImageMagick-6.7.9-Q16\composite.exe')."\" -verbose -dissolve 25% -gravity ".$gravity." ".$logo." ".$pathSource." ".$pathDest." 2>&1";
-                                        exec($log->input, $log->output);
-                                }
-                                else
-                                {
-                                        $log->input = $config->get('path_composite', '/usr/bin/composite')." -verbose -watermark 50% -gravity ".$gravity." ".$logo." ".$pathSource." ".$pathDest." 2>&1";
-                                        exec($log->input, $log->output);
-                                }
-
-                                jimport( 'joomla.filesystem.file' );
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        if (JFile::copy($pathDest, $pathSource))
-                                        {
-                                                // The watermarked image has been copied successfuly to replace the original, so
-                                                // delete the temporary file and mark as successull
-                                                JFile::delete($pathDest);
-                                                $log->status = 2;
-                                        }
-                                }
-                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                {
-                                        JFile::delete($pathDest);
-                                }
-                        }
-                        catch(Exception $e)
-                        {
-                                $log->output = $e->getMessage();
-                        }
-
-                        // Add process log
-                        hwdMediaShareProcesses::addLog($log);
+                        // Log fail (no source file).
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
                 }
 
-		return true;
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, 26);
+                $extDest = hwdMediaShareFiles::getExtension($media, 26);
+
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+
+                // Define path to watermark image.
+                $logo = JPATH_SITE.'/'.$config->get('watermark_path');
+
+                switch ($config->get('watermark_position'))
+                {
+                        case 1: // Top left
+                                $gravity = 'northwest';
+                        break;
+                        case 2: // Top right
+                                $gravity = 'northeast';
+                        break;
+                        case 4: // Bottom left
+                                $gravity = 'southwest';
+                        break;
+                        default: // Bottom right
+                                $gravity = 'southeast';
+                        break;
+                }
+
+                try
+                {
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $logo = preg_replace('|^([a-z]{1}):|i', '', $logo); //Strip out windows drive letter if it's there.
+                                $logo = str_replace('\\', '/', $logo); //Windows path sanitisation.
+                                $log->input = "\"".$config->get('path_composite', 'C:\Program Files (x86)\ImageMagick-6.7.9-Q16\composite.exe')."\" -verbose -dissolve 25% -gravity ".$gravity." ".$logo." ".$pathSource." ".$pathDest." 2>&1";
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_composite', '/usr/bin/composite')." -verbose -watermark 50% -gravity ".$gravity." ".$logo." ".$pathSource." ".$pathDest." 2>&1";
+                                exec($log->input, $log->output);
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                return $log;                                        
+                        }
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        return $log; 
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Copy the watermarked image to replace the original.
+                        if (JFile::copy($pathDest, $pathSource))
+                        {
+                                // Log success.
+                                JFile::delete($pathDest);
+                                $log->status = 2;
+                                $HWDprocesses->addLog($log);
+                                return $log;  
+                        } 
+                }
+                
+                // Log fail (unknown).
+                $HWDprocesses->addLog($log);
+                return $log;   
 	}
 
         /**
-	 * Method to extract the metadata from an audio file.
+	 * Method to extract the metadata from an image file.
          * 
          * @access  public
          * @param   object  $item   The media item.
@@ -607,76 +630,79 @@ class hwdMediaShareImages extends JObject
 	 */
 	public static function getMeta($item)
 	{
+                // Import HWD libraries.
                 hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('downloads');                
+                hwdMediaShareFactory::load('downloads'); 
+                
                 $foldersSource = hwdMediaShareFiles::getFolders($item->key);
                 $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
                 $extSource = hwdMediaShareFiles::getExtension($item, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                // Check if the variable is set and if the file itself exists before continuing
+                // Check for original file.
                 if (file_exists($pathSource) && filesize($pathSource) > 0)
                 {
-                        // Try ImageMagick PHP extension
                         try
                         {
-                                // Let's check whether we can load the exif.
+                                // Check we can use the read_exif_data function.
                                 if (TRUE !== function_exists('read_exif_data'))
                                 {
-                                    throw new Exception(JText::_('COM_HWDMS_ERROR_EXIF_FUNCTION_NOT_EXIST'));
+                                        throw new Exception(JText::_('COM_HWDMS_ERROR_EXIF_FUNCTION_NOT_EXIST'));
                                 } 
                                         
-                                 // There are 2 arrays which contains the information we are after, so it's easier to state them both
-                                $exif_ifd0 = read_exif_data($pathSource ,'IFD0' ,0);      
-                                $exif_exif = read_exif_data($pathSource ,'EXIF' ,0);
+                                // There are 2 arrays which contains the information we 
+                                // are after, so it's easier to define both.
+                                $ifd0 = read_exif_data($pathSource, 'IFD0', 0);      
+                                $exif = read_exif_data($pathSource, 'EXIF', 0);
                         }
                         catch(Exception $e)
                         {
-                                //$this->setError($e->getMessage());
+                                // $this->setError($e->getMessage());
                                 return false;
-                        }   
-
-                        //error control
-                        $notFound = JText::_('COM_HWDMS_UNAVAILABLE');
-
-                        // Make
-                        if (@array_key_exists('Make', $exif_ifd0)) {
-                            $camMake = $exif_ifd0['Make'];
-                        } else { $camMake = $notFound; }
-
-                        // Model
-                        if (@array_key_exists('Model', $exif_ifd0)) {
-                            $camModel = $exif_ifd0['Model'];
-                        } else { $camModel = $notFound; }
-
-                        // Exposure
-                        if (@array_key_exists('ExposureTime', $exif_ifd0)) {
-                            $camExposure = $exif_ifd0['ExposureTime'];
-                        } else { $camExposure = $notFound; }
-
-                        // Aperture
-                        if (@array_key_exists('ApertureFNumber', $exif_ifd0['COMPUTED'])) {
-                            $camAperture = $exif_ifd0['COMPUTED']['ApertureFNumber'];
-                        } else { $camAperture = $notFound; }
-
-                        // Date
-                        if (@array_key_exists('DateTime', $exif_ifd0)) {
-                            $camDate = $exif_ifd0['DateTime'];
-                        } else { $camDate = $notFound; }
-
-                        // ISO
-                        if (@array_key_exists('ISOSpeedRatings',$exif_exif)) {
-                            $camIso = $exif_exif['ISOSpeedRatings'];
-                        } else { $camIso = $notFound; }
-
+                        }
+                        
+                        // Define an array of EXIF headers we want to use.
+                        $headers = array(
+                            'ApertureFNumber' => 'COM_HWDMS_EXIF_APERTUREFNUMBER',
+                            'ApertureValue' => 'COM_HWDMS_EXIF_APERTUREVALUE',
+                            'CCDWidth' => 'COM_HWDMS_EXIF_CCDWIDTH',
+                            'ColorSpace' => 'COM_HWDMS_EXIF_COLORSPACE',
+                            'DateTime' => 'COM_HWDMS_EXIF_DATETIME',
+                            'ExifImageLength' => 'COM_HWDMS_EXIF_EXIFIMAGELENGTH',
+                            'ExifImageWidth' => 'COM_HWDMS_EXIF_EXIFIMAGEWIDTH',
+                            'ExifVersion' => 'COM_HWDMS_EXIF_EXIFVERSION',
+                            'ExposureBiasValue' => 'COM_HWDMS_EXIF_EXPOSUREBIASVALUE',
+                            'ExposureTime' => 'COM_HWDMS_EXIF_EXPOSURETIME',
+                            'FirmwareVersion' => 'COM_HWDMS_EXIF_FIRMWAREVERSION',
+                            'Flash' => 'COM_HWDMS_EXIF_FLASH',
+                            'FlashPixVersion' => 'COM_HWDMS_EXIF_FLASHPIXVERSION',
+                            'FocalLength' => 'COM_HWDMS_EXIF_FOCALLENGTH',
+                            'FocalPlaneResolutionUnit' => 'COM_HWDMS_EXIF_FOCALPLANERESOLUTIONUNIT',
+                            'FocalPlaneXResolution' => 'COM_HWDMS_EXIF_FOCALPLANEXRESOLUTION',
+                            'FocalPlaneYResolution' => 'COM_HWDMS_EXIF_FOCALPLANEYRESOLUTION',
+                            'FocusDistance' => 'COM_HWDMS_EXIF_FOCUSDISTANCE',
+                            'ISOSpeedRatings' => 'COM_HWDMS_EXIF_ISOSPEEDRATINGS',
+                            'Make' => 'COM_HWDMS_EXIF_MAKE',
+                            'MaxApertureValue' => 'COM_HWDMS_EXIF_MAXAPERTUREVALUE',
+                            'MeteringMode' => 'COM_HWDMS_EXIF_METERINGMODE',
+                            'Model' => 'COM_HWDMS_EXIF_MODEL',
+                            'OwnerName' => 'COM_HWDMS_EXIF_OWNERNAME',
+                            'ShutterSpeedValue' => 'COM_HWDMS_EXIF_SHUTTERSPEEDVALUE',
+                            'SubjectDistance' => 'COM_HWDMS_EXIF_SUBJECTDISTANCE',
+                            'XResolution' => 'COM_HWDMS_EXIF_XRESOLUTION',
+                            'YResolution' => 'COM_HWDMS_EXIF_YRESOLUTION',
+                        );
+                        
                         $return = array();
-                        $return['make'] = $camMake;
-                        $return['model'] = $camModel;
-                        $return['exposure'] = $camExposure;
-                        $return['aperture'] = $camAperture;
-                        $return['date'] = $camDate;
-                        $return['iso'] = $camIso;
+                        foreach ($headers as $key => $header)
+                        {
+                                if (array_key_exists($key, $exif))
+                                {
+                                        $return[$header] = $exif[$key];
+                                }
+                        }
+
                         return $return;
                 } 
 
