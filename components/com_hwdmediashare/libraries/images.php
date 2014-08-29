@@ -273,6 +273,9 @@ class hwdMediaShareImages extends JObject
 
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
+                // Destination file already exists. We must be re-processing, so delete. 
+                if (file_exists($pathDest)) JFile::delete($pathDest);
+                
                 /**
                  * Attempt image manipulation firstly with the ImageMagick PHP 
                  * extension. There is more overhead associated with command line 
@@ -330,7 +333,7 @@ class hwdMediaShareImages extends JObject
                 }
 
                 // SUCCESS!
-                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
                 {
                         // Log success.
                         $log->status = 2;
@@ -388,6 +391,34 @@ class hwdMediaShareImages extends JObject
                                 }
                                 exec($log->input, $log->output);
                         }
+                        
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                return $log;
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        return $log;
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                return $log;                                        
+                        }
                 }
                 catch(Exception $e)
                 {
@@ -399,7 +430,7 @@ class hwdMediaShareImages extends JObject
                 }       
 
                 // SUCCESS!
-                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
                 {
                         // Log success.
                         $log->status = 2;
@@ -447,6 +478,34 @@ class hwdMediaShareImages extends JObject
                                 }
                                 exec($log->input, $log->output);
                         }
+                        
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                return $log;
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        return $log;
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                return $log;                                        
+                        }
                 }
                 catch(Exception $e)
                 {
@@ -458,7 +517,7 @@ class hwdMediaShareImages extends JObject
                 }       
 
                 // SUCCESS!
-                if (file_exists($pathDest) && filesize($pathDest) > 0 && (filemtime($pathDest) > time()-60*5))
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
                 {
                         // Log success.
                         $log->status = 2;
@@ -538,6 +597,9 @@ class hwdMediaShareImages extends JObject
                 $extDest = hwdMediaShareFiles::getExtension($media, 26);
 
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+
+                // Destination file already exists. We must be re-processing, so delete. 
+                if (file_exists($pathDest)) JFile::delete($pathDest);
 
                 // Define path to watermark image.
                 $logo = JPATH_SITE.'/'.$config->get('watermark_path');
