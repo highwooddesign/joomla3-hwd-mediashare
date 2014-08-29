@@ -275,6 +275,9 @@ class hwdMediaShareAudio extends JObject
                 $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
 
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
+                
+                // Destination file already exists. We must be re-processing, so delete. 
+                if (file_exists($pathDest)) JFile::delete($pathDest);
 
                 try
                 {
@@ -399,7 +402,7 @@ class hwdMediaShareAudio extends JObject
                 $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
-
+                
                 if (!file_exists($pathSource))
                 {
                         // Log fail (no source file).
@@ -414,6 +417,9 @@ class hwdMediaShareAudio extends JObject
 
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
+                // Destination file already exists. We must be re-processing, so delete. 
+                if (file_exists($pathDest)) JFile::delete($pathDest);
+                
                 try
                 {
                         // Check we can use the exec function.
