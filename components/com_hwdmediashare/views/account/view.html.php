@@ -47,7 +47,9 @@ class hwdMediaShareViewAccount extends JViewLegacy
 	{                
 		// Initialise variables.
                 $app = JFactory::getApplication();
-                $user = JFactory::getUser();                
+                $user = JFactory::getUser();   
+
+                // Get the layout from the request.                
                 $this->layout = $app->input->get('layout', 'media', 'word');
 
                 // Account access check. 
@@ -59,6 +61,7 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 }
                 
                 // Get data from the model.
+                $this->user = $this->get('User');
                 $this->albums = $this->get('Albums');
                 $this->favourites = $this->get('Favourites');
                 $this->groups = $this->get('Groups');
@@ -110,7 +113,6 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 // Update the filterFormName state from the layout data.
                 $this->get('FilterFormName');
                 
-                $this->user = $this->get('User');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
@@ -128,6 +130,13 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 hwdMediaShareFactory::load('activities');
                 hwdMediaShareHelperNavigation::setJavascriptVars();
 
+                $this->user->numalbums = $this->get('numAlbums');
+                $this->user->numfavourites = $this->get('numFavourites');
+                $this->user->numgroups = $this->get('numGroups');
+                $this->user->nummedia = $this->get('numMedia');
+                $this->user->nummemberships = $this->get('numMemberships');
+                $this->user->numplaylists = $this->get('numPlaylists');
+                $this->user->numsubscriptions = $this->get('numSubscriptions');
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->columns = $this->params->get('list_columns', 3);
