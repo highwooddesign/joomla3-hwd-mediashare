@@ -550,7 +550,7 @@ class hwdMediaShareModelGroup extends JModelList
 	}
 
 	/**
-	 * Method to report an group.
+	 * Method to report a group.
          * 
          * @access  public
 	 * @return  boolean True on success, false on failure.
