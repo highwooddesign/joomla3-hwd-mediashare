@@ -3,7 +3,10 @@
         <layout title="COM_HWDMEDIASHARE_GROUP_VIEW_DEFAULT_TITLE">
                 <message>COM_HWDMEDIASHARE_GROUP_VIEW_DEFAULT_DESC</message>
         </layout>
-	<fields name="request" addfieldpath="/administrator/components/com_hwdmediashare/models/fields/">
+	<fields
+                name="request" 
+                addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        >
 		<fieldset name="request">
 			<field 
                                 name="id" 
