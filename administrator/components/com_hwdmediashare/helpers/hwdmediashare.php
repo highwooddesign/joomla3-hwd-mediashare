@@ -22,6 +22,10 @@ abstract class hwdMediaShareHelper
 	 */
 	public static function addSubmenu($submenu)
 	{
+                // This helper is executed from the categories manager, so we need to
+                // register our library factory file.
+                JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+
                 // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
