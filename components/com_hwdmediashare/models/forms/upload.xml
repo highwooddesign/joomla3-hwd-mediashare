@@ -22,6 +22,7 @@
 			label="COM_HWDMS_REMOTE_MEDIA_LINK_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINK_DESC"
                         class="input-large-text hwd-form-title span12"                        
+                        hint="COM_HWDMS_HINT_ENTER_REMOTE_HERE"  
                 />
 		<field 
                         name="remotes" 
@@ -29,6 +30,7 @@
 			label="COM_HWDMS_REMOTE_MEDIA_LINKS_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINKS_DESC"
                         class="span12"                        
+                        hint="COM_HWDMS_HINT_ENTER_REMOTES_HERE"                        
                 />
         </fieldset>
 	<fieldset 
