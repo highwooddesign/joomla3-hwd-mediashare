@@ -584,7 +584,7 @@ class hwdMediaShareModelGroup extends JModelList
                 $object->description = $input->get('description', '', 'string');
                 $object->created = $date->toSql();
                 
-                // Attempt to change the state of the records.
+                // Attempt to save the report details to the database.
                 if (!$table->save($object))
                 {
                         $this->setError($table->getError());
