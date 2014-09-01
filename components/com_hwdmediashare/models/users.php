@@ -14,21 +14,19 @@ class hwdMediaShareModelUsers extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */ 
 	public $context = 'com_hwdmediashare.users';
 
 	/**
-	 * Model data
-	 * @var array
-	 */
-	protected $_items = null;
-        
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */  
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -51,6 +49,7 @@ class hwdMediaShareModelUsers extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -59,7 +58,12 @@ class hwdMediaShareModelUsers extends JModelList
 		{            
                         for ($x = 0, $count = count($items); $x < $count; $x++)
                         {
+                                // Unset this item if no title.
                                 if (empty($items[$x]->title)) unset($items[$x]);
+                                
+                                // Add the number of media and subscribers to the user.
+                                $items[$x]->nummedia = $this->getNumMedia($items[$x]->id);
+                                $items[$x]->numsubscribers = $this->getNumSubscribers($items[$x]->id);
                         }
                 }
 
@@ -69,10 +73,12 @@ class hwdMediaShareModelUsers extends JModelList
 	/**
 	 * Method to get the database query.
 	 *
+	 * @access  protected
 	 * @return  JDatabaseQuery  database query
 	 */
         public function getListQuery()
         {
+                // Initialise variables.
 		$user	= JFactory::getUser();
 		$groups	= implode(',', $user->getAuthorisedViewLevels());
 
@@ -85,7 +91,6 @@ class hwdMediaShareModelUsers extends JModelList
                 $config = $hwdms->getConfig();
                 
 		// Select the required fields from the table.
-                // Select DISTINCT ID to avoid duplicates when joining over subscription lists.
 		$query->select(
 			$this->getState(
 				'list.select',
@@ -105,18 +110,17 @@ class hwdMediaShareModelUsers extends JModelList
                         $query->where('a.access IN ('.$groups.')');
                 }
                 
-                // Restrict based on privacy access.
+                // Restrict based on privacy (listed/unlisted) access.
                 $query->where('(a.private = 0 OR (a.private = 1 && a.id = '.$user->id.'))');
                 
-                // Join over the users.
+                // Join over the users table.
 		$query->select('u.name, u.username, u.block, u.activation');
 		$query->join('LEFT', '#__users AS u ON u.id=a.id');
 
                 // Join over the users for the title (if empty), with value based on configuration.
-                $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->Quote(' ') . ' THEN a.title ELSE ua.username END AS title');
+                $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->quote(' ') . ' THEN a.title ELSE ua.username END AS title');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.id');
-		$query->join('LEFT', '#__users AS uam ON uam.id = a.modified_user_id');
-
+                
 		// Filter by published state.
 		$published = $this->getState('filter.published');
 		if (is_array($published)) 
@@ -159,7 +163,7 @@ class hwdMediaShareModelUsers extends JModelList
 			}
                         else
                         {
-				$search = $db->Quote('%'.$db->escape($search, true).'%');
+				$search = $db->quote('%'.$db->escape($search, true).'%');
 				$query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
 			}
 		}
@@ -167,7 +171,7 @@ class hwdMediaShareModelUsers extends JModelList
 		// Filter on the language.
 		if ($this->getState('filter.language'))
                 {
-			$query->where('a.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('a.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}                
 
 		// Add the list ordering clause.
@@ -185,34 +189,29 @@ class hwdMediaShareModelUsers extends JModelList
                         }                    
 		}    
 
-		// Filter by start and end dates.
-		$nullDate = $db->Quote($db->getNullDate());
-		$nowDate = $db->Quote(JFactory::getDate()->toSql());
+		// Filter by published start and end dates.
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate = $db->quote(JFactory::getDate()->toSql());
 		if ($this->getState('filter.publish_date'))
                 {
 			$query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
 			$query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
 		}
 
-		// Filter by Date Range or Relative Date
+		// Filter by date range states.
 		$dateFiltering = $this->getState('filter.date_filtering', 'off');
 		$dateField = $this->getState('filter.date_field', 'a.created');
 		switch ($dateFiltering)
 		{
 			case 'range':
-				$startDateRange = $db->Quote($this->getState('filter.start_date_range', $nullDate));
-				$endDateRange = $db->Quote($this->getState('filter.end_date_range', $nullDate));
+				$startDateRange = $db->quote($this->getState('filter.start_date_range', $nullDate));
+				$endDateRange = $db->quote($this->getState('filter.end_date_range', $nullDate));
 				$query->where('('.$dateField.' >= '.$startDateRange.' AND '.$dateField . ' <= '.$endDateRange.')');
-				break;
-
+			break;
 			case 'relative':
 				$relativeDate = (int) $this->getState('filter.relative_date', 0);
 				$query->where($dateField.' >= DATE_SUB('.$nowDate.', INTERVAL ' . $relativeDate.' DAY)');
-				break;
-
-			case 'off':
-			default:
-				break;
+			break;
 		}
 
 		// Filter by featured state.
@@ -221,49 +220,14 @@ class hwdMediaShareModelUsers extends JModelList
 		{
 			case 'hide':
 				$query->where('a.featured = 0');
-				break;
-
+			break;
                         case 'only':
 				$query->where('a.featured = 1');
-				break;
-                            
-			case 'show':
-			default:
-				// Normally we do not discriminate
-				// between featured/unfeatured items.
-				break;
+			break;
 		}                
 
-                // Group over the media ID to prevent duplicates.
+                // Group over the user ID to prevent duplicates.
                 $query->group('a.id');
-                
-                // Filter by groups.
-		$groupId = $this->getState('filter.group_id');
-		if (is_numeric($groupId)) 
-                {
-                        $query->join('LEFT', '#__hwdms_group_members AS map ON map.member_id = a.id');
-                        $query->where('map.group_id = ' . $db->quote($groupId));                        
-		}
-                
-                // Filter by subscribers.
-		$subscribersId = $this->getState('filter.subscribers_id');
-		if (is_numeric($subscribersId)) 
-                {
-                        $query->join('LEFT', '#__hwdms_subscriptions AS map ON map.user_id = a.id');
-                        $query->where('map.element_type = 5');
-                        $query->where('map.element_id = ' . $db->quote($subscribersId));                        
-		}
-                
-                // Filter by subscriptions.
-		$subscriptionsId = $this->getState('filter.subscriptions_id');
-		if (is_numeric($subscriptionsId)) 
-                {
-                        // If we are filtering by subscriptionsId then we are trying to get the user who has been 
-                        // subscribed too, so we match the element_id with the id.
-                        $query->join('LEFT', '#__hwdms_subscriptions AS map ON map.element_id = a.id');
-                        $query->where('map.element_type = 5');
-                        $query->where('map.user_id = ' . $db->quote($subscriptionsId));                        
-		}                
 
                 //echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
@@ -274,9 +238,9 @@ class hwdMediaShareModelUsers extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	public function populateState($ordering = null, $direction = null)
@@ -315,7 +279,7 @@ class hwdMediaShareModelUsers extends JModelList
                         $this->setState('media.display_users', 'details');
 
                         // Load the featured state.
-                        $featured = $this->getUserStateFromRequest('users.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        $featured = $this->getUserStateFromRequest('users.show_featured', 'show_featured', $config->get('show_featured', 'show'), 'word', false);
                         if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
                         $this->setState('users.show_featured', $featured);
                         $this->setState('filter.featured', $featured);
@@ -336,4 +300,38 @@ class hwdMediaShareModelUsers extends JModelList
                 // List state information.
                 parent::populateState($ordering, $direction); 
 	}
+        
+	/**
+	 * Method to get a list of media associated with the user.
+	 *
+	 * @access  public
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getNumMedia($userId)
+	{
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model->context = 'com_hwdmediashare.users';
+                $this->_model->populateState();
+                $this->_model->setState('filter.author_id', $userId);
+
+                return $this->_model->getTotal();
+	}   
+        
+	/**
+	 * Method to get a list of members associated with the user.
+	 *
+	 * @access  public
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getNumSubscribers($userId)
+	{
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance('Members', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model->context = 'com_hwdmediashare.users';
+                $this->_model->populateState();
+                $this->_model->setState('filter.subscribers_id', $userId);
+
+                return $this->_model->getTotal();
+	}         
 }
