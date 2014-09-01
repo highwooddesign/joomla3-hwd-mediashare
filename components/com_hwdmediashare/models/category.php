@@ -198,34 +198,39 @@ class hwdMediaShareModelCategory extends JModelList
 	 */
 	public function getFeature()
 	{
-                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                if ($this->_category->params->get('feature') == 1)
+                if ($this->_category)
                 {
-                        $this->_model = JModelLegacy::getInstance('MediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
-                        $this->_model->populateState();
-                        $this->_model->setState('media.id', (int) $this->_category->params->get('featuremedia', 0));
-
-                        if ($this->_feature = $this->_model->getItem()) return $this->_feature; 
-                }
-                elseif ($this->_category->params->get('feature') > 1)
-                {
-                        $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
-                        $this->_model->populateState();
-                        $this->_model->setState('filter.category_id', $this->getState('filter.category_id'));
-                        switch ($this->_category->params->get('feature')) 
-                        {
-                            case 2:
-                                $this->_model->setState('list.ordering', 'a.created');
-                                $this->_model->setState('list.direction', 'desc');
-                                break;
-                            case 3:
-                                $this->_model->setState('list.ordering', 'a.created');
-                                $this->_model->setState('list.direction', 'desc');
-                                $this->_model->setState('filter.featured', 'only');
-                                break;
-                        }
+                        // Include HWD model path.
+                        JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
                         
-                        if ($this->_feature = $this->_model->getItem()) return $this->_feature;                        
+                        if ($this->_category->params->get('feature') == 1)
+                        {
+                                $this->_model = JModelLegacy::getInstance('MediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                                $this->_model->populateState();
+                                $this->_model->setState('media.id', (int) $this->_category->params->get('featuremedia', 0));
+
+                                if ($this->_feature = $this->_model->getItem()) return $this->_feature; 
+                        }
+                        elseif ($this->_category->params->get('feature') > 1)
+                        {
+                                $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));
+                                $this->_model->populateState();
+                                $this->_model->setState('filter.category_id', $this->getState('filter.category_id'));
+                                switch ($this->_category->params->get('feature')) 
+                                {
+                                        case 2:
+                                                $this->_model->setState('list.ordering', 'a.created');
+                                                $this->_model->setState('list.direction', 'desc');
+                                        break;
+                                        case 3:
+                                                $this->_model->setState('list.ordering', 'a.created');
+                                                $this->_model->setState('list.direction', 'desc');
+                                                $this->_model->setState('filter.featured', 'only');
+                                        break;
+                                }
+
+                                if ($this->_feature = $this->_model->getItem()) return $this->_feature;                        
+                        }
                 }
                 
                 return false;
