@@ -14,39 +14,179 @@ class hwdMediaShareModelUser extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
+         * 
+         * @access      public
+	 * @var         string
 	 */
 	public $context = 'com_hwdmediashare.user';
 
 	/**
-	 * Model data
-	 * @var array
+	 * The user data.
+         * 
+         * @access      protected
+	 * @var         object
 	 */
-	protected $_user = null;
+	protected $_user;
+        
+	/**
+	 * The user items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */           
+	protected $_items;
+        
+	/**
+	 * The user albums.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_albums = null;
+        
+	/**
+	 * The user favourites.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_favourites = null;
+        
+	/**
+	 * The user groups.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_groups = null;
+        
+	/**
+	 * The user media.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_media = null;
+        
+	/**
+	 * The user memberships.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_memberships = null;
+        
+	/**
+	 * The user playlists.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_playlists = null;
+        
+	/**
+	 * The user subscribers.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_subscribers = null;
+        
+	/**
+	 * The user subscriptions.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_subscriptions = null;
+        
+	/**
+	 * The user activity.
+         * 
+         * @access      protected
+	 * @var         object
+	 */   
 	protected $_activity = null;
+        
+	/**
+	 * The model used for obtaining group items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */  
 	protected $_model = null;
+        
+	/**
+	 * The number of albums associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numAlbums = 0;
+        
+	/**
+	 * The number of favourites associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
 	protected $_numFavourites = 0;
+        
+	/**
+	 * The number of groups associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numGroups = 0;
+        
+	/**
+	 * The number of media associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numMedia = 0;
+        
+	/**
+	 * The number of memberships associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numMemberships = 0;
+        
+	/**
+	 * The number of playlists associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numPlaylists = 0;
+        
+	/**
+	 * The number of subscribers associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numSubscribers = 0;
+        
+	/**
+	 * The number of subscriptions associated with this user.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
         protected $_numSubscriptions = 0;
 
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -68,12 +208,12 @@ class hwdMediaShareModelUser extends JModelList
 	}
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'UserChannel', $prefix = 'hwdMediaShareTable', $config = array())
@@ -84,9 +224,9 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a single user.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getUser($pk = null)
 	{
@@ -100,7 +240,7 @@ class hwdMediaShareModelUser extends JModelList
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
@@ -114,10 +254,10 @@ class hwdMediaShareModelUser extends JModelList
                         }
                 }
                 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
+		// Attempt to load the table row.
 		$return = $table->load($pk);
 
 		// Check for a table object error.
@@ -206,12 +346,11 @@ class hwdMediaShareModelUser extends JModelList
                         
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 5;
-                        $this->_user->customfields = $cf->get($this->_user);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 5;
+                        $this->_user->customfields = $HWDcustomfields->load($this->_user);
                         
-                        // Add the number of media in the album.
-                        $this->_user->nummedia = $this->_numMedia;
+                        // Add the number of itemsfor the userp.
                         $this->_user->numalbums = $this->_numAlbums;
                         $this->_user->numfavourites = $this->_numFavourites;
                         $this->_user->numgroups = $this->_numGroups;
@@ -228,6 +367,7 @@ class hwdMediaShareModelUser extends JModelList
                                 $this->_user->title = $config->get('author') == 0 ? $user->name : $user->username;
                         }
 
+                        // Add subscription status.
                         hwdMediaShareFactory::load('subscriptions');
                         $HWDsubscriptions = hwdMediaShareSubscriptions::getInstance();
                         $HWDsubscriptions->elementType = 5;
@@ -240,6 +380,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of albums associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getAlbums()
@@ -272,6 +413,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of favourites associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getFavourites()
@@ -303,6 +445,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of groups associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getGroups()
@@ -335,6 +478,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of media.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getMedia()
@@ -368,6 +512,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of memberships.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getMemberships()
@@ -388,6 +533,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of playlists associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getPlaylists()
@@ -420,6 +566,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of subscribers associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getSubscribers()
@@ -440,6 +587,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of subscriptions associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getSubscriptions()
@@ -460,6 +608,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a list of activities associated with this user.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getActivities()
@@ -479,6 +628,7 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to get a JPagination object for the data set.
 	 *
+         * @access  public
 	 * @return  JPagination  A JPagination object for the data set.
 	 */
 	public function getPagination()
@@ -487,16 +637,104 @@ class hwdMediaShareModelUser extends JModelList
 	}
         
 	/**
+	 * Method to get number of albums for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of albums.
+	 */
+	public function getNumAlbums()
+	{
+                return (int) $this->_numAlbums; 
+	}
+        
+	/**
+	 * Method to get number of favourites for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of favourites.
+	 */
+	public function getNumFavourites()
+	{
+                return (int) $this->_numFavourites; 
+	}
+        
+	/**
+	 * Method to get number of groups for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of groups.
+	 */
+	public function getNumGroups()
+	{
+                return (int) $this->_numGroups; 
+	}
+        
+	/**
+	 * Method to get number of media for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of media.
+	 */
+	public function getNumMedia()
+	{
+                return (int) $this->_numMedia; 
+	}
+        
+	/**
+	 * Method to get number of memberships for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of memberships.
+	 */
+	public function getNumMemberships()
+	{
+                return (int) $this->_numMemberships; 
+	} 
+        
+	/**
+	 * Method to get number of playlists for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of playlists.
+	 */
+	public function getNumPlaylists()
+	{
+                return (int) $this->_numPlaylists; 
+	}
+
+	/**
+	 * Method to get number of subscribers for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of subscribers.
+	 */
+	public function getNumSubscribers()
+	{
+                return (int) $this->_numSubscribers; 
+	}        
+
+	/**
+	 * Method to get number of subscriptions for the user.
+	 *
+         * @access  public
+	 * @return  integer The number of subscriptions.
+	 */
+	public function getNumSubscriptions()
+	{
+                return (int) $this->_numSubscriptions; 
+	} 
+        
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	public function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
@@ -517,11 +755,6 @@ class hwdMediaShareModelUser extends JModelList
                         $id = $app->input->getInt('id');
                 }
 		$this->setState('filter.user_id', $id);
-
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		$this->setState('layout', $app->input->getString('layout'));                
 
 		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
@@ -566,8 +799,8 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Increment the hit counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk  Optional primary key of the record to increment.
-	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
@@ -590,9 +823,9 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Increment the like counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk     Optional primary key of the record to increment.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function like($pk = 0, $value = 1)
@@ -616,9 +849,9 @@ class hwdMediaShareModelUser extends JModelList
 	/**
 	 * Method to change the published state of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks    A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
@@ -670,8 +903,10 @@ class hwdMediaShareModelUser extends JModelList
 	}
 
 	/**
-	 * Method to report an object
-	 * @return  void
+	 * Method to report an group.
+         * 
+         * @access  public
+	 * @return  boolean True on success, false on failure.
 	 */
 	public function report()
 	{
@@ -680,9 +915,11 @@ class hwdMediaShareModelUser extends JModelList
                 $date = JFactory::getDate();                
 		$input = JFactory::getApplication()->input;
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+                // Load HWD report table.
 		$table = $this->getTable('Report', 'hwdMediaShareTable');    
 
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
