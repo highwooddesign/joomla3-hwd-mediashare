@@ -1,279 +1,453 @@
 <?php
 /**
- * @version    SVN $Id: router.php 1311 2013-03-20 09:37:47Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      07-Mar-2012 10:27:44
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
 defined('_JEXEC') or die;
 
-/**
- * Build the route for the com_hwdmediashare component
- *
- * @param	array	An array of URL arguments
- * @return	array	The URL arguments to use to assemble the subsequent URL.
- * @since	1.5
- */
-function hwdMediaShareBuildRoute(&$query)
+class hwdMediaShareRouter extends JComponentRouterBase
 {
-	$segments	= array();
+	/**
+	 * Build the route for the com_hwdmediashare component.
+	 *
+         * @access  public
+	 * @param   array  &$query  An array of URL arguments
+	 * @return  array  The URL arguments to use to assemble the subsequent URL.
+	 */
+	public function build(&$query)
+        {
+                // Initialise variables.
+                $db = JFactory::getDbo();            
+                $segments = array();
 
-	// Get a menu item based on Itemid or currently active
-	$app		= JFactory::getApplication();
-	$menu		= $app->getMenu();
-	$params		= JComponentHelper::getParams('com_hwdmediashare');
-	$advanced	= $params->get('sef_advanced_link', 0);
+                // Get a menu item based on Itemid or currently active.
+                $app = JFactory::getApplication();
+                $menu = $app->getMenu();
+                $params = JComponentHelper::getParams('com_hwdmediashare');
+                $advanced = $params->get('sef_advanced_link', 1);
 
-	// We need a menu item.  Either the one specified in the query, or the current active one if none specified
-	if (empty($query['Itemid']))
-        {
-		$menuItem = $menu->getActive();
-		$menuItemGiven = false;
-	}
-	else
-        {
-		$menuItem = $menu->getItem($query['Itemid']);
-		$menuItemGiven = true;
-	}
-
-	if (isset($query['view']))
-        {
-		$view = $query['view'];
-	}
-	else
-        {
-		// We need to have a view in the query or it is an invalid URL
-		return $segments;
-	}
-
-	// Are we dealing with an item view that is attached to a menu item?
-	if (($menuItem instanceof stdClass) && isset($menuItem->query['view']) && isset($menuItem->query['id']) && isset($query['id']))
-        {
-                if ($menuItem->query['view'] == $query['view'] && $menuItem->query['id'] == intval($query['id']))
+                // We need a menu item.  Either the one specified in the query, or the current active one if none specified.
+                if (empty($query['Itemid']))
                 {
-                        unset($query['view']);
-                        unset($query['id']);
-                        return $segments;
+                        $menuItem = $menu->getActive();
+                        $menuItemGiven = false;
                 }
-	}
-        
-        // Are we dealing with a list view that is attached to a menu item?
-	if (($menuItem instanceof stdClass) && isset($menuItem->query['view']))
-        {
-                // Are we dealing with an item view that is attached to a menu with the correct view, but wrong item?
-                if ($menuItem->query['view'] == $query['view'] && @$menuItem->query['id'] != @intval($query['id']))
-                {
-                        // We will continue to set the segments and then check for this situation and parse the URL appropriately
-                }
-                else if ($menuItem->query['view'] == $query['view'])
-                {
-                        unset($query['view']);
-                        return $segments;
-                }
-	}
-
-        $listViews = array( 'media' , 'categories' , 'albums' , 'groups' , 'playlists', 'users' );
-        $itemViews = array( 'mediaitem' , 'category' , 'album' , 'group' , 'playlist', 'user' );
-
-        if(in_array($view, $listViews))
-        {
-                $segments[] = $view;
-		unset($query['view']);
-        }
-        else if (in_array($view, $itemViews))
-	{
-                if (!$menuItemGiven) {
-			$segments[] = $view;
-		}
                 else
                 {
-                        // Are we dealing with an item view that is attached to it's own list view? We won't add the view segment, then check for this situation and parse the URL appropriately
-                        if ($menuItem->query['view'] == 'media' && $view == 'mediaitem') {}
-                        else if ($menuItem->query['view'] == 'categories' && $view == 'category') {}
-                        else if ($menuItem->query['view'] == 'albums' && $view == 'album') {}
-                        else if ($menuItem->query['view'] == 'groups' && $view == 'group') {}
-                        else if ($menuItem->query['view'] == 'playlists' && $view == 'playlist') {}
-                        else if ($menuItem->query['view'] == 'users' && $view == 'user') {}
-                        else
+                        $menuItem = $menu->getItem($query['Itemid']);
+                        $menuItemGiven = true;
+                }
+
+                if (isset($query['view']))
+                {
+                        $view = $query['view'];
+                }
+                else
+                {
+                        // We need to have a view in the query or it is an invalid URL.
+                        return $segments;
+                }
+
+                // Check if this is an item view attached to a menu item.
+                if (($menuItem instanceof stdClass) && isset($menuItem->query['view']) && isset($menuItem->query['id']) && isset($query['id']))
+                {
+                        if ($menuItem->query['view'] == $query['view'] && $menuItem->query['id'] == intval($query['id']))
+                        {                            
+                                unset($query['view']);
+                                unset($query['id']);
+                                return $segments;
+                        }
+                }
+ 
+                // Check if this is a list view that is aattached to a menu item.
+                if (($menuItem instanceof stdClass) && isset($menuItem->query['view']) && !isset($menuItem->query['id']))
+                {
+                        if ($menuItem->query['view'] == $query['view'])
                         {
-                                parse_str(str_replace('index.php?', '', $menuItem->link), $linkQuery);                        
-                                if (@$linkQuery['option'] != 'com_hwdmediashare' || @$linkQuery['view'] != $view)
+                                unset($query['view']);
+                                return $segments;
+                        }
+                }
+
+                $listViews = array('albums', 'categories', 'groups', 'media', 'playlists', 'users');
+                $itemViews = array('album', 'category', 'group', 'mediaitem', 'playlist', 'user');
+                $editViews = array('albumform', 'categoryform', 'groupform', 'mediaform', 'playlistform', 'userform');
+
+                if(in_array($view, $listViews))
+                {
+                        $segments[] = $this->translate($view);
+                        unset($query['view']);
+                }
+                elseif (in_array($view, $itemViews) || in_array($view, $editViews))
+                {                  
+                        // Check if this is an item view that is attached to its own list view. We won't add the
+                        // view segment, then check for this situation and parse the URL appropriately.
+                        if (isset($menuItem->query['view']) && 
+                           (($menuItem->query['view'] == 'albums' && $view == 'album')
+                         || ($menuItem->query['view'] == 'categories' && $view == 'category')
+                         || ($menuItem->query['view'] == 'groups' && $view == 'group')
+                         || ($menuItem->query['view'] == 'media' && $view == 'mediaitem')
+                         || ($menuItem->query['view'] == 'playlists' && $view == 'playlist')
+                         || ($menuItem->query['view'] == 'users' && $view == 'user')))
+                        {
+                                unset($query['view']);
+                        }
+                        elseif (isset($menuItem->query['view']) && 
+                           (($menuItem->query['view'] == 'albums' && $view == 'albumform')
+                         || ($menuItem->query['view'] == 'categories' && $view == 'categoryform')
+                         || ($menuItem->query['view'] == 'groups' && $view == 'groupform')
+                         || ($menuItem->query['view'] == 'media' && $view == 'mediaform')
+                         || ($menuItem->query['view'] == 'playlists' && $view == 'playlistform')
+                         || ($menuItem->query['view'] == 'users' && $view == 'userform')))
+                        {                            
+                                if (isset($query['id']) && $query['id'] > 0)
                                 {
-                                        $segments[] = $view;
-                                } 
-                        }
-                }
-		unset($query['view']);
-
-                $values = array(
-                    'mediaitem' => array( 'table' => 'hwdms_media', 'view' => 'mediaitem' ),
-                    'category' => array( 'table' => 'categories', 'view' => 'category' ),
-                    'album' => array( 'table' => 'hwdms_albums', 'view' => 'album' ),
-                    'group' => array( 'table' => 'hwdms_groups', 'view' => 'group' ),
-                    'playlist' => array( 'table' => 'hwdms_playlists', 'view' => 'playlist' ),
-                    'user' => array( 'table' => 'hwdms_users', 'view' => 'user' )
-                );
-
-                if (isset($query['id'])) {
-                        // Make sure we have the id and the alias
-                        if (strpos($query['id'], ':') === false && !empty($values[$view]['table'])) {
-                                $db = JFactory::getDbo();
-                                $aquery = $db->setQuery($db->getQuery(true)
-                                        ->select('alias')
-                                        ->from('#__'.$values[$view]['table'])
-                                        ->where('id='.(int)$query['id'])
-                                );
-                                $alias = $db->loadResult();
-                                $query['id'] = (!empty($alias) ? $query['id'].':'.$alias : $query['id']);
-                        }
-                } else {
-                        // We should have id set for this view.  If we don't, it is an error
-                        return $segments;
-                }
-
-		if (in_array($view, $itemViews)) {
-			if ($advanced) {
-				list($tmp, $id) = explode(':', $query['id'], 2);
-			}
-			else {
-				$id = $query['id'];
-			}
-			$segments[] = $id;
-		}
-		unset($query['id']);
-	}
-
-	// If the layout is specified and it is the same as the layout in the menu item, we
-	// unset it so it doesn't go into the query string.
-	if (isset($query['layout'])) {
-		if ($menuItemGiven && isset($menuItem->query['layout'])) {
-			if ($query['layout'] == $menuItem->query['layout']) {
-
-				unset($query['layout']);
-			}
-		}
-		else {
-			if ($query['layout'] == 'default') {
-				unset($query['layout']);
-			}
-		}
-	}
-
-	return $segments;
-}
-
-/**
- * Parse the segments of a URL.
- *
- * @param	array	The segments of the URL to parse.
- *
- * @return	array	The URL attributes to be used by the application.
- * @since	1.5
- */
-function hwdMediaShareParseRoute($segments)
-{
-	$vars = array();
-
-	//Get the active menu item.
-	$app	= JFactory::getApplication();
-	$menu	= $app->getMenu();
-	$item	= $menu->getActive();
-	$params = JComponentHelper::getParams('com_hwdmediashare');
-	$advanced = $params->get('sef_advanced_link', 0);
-	$db = JFactory::getDBO();
-
-	// Count route segments
-	$count = count($segments);
-
-	// Standard routing for items. If we don't pick up an Itemid then we get the view from the segments
-	// the first segment is the view and the last segment is the id of the item.
-	if (!isset($item))
-        {
-		$vars['view']               = $segments[0];
-		// Only define an id value if there is more than one segment
-                if ($count > 1) $vars['id'] = $segments[$count - 1];
-               
-		return $vars;
-	}
-
-	// If there is only one segment, then it points to either 1) an item view 2) an item view bound to a different item 3) an item view bound to it's own list view
-        // We test it first to see if the id and alias match the expected item
-	if ($count == 1)
-        {
-                $values = array(
-                        'media' => array( 'table' => 'hwdms_media', 'view' => 'mediaitem' ),
-                        'mediaitem' => array( 'table' => 'hwdms_media', 'view' => 'mediaitem' ),
-                        'categories' => array( 'table' => 'categories', 'view' => 'category' ),
-                        'category' => array( 'table' => 'categories', 'view' => 'category' ),
-                        'albums' => array( 'table' => 'hwdms_albums', 'view' => 'album' ),
-                        'album' => array( 'table' => 'hwdms_albums', 'view' => 'album' ),
-                        'groups' => array( 'table' => 'hwdms_groups', 'view' => 'group' ),
-                        'group' => array( 'table' => 'hwdms_groups', 'view' => 'group' ),
-                        'playlists' => array( 'table' => 'hwdms_playlists', 'view' => 'playlist' ),
-                        'playlist' => array( 'table' => 'hwdms_playlists', 'view' => 'playlist' ),
-                        'users' => array( 'table' => 'hwdms_users', 'view' => 'user' ),
-                        'user' => array( 'table' => 'hwdms_users', 'view' => 'user' )
-                );
-
-                if (strpos($segments[0], ':') === false)
-                {
-                        if (isset($values[$segments[0]]['view']))
-                        {
-                                $vars['view'] = $segments[0];
+                                        $segments[] = $this->translate('edit');
+                                }
+                                else
+                                {
+                                        $segments[] = $this->translate('new');
+                                }
+                                unset($query['view']);
                         }
                         else
                         {
-                                $id = (int)$segments[0];
-                                $vars['view'] = $values[$item->query['view']]['view'];
-                                $vars['id'] = (int)$id; 
+                                if ($view == 'mediaitem' && isset($query['id']))
+                                {
+                                        unset($query['view']);
+                                }
+                                $segments[] = $this->translate($view);
+                                unset($query['view']);
                         }
 
-                        return $vars;
+                        // Setup an array to validate the alias. 
+                        $values = array(
+                            'album' => array('table' => 'hwdms_albums', 'view' => 'album'),
+                            'albumform' => array('table' => 'hwdms_albums', 'view' => 'album'),
+                            'category' => array('table' => 'categories', 'view' => 'category'),
+                            'categoryform' => array('table' => 'categories', 'view' => 'category'),
+                            'group' => array('table' => 'hwdms_groups', 'view' => 'group'),
+                            'groupform' => array('table' => 'hwdms_groups', 'view' => 'group'),                            
+                            'mediaitem' => array('table' => 'hwdms_media', 'view' => 'mediaitem'),
+                            'mediaform' => array('table' => 'hwdms_media', 'view' => 'mediaitem'),
+                            'playlist' => array('table' => 'hwdms_playlists', 'view' => 'playlist'),
+                            'playlistform' => array('table' => 'hwdms_playlists', 'view' => 'playlist'),
+                            'user' => array('table' => 'hwdms_users', 'view' => 'user'),
+                            'userform' => array('table' => 'hwdms_users', 'view' => 'user')
+                        );
+
+                        if (isset($query['id']))
+                        {
+                                // Make sure we have the id and the alias.
+                                if (strpos($query['id'], ':') === false && !empty($values[$view]['table']))
+                                {
+                                        $aquery = $db->getQuery(true)
+                                                 ->select('alias')
+                                                 ->from('#__' . $values[$view]['table'])
+                                                 ->where('id = ' . $db->quote((int) $query['id']));
+                                        try
+                                        {                
+                                                $db->setQuery($aquery);
+                                                $alias = $db->loadResult();
+                                                $query['id'] = (!empty($alias) ? $query['id'].':'.$alias : (int) $query['id']);
+                                        }
+                                        catch (Exception $e)
+                                        {
+                                                $query['id'] = (int) $query['id'];
+                                                // echo $e->getMessage();
+                                        }     
+                                }
+                                
+                                // Check for advanced link option, this removes the ID from the slug value.
+                                if ($advanced && strpos($query['id'], ':') !== false) 
+                                {
+                                        list($tmp, $id) = explode(':', $query['id'], 2);
+                                }
+                                else
+                                {
+                                        $id = $query['id'];
+                                }
+
+                                $segments[] = $id;
+                                unset($query['id']);
+                        } 
+                        else
+                        {
+                                // We should have id set for this view.  If we don't, it is an error.
+                                return $segments;
+                        }
                 }
                 else
                 {
-                        list($id, $alias) = explode(':', $segments[0], 2);
+                        $segments[] = $this->translate($view);
+                        unset($query['view']);
+                }
+                
+                // If the layout is specified and it is the same as the layout in the menu item, we
+                // unset it so it doesn't go into the query string.
+                if (isset($query['layout']))
+                {
+                        if ($menuItemGiven && isset($menuItem->query['layout']))
+                        {
+                                if ($query['layout'] == $menuItem->query['layout'])
+                                {
 
-                        if (empty($values[$item->query['view']]['table'])) return $vars;
-
-                        $query = 'SELECT alias FROM #__'.$values[$item->query['view']]['table'].' WHERE id = '.(int)$id;
-                        $db->setQuery($query);
-                        $row = $db->loadObject();
-
-                        if ($row) {
-                                if ($row->alias == $alias) {
-                                        $vars['view'] = $values[$item->query['view']]['view'];
-                                        $vars['id'] = (int)$id;
-
-                                        return $vars;
+                                        unset($query['layout']);
+                                }
+                        }
+                        else
+                        {
+                                if ($query['layout'] == 'default')
+                                {
+                                        unset($query['layout']);
                                 }
                         }
                 }
-	}
 
-	// If there was more than one segment, then we can determine where the URL points to
-	// because the first segment will have the target category id prepended to it.  If the
-	// last segment has a number prepended, it is an article, otherwise, it is a category.
-	if (!$advanced) {
-                $id = (int)$segments[$count - 1];
+                $variables = array(
+                    'album' => 'album_id',
+                    'category' => 'category_id',
+                    'group' => 'group_id',
+                    'playlist' => 'playlist_id',
+                );
+              
+                foreach($variables as $key => $variable)
+                {
+                        if(isset($query[$variable]))
+                        {
+                                $segments[] = $this->translate($key) . ':' . $query[$variable];
+                                unset($query[$variable]);
+                        }
+                }
 
-		if ($id > 0) {
-                        $vars['view'] = $segments[0];
-			$vars['id'] = $id;
-		} else {
-                        $vars['view'] = $segments[0];
-		}
+                return $segments;
+        }
 
-		return $vars;
-	}
-
-	foreach($segments as $segment)
+	/**
+	 * Parse the segments of a URL.
+	 *
+         * @access  public
+	 * @param   array  &$segments  The segments of the URL to parse.
+	 * @return  array  The URL attributes to be used by the application.
+	 */
+	public function parse(&$segments)
 	{
-		$segment = str_replace(':', '-', $segment);
-	}
+                // Initialise variables.
+                $db = JFactory::getDbo();            
+                $vars = array();
 
-	return $vars;
+                // Get the active menu item.
+                $app = JFactory::getApplication();
+                $menu = $app->getMenu();
+                $item = $menu->getActive();
+                $params = JComponentHelper::getParams('com_hwdmediashare');
+                $advanced = $params->get('sef_advanced_link', 1);
+
+                // Count route segments.
+                $count = count($segments);
+
+                if (!isset($item))
+                {
+                        // Standard routing for items. If we don't pick up an Itemid then we get the view from the segments
+                        // the first segment is the view and the last segment is the id of the item.
+                        $vars['view'] = $this->translate($segments[0], true);
+                        
+                        // Only define an id value if there is more than one segment.
+                        if ($count > 1) $vars['id'] = $segments[$count - 1];
+                }
+                else
+                {
+                        $routing = array(
+                            'media' =>      array('table' => 'hwdms_media', 'view' => 'mediaitem', 'form' => 'mediaform'),
+                            'mediaitem' =>  array('table' => 'hwdms_media', 'view' => 'mediaitem', 'form' => 'mediaform'),
+                            'categories' => array('table' => 'categories', 'view' => 'category', 'form' => 'categoryform'),
+                            'category' =>   array('table' => 'categories', 'view' => 'category', 'form' => 'categoryform'),
+                            'albums' =>     array('table' => 'hwdms_albums', 'view' => 'album', 'form' => 'albumform'),
+                            'album' =>      array('table' => 'hwdms_albums', 'view' => 'album', 'form' => 'albumform'),
+                            'groups' =>     array('table' => 'hwdms_groups', 'view' => 'group', 'form' => 'groupform'),
+                            'group' =>      array('table' => 'hwdms_groups', 'view' => 'group', 'form' => 'groupform'),
+                            'playlists' =>  array('table' => 'hwdms_playlists', 'view' => 'playlist', 'form' => 'playlistform'),
+                            'playlist' =>   array('table' => 'hwdms_playlists', 'view' => 'playlist', 'form' => 'playlistform'),
+                            'users' =>      array('table' => 'hwdms_users', 'view' => 'user', 'form' => 'userform'),
+                            'user' =>       array('table' => 'hwdms_users', 'view' => 'user', 'form' => 'userform')                         
+                        );
+
+                        if (isset($segments[0]) && isset($segments[1]) && $segments[0] == 'edit')
+                        {
+                                $vars['view'] = $routing[$item->query['view']]['form'];
+                                if ($advanced)
+                                {
+                                        $alias = JApplication::stringURLSafe($segments[1]);
+                                        $aquery = $db->getQuery(true)
+                                                 ->select('id')
+                                                 ->from('#__' . $routing[$item->query['view']]['table'])
+                                                 ->where('alias = ' . $db->quote($alias));
+                                        try
+                                        {                                        
+                                                $db->setQuery($aquery);
+                                                $vars['id'] = (int) $db->loadResult();
+                                        }
+                                        catch (Exception $e)
+                                        {
+                                                $vars['id'] = 0;
+                                                // echo $e->getMessage();
+                                        }
+                                }
+                                else
+                                {
+                                        if (strpos($segments[1], ':') === false)
+                                        {                            
+                                                $vars['id'] = (int) $segments[1]; 
+                                        }
+                                        else
+                                        {
+                                                list($id, $alias) = explode(':', $segments[1], 2);
+                                                $vars['id'] = (int) $id;
+                                        }
+                                }                                  
+                        }
+                        elseif (isset($segments[0]) && $segments[0] == 'new')
+                        {
+                                $vars['view'] = $routing[$item->query['view']]['new'];
+                        }
+                        else
+                        {                            
+                                if (isset($segments[0]) && isset($segments[1]) && $segments[0] == $this->translate('mediaitem'))
+                                {
+                                        $alias = JApplication::stringURLSafe($segments[1]); 
+                                        $item->query['view'] = 'mediaitem';   
+                                }
+                                else
+                                {
+                                        $alias = JApplication::stringURLSafe($segments[0]); 
+                                }
+                                
+                                if ($advanced)
+                                {
+                                        $aquery = $db->getQuery(true)
+                                                 ->select('id')
+                                                 ->from('#__' . $routing[$item->query['view']]['table'])
+                                                 ->where('alias = ' . $db->quote($alias));
+                                        try
+                                        {     
+                                                $db->setQuery($aquery);
+                                                $vars['view'] = $routing[$item->query['view']]['view'];
+                                                $vars['id'] = (int) $db->loadResult();
+                                        }
+                                        catch (Exception $e)
+                                        {
+                                                $vars['view'] = $routing[$item->query['view']]['view'];
+                                                $vars['id'] = 0;
+                                                // echo $e->getMessage();
+                                        } 
+
+                                        // Resolve situation where only the ID was passed.
+                                        if ($vars['id'] == 0 && (int) $alias > 0)
+                                        {
+                                                $vars['id'] = (int) $alias;
+                                        }
+                                }
+                                else
+                                {
+                                        if (strpos($segments[0], ':') === false)
+                                        {                            
+                                                $vars['view'] = $this->translate($segments[0], true);
+                                        }
+                                        else
+                                        {
+                                                list($id, $alias) = explode(':', $segments[0], 2);
+                                                $vars['view'] = $routing[$item->query['view']]['view'];
+                                                $vars['id'] = (int) $id;                                                  
+                                        }
+                                } 
+                        }
+                }
+
+                $variables = array(
+                    'category' => 'category_id',
+                    'album' => 'album_id',
+                    'display' => 'display',
+                );
+                
+                foreach($segments as $segment)
+                {
+                        if (strpos($segment, ':') !== false)
+                        {                            
+                                list($key, $value) = explode(':', $segment, 2);
+                                if(isset($variables[$key]))
+                                {
+                                        $vars[$variables[$key]] = $value;                                                  
+                                }
+                        }
+                }
+
+                return $vars;
+        }
+        
+	/**
+	 * Translates a term for use with SEF.
+	 *
+         * @access  public
+	 * @param   array    $string   The string to translate.
+	 * @param   boolean  $inverse  Inverse trace.
+	 * @return  array    The translated string.
+	 */
+	public function translate($string, $inverse = false)
+	{
+                // Translate URL strings here.
+                $segments = array(
+                //  Original           Translated
+                    'account'       => 'account',
+                    'album'         => 'album',
+                    'albumform'     => 'albumform',
+                    'albummedia'    => 'albummedia',
+                    'albums'        => 'albums',
+                    'categories'    => 'categories',
+                    'category'      => 'category',
+                    'categoryform'  => 'categoryform',
+                    'discover'      => 'discover',
+                    'group'         => 'group',
+                    'groupform'     => 'groupform',
+                    'groupmedia'    => 'groupmedia',
+                    'groupmembers'  => 'groupmembers',
+                    'groups'        => 'groups',
+                    'media'         => 'media',
+                    'mediaform'     => 'mediaform',
+                    'mediaitem'     => 'view',
+                    'playlist'      => 'playlist',
+                    'playlistform'  => 'playlistform',
+                    'playlistmedia' => 'playlistmedia',
+                    'playlists'     => 'playlists',
+                    'search'        => 'search',
+                    'slideshow'     => 'slideshow',
+                    'upload'        => 'upload',
+                    'user'          => 'user',
+                    'userform'      => 'userform',
+                    'user'          => 'user',
+                    
+                    'audio' => '',                    
+                    'document' => '',                    
+                    'image' => '',
+                    'video' => '',                    
+                );
+
+                if (!$inverse && isset($segments[$string]))
+                {
+                        return JApplication::stringURLSafe($segments[$string]);
+                }
+                elseif ($inverse && in_array($string, $segments))
+                {
+                        if ($key = array_search($string, $segments))
+                        {
+                                return JApplication::stringURLSafe($key);
+                        }
+                }
+                
+                return $string;
+        }        
 }
