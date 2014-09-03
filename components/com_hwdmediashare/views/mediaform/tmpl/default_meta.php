@@ -16,14 +16,14 @@ defined('_JEXEC') or die;
       <table class="table">
         <tbody>
         <?php if (!is_array($this->meta) || count($this->meta) == 0) : ?>
-          <tr class="cat-list-row<?php echo ($counter % 2);?>">
+          <tr>
             <td><?php echo JText::_('COM_HWDMS_NO_DATA'); ?></td>
           </tr>   
         <?php else : ?>
-          <?php foreach ($this->meta as $id => $item) : ?>
+          <?php foreach ($this->meta as $key => $value) : ?>
             <tr>
-              <td><?php echo ucwords($id); ?></a></td>
-              <td><?php echo ucwords($item); ?></td>
+              <td><?php echo JText::_($key); ?></a></td>
+              <td><?php echo $value; ?></td>
             </tr>
           <?php endforeach; ?>
         <?php endif; ?>
