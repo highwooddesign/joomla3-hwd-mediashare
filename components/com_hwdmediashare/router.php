@@ -126,7 +126,7 @@ class hwdMediaShareRouter extends JComponentRouterBase
                         }
 
                         // Setup an array to validate the alias. 
-                        $values = array(
+                        $routing = array(
                             'album' => array('table' => 'hwdms_albums', 'view' => 'album'),
                             'albumform' => array('table' => 'hwdms_albums', 'view' => 'album'),
                             'category' => array('table' => 'categories', 'view' => 'category'),
@@ -144,11 +144,11 @@ class hwdMediaShareRouter extends JComponentRouterBase
                         if (isset($query['id']))
                         {
                                 // Make sure we have the id and the alias.
-                                if (strpos($query['id'], ':') === false && !empty($values[$view]['table']))
+                                if (strpos($query['id'], ':') === false && !empty($routing[$view]['table']))
                                 {
                                         $aquery = $db->getQuery(true)
                                                  ->select('alias')
-                                                 ->from('#__' . $values[$view]['table'])
+                                                 ->from('#__' . $routing[$view]['table'])
                                                  ->where('id = ' . $db->quote((int) $query['id']));
                                         try
                                         {                
@@ -263,23 +263,38 @@ class hwdMediaShareRouter extends JComponentRouterBase
                 else
                 {
                         $routing = array(
-                            'media' =>      array('table' => 'hwdms_media', 'view' => 'mediaitem', 'form' => 'mediaform'),
-                            'mediaitem' =>  array('table' => 'hwdms_media', 'view' => 'mediaitem', 'form' => 'mediaform'),
-                            'categories' => array('table' => 'categories', 'view' => 'category', 'form' => 'categoryform'),
-                            'category' =>   array('table' => 'categories', 'view' => 'category', 'form' => 'categoryform'),
-                            'albums' =>     array('table' => 'hwdms_albums', 'view' => 'album', 'form' => 'albumform'),
-                            'album' =>      array('table' => 'hwdms_albums', 'view' => 'album', 'form' => 'albumform'),
-                            'groups' =>     array('table' => 'hwdms_groups', 'view' => 'group', 'form' => 'groupform'),
-                            'group' =>      array('table' => 'hwdms_groups', 'view' => 'group', 'form' => 'groupform'),
-                            'playlists' =>  array('table' => 'hwdms_playlists', 'view' => 'playlist', 'form' => 'playlistform'),
-                            'playlist' =>   array('table' => 'hwdms_playlists', 'view' => 'playlist', 'form' => 'playlistform'),
-                            'users' =>      array('table' => 'hwdms_users', 'view' => 'user', 'form' => 'userform'),
-                            'user' =>       array('table' => 'hwdms_users', 'view' => 'user', 'form' => 'userform')                         
+                            'account'       => array(),
+                            'album'         => array('table' => 'hwdms_albums', 'listview' => 'albums', 'itemview' => 'album', 'formview' => 'albumform'),
+                            'albumform'     => array('table' => 'hwdms_albums', 'listview' => 'albums', 'itemview' => 'album', 'formview' => 'albumform'),
+                            'albummedia'    => array(),
+                            'albums'        => array('table' => 'hwdms_albums', 'listview' => 'albums', 'itemview' => 'album', 'formview' => 'albumform'),
+                            'categories'    => array('table' => 'categories', 'listview' => 'categories', 'itemview' => 'category', 'formview' => 'categoryform'),
+                            'category'      => array('table' => 'categories', 'listview' => 'categories', 'itemview' => 'category', 'formview' => 'categoryform'),
+                            'categoryform'  => array('table' => 'categories', 'listview' => 'categories', 'itemview' => 'category', 'formview' => 'categoryform'),
+                            'discover'      => array(),
+                            'group'         => array('table' => 'hwdms_groups', 'listview' => 'groups', 'itemview' => 'group', 'formview' => 'groupform'),
+                            'groupform'     => array('table' => 'hwdms_groups', 'listview' => 'groups', 'itemview' => 'group', 'formview' => 'groupform'),
+                            'groupmedia'    => array(),
+                            'groupmembers'  => array(),
+                            'groups'        => array('table' => 'hwdms_groups', 'listview' => 'groups', 'itemview' => 'group', 'formview' => 'groupform'),
+                            'media'         => array('table' => 'hwdms_media', 'listview' => 'media', 'itemview' => 'mediaitem', 'formview' => 'mediaform'),
+                            'mediaform'     => array('table' => 'hwdms_media', 'listview' => 'media', 'itemview' => 'mediaitem', 'formview' => 'mediaform'),
+                            'mediaitem'     => array('table' => 'hwdms_media', 'listview' => 'media', 'itemview' => 'mediaitem', 'formview' => 'mediaform'),
+                            'playlist'      => array('table' => 'hwdms_playlists', 'listview' => 'playlists', 'itemview' => 'playlist', 'formview' => 'playlistform'),
+                            'playlistform'  => array('table' => 'hwdms_playlists', 'listview' => 'playlists', 'itemview' => 'playlist', 'formview' => 'playlistform'),
+                            'playlistmedia' => array(),
+                            'playlists'     => array('table' => 'hwdms_playlists', 'listview' => 'playlists', 'itemview' => 'playlist', 'formview' => 'playlistform'),
+                            'search'        => array(),
+                            'slideshow'     => array(),
+                            'upload'        => array(),
+                            'user'          => array('table' => 'hwdms_users', 'listview' => 'users', 'itemview' => 'user', 'formview' => 'userform'),
+                            'userform'      => array('table' => 'hwdms_users', 'listview' => 'users', 'itemview' => 'user', 'formview' => 'userform'),
+                            'users'          => array('table' => 'hwdms_users', 'listview' => 'users', 'itemview' => 'user', 'formview' => 'userform'),                      
                         );
 
-                        if (isset($segments[0]) && isset($segments[1]) && $segments[0] == 'edit')
+                        if (isset($segments[0]) && isset($segments[1]) && $segments[0] == $this->translate('edit'))
                         {
-                                $vars['view'] = $routing[$item->query['view']]['form'];
+                                $vars['view'] = $routing[$item->query['view']]['formview'];
                                 if ($advanced)
                                 {
                                         $alias = JApplication::stringURLSafe($segments[1]);
@@ -294,8 +309,9 @@ class hwdMediaShareRouter extends JComponentRouterBase
                                         }
                                         catch (Exception $e)
                                         {
-                                                $vars['id'] = 0;
                                                 // echo $e->getMessage();
+                                                JError::raiseError(404, JText::_('COM_HWDMS_ERROR_ITEM_NOT_FOUND'));
+                                                return $vars;                
                                         }
                                 }
                                 else
@@ -313,14 +329,14 @@ class hwdMediaShareRouter extends JComponentRouterBase
                         }
                         elseif (isset($segments[0]) && $segments[0] == 'new')
                         {
-                                $vars['view'] = $routing[$item->query['view']]['new'];
+                                $vars['view'] = $routing[$item->query['view']]['formview'];
                         }
                         else
-                        {                            
-                                if (isset($segments[0]) && isset($segments[1]) && $segments[0] == $this->translate('mediaitem'))
+                        {         
+                                if (isset($segments[0]) && isset($segments[1]) && isset($routing[$this->translate($segments[0], true)]))
                                 {
                                         $alias = JApplication::stringURLSafe($segments[1]); 
-                                        $item->query['view'] = 'mediaitem';   
+                                        $item->query['view'] = $this->translate($segments[0], true);   
                                 }
                                 else
                                 {
@@ -336,20 +352,29 @@ class hwdMediaShareRouter extends JComponentRouterBase
                                         try
                                         {     
                                                 $db->setQuery($aquery);
-                                                $vars['view'] = $routing[$item->query['view']]['view'];
+                                                $vars['view'] = $routing[$item->query['view']]['itemview'];
                                                 $vars['id'] = (int) $db->loadResult();
                                         }
                                         catch (Exception $e)
                                         {
-                                                $vars['view'] = $routing[$item->query['view']]['view'];
-                                                $vars['id'] = 0;
                                                 // echo $e->getMessage();
+                                                JError::raiseError(404, JText::_('COM_HWDMS_ERROR_ITEM_NOT_FOUND'));
+                                                return $vars; 
                                         } 
 
-                                        // Resolve situation where only the ID was passed.
-                                        if ($vars['id'] == 0 && (int) $alias > 0)
+                                        // Check if ID still hasn't been defined.
+                                        if (!isset($vars['id']) || $vars['id'] == 0)
                                         {
-                                                $vars['id'] = (int) $alias;
+                                                // Check if alias could be the ID.
+                                                if ((int) $alias == 0)
+                                                {
+                                                        JError::raiseError(404, JText::_('COM_HWDMS_ERROR_ITEM_NOT_FOUND'));
+                                                        return $vars;                                                      
+                                                }
+                                                else
+                                                {
+                                                        $vars['id'] = (int) $alias;
+                                                }
                                         }
                                 }
                                 else
@@ -361,7 +386,7 @@ class hwdMediaShareRouter extends JComponentRouterBase
                                         else
                                         {
                                                 list($id, $alias) = explode(':', $segments[0], 2);
-                                                $vars['view'] = $routing[$item->query['view']]['view'];
+                                                $vars['view'] = $routing[$item->query['view']]['itemview'];
                                                 $vars['id'] = (int) $id;                                                  
                                         }
                                 } 
@@ -369,9 +394,10 @@ class hwdMediaShareRouter extends JComponentRouterBase
                 }
 
                 $variables = array(
-                    'category' => 'category_id',
                     'album' => 'album_id',
-                    'display' => 'display',
+                    'category' => 'category_id',
+                    'group' => 'group_id',
+                    'playlist' => 'playlist_id',
                 );
                 
                 foreach($segments as $segment)
@@ -428,12 +454,7 @@ class hwdMediaShareRouter extends JComponentRouterBase
                     'upload'        => 'upload',
                     'user'          => 'user',
                     'userform'      => 'userform',
-                    'user'          => 'user',
-                    
-                    'audio' => '',                    
-                    'document' => '',                    
-                    'image' => '',
-                    'video' => '',                    
+                    'user'          => 'user',                   
                 );
 
                 if (!$inverse && isset($segments[$string]))
