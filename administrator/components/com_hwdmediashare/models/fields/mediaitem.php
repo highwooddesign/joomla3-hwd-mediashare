@@ -58,7 +58,7 @@ class JFormFieldMediaItem extends JFormField
 		// Select button script.
 		$script[] = '	function jSelectMedia_'.$this->id.'(id, title, catid, object) {';
 		$script[] = '		document.getElementById("'.$this->id.'_id").value = id;';
-		$script[] = '		document.getElementById("'.$this->id.'_name").value = title;';
+		$script[] = '		document.getElementById("'.$this->id.'_name").innerHTML = title;';
 
 		if ($allowClear)
 		{
@@ -77,7 +77,7 @@ class JFormFieldMediaItem extends JFormField
 
 			$script[] = '	function jClearMedia(id) {';
 			$script[] = '		document.getElementById(id + "_id").value = "";';
-			$script[] = '		document.getElementById(id + "_name").value = "'.htmlspecialchars(JText::_('COM_HWDMS_SELECT_MEDIA', true), ENT_COMPAT, 'UTF-8').'";';
+			$script[] = '		document.getElementById(id + "_name").innerHTML = "'.htmlspecialchars(JText::_('COM_HWDMS_SELECT_MEDIA', true), ENT_COMPAT, 'UTF-8').'";';
 			$script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
 			$script[] = '		return false;';
 			$script[] = '	}';
@@ -129,7 +129,7 @@ class JFormFieldMediaItem extends JFormField
 
 		// The current display field.
 		$html[] = '<span class="input-append">';
-		$html[] = '<input type="text" class="input-medium" id="'.$this->id.'_name" value="'.$title.'" disabled="disabled" size="35" />';
+		$html[] = '<span class="input-medium uneditable-input" id="'.$this->id.'_name">'.$title.'</span>';
 		$html[] = '<a class="modal btn hasTooltip" title="'.JHtml::tooltipText('COM_HWDMS_CHANGE_MEDIA').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> '.JText::_('JSELECT').'</a>';
 
 		// Clear button.
