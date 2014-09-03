@@ -114,8 +114,6 @@ class hwdMediaShareViewEditMedia extends JViewLegacy
 		{
 			JToolbarHelper::cancel('editmedia.cancel', 'JTOOLBAR_CLOSE');
 		}
-
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs'); 
 	}
         
