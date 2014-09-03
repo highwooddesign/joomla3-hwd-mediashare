@@ -115,7 +115,7 @@ class hwdMediaShareModelUsers extends JModelList
                 {
 			$query->where('a.published = '.(int) $published);
 		}
-                elseif ($published === '')
+                else
                 {
 			$query->where('(a.published IN (0, 1))');
 		}
