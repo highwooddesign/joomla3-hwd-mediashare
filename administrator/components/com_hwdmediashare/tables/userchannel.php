@@ -115,6 +115,11 @@ class hwdMediaShareTableUserChannel extends JTable
                                 }
                         }
 
+                        // Set default values.
+                        if (!isset($this->published)) $this->published = 1;
+                        if (!isset($this->featured)) $this->featured = 0;
+                        if (!isset($this->access)) $this->access = 1;
+                        
                         // Only allow users with permission to edit states.
                         if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
                         {
