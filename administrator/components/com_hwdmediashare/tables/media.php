@@ -134,6 +134,7 @@ class hwdMediaShareTableMedia extends JTable
                                 unset($this->status);
                                 unset($this->featured);
                                 unset($this->access);
+                                unset($this->download);
                         }                          
 		}
 		else
@@ -152,6 +153,12 @@ class hwdMediaShareTableMedia extends JTable
                                         return false;
                                 }
                         }
+                        
+                        // Set default values.
+                        if (!isset($this->published)) $this->published = 1;
+                        if (!isset($this->featured)) $this->featured = 0;
+                        if (!isset($this->access)) $this->access = 1;
+                        if (!isset($this->download)) $this->download = 1;
 
                         // Only allow users with permission to edit states.
                         if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
@@ -159,6 +166,7 @@ class hwdMediaShareTableMedia extends JTable
                                 $this->published = 1;
                                 $this->featured = 0;
                                 $this->access = 1;
+                                $this->download = 1;
                         } 
 
                         // Set approval status.
