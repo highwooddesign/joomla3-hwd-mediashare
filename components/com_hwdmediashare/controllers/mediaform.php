@@ -316,10 +316,10 @@ class hwdMediaShareControllerMediaForm extends JControllerForm
 		$mName		= 'mediaItem';
 
 		// Get and render the view.
-		if ($view = $this->getView($mName, $vFormat))
+		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
+			$model = $this->getModel($mName, 'hwdMediaShareModel', array('ignore_request' => false));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
