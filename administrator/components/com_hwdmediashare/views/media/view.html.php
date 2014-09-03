@@ -12,6 +12,14 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareViewMedia extends JViewLegacy
 {
+	protected $items;
+
+	protected $pagination;
+
+	protected $state;
+        
+	public $filterForm;
+        
 	/**
 	 * Display the view.
 	 *
@@ -80,26 +88,20 @@ class hwdMediaShareViewMedia extends JViewLegacy
 		}
 		if ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
 			JToolBarHelper::publish('media.publish', 'JTOOLBAR_PUBLISH', true);
 			JToolBarHelper::unpublish('media.unpublish', 'JTOOLBAR_UNPUBLISH', true);
 			JToolBarHelper::custom('media.feature', 'featured', 'featured', 'COM_HWDMS_FEATURE', true);
                         JToolBarHelper::custom('media.unfeature', 'unfeatured', 'unfeatured', 'COM_HWDMS_UNFEATURE', true);
-                        JToolBarHelper::divider();
 			JToolBarHelper::archiveList('media.archive');
 			JToolBarHelper::checkin('media.checkin');
 		}
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::deleteList('', 'media.delete', 'JTOOLBAR_EMPTY_TRASH');
-                        JToolBarHelper::divider();
                 }
 		elseif ($canDo->get('core.edit.state'))
                 {
-			JToolBarHelper::divider();
                         JToolBarHelper::trash('media.trash');
-                        JToolBarHelper::divider();
 		}
 		// Add a batch button.
 		if ($user->authorise('core.create', 'com_hwdmediashare') && $user->authorise('core.edit', 'com_hwdmediashare') && $user->authorise('core.edit.state', 'com_hwdmediashare'))
