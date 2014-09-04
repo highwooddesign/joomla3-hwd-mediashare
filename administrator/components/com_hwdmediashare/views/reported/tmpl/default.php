@@ -54,8 +54,8 @@ JHtml::_('behavior.modal');
                         <tr>
                                 <td>
                                         <div class="btn-group pull-right">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
-                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=users&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=channels&filter[status]=3'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn modal" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=channels&tmpl=component'); ?>" rel="{handler: 'iframe', size: {x: 800, y: 500}}"><i class="icon-cog"></i> <?php echo JText::_('COM_HWDMS_BTN_MANAGE'); ?></a>
                                         </div>                                       
                                         <?php echo JText::sprintf('COM_HWDMS_N_REPORTED_USERS', $this->users); ?>
                                 </td>
