@@ -41,7 +41,10 @@ class hwdMediaShareModelChannel extends JModelAdmin
                         $config = $hwdms->getConfig();
 
                         // Set title with value based on configuration.
-                        $item->title = $config->get('author') == 0 ? JFactory::getUser($item->id)->name : JFactory::getUser($item->id)->username;
+                        if (empty($item->title))
+                        {
+                                $item->title = $config->get('author') == 0 ? JFactory::getUser($item->id)->name : JFactory::getUser($item->id)->username;
+                        }    
                 }
 
 		return $item;
