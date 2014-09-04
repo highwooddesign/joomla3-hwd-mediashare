@@ -71,7 +71,7 @@ abstract class hwdMediaShareHelper
 		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_CHANNELS'),
 			'index.php?option=com_hwdmediashare&view=channels',
-			$submenu == 'users'
+			$submenu == 'channels'
 		);    
 		JHtmlSidebar::addEntry(
 			JText::_('COM_HWDMS_PLAYLISTS'),
