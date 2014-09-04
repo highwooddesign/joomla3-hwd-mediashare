@@ -91,12 +91,12 @@ class hwdMediaShareModelPending extends JModelLegacy
 	}
         
         /**
-	 * Method to count pending users.
+	 * Method to count pending channels.
          * 
          * @access  public
 	 * @return  mixed   An integer on success, false on failure.
 	 */
-	public function getUsers()
+	public function getChannels()
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
