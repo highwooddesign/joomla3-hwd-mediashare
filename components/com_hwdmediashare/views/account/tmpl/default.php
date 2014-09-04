@@ -12,9 +12,9 @@ defined('_JEXEC') or die;
 
 $user = JFactory::getUser();
 $uri = JFactory::getURI();
-$canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.user.'.$this->user->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.user.'.$this->user->id) && ($this->user->id == $user->id)));
-$canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.user.'.$this->user->id);
-$canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.user.'.$this->user->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.user.'.$this->user->id) && ($this->user->id == $user->id)));
+$canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.channel.'.$this->user->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.channel.'.$this->user->id) && ($this->user->id == $user->id)));
+$canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.channel.'.$this->user->id);
+$canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.channel.'.$this->user->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.channel.'.$this->user->id) && ($this->user->id == $user->id)));
 $canAddMedia = ($user->authorise('hwdmediashare.upload', 'com_hwdmediashare') || $user->authorise('hwdmediashare.import', 'com_hwdmediashare'));
 $canAddAlbum = $user->authorise('core.create', 'com_hwdmediashare');
 $canAddGroup = $user->authorise('core.create', 'com_hwdmediashare');
@@ -41,8 +41,8 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
       <h2 class="media-account-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
       <!-- Buttons -->
       <div class="btn-group pull-right">
-        <a title="<?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getUserRoute($user->id)); ?>" class="btn"><i class="icon-user"></i> <?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?></a>
-        <a title="<?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=userform.edit&id='.$user->id.'&return=' . $this->return); ?>" class="btn"><i class="icon-edit"></i> <?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?></a> 
+        <a title="<?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getChannelRoute($user->id)); ?>" class="btn"><i class="icon-user"></i> <?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?></a>
+        <a title="<?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=channelform.edit&id='.$user->id.'&return=' . $this->return); ?>" class="btn"><i class="icon-edit"></i> <?php echo JText::_('COM_HWDMS_EDIT_PROFILE'); ?></a> 
         <?php if ($canAddMedia) : ?>
         <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getUploadRoute()); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>

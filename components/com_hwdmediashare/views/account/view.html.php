@@ -61,7 +61,7 @@ class hwdMediaShareViewAccount extends JViewLegacy
                 }
                 
                 // Get data from the model.
-                $this->user = $this->get('User');
+                $this->user = $this->get('Channel');
                 $this->albums = $this->get('Albums');
                 $this->favourites = $this->get('Favourites');
                 $this->groups = $this->get('Groups');
