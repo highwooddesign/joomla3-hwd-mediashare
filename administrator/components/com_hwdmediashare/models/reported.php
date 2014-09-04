@@ -208,7 +208,7 @@ class hwdMediaShareModelReported extends JModelList
                                                 $table = JTable::getInstance('Playlist', 'hwdMediaShareTable');
                                         break;
                                         case 5: // Channel
-                                                $table = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                                $table = JTable::getInstance('Channel', 'hwdMediaShareTable');
                                         break;
                                 }
 
