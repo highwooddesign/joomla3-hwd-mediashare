@@ -164,12 +164,12 @@ class hwdMediaShareModelDashboard extends JModelLegacy
 	}
         
         /**
-	 * Method to count the number of user channels in the gallery.
+	 * Method to count the number of channels in the gallery.
          * 
          * @access  public
 	 * @return  mixed   An integer on success, false on failure.
 	 */
-	public function getUserCount()
+	public function getChannelCount()
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
