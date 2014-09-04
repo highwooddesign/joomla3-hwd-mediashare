@@ -25,7 +25,7 @@ class hwdMediaShareViewPending extends JViewLegacy
                 $this->media = $this->get('media');
                 $this->albums = $this->get('albums');
                 $this->groups = $this->get('groups');
-                $this->users = $this->get('users');
+                $this->channels = $this->get('channels');
                 $this->playlists = $this->get('playlists');
 
                 // Check for errors.
