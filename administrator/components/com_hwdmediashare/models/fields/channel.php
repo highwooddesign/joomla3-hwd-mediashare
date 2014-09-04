@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-class JFormFieldUserChannel extends JFormField
+class JFormFieldChannel extends JFormField
 {
 	/**
 	 * The name of the form field type.
@@ -18,7 +18,7 @@ class JFormFieldUserChannel extends JFormField
          * @access      protected
 	 * @var         string
 	 */
- 	protected $type = 'UserChannel';
+ 	protected $type = 'Channel';
 
 	/**
 	 * The name of the form field.
@@ -26,7 +26,7 @@ class JFormFieldUserChannel extends JFormField
          * @access      protected
 	 * @var         string
 	 */
- 	protected $name = 'userchannel';
+ 	protected $name = 'channel';
 
 	/**
 	 * The id of the form field.
@@ -34,7 +34,7 @@ class JFormFieldUserChannel extends JFormField
          * @access      protected
 	 * @var         string
 	 */
- 	protected $id = 'userchannel';
+ 	protected $id = 'channel';
 
 	/**
 	 * Method to get the field input markup.
@@ -56,7 +56,7 @@ class JFormFieldUserChannel extends JFormField
 		$script = array();
 
 		// Select button script.
-		$script[] = '	function jSelectUserChannel_'.$this->id.'(id, title, catid, object) {';
+		$script[] = '	function jSelectChannel_'.$this->id.'(id, title, catid, object) {';
 		$script[] = '		document.getElementById("'.$this->id.'_id").value = id;';
 		$script[] = '		document.getElementById("'.$this->id.'_name").innerHTML = title;';
 
@@ -75,9 +75,9 @@ class JFormFieldUserChannel extends JFormField
 		{
 			$scriptClear = true;
 
-			$script[] = '	function jClearUserChannel(id) {';
+			$script[] = '	function jClearChannel(id) {';
 			$script[] = '		document.getElementById(id + "_id").value = "";';
-			$script[] = '		document.getElementById(id + "_name").innerHTML = "'.htmlspecialchars(JText::_('COM_HWDMS_SELECT_USER_CHANNEL', true), ENT_COMPAT, 'UTF-8').'";';
+			$script[] = '		document.getElementById(id + "_name").innerHTML = "'.htmlspecialchars(JText::_('COM_HWDMS_SELECT_CHANNEL', true), ENT_COMPAT, 'UTF-8').'";';
 			$script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
 			$script[] = '		return false;';
 			$script[] = '	}';
@@ -88,7 +88,7 @@ class JFormFieldUserChannel extends JFormField
 
 		// Setup variables for display.
 		$html	= array();
-                $link   = 'index.php?option=com_hwdmediashare&amp;view=users&amp;layout=modal&amp;tmpl=component&amp;function=jSelectUserChannel_'.$this->id;
+                $link   = 'index.php?option=com_hwdmediashare&amp;view=channels&amp;layout=modal&amp;tmpl=component&amp;function=jSelectChannel_'.$this->id;
 
 		if (isset($this->element['language']))
 		{
@@ -113,7 +113,7 @@ class JFormFieldUserChannel extends JFormField
 
 		if (empty($title))
 		{
-			$title = JText::_('COM_HWDMS_SELECT_USER_CHANNEL');
+			$title = JText::_('COM_HWDMS_SELECT_CHANNEL');
 		}
 		$title = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
 
@@ -130,12 +130,12 @@ class JFormFieldUserChannel extends JFormField
 		// The current display field.
 		$html[] = '<span class="input-append">';
 		$html[] = '<span class="input-medium uneditable-input" id="'.$this->id.'_name">'.$title.'</span>';
-		$html[] = '<a class="modal btn hasTooltip" title="'.JHtml::tooltipText('COM_HWDMS_CHANGE_USER_CHANNEL').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> '.JText::_('JSELECT').'</a>';
+		$html[] = '<a class="modal btn hasTooltip" title="'.JHtml::tooltipText('COM_HWDMS_CHANGE_CHANNEL').'"  href="'.$link.'&amp;'.JSession::getFormToken().'=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> '.JText::_('JSELECT').'</a>';
 
 		// Clear button.
 		if ($allowClear)
 		{
-			$html[] = '<button id="'.$this->id.'_clear" class="btn'.($value ? '' : ' hidden').'" onclick="return jClearUserChannel(\''.$this->id.'\')"><span class="icon-remove"></span> ' . JText::_('JCLEAR') . '</button>';
+			$html[] = '<button id="'.$this->id.'_clear" class="btn'.($value ? '' : ' hidden').'" onclick="return jClearChannel(\''.$this->id.'\')"><span class="icon-remove"></span> ' . JText::_('JCLEAR') . '</button>';
 		}
 
 		$html[] = '</span>';

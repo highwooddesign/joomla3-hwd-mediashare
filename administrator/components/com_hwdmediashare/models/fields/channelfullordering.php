@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 JFormHelper::loadFieldClass('list');
 
-class JFormFieldUserChannelFullOrdering extends JFormFieldList
+class JFormFieldChannelFullOrdering extends JFormFieldList
 {
 	/**
 	 * The name of the form field type.
@@ -20,7 +20,7 @@ class JFormFieldUserChannelFullOrdering extends JFormFieldList
          * @access      protected
 	 * @var         string
 	 */
-	protected $type = 'UserChannelFullOrdering';
+	protected $type = 'ChannelFullOrdering';
 
 	/**
 	 * Method to get the field options.
