@@ -69,8 +69,8 @@ abstract class hwdMediaShareHelper
 			$submenu == 'groups'
 		);    
 		JHtmlSidebar::addEntry(
-			JText::_('COM_HWDMS_USER_CHANNELS'),
-			'index.php?option=com_hwdmediashare&view=users',
+			JText::_('COM_HWDMS_CHANNELS'),
+			'index.php?option=com_hwdmediashare&view=channels',
 			$submenu == 'users'
 		);    
 		JHtmlSidebar::addEntry(
@@ -94,7 +94,7 @@ abstract class hwdMediaShareHelper
 			$submenu == 'configuration'
 		); 
 		JHtmlSidebar::addEntry(
-			JText::_('COM_HWDMS_MEDIA_PROCESSING'),
+			JText::_('COM_HWDMS_PROCESSING'),
 			'index.php?option=com_hwdmediashare&view=processes',
 			$submenu == 'processes'
 		);  
