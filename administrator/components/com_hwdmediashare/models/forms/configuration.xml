@@ -214,10 +214,10 @@
                         <option value="0">JNO</option>
                 </field>               
                 <field
-			name="enable_user_channels"
+			name="enable_channels"
 			type="radio"
-			label="COM_HWDMS_ENABLE_USER_CHANNELS_LABEL"
-			description="COM_HWDMS_ENABLE_USER_CHANNELS_DESC"
+			label="COM_HWDMS_ENABLE_CHANNELS_LABEL"
+			description="COM_HWDMS_ENABLE_CHANNELS_DESC"
 			class="btn-group btn-group-yesno"
 			default="1"
 			validate="integer"
@@ -318,10 +318,10 @@
                         <option value="0">JNO</option>
                 </field>                  
                 <field
-			name="notify_new_user_channels"
+			name="notify_new_channels"
 			type="radio"
-			label="COM_HWDMS_NOTIFY_NEW_USER_CHANNELS_LABEL"
-			description="COM_HWDMS_NOTIFY_NEW_USER_CHANNELS_DESC"
+			label="COM_HWDMS_NOTIFY_NEW_CHANNELS_LABEL"
+			description="COM_HWDMS_NOTIFY_NEW_CHANNELS_DESC"
 			class="btn-group btn-group-yesno"
 			default="0"
 			validate="integer"
@@ -329,20 +329,7 @@
                 >
                         <option value="1">JYES</option>
                         <option value="0">JNO</option>
-                </field>                  
-                <field
-			name="notify_new_activities"
-			type="radio"
-			label="COM_HWDMS_NOTIFY_NEW_USER_ACTIVITIES_LABEL"
-			description="COM_HWDMS_NOTIFY_NEW_USER_ACTIVITIES_DESC"
-			class="btn-group btn-group-yesno"
-			default="0"
-			validate="integer"
-                        filter="integer"                        
-                >
-                        <option value="1">JYES</option>
-                        <option value="0">JNO</option>
-                </field>            
+                </field>                           
                 <field
 			name="approve_new_media"
 			type="radio"
@@ -396,10 +383,10 @@
                         <option value="0">JNO</option>
                 </field>      
                 <field
-			name="approve_new_user_channels"
+			name="approve_new_channels"
 			type="radio"
-			label="COM_HWDMS_APPROVE_NEW_USER_CHANNELS_LABEL"
-			description="COM_HWDMS_APPROVE_NEW_USER_CHANNELS_DESC"
+			label="COM_HWDMS_APPROVE_NEW_CHANNELS_LABEL"
+			description="COM_HWDMS_APPROVE_NEW_CHANNELS_DESC"
 			class="btn-group btn-group-yesno"
 			default="0"
 			validate="integer"
@@ -408,19 +395,6 @@
                         <option value="1">JYES</option>
                         <option value="0">JNO</option>
                 </field>  
-                <field
-			name="approve_new_activities"
-			type="radio"
-			label="COM_HWDMS_APPROVE_NEW_ACTIVITIES_LABEL"
-			description="COM_HWDMS_APPROVE_NEW_ACTIVITIES_DESC"
-			class="btn-group btn-group-yesno"
-			default="0"
-			validate="integer"
-                        filter="integer"                        
-                >
-                        <option value="1">JYES</option>
-                        <option value="0">JNO</option>
-                </field> 
                 <field
 			name="channel_auto_create"
 			type="radio"
