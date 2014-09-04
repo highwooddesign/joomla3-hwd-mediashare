@@ -24,7 +24,7 @@ JHtml::_('behavior.framework', true);
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
 ?>              
-<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=users&tmpl=component&id=' . $app->input->get('id', 0, 'integer'));?>" method="post" name="adminForm" id="adminForm" class="form-inline">
+<form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=reported&layout=channels&tmpl=component&id=' . $app->input->get('id', 0, 'integer'));?>" method="post" name="adminForm" id="adminForm" class="form-inline">
 <?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
@@ -60,14 +60,14 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 				<td>  
                                         <?php echo JHtml::_('HwdGrid.id', $i, $item->id, 'cb', false, 'cid', 'hide'); ?>
                                         <div class="pull-right label"><?php echo $this->getReportType($item); ?></div>
-                                        <p><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=user.edit&id=' . $item->element_id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>" target="_blank"><?php echo $this->escape($item->title); ?></a></p>
+                                        <p><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=channel.edit&id=' . $item->element_id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>" target="_blank"><?php echo $this->escape($item->title); ?></a></p>
                                         <div class="small">
                                                 <blockquote><?php echo $this->escape($item->description); ?></blockquote> 
                                         </div>  
                                         <div class="btn-group">
                                                 <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.dismiss')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_DISMISS_REPORT'); ?></a>                                            
                                                 <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.remove')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_REMOVE_CHANNEL'); ?></a>                                            
-                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=user.edit&id=' . $item->element_id); ?>" target="_blank" class="btn btn-mini"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW_CHANNEL'); ?></a>                                            
+                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=channel.edit&id=' . $item->element_id); ?>" target="_blank" class="btn btn-mini"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW_CHANNEL'); ?></a>                                            
                                         </div>  
 				</td>
 				<td class="center">
