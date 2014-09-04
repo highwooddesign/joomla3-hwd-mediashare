@@ -32,9 +32,9 @@
 			<link><![CDATA[index.php?option=com_hwdmediashare&view=playlists]]></link>
 		</item>
 		<item>
-			<name>User Channels</name>
+			<name>Channels</name>
 			<alias>channels</alias>
-			<link><![CDATA[index.php?option=com_hwdmediashare&view=users]]></link>
+			<link><![CDATA[index.php?option=com_hwdmediashare&view=channels]]></link>
 		</item>
 		<item>
 			<name>Upload</name>
