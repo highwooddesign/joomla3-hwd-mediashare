@@ -704,7 +704,7 @@
 			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
 		</field> 
 		<field
-			name="menu_bind_users"
+			name="menu_bind_channels"
 			type="menuitem"
 			label="COM_HWDMS_CHANNELS_PAGE_LABEL"
 			description="COM_HWDMS_CHANNELS_PAGE_DESC"
@@ -715,7 +715,7 @@
 			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
 		</field> 
 		<field
-			name="menu_bind_user"
+			name="menu_bind_channel"
 			type="menuitem"
 			label="COM_HWDMS_CHANNEL_PAGE_LABEL"
 			description="COM_HWDMS_CHANNEL_PAGE_DESC"
