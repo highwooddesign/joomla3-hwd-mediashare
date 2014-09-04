@@ -32,7 +32,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                 <div class="pull-left">
                         <?php if ($canEdit) : ?>
                                 <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=subscription.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
-                                        <?php echo $this->escape($item->element_id); ?></a>
+                                        <?php echo $item->element->title ? $this->escape($item->element->title) : $item->element_id; ?></a>
                         <?php else : ?>
                                 <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->element_id); ?></span>
                         <?php endif; ?>
