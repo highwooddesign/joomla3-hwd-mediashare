@@ -66,8 +66,8 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                         </div>  
                                         <div class="btn-group">
                                                 <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.dismiss')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_DISMISS_REPORT'); ?></a>                                            
-                                                <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.remove')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_REMOVE_USER_CHANNEL'); ?></a>                                            
-                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=user.edit&id=' . $item->element_id); ?>" target="_blank" class="btn btn-mini"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW_USER_CHANNEL'); ?></a>                                            
+                                                <a href="javascript:void(0);" onclick="return listItemTask('cb<?php echo $i; ?>', 'report.remove')" class="btn btn-mini"><i class="icon-trash"></i> <?php echo JText::_('COM_HWDMS_BTN_REMOVE_CHANNEL'); ?></a>                                            
+                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=user.edit&id=' . $item->element_id); ?>" target="_blank" class="btn btn-mini"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW_CHANNEL'); ?></a>                                            
                                         </div>  
 				</td>
 				<td class="center">
