@@ -20,16 +20,16 @@
 			type="hidden"
 			label="COM_HWDMS_ELEMENT_LABEL"
 			description="COM_HWDMS_ELEMENT_DESC"
+			required="true"
 			default="5"
                         validate="integer"
                         filter="integer"                        
                 />
                 <field
-			name="element_id"
+			name="element_id_5"
 			type="channel"
 			label="COM_HWDMS_CHANNEL_LABEL"
 			description="COM_HWDMS_CHANNEL_DESC"
-			required="true"
                         validate="integer"
                         filter="integer"  
 		/>
@@ -38,6 +38,7 @@
                         type="user"
 			label="COM_HWDMS_SUBSCRIBER_LABEL"
                         description="COM_HWDMS_SUBSCRIBER_DESC"
+			required="true"
                 />
 	</fieldset>
 </form>
