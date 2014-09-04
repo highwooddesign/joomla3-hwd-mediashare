@@ -68,10 +68,6 @@ class hwdMediaShareViewSubscription extends JViewLegacy
 			JToolbarHelper::apply('subscription.apply');
 			JToolbarHelper::save('subscription.save');
 		}
-		if (count($user->getAuthorisedCategories('com_hwdmediashare', 'core.create')))
-		{
-			JToolbarHelper::save2new('subscription.save2new');
-		}
 		if (empty($this->item->id))
 		{
 			JToolbarHelper::cancel('subscription.cancel');
