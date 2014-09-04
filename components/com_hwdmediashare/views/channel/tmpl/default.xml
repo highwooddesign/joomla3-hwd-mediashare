@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+        <layout title="COM_HWDMEDIASHARE_CHANNEL_VIEW_DEFAULT_TITLE">
+                <message>COM_HWDMEDIASHARE_CHANNEL_VIEW_DEFAULT_DESC</message>
+        </layout>
+	<fields 
+                name="request" 
+                addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        >
+		<fieldset name="request">
+			<field 
+                                name="id" 
+                                type="channel"
+				label="COM_HWDMS_CHANNEL_LABEL"
+                                description="COM_HWDMS_CHANNEL_DESC"
+				required="true"
+			/>
+		</fieldset>
+	</fields> 
+</metadata>
