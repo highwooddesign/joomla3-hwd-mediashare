@@ -25,7 +25,6 @@ class hwdMediaShareModelUsers extends JModelList
                 $query = $db->getQuery(true);
 
 		// Select the required fields from the table.
-                // Select DISTINCT ID to avoid duplicates when joining over subscription lists.
 		$query->select(
 			$this->getState(
 				'list.select',
