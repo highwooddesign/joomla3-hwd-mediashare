@@ -121,7 +121,7 @@ class hwdMediaShareModelFile extends JModelAdmin
                                         $element = JTable::getInstance('Playlist', 'hwdMediaShareTable');
                                 break;
                                 case 5: // Channel
-                                        $element = JTable::getInstance('UserChannel', 'hwdMediaShareTable');
+                                        $element = JTable::getInstance('Channel', 'hwdMediaShareTable');
                                 break;
                                 case 6: // Category
                                         $element = JTable::getInstance('Category', 'hwdMediaShareTable');
