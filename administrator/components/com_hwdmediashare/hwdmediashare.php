@@ -16,11 +16,11 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_hwdmediashare'))
 	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-// Require helper file.
-JLoader::register('hwdMediaShareHelper', dirname(__FILE__).'/helpers/hwdmediashare.php');
-
 // Require hwdMediaShare factory.
 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+
+// Require helper file.
+JLoader::register('hwdMediaShareHelper', dirname(__FILE__).'/helpers/hwdmediashare.php');
 
 // Get an instance of the controller.
 $controller = JControllerLegacy::getInstance('hwdMediaShare');
