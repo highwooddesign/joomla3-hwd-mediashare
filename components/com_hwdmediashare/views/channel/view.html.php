@@ -102,6 +102,7 @@ class hwdMediaShareViewChannel extends JViewLegacy
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
                 hwdMediaShareFactory::load('activities');
+                hwdMediaShareFactory::load('thumbnails');
                 hwdMediaShareHelperNavigation::setJavascriptVars();
 
                 $this->channel->numalbums = $this->get('numAlbums');
