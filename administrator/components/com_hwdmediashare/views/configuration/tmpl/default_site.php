@@ -94,8 +94,8 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('enable_groups'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('enable_user_channels'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('enable_user_channels'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('enable_channels'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('enable_channels'); ?></div>
                         </div>
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('enable_playlists'); ?></div>
@@ -129,12 +129,8 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('notify_new_playlists'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('notify_new_user_channels'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('notify_new_user_channels'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('notify_new_activities'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('notify_new_activities'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('notify_new_channels'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('notify_new_channels'); ?></div>
                         </div>
                 </fieldset>
                 <fieldset class="form-horizontal">
@@ -156,12 +152,8 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('approve_new_playlists'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('approve_new_user_channels'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('approve_new_user_channels'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('approve_new_activities'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('approve_new_activities'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('approve_new_channels'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('approve_new_channels'); ?></div>
                         </div>
                 </fieldset>
                 <fieldset class="form-horizontal">
