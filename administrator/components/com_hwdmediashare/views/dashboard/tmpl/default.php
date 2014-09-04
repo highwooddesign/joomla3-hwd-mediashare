@@ -121,7 +121,7 @@ JHtml::_('behavior.modal');
                                 </div>
                                 <div class="row-fluid">
                                         <div class="span12">
-                                                <a href="index.php?option=com_hwdmediashare&view=users"><i class="icon-user"></i> <span><?php echo JText::sprintf('COM_HWDMS_USER_CHANNELS_COUNTN', $this->numchannels); ?></span></a>
+                                                <a href="index.php?option=com_hwdmediashare&view=users"><i class="icon-user"></i> <span><?php echo JText::sprintf('COM_HWDMS_CHANNELS_COUNTN', $this->numchannels); ?></span></a>
                                         </div>
                                 </div>
                                 <div class="row-fluid">
