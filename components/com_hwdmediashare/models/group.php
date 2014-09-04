@@ -310,7 +310,7 @@ class hwdMediaShareModelGroup extends JModelList
 	public function getMembers()
 	{
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $this->_model = JModelLegacy::getInstance('Members', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->_model = JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->_model->populateState();
                 $this->_model->setState('filter.group_id', $this->getState('filter.group_id'));
 
