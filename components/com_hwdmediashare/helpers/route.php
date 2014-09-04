@@ -69,7 +69,7 @@ class hwdMediaShareHelperRoute
                 if (!$config->get('enable_categories')    && (in_array($app->input->get('view', '', 'word'), array('categories', 'category', 'categoryform')))) $enabled = false;
                 if (!$config->get('enable_albums')        && (in_array($app->input->get('view', '', 'word'), array('albums', 'album', 'albumform')))) $enabled = false;
                 if (!$config->get('enable_groups')        && (in_array($app->input->get('view', '', 'word'), array('groups', 'group', 'groupform')))) $enabled = false;
-                if (!$config->get('enable_user_channels') && (in_array($app->input->get('view', '', 'word'), array('users', 'user', 'userform')))) $enabled = false;
+                if (!$config->get('enable_channels')      && (in_array($app->input->get('view', '', 'word'), array('users', 'user', 'userform')))) $enabled = false;
                 if (!$config->get('enable_playlists')     && (in_array($app->input->get('view', '', 'word'), array('playlists', 'playlist', 'playlistform')))) $enabled = false;
                 
                 if (!$enabled)
@@ -390,11 +390,11 @@ class hwdMediaShareHelperRoute
                 }
                 
 		$needles = array(
-			'user'  => array((int) $id),
-			'users'  => null
+			'channel'  => array((int) $id),
+			'channels'  => null
 		);
 
-                return self::_buildUrl('index.php?option=com_hwdmediashare&view=user&id=' . $id, $params, $needles);
+                return self::_buildUrl('index.php?option=com_hwdmediashare&view=channel&id=' . $id, $params, $needles);
         }
         
 	/**
@@ -414,11 +414,11 @@ class hwdMediaShareHelperRoute
                 }
                 
 		$needles = array(
-			'user'  => array((int) $id),
-			'users'  => null
+			'channel'  => array((int) $id),
+			'channels'  => null
 		);
 
-                return self::_buildUrl('index.php?option=com_hwdmediashare&view=user&id=' . $id, $params, $needles);
+                return self::_buildUrl('index.php?option=com_hwdmediashare&view=channel&id=' . $id, $params, $needles);
         }
         
 	/**
@@ -429,13 +429,13 @@ class hwdMediaShareHelperRoute
          * @param   array   $params An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
-	public static function getUsersRoute($params = array())
+	public static function getChannelsRoute($params = array())
 	{
 		$needles = array(
-			'users'  => null
+			'channels'  => null
 		);
                 
-                return self::_buildUrl('index.php?option=com_hwdmediashare&view=users', $params, $needles);
+                return self::_buildUrl('index.php?option=com_hwdmediashare&view=channels', $params, $needles);
 	}
 
 	/**
@@ -459,15 +459,16 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
+         * @param   array   $params An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
-	public static function getUploadRoute()
+	public static function getUploadRoute($params = array())
 	{
 		$needles = array(
 			'upload'  => null
 		);
                 
-                return self::_buildUrl('index.php?option=com_hwdmediashare&view=account&layout=media', array(), $needles);
+                return self::_buildUrl('index.php?option=com_hwdmediashare&view=upload', $params, $needles);
 	}        
 
 	/**
@@ -544,17 +545,38 @@ class hwdMediaShareHelperRoute
 		{
                         foreach ($needles as $view => $ids)
                         {
-                                if ($view == 'mediaitem' && isset($ids[0]))
-                                {
+                                if ($view == 'mediaitem' && is_array($ids))
+                                {                                    
                                         //@TODO: Check impact on performace.
                                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                         $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                        $table->load($ids[0]);
+                                        $table->load(reset($ids));
+                                        
                                         $properties = $table->getProperties(1);
                                         $media = JArrayHelper::toObject($properties, 'JObject');
+                                        
+                                        // Get the categories.
+                                        hwdMediaShareFactory::load('category');
+                                        $cat = hwdMediaShareCategory::getInstance();
+                                        $categories = $cat->load($media);
+
+                                        // If media is assigned only to one category, then search for associated menu link.
+                                        if (count($categories) == 1)
+                                        {
+                                                $needles = array(
+                                                        'category'  => array(reset($categories)->id)
+                                                );
+                
+                                                if ($category = self::_findItem($needles)) 
+                                                {
+                                                        return $category;
+                                                }                                            
+                                        }
+                                        
+                                        // Get the media type.
                                         hwdMediaShareFactory::load('media');
                                         $type = hwdMediaShareMedia::loadMediaType($media);
-                                
+
                                         if ($config->get('menu_bind_'.$view.$type) > 1) return $config->get('menu_bind_'.$view.$type);
                                 }
                         }  
