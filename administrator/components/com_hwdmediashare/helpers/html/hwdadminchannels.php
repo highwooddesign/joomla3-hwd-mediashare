@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-abstract class JHtmlHwdAdminUsers
+abstract class JHtmlHwdAdminChannels
 {
 	/**
 	 * Show the feature/unfeature links.
@@ -28,8 +28,8 @@ abstract class JHtmlHwdAdminUsers
 
 		// Array of image, task, title, action
 		$states	= array(
-			0	=> array('unfeatured',	'users.feature',	'COM_HWDMS_UNFEATURED',         'COM_HWDMS_TOGGLE_TO_FEATURE'),
-			1	=> array('featured',	'users.unfeature',	'COM_HWDMS_FEATURED',		'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
+			0	=> array('unfeatured',	'channels.feature',	'COM_HWDMS_UNFEATURED',         'COM_HWDMS_TOGGLE_TO_FEATURE'),
+			1	=> array('featured',	'channels.unfeature',	'COM_HWDMS_FEATURED',		'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -64,10 +64,10 @@ abstract class JHtmlHwdAdminUsers
 
 		// Array of image, task, title, action.
 		$states	= array(
-			0	=> array('unpublish',	'users.approve',	'COM_HWDMS_UNAPPROVED',         'COM_HWDMS_TOGGLE_TO_APPROVE'),
-			1	=> array('publish',	'users.unapprove',	'COM_HWDMS_APPROVED',		'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
-			2	=> array('pending',	'users.approve',	'COM_HWDMS_PENDING',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
-			3	=> array('not-ok',	'users.approve',	'COM_HWDMS_REPORTED',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			0	=> array('unpublish',	'channels.approve',	'COM_HWDMS_UNAPPROVED',         'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			1	=> array('publish',	'channels.unapprove',	'COM_HWDMS_APPROVED',		'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
+			2	=> array('pending',	'channels.approve',	'COM_HWDMS_PENDING',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			3	=> array('not-ok',	'channels.approve',	'COM_HWDMS_REPORTED',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
