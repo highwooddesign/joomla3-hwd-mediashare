@@ -11,9 +11,9 @@
 defined('_JEXEC') or die;
 
 // Base this model on the user model.
-require_once JPATH_SITE.'/components/com_hwdmediashare/models/user.php';
+require_once JPATH_SITE.'/components/com_hwdmediashare/models/channel.php';
 
-class hwdMediaShareModelAccount extends hwdMediaShareModelUser
+class hwdMediaShareModelAccount extends hwdMediaShareModelChannel
 {
 	/**
 	 * Method to set the filterFormName variable for the account pages, 
