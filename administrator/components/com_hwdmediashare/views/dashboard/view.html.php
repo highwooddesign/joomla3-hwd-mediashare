@@ -29,7 +29,7 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 $this->numcategories = $this->get('CategoryCount');
                 $this->numalbums = $this->get('AlbumCount');
                 $this->numgroups = $this->get('GroupCount');
-                $this->numchannels = $this->get('UserCount');
+                $this->numchannels = $this->get('ChannelCount');
                 $this->numplaylists = $this->get('PlaylistCount');
                 
                 // Import HWD libraries.
