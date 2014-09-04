@@ -1978,7 +1978,7 @@
                 />             
                 <field
 			name="list_order_channel"
-			type="userchannelfullordering"
+			type="channelfullordering"
 			label="COM_HWDMS_CHANNEL_ORDERING_LABEL"
 			description="COM_HWDMS_CHANNEL_ORDERING_DESC"
 			default="a.created DESC"
