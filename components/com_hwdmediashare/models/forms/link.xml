@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: link.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
 <form
-	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+        addfieldpath="/components/com_hwdmediashare/models/fields/"
 >
-	<fieldset
+	<fieldset 
                 name="details"
                 label="COM_HWDMS_DETAILS"
-                addfieldpath="/components/com_hwdmediashare/models/fields/"
         >
                 <field 
                         name="category_id" 
