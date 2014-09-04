@@ -122,12 +122,12 @@ class hwdMediaShareModelReported extends JModelList
 	}
         
         /**
-	 * Method to count reported users.
+	 * Method to count reported channels.
          * 
          * @access  public
 	 * @return  mixed   An integer on success, false on failure.
 	 */
-	public function getUsers()
+	public function getChannels()
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
@@ -311,7 +311,7 @@ class hwdMediaShareModelReported extends JModelList
                                 $this->setState('filter.element_type', 4);
                                 $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break;                      
-                        case 'users':
+                        case 'channels':
                                 $this->setState('filter.element_type', 5);
                                 $this->setState('filter.element_id', $app->input->get('id', '', 'int'));
                         break; 
