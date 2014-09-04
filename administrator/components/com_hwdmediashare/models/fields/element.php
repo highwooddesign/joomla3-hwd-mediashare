@@ -41,7 +41,7 @@ class JFormFieldElement extends JFormFieldList
                 if ($config->get('enable_albums'))          $options[] = JHtml::_('select.option', '2', JText::_('COM_HWDMS_ALBUM'));
                 if ($config->get('enable_groups'))          $options[] = JHtml::_('select.option', '3', JText::_('COM_HWDMS_GROUP'));
                 if ($config->get('enable_playlists'))       $options[] = JHtml::_('select.option', '4', JText::_('COM_HWDMS_PLAYLIST'));
-                if ($config->get('enable_user_channels'))   $options[] = JHtml::_('select.option', '5', JText::_('COM_HWDMS_USER_CHANNEL'));
+                if ($config->get('enable_channels'))        $options[] = JHtml::_('select.option', '5', JText::_('COM_HWDMS_CHANNEL'));
 
                 // Merge any additional options in the XML definition.
 		$options = array_merge(parent::getOptions(), $options);
