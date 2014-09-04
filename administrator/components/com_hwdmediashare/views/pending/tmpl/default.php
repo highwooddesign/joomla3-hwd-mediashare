@@ -50,7 +50,7 @@ JHtml::_('behavior.framework', true);
                         <tr>
                                 <td>
                                         <div class="btn-group pull-right">
-                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=users&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
+                                                <a class="btn" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=channels&filter[status]=2'); ?>"><i class="icon-eye"></i> <?php echo JText::_('COM_HWDMS_BTN_VIEW'); ?></a>
                                         </div>                                     
                                         <?php echo JText::sprintf('COM_HWDMS_N_PENDING_USERS', $this->users); ?>
                                 </td>
