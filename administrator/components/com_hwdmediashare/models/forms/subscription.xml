@@ -26,7 +26,7 @@
                 />
                 <field
 			name="element_id"
-			type="userchannel"
+			type="channel"
 			label="COM_HWDMS_CHANNEL_LABEL"
 			description="COM_HWDMS_CHANNEL_DESC"
 			required="true"
