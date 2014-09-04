@@ -398,7 +398,7 @@ class hwdMediaShareHelperRoute
         }
         
 	/**
-	 * Method to get the url to the a user channel.
+	 * Method to get the url to the a channel.
          * 
          * @access  public
          * @static
