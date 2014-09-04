@@ -28,7 +28,7 @@ class hwdMediaShareControllerSample extends JControllerLegacy
                 $numcategories = $model->getCategoryCount();
                 $numalbums = $model->getAlbumCount();
                 $numgroups = $model->getGroupCount();
-                $numchannels = $model->getUserCount();
+                $numchannels = $model->getChannelCount();
                 $numplaylists = $model->getPlaylistCount();
                 
                 if ($nummedia > 0 || $numcategories > 0 || $numalbums > 0 || $numgroups > 0 || $numchannels > 0 || $numplaylists > 0)
