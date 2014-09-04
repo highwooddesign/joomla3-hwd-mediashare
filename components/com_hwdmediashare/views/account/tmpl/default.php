@@ -23,19 +23,7 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
   <div id="hwd-container" class="<?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <!-- Media Navigation -->
-    <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
-    <!-- Media Main Navigation -->
-    <div class="media-accountmenu">
-      <ul class="media-accountnav">
-        <li class="media-accountnav-media"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=media'); ?>"><?php echo JText::_('COM_HWDMS_MY_MEDIA'); ?> (<?php echo $this->user->nummedia; ?>)</a></li>
-        <li class="media-accountnav-favourites"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=favourites'); ?>"><?php echo JText::_('COM_HWDMS_MY_FAVOURITES'); ?> (<?php echo $this->user->numfavourites; ?>)</a></li>
-        <?php if ($this->params->get('enable_albums')): ?><li class="media-accountnav-albums"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=albums'); ?>"><?php echo JText::_('COM_HWDMS_MY_ALBUMS'); ?> (<?php echo $this->user->numalbums; ?>)</a></li><?php endif; ?>
-        <?php if ($this->params->get('enable_groups')): ?><li class="media-accountnav-groups"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=groups'); ?>"><?php echo JText::_('COM_HWDMS_MY_GROUPS'); ?> (<?php echo $this->user->numgroups; ?>)</a></li><?php endif; ?>
-        <?php if ($this->params->get('enable_playlists')): ?><li class="media-accountnav-playlists"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=playlists'); ?>"><?php echo JText::_('COM_HWDMS_MY_PLAYLISTS'); ?> (<?php echo $this->user->numplaylists; ?>)</a></li><?php endif; ?>
-        <?php if ($this->params->get('enable_subscriptions')): ?><li class="media-accountnav-subscriptions"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=subscriptions'); ?>"><?php echo JText::_('COM_HWDMS_MY_SUBSCRIPTIONS'); ?> (<?php echo $this->user->numsubscriptions; ?>)</a></li><?php endif; ?>
-        <?php if ($this->params->get('enable_groups')): ?><li class="media-accountnav-memberships"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=memberships'); ?>"><?php echo JText::_('COM_HWDMS_MY_MEMBERSHIPS'); ?> (<?php echo $this->user->nummemberships; ?>)</a></li><?php endif; ?>
-      </ul>
-    </div>      
+    <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>    
     <!-- Media Header -->
     <div class="media-header">
       <h2 class="media-account-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
@@ -49,25 +37,37 @@ $canAddPlaylist = $user->authorise('core.create', 'com_hwdmediashare');
         <?php
         // Create dropdown items 
         if ($canAddAlbum) : 
-            JHtml::_('hwddropdown.add', 2, 'albumform'); 
+          JHtml::_('hwddropdown.add', 2, 'albumform'); 
         endif;                   
         if ($canAddGroup) : 
-            JHtml::_('hwddropdown.add', 3, 'groupform'); 
+          JHtml::_('hwddropdown.add', 3, 'groupform'); 
         endif;  
         if ($canAddPlaylist) : 
-            JHtml::_('hwddropdown.add', 4, 'playlistform'); 
+          JHtml::_('hwddropdown.add', 4, 'playlistform'); 
         endif;  
         // Render dropdown list
         echo JHtml::_('hwddropdown.render', $this->escape($this->user->title));
         ?>                    
       </div>        
       <div class="clear"></div>
+      <!-- Navigation -->
+      <div class="media-tabmenu">
+        <ul>
+          <li class="<?php echo ($this->layout == 'media' ? 'active ' : false); ?>media-tabmenu-media"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=media'); ?>"><?php echo JText::_('COM_HWDMS_MY_MEDIA'); ?> (<?php echo $this->user->nummedia; ?>)</a></li>
+          <li class="<?php echo ($this->layout == 'favourites' ? 'active ' : false); ?>media-tabmenu-favourites"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=favourites'); ?>"><?php echo JText::_('COM_HWDMS_MY_FAVOURITES'); ?> (<?php echo $this->user->numfavourites; ?>)</a></li>
+          <?php if ($this->params->get('enable_albums')): ?><li class="<?php echo ($this->layout == 'albums' ? 'active ' : false); ?>media-tabmenu-albums"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=albums'); ?>"><?php echo JText::_('COM_HWDMS_MY_ALBUMS'); ?> (<?php echo $this->user->numalbums; ?>)</a></li><?php endif; ?>
+          <?php if ($this->params->get('enable_groups')): ?><li class="<?php echo ($this->layout == 'groups' ? 'active ' : false); ?>media-tabmenu-groups"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=groups'); ?>"><?php echo JText::_('COM_HWDMS_MY_GROUPS'); ?> (<?php echo $this->user->numgroups; ?>)</a></li><?php endif; ?>
+          <?php if ($this->params->get('enable_playlists')): ?><li class="<?php echo ($this->layout == 'playlists' ? 'active ' : false); ?>media-tabmenu-playlists"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=playlists'); ?>"><?php echo JText::_('COM_HWDMS_MY_PLAYLISTS'); ?> (<?php echo $this->user->numplaylists; ?>)</a></li><?php endif; ?>
+          <?php if ($this->params->get('enable_subscriptions')): ?><li class="<?php echo ($this->layout == 'subscriptions' ? 'active ' : false); ?>media-tabmenu-subscriptions"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=subscriptions'); ?>"><?php echo JText::_('COM_HWDMS_MY_SUBSCRIPTIONS'); ?> (<?php echo $this->user->numsubscriptions; ?>)</a></li><?php endif; ?>
+          <?php if ($this->params->get('enable_groups')): ?><li class="<?php echo ($this->layout == 'memberships' ? 'active ' : false); ?>media-tabmenu-memberships"><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=account&layout=memberships'); ?>"><?php echo JText::_('COM_HWDMS_MY_MEMBERSHIPS'); ?> (<?php echo $this->user->nummemberships; ?>)</a></li><?php endif; ?>
+        </ul>
+      </div>      
       <!-- Search Filters -->
       <?php echo JLayoutHelper::render('search_tools', array('view' => $this), JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
       <div class="clear"></div>
     </div>
     <div class="media-list-view">
-        <?php echo JLayoutHelper::render($this->layout . '_manage', $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+      <?php echo JLayoutHelper::render($this->layout . '_manage', $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
     </div>    
     <!-- Pagination -->
     <div class="pagination"> <?php echo $this->pagination->getPagesLinks(); ?> </div>
