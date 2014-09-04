@@ -40,10 +40,10 @@ $isNew = $this->item->id == 0 ? true : false ;
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_HWDMS_SUBSCRIPTION_DETAILS', true)); ?>
                 <div class="control-group">
                         <div class="control-label">
-                                <?php echo $this->form->getLabel('element_id'); ?>
+                                <?php echo $this->form->getLabel('element_id_' . $this->form->getValue('element_type')); ?>
                         </div>
                         <div class="controls">
-                                <?php echo $this->form->getInput('element_id'); ?>
+                                <?php echo $this->form->getInput('element_id_' . $this->form->getValue('element_type')); ?>
                         </div>
                 </div> 
                 <div class="control-group">
@@ -60,5 +60,6 @@ $isNew = $this->item->id == 0 ? true : false ;
 		<input type="hidden" name="task" value="" />
 		<input type="hidden" name="return" value="<?php echo $input->get('return', null, 'base64'); ?>" />
 		<?php echo JHtml::_('form.token'); ?>
+                <?php echo $this->form->getInput('element_type'); ?>
         </div>
 </form>
