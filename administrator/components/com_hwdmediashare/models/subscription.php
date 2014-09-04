@@ -46,4 +46,23 @@ class hwdMediaShareModelSubscription extends JModelAdmin
 
 		return $form;
 	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @access  protected
+         * @return  mixed       The data for the form.
+	 */
+	protected function loadFormData()
+	{
+		// Check the session for previously entered form data.
+		$data = JFactory::getApplication()->getUserState('com_hwdmediashare.edit.subscription.data', array());
+
+		if (empty($data))
+		{
+			$data = $this->getItem();
+		}
+
+		return $data;
+	}
 }
