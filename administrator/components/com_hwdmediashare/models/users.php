@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 
-class hwdMediaShareModelMembers extends JModelList
+class hwdMediaShareModelUsers extends JModelList
 { 
 	/**
 	 * Method to get the database query.
@@ -42,6 +42,7 @@ class hwdMediaShareModelMembers extends JModelList
                 // Group over the key to prevent duplicates.
                 $query->group('a.id');
                 
+                // Filter by group members (allowing the display of users who have joined specific groups).
                 $groupId = $this->getState('filter.group_id');
                 if ($groupId > 0)
                 {
