@@ -300,12 +300,12 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('menu_bind_playlist'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_users'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_users'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_channels'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_channels'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_user'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_user'); ?></div>
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_channel'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_channel'); ?></div>
                         </div>
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_upload'); ?></div>
