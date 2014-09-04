@@ -105,10 +105,10 @@ class hwdMediaShareControllerCategories extends JControllerForm
                                 switch ($task)
                                 {
                                         case 'delete':
-                                                $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_DELETED', count($cid)));
+                                                $this->setMessage(JText::plural($this->text_prefix . '_N_CATEGORY_DELETED', count($cid)));
                                         break;
                                         default:
-                                                $this->setMessage(JText::plural($this->text_prefix . '_N_ITEMS_'.strtoupper($task).'ED', count($cid)));
+                                                $this->setMessage(JText::plural($this->text_prefix . '_N_CATEGORY_'.strtoupper($task).'ED', count($cid)));
                                 }
 			}
 			else
