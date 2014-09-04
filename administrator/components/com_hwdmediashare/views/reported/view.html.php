@@ -32,7 +32,7 @@ class hwdMediaShareViewReported extends JViewLegacy
                         case 'albums':
                         case 'groups':
                         case 'playlists':
-                        case 'users':
+                        case 'channels':
                                 $this->items = $this->get('Items');
                                 $this->pagination = $this->get('Pagination');
                                 $this->state = $this->get('State');
@@ -42,7 +42,7 @@ class hwdMediaShareViewReported extends JViewLegacy
                                 $this->albums = $this->get('albums');
                                 $this->groups = $this->get('groups');
                                 $this->playlists = $this->get('playlists');
-                                $this->users = $this->get('users');
+                                $this->channels = $this->get('channels');
                         break;
                 }
                 
