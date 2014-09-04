@@ -62,7 +62,46 @@ class hwdMediaShareModelSubscription extends JModelAdmin
 		{
 			$data = $this->getItem();
 		}
+                
+                // We define a dummy variable which is used to collect the element_id.                
+                if (is_array($data) && isset($data['element_type']) && isset($data['element_id']))
+                {
+                        $variable = 'element_id_' . $data->element_type;
+                        $data[$variable] = $data['element_id'];   
+                }
+                elseif(is_object($data) && isset($data->element_type) && isset($data->element_id))
+                {
+                        $variable = 'element_id_' . $data->element_type;
+                        $data->$variable = $data->element_id;  
+                }
 
 		return $data;
 	}
+
+	/**
+	 * Method to save the subscription form data.
+	 *
+	 * @access  public
+         * @param   array       $data  The form data.
+	 * @return  boolean     True on success, False on error.
+	 */
+	public function save($data)
+	{
+                // We define the element_id using the dummy variable value.
+                $data['element_id'] = (int) $data['element_id_' . $data['element_type']];
+                unset($data['element_id_' . $data['element_type']]);
+                
+		if ($data['element_id'] == 0)
+		{
+			$this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+			return false;
+		}
+
+                if (parent::save($data))
+                {
+                        return true;
+                }   
+
+		return false;
+	}        
 }
