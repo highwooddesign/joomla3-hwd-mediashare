@@ -31,6 +31,9 @@ abstract class JHtmlHwdImage
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
+                // Import HWD libraries.
+                hwdMediaShareFactory::load('thumbnails');
+                
                 $alt = $config->get('author') == 0 ? $user->name : $user->username;
 
                 return '<img src="' . JRoute::_(hwdMediaShareThumbnails::getAvatar($user)) . '" alt="' . $alt . '" width="' . $size . '" height="' . $size . '" '
