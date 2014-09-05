@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: default.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
 <metadata>
         <layout title="COM_HWDMEDIASHARE_SEARCH_VIEW_DEFAULT_TITLE">
                 <message>COM_HWDMEDIASHARE_SEARCH_VIEW_DEFAULT_DESC</message>
