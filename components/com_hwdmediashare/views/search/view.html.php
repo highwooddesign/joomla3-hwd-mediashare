@@ -1,197 +1,138 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 1032 2013-02-01 10:47:55Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      25-Nov-2011 16:54:01
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
-
-/**
- * HTML View class for the hwdMediaShare Component
- */
-class hwdMediaShareViewSearch extends JViewLegacy {
+class hwdMediaShareViewSearch extends JViewLegacy 
+{
+	public $items;
+        
+	public $state;
+        
+	public $params;
+        
+	public $filterForm; 
+        
+	/**
+	 * Display the view.
+	 *
+	 * @access  public
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @return  void
+	 */
 	public function display($tpl = null)
 	{
-		require_once JPATH_ROOT.'/administrator/components/com_search/helpers/search.php';
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get the type from the request.
+                $this->type = $app->input->get('type', 'media', 'word');
 
-		// Initialise some variables
-		$app        = JFactory::getApplication();
-		$pathway    = $app->getPathway();
-		$uri        = JFactory::getURI();
-                
-                hwdMediaShareFactory::load('downloads');
+                // Update the filterFormName state from the request.
+                $this->get('FilterFormName');
+                                
+                // Get data from the model.
+		$this->form = $this->get('Form');
+                $this->items = $this->get('Items');
+                $this->pagination = $this->get('Pagination');
+		$this->state = $this->get('State');
+		$this->params = $this->state->params;
+                $this->filterForm = $this->get('FilterForm');
 
-                // Load search language file
-                $lang =& JFactory::getLanguage();
-                $lang->load('com_search');
-                
-		$error      = null;
-		$rows       = null;
-		$results    = null;
-		$total      = 0;
-
-		// Get some data from the model
-		$area       = $this->get('area');
-		$state      = $this->get('state');
-		$searchword = $state->get('keyword');
-                $params     = &$state->params;
-                $form       = $this->get('Form');
-                
-                jimport( 'joomla.utilities.arrayhelper' );
-                
-                // Bind the form data
-                $form->bind(JArrayHelper::toObject(JRequest::get( 'get' )));
-                
-		// Limit searchword
-		$lang = JFactory::getLanguage();
-		$upper_limit = $lang->getUpperLimitSearchWord();
-		$lower_limit = $lang->getLowerLimitSearchWord();
-		//if (SearchHelper::limitSearchWord($searchword)) 
-                //{
-		//	$error = JText::sprintf('COM_SEARCH_ERROR_SEARCH_MESSAGE', $lower_limit, $upper_limit);
-		//}
-
-                // Instead of returning an error when the search term is too large, we just truncate it
-                // This enables us to perform "related" searches from the media item page
+                // Register classes.
+                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                $new_limit = $upper_limit*2;
-                $searchword = JHtmlString::truncate($searchword, $new_limit);
+
+                // Import HWD libraries.                
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('media');
+		hwdMediaShareFactory::load('utilities');
                 
-		// Sanatise searchword
-		if (SearchHelper::santiseSearchWord($searchword, $state->get('match')))
+                $this->total = $this->get('Total'); // The total number of results.
+                $this->time = $this->get('Time'); // The query execution time.
+                $this->status = $this->get('Status'); // True if a search query has been executed.
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+                $this->columns = $this->params->get('list_columns', 3);
+                $this->return = base64_encode(JFactory::getURI()->toString());
+                $this->display = $this->state->get('media.display', 'details');
+
+                // Check for errors.
+                if (count($errors = $this->get('Errors')))
                 {
-			$error = JText::_('COM_SEARCH_ERROR_IGNOREKEYWORD');
-		}
-
-		// built select lists
-		$orders = array();
-		$orders[] = JHtml::_('select.option',  'newest', JText::_('COM_SEARCH_NEWEST_FIRST'));
-		$orders[] = JHtml::_('select.option',  'oldest', JText::_('COM_SEARCH_OLDEST_FIRST'));
-		$orders[] = JHtml::_('select.option',  'popular', JText::_('COM_SEARCH_MOST_POPULAR'));
-		$orders[] = JHtml::_('select.option',  'alpha', JText::_('COM_SEARCH_ALPHABETICAL'));
-		// $orders[] = JHtml::_('select.option',  'category', JText::_('JCATEGORY'));
-
-		$lists = array();
-		$lists['ordering'] = JHtml::_('select.genericlist', $orders, 'ordering', 'class="inputbox"', 'value', 'text', $state->get('ordering'));
-
-		$searchphrases		= array();
-		$searchphrases[]	= JHtml::_('select.option',  'all', JText::_('COM_SEARCH_ALL_WORDS'));
-		$searchphrases[]	= JHtml::_('select.option',  'any', JText::_('COM_SEARCH_ANY_WORDS'));
-		$searchphrases[]	= JHtml::_('select.option',  'exact', JText::_('COM_SEARCH_EXACT_PHRASE'));
-		$lists['searchphrase' ] = JHtml::_('select.radiolist',  $searchphrases, 'searchphrase', '', 'value', 'text', $state->get('match'));
-
-		// Put the filtered results back into the model
-		$state->set('keyword', $searchword);
-		if ($error == null) 
-                {
-			$results	= $this->get('data');
-			$total		= $this->get('total');
-			$pagination	= $this->get('pagination');
-
-			require_once JPATH_SITE . '/components/com_content/helpers/route.php';
-
-			for ($i=0, $count = count($results); $i < $count; $i++)
-			{
-				$row = &$results[$i]->text;
-
-				if ($state->get('match') == 'exact') {
-					$searchwords = array($searchword);
-					$needle = $searchword;
-				}
-				else {
-					$searchworda = preg_replace('#\xE3\x80\x80#s', ' ', $searchword);
-					$searchwords = preg_split("/\s+/u", $searchworda);
- 					$needle = $searchwords[0];
-				}
-
-				$row = SearchHelper::prepareSearchContent($row, $needle);
-				$searchwords = array_unique($searchwords);
-				$searchRegex = '#(';
-				$x = 0;
-
-				foreach ($searchwords as $k => $hlword)
-				{
-					$searchRegex .= ($x == 0 ? '' : '|');
-					$searchRegex .= preg_quote($hlword, '#');
-					$x++;
-				}
-				$searchRegex .= ')#iu';
-
-				$row = preg_replace($searchRegex, '<span class="highlight">\0</span>', $row);
-
-				$result = &$results[$i];
-				if ($result->created) {
-					$created = JHtml::_('date',$result->created, JText::_('DATE_FORMAT_LC3'));
-				}
-				else {
-					$created = '';
-				}
-
-				$result->text		= JHtml::_('content.prepare', $result->text);
-				$result->created	= $created;
-				$result->count		= $i + 1;
-			}
-		}
-
-		//Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-
-		$this->assignRef('pagination',  $pagination);
-		$this->assignRef('results',	$results);
-		$this->assignRef('lists',	$lists);
-		$this->assignRef('params',	$params);
-                $this->assignRef('state',	$state);
-                $this->assignRef('form',	$form);
-                
-		$this->assign('ordering',	$state->get('ordering'));
-		$this->assign('searchword',	$searchword);
-		$this->assign('origkeyword',	$state->get('origkeyword'));
-		$this->assign('searchphrase',	$state->get('match'));
-		$this->assign('searcharea',	$area);
-
-		$this->assign('total',		$total);
-		$this->assign('error',		$error);
-		$this->assign('action',		$uri);
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
 
 		$this->_prepareDocument();
                 
+		// Display the template.
 		parent::display($tpl);
 	}
+        
 	/**
-	 * Prepares the document
+	 * Prepares the document.
+	 *
+         * @access  protected
+	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app	= JFactory::getApplication();
-                $menus	= $app->getMenu();
-		$title	= null;
+		$app = JFactory::getApplication();
+		$menus = $app->getMenu();
+		$pathway = $app->getPathway();
+		$title = null;
 
+                // Add page assets.
+                JHtml::_('bootstrap.framework');
+                JHtml::_('behavior.core');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->state->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// Define the page title and headings. 
 		$menu = $menus->getActive();
 		if ($menu)
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+                        $title = $this->params->get('page_title');
+                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_SEARCH'));
 		}
-                else
-                {
-			$this->params->def('page_heading', JText::_('COM_HWDMS_SEARCH'));
+		else
+		{
+                        $title = JText::_('COM_HWDMS_SEARCH');
+                        $heading = JText::_('COM_HWDMS_SEARCH');
 		}
-		$title = $this->params->get('page_title', '');
+
+                $this->params->set('page_title', $title);
+                $this->params->set('page_heading', $heading);
+                
+		// If the menu item does not concern this view then add a breadcrumb.
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'search'))
+		{       
+                        // Breadcrumb support.
+			$path = array(array('title' => JText::_('COM_HWDMS_SEARCH'), 'link' => ''));
+                                                
+			$path = array_reverse($path);
+			foreach($path as $item)
+			{
+				$pathway->addItem($item['title'], $item['link']);
+			}                    
+		}
+                
+		// Check for empty title and add site name when configured.
 		if (empty($title))
                 {
-			$title = JText::_('COM_HWDMS_SEARCH');
+			$title = $app->getCfg('sitename');
 		}
 		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
                 {
@@ -201,26 +142,31 @@ class hwdMediaShareViewSearch extends JViewLegacy {
                 {
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
-                $this->document->setTitle($title);
+                
+                // Set metadata.
+		$this->document->setTitle($title);
 
-		if ($this->params->get('meta_desc'))
-		{
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'search' && $this->params->get('menu-meta_description'))
+                {
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+                } 
+                elseif ($this->params->get('meta_desc'))
+                {
 			$this->document->setDescription($this->params->get('meta_desc'));
-		}
+                }   
 
-		if ($this->params->get('meta_keys'))
-		{
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'search' && $this->params->get('menu-meta_keywords'))
+                {
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+                } 
+		elseif ($this->params->get('meta_keys'))
+                {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
-		}
+                }
 
 		if ($this->params->get('meta_rights'))
-		{
+                {
 			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
-		}
-         	
-                if ($this->params->get('meta_author'))
-		{
-			//$this->document->setMetadata('author', $this->params->get('meta_author'));
-		}       
+                }   
 	}
 }
