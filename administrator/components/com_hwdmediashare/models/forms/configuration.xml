@@ -757,7 +757,38 @@
                         filter="integer"    
                 >
 			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field>                 
+		</field>         
+		<field
+			name="media_autoplay"
+			type="radio"
+			label="COM_HWDMS_MEDIA_AUTOPLAY_LABEL"
+			description="COM_HWDMS_MEDIA_AUTOPLAY_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+			validate="integer"
+                        filter="integer"
+                >
+			<option value="1">JYES</option>
+			<option value="0">JNO</option>
+		</field>   
+                <field
+			name="mediaitem_size"
+			type="text"
+			label="COM_HWDMS_MAXIMUM_MEDIA_SIZE_LABEL"
+			description="COM_HWDMS_MAXIMUM_MEDIA_SIZE_DESC"
+			default="500"
+                        validate="integer"
+                        filter="integer"
+                />      
+                <field
+			name="media_player"
+			type="player"
+			label="COM_HWDMS_MEDIA_PLAYER_LABEL"
+			description="COM_HWDMS_MEDIA_PLAYER_LABEL"
+			default="player_mejs"
+                >
+                        <option value="">COM_HWDMS_LIST_SELECT_PLAYER</option>
+                </field>                                                    
                 <field
 			name="fallback"
 			type="list"
@@ -771,28 +802,6 @@
                         <option value="2">COM_HWDMS_OPTION_HTML5_FALLBACK_FLASH</option>
                         <option value="3">COM_HWDMS_OPTION_FLASH_FALLBACK_HTML5</option>
                 </field> 
-                <field
-			name="media_player"
-			type="player"
-			label="COM_HWDMS_MEDIA_PLAYER_LABEL"
-			description="COM_HWDMS_MEDIA_PLAYER_LABEL"
-			default="player_mejs"
-                >
-                        <option value="">COM_HWDMS_LIST_SELECT_PLAYER</option>
-                </field>  
-		<field
-			name="media_autoplay"
-			type="radio"
-			label="COM_HWDMS_MEDIA_AUTOPLAY_LABEL"
-			description="COM_HWDMS_MEDIA_AUTOPLAY_DESC"
-			class="btn-group btn-group-yesno"
-			default="0"
-			validate="integer"
-                        filter="integer"
-                >
-			<option value="1">JYES</option>
-			<option value="0">JNO</option>
-		</field>
    		<field
 			name="video_quality"
 			type="list"
@@ -1460,66 +1469,6 @@
                         section="component"
                         validate="rules"
 		/>
-                <field 
-                        name="list_item_heading" 
-                        type="list" 
-                        label="COM_HWDMS_HEADING_LEVEL_LABEL"
-                        description="COM_HWDMS_HEADING_LEVEL_DESC"
-                        default="2"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">JH1</option>
-                        <option value="2">JH2</option>
-                        <option value="3">JH3</option>
-                        <option value="4">JH4</option>
-                        <option value="5">JH5</option>
-                        <option value="6">JH6</option>
-                </field>
-                <field
-			name="list_thumbnail_size"
-			type="list"
-			label="COM_HWDMS_THUMBNAIL_SIZE_LABEL"
-			description="COM_HWDMS_THUMBNAIL_SIZE_DESC"
-			default="4"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="2">COM_HWDMS_FILE_SQUARE_IMAGE</option>
-                        <option value="3">COM_HWDMS_FILE_THUMBNAIL_IMAGE</option>
-                        <option value="4">COM_HWDMS_FILE_SMALL_IMAGE</option>
-                        <option value="5">COM_HWDMS_FILE_MEDIUM1_IMAGE</option>
-                        <option value="6">COM_HWDMS_FILE_MEDIUM2_IMAGE</option>
-                        <option value="7">COM_HWDMS_FILE_LARGE_IMAGE</option>
-                </field>
-                <field
-			name="list_thumbnail_aspect"
-			type="list"
-			label="COM_HWDMS_THUMBNAIL_ASPECT_LABEL"
-			description="COM_HWDMS_THUMBNAIL_ASPECT_DESC"
-			default="169"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="0">COM_HWDMS_OPTION_MAINTAIN_ORIGINAL</option>
-                        <option value="43">COM_HWDMS_OPTION_43</option>
-                        <option value="169">COM_HWDMS_OPTION_169</option>
-                        <option value="11">COM_HWDMS_OPTION_11</option>
-                        <option value="1115">COM_HWDMS_OPTION_1115</option>
-                </field>                
-                <field
-			name="list_default_display"
-			type="list"
-			label="COM_HWDMS_DISPLAY_STYLE_LABEL"
-			description="COM_HWDMS_DISPLAY_STYLE_DESC"
-			default="details"
-			validate="word"
-                        filter="word"  
-                >
-                        <option value="details">COM_HWDMS_DETAILS</option>
-                        <option value="gallery">COM_HWDMS_GALLERY</option>
-                        <option value="list">COM_HWDMS_LIST</option>
-                </field>
                 <field
                         name="list_columns"
                         type="list"
@@ -1563,196 +1512,17 @@
 			<option value="100">J100</option>
 		</field>
                 <field
-			name="list_date_format"
-			type="text"
-			label="COM_HWDMS_DATE_FORMAT_LABEL"
-			description="COM_HWDMS_DATE_FORMAT_DESC"
-			default="d F Y"
-                />
-                <field 
-                        name="list_date_field" 
-                        type="list" 
-                        label="COM_HWDMS_DATE_FIELD_LABEL"
-                        description="COM_HWDMS_DATE_FIELD_LABEL"
-                        default="created"
+			name="list_default_display"
+			type="list"
+			label="COM_HWDMS_DISPLAY_STYLE_LABEL"
+			description="COM_HWDMS_DISPLAY_STYLE_DESC"
+			default="details"
+			validate="word"
+                        filter="word"  
                 >
-                        <option value="created">COM_HWDMS_OPTION_CREATED_DATE</option>
-                        <option value="modified">COM_HWDMS_OPTION_MODIFIED_DATE</option>
-                        <option value="publish_up">COM_HWDMS_OPTION_PUBLISHED_DATE</option>
-                </field>
-                <field 
-                        name="list_link_titles" 
-                        type="radio" 
-                        label="COM_HWDMS_LINKED_TITLES_LABEL"
-                        description="COM_HWDMS_LINKED_TITLES_LABEL"
-			class="btn-group btn-group-yesno"
-                        default="1"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">JYES</option>
-                        <option value="0">JNO</option>
-                </field>
-                <field 
-                        name="list_link_thumbnails" 
-                        type="radio" 
-                        label="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
-                        description="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
-			class="btn-group btn-group-yesno"
-                        default="1"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">JYES</option>
-                        <option value="0">JNO</option>
-                </field>
-                <field
-			name="list_title_truncate"
-			type="text"
-			label="COM_HWDMS_TRUNCATE_TITLE_LABEL"
-			description="COM_HWDMS_TRUNCATE_TITLE_DESC"
-			default="20"
-			validate="integer"
-                        filter="integer"
-                />
-                <field
-			name="list_desc_truncate"
-			type="text"
-			label="COM_HWDMS_TRUNCATE_DESC_LABEL"
-			description="COM_HWDMS_TRUNCATE_DESC_DESC"
-			default="40"
-			validate="integer"
-                        filter="integer"  
-                />
-                <field 
-                        name="list_tooltip_location" 
-                        type="list" 
-                        label="COM_HWDMS_TOOLTIP_LOCATION_LABEL"
-                        description="COM_HWDMS_TOOLTIP_LOCATION_DESC"
-                        default="2"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="3">COM_HWDMS_OPTION_GALLERY_TITLES_AND_THUMBS</option>
-                        <option value="2">COM_HWDMS_OPTION_GALLERY_AND_TITLES</option>
-                        <option value="1">COM_HWDMS_OPTION_GALLERY_ONLY</option>
-                        <option value="0">JHIDE</option>
-                </field>
-                <field 
-                        name="list_tooltip_contents" 
-                        type="list" 
-                        label="COM_HWDMS_TOOLTIP_CONTENTS_LABEL"
-                        description="COM_HWDMS_TOOLTIP_CONTENTS_DESC"
-                        default="0"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">COM_HWDMS_OPTION_TITLE_AND_DESCRIPTION</option>
-                        <option value="0">COM_HWDMS_OPTION_TITLE_ONLY</option>
-                </field>
-                <field
-			name="list_details_button"
-			type="radio"
-			label="COM_HWDMS_DETAILS_DISPLAY_BUTTON_LABEL"
-			description="COM_HWDMS_DETAILS_DISPLAY_BUTTON_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>                
-                <field
-			name="list_gallery_button"
-			type="radio"
-			label="COM_HWDMS_GALLERY_DISPLAY_BUTTON_LABEL"
-			description="COM_HWDMS_GALLERY_DISPLAY_BUTTON_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>                 
-                <field
-			name="list_list_button"
-			type="radio"
-			label="COM_HWDMS_LIST_DISPLAY_BUTTON_LABEL"
-			description="COM_HWDMS_LIST_DISPLAY_BUTTON_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer" 
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>                 
-                <field
-			name="list_tree_button"
-			type="radio"
-			label="COM_HWDMS_TREE_DISPLAY_BUTTON_LABEL"
-			description="COM_HWDMS_TREE_DISPLAY_BUTTON_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer" 
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>                  
-                <field
-			name="list_filter_search"
-			type="radio"
-			label="COM_HWDMS_HEADER_SEARCH_FILTER_LABEL"
-			description="COM_HWDMS_HEADER_SEARCH_FILTER_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>
-                <field
-			name="list_filter_media"
-			type="radio"
-			label="COM_HWDMS_HEADER_MEDIA_FILTER_LABEL"
-			description="COM_HWDMS_HEADER_MEDIA_FILTER_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>
-                <field
-			name="list_filter_ordering"
-			type="radio"
-			label="COM_HWDMS_HEADER_ORDERING_FILTER_LABEL"
-			description="COM_HWDMS_HEADER_ORDERING_FILTER_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>
-                <field
-			name="list_filter_pagination"
-			type="radio"
-			label="COM_HWDMS_HEADER_PAGINATION_FILTER_LABEL"
-			description="COM_HWDMS_HEADER_PAGINATION_FILTER_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
+                        <option value="details">COM_HWDMS_DETAILS</option>
+                        <option value="gallery">COM_HWDMS_GALLERY</option>
+                        <option value="list">COM_HWDMS_LIST</option>
                 </field>
                 <field
 			name="list_meta_title"
@@ -1897,6 +1667,240 @@
                         <option value="1">JSHOW</option>
                         <option value="0">JHIDE</option>
                 </field>
+                <field 
+                        name="list_item_heading" 
+                        type="list" 
+                        label="COM_HWDMS_HEADING_LEVEL_LABEL"
+                        description="COM_HWDMS_HEADING_LEVEL_DESC"
+                        default="2"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">JH1</option>
+                        <option value="2">JH2</option>
+                        <option value="3">JH3</option>
+                        <option value="4">JH4</option>
+                        <option value="5">JH5</option>
+                        <option value="6">JH6</option>
+                </field>
+                <field
+			name="list_thumbnail_size"
+			type="list"
+			label="COM_HWDMS_THUMBNAIL_SIZE_LABEL"
+			description="COM_HWDMS_THUMBNAIL_SIZE_DESC"
+			default="4"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="2">COM_HWDMS_FILE_SQUARE_IMAGE</option>
+                        <option value="3">COM_HWDMS_FILE_THUMBNAIL_IMAGE</option>
+                        <option value="4">COM_HWDMS_FILE_SMALL_IMAGE</option>
+                        <option value="5">COM_HWDMS_FILE_MEDIUM1_IMAGE</option>
+                        <option value="6">COM_HWDMS_FILE_MEDIUM2_IMAGE</option>
+                        <option value="7">COM_HWDMS_FILE_LARGE_IMAGE</option>
+                </field>
+                <field
+			name="list_thumbnail_aspect"
+			type="list"
+			label="COM_HWDMS_THUMBNAIL_ASPECT_LABEL"
+			description="COM_HWDMS_THUMBNAIL_ASPECT_DESC"
+			default="169"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="0">COM_HWDMS_OPTION_MAINTAIN_ORIGINAL</option>
+                        <option value="43">COM_HWDMS_OPTION_43</option>
+                        <option value="169">COM_HWDMS_OPTION_169</option>
+                        <option value="11">COM_HWDMS_OPTION_11</option>
+                        <option value="1115">COM_HWDMS_OPTION_1115</option>
+                </field>                
+                <field 
+                        name="list_link_titles" 
+                        type="radio" 
+                        label="COM_HWDMS_LINKED_TITLES_LABEL"
+                        description="COM_HWDMS_LINKED_TITLES_LABEL"
+			class="btn-group btn-group-yesno"
+                        default="1"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>
+                <field 
+                        name="list_link_thumbnails" 
+                        type="radio" 
+                        label="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
+                        description="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
+			class="btn-group btn-group-yesno"
+                        default="1"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>
+                <field
+			name="list_title_truncate"
+			type="text"
+			label="COM_HWDMS_TRUNCATE_TITLE_LABEL"
+			description="COM_HWDMS_TRUNCATE_TITLE_DESC"
+			default="20"
+			validate="integer"
+                        filter="integer"
+                />
+                <field
+			name="list_desc_truncate"
+			type="text"
+			label="COM_HWDMS_TRUNCATE_DESC_LABEL"
+			description="COM_HWDMS_TRUNCATE_DESC_DESC"
+			default="40"
+			validate="integer"
+                        filter="integer"  
+                />
+                <field 
+                        name="list_tooltip_location" 
+                        type="list" 
+                        label="COM_HWDMS_TOOLTIP_LOCATION_LABEL"
+                        description="COM_HWDMS_TOOLTIP_LOCATION_DESC"
+                        default="2"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="3">COM_HWDMS_OPTION_GALLERY_TITLES_AND_THUMBS</option>
+                        <option value="2">COM_HWDMS_OPTION_GALLERY_AND_TITLES</option>
+                        <option value="1">COM_HWDMS_OPTION_GALLERY_ONLY</option>
+                        <option value="0">JHIDE</option>
+                </field>
+                <field 
+                        name="list_tooltip_contents" 
+                        type="list" 
+                        label="COM_HWDMS_TOOLTIP_CONTENTS_LABEL"
+                        description="COM_HWDMS_TOOLTIP_CONTENTS_DESC"
+                        default="0"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">COM_HWDMS_OPTION_TITLE_AND_DESCRIPTION</option>
+                        <option value="0">COM_HWDMS_OPTION_TITLE_ONLY</option>
+                </field>  
+                <field
+			name="list_page_title"
+			type="radio"
+			label="COM_HWDMS_SHOW_TITLE_LABEL"
+			description="COM_HWDMS_SHOW_TITLE_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>  
+                <field
+			name="list_feature_button"
+			type="radio"
+			label="COM_HWDMS_SHOW_FEATURE_BUTTON_LABEL"
+			description="COM_HWDMS_SHOW_FEATURE_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field> 
+                <field
+			name="list_details_button"
+			type="radio"
+			label="COM_HWDMS_DETAILS_DISPLAY_BUTTON_LABEL"
+			description="COM_HWDMS_DETAILS_DISPLAY_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                
+                <field
+			name="list_gallery_button"
+			type="radio"
+			label="COM_HWDMS_GALLERY_DISPLAY_BUTTON_LABEL"
+			description="COM_HWDMS_GALLERY_DISPLAY_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                 
+                <field
+			name="list_list_button"
+			type="radio"
+			label="COM_HWDMS_LIST_DISPLAY_BUTTON_LABEL"
+			description="COM_HWDMS_LIST_DISPLAY_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer" 
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                 
+                <field
+			name="list_tree_button"
+			type="radio"
+			label="COM_HWDMS_TREE_DISPLAY_BUTTON_LABEL"
+			description="COM_HWDMS_TREE_DISPLAY_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer" 
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                  
+                <field
+			name="list_filter_search"
+			type="radio"
+			label="COM_HWDMS_SHOW_SEARCH_FILTER_LABEL"
+			description="COM_HWDMS_SHOW_SEARCH_FILTER_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>
+                <field
+			name="list_filter_ordering"
+			type="radio"
+			label="COM_HWDMS_SHOW_ORDERING_FILTER_LABEL"
+			description="COM_HWDMS_SHOW_ORDERING_FILTER_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>
+                <field
+			name="list_filter_pagination"
+			type="radio"
+			label="COM_HWDMS_SHOW_PAGINATION_FILTER_LABEL"
+			description="COM_HWDMS_SHOW_PAGINATION_FILTER_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>
                 <field
 			name="category_list_default_display"
 			type="list"
@@ -1997,45 +2001,6 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
-			name="item_meta_thumbnail"
-			type="radio"
-			label="COM_HWDMS_SHOW_THUMBNAIL_LABEL"
-			description="COM_HWDMS_SHOW_THUMBNAIL_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>
-                <field
-			name="item_meta_type_icon"
-			type="radio"
-			label="COM_HWDMS_SHOW_MEDIA_TYPE_ICON_LABEL"
-			description="COM_HWDMS_SHOW_MEDIA_TYPE_ICON_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer" 
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>   
-                <field
-			name="item_meta_media_count"
-			type="radio"
-			label="COM_HWDMS_SHOW_MEDIA_COUNT_LABEL"
-			description="COM_HWDMS_SHOW_MEDIA_COUNT_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field> 
-                <field
 			name="item_meta_description"
 			type="radio"
 			label="COM_HWDMS_SHOW_DESCRIPTION_LABEL"
@@ -2101,6 +2066,19 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
+			name="item_meta_media_count"
+			type="radio"
+			label="COM_HWDMS_SHOW_MEDIA_COUNT_LABEL"
+			description="COM_HWDMS_SHOW_MEDIA_COUNT_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field> 
+                <field
 			name="item_meta_report"
 			type="radio"
 			label="COM_HWDMS_SHOW_REPORT_LABEL"
@@ -2113,15 +2091,6 @@
                         <option value="1">JSHOW</option>
                         <option value="0">JHIDE</option>
                 </field> 
-                <field
-			name="mediaitem_size"
-			type="text"
-			label="COM_HWDMS_MAXIMUM_MEDIA_SIZE_LABEL"
-			description="COM_HWDMS_MAXIMUM_MEDIA_SIZE_DESC"
-			default="500"
-                        validate="integer"
-                        filter="integer"
-                />
                 <field
 			name="mediaitem_meta_title"
 			type="radio"
