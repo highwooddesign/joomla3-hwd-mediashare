@@ -547,18 +547,26 @@ class hwdMediaShareHelperRoute
                         {
                                 if ($view == 'mediaitem' && is_array($ids))
                                 {                                    
-                                        //@TODO: Check impact on performace.
+                                        // Get a table instance.
                                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                         $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                        $table->load(reset($ids));
                                         
+                                        // Attempt to load the table row.
+                                        $return = $table->load(reset($ids));
+
+                                        // Check for a table object error.
+                                        if ($return === false && $table->getError())
+                                        {
+                                                return null;
+                                        }
+
                                         $properties = $table->getProperties(1);
-                                        $media = JArrayHelper::toObject($properties, 'JObject');
+                                        $item = JArrayHelper::toObject($properties, 'JObject');
                                         
                                         // Get the categories.
                                         hwdMediaShareFactory::load('category');
                                         $cat = hwdMediaShareCategory::getInstance();
-                                        $categories = $cat->load($media);
+                                        $categories = $cat->load($item);
 
                                         // If media is assigned only to one category, then search for associated menu link.
                                         if (count($categories) == 1)
@@ -575,7 +583,7 @@ class hwdMediaShareHelperRoute
                                         
                                         // Get the media type.
                                         hwdMediaShareFactory::load('media');
-                                        $type = hwdMediaShareMedia::loadMediaType($media);
+                                        $type = hwdMediaShareMedia::loadMediaType($item);
 
                                         if ($config->get('menu_bind_'.$view.$type) > 1) return $config->get('menu_bind_'.$view.$type);
                                 }
