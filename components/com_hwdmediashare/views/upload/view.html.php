@@ -68,6 +68,7 @@ class hwdMediaShareViewUpload extends JViewLegacy
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
+		hwdMediaShareFactory::load('remote');
 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
