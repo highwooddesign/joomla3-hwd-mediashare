@@ -75,6 +75,7 @@ class hwdMediaShareModelReport extends JModelAdmin
 		// Access checks.
 		foreach ($pks as $i => $id)
 		{
+                        // Get a table instance.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('Report', 'hwdMediaShareTable');
                         
@@ -89,9 +90,9 @@ class hwdMediaShareModelReport extends JModelAdmin
                         }
                 
                         $properties = $table->getProperties(1);
-                        $report = JArrayHelper::toObject($properties, 'JObject');                      
+                        $item = JArrayHelper::toObject($properties, 'JObject');                      
                         
-                        switch ($report->element_type)
+                        switch ($item->element_type)
                         {
                                 case 1: // Media
                                         $query = $db->getQuery(true)->update($db->quoteName('#__hwdms_media'));
@@ -114,7 +115,7 @@ class hwdMediaShareModelReport extends JModelAdmin
                         {
                                 // Complete the query to trash the content.
                                 $query->set('published = ' . $db->quote(-2))
-                                      ->where('id = ' . $db->quote($report->element_id));                            
+                                      ->where('id = ' . $db->quote($item->element_id));                            
                                 
                                 $db->setQuery($query);
                                 $db->execute();
