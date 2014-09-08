@@ -63,6 +63,9 @@ class JHtmlHwdDropdown
 	 */
 	public static function renderQualities($item = '', $class = '')
 	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                
 		$html = array();
     
 		$html[] = '<button data-toggle="dropdown" class="dropdown-toggle btn' . $class . '">';
@@ -70,7 +73,7 @@ class JHtmlHwdDropdown
 
 		if ($item)
 		{
-			$html[] = '<span>' . JText::sprintf('COM_HWDMS_QUALITY', $item) . '</span>';
+			$html[] = '<span>' . JText::sprintf('COM_HWDMS_QUALITY_WITH_DEFAULT', $app->getUserState('media.quality', '360')) . '</span>';
 		}
 
 		$html[] = '</button>';
@@ -230,25 +233,20 @@ class JHtmlHwdDropdown
 	{
                 switch ($id)
                 {
-                        case 1:
-                            // Media
-                            $text = JText::_('COM_HWDMS_ADD_MEDIA');
-                            break;
-                        case 2:
-                            // Album
-                            $text = JText::_('COM_HWDMS_ADD_ALBUM');
-                            break;
-                        case 3:
-                            // Group
-                            $text = JText::_('COM_HWDMS_ADD_GROUP');
-                            break;
-                        case 4:
-                            // Playlist
-                            $text = JText::_('COM_HWDMS_ADD_PLAYLIST');
-                            break;
-                        case 5:
-                            // Channel
-                            break;
+                        case 1: // Media
+                                $text = JText::_('COM_HWDMS_ADD_MEDIA');
+                        break;
+                        case 2: // Album
+                                $text = JText::_('COM_HWDMS_ADD_ALBUM');
+                        break;
+                        case 3: // Group
+                                $text = JText::_('COM_HWDMS_ADD_GROUP');
+                        break;
+                        case 4: // Playlist
+                                $text = JText::_('COM_HWDMS_ADD_PLAYLIST');
+                        break;
+                        case 5: // Channel
+                        break;
                 }            
 		$task = ($prefix ? $prefix . '.' : '') . 'edit';
 		static::addCustomItem($text, 'plus', 0, $task);
@@ -388,12 +386,16 @@ class JHtmlHwdDropdown
 	 */
 	public static function addCustomQualityItem($item = '', $quality = '')
 	{
-		$url	= hwdMediaShareHelperRoute::getMediaItemRoute($item->id, array('quality' => $quality));
-                $class  = '';
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                
+		$url = hwdMediaShareHelperRoute::getMediaItemRoute($item->id, array('quality' => $quality));
+                $class = '';
+                $default = $app->getUserState('media.quality', '360');
                 
 		static::$dropDownList[] = '<li>'
 			. '<a href="' . JRoute::_($url) . '" class="' . $class . '">'
-			. '<span class="icon-star"></span> '
+			. ($default == $quality ? '<span class="icon-ok"></span> ' : '<span class="icon-dummy"></span> ')
 			. JText::_('COM_HWDMS_'.$quality.'P')
 			. '</a>'
 			. '</li>';
