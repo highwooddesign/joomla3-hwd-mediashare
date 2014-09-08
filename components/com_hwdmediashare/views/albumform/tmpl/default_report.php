@@ -30,8 +30,7 @@ JHtml::_('behavior.framework', true);
     <div class="formelm-buttons">
       <button onclick="Joomla.submitbutton('albums.report')" type="button" class="btn"><?php echo JText::_('COM_HWDMS_REPORT'); ?></button>
     </div>
-    <div>
     <input type="hidden" name="task" value="" />
-    <?php echo JHtml::_('form.token'); ?> </div>
+    <?php echo JHtml::_('form.token'); ?>
   </div>
 </form>  
