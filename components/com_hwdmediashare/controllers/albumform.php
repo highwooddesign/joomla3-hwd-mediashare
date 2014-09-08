@@ -259,7 +259,7 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName);
+			$model = $this->getModel($vName, 'hwdMediaShareModel', array('ignore_request' => false));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
