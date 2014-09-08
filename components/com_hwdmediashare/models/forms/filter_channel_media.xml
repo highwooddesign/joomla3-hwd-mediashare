@@ -13,6 +13,14 @@
 	</fields>
 	<fields name="list">
 		<field
+			name="fullordering"
+			type="mediafullordering"
+			label="COM_HWDMS_LIST_FULL_ORDERING"
+			description="COM_HWDMS_LIST_FULL_ORDERING_DESC"
+			onchange="this.form.submit();"
+			default="a.created DESC"
+		/>
+		<field
 			name="limit"
 			type="hwdlimitbox"
 			class="inputbox input-mini"

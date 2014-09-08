@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: search.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
 <form
-	addrulepath="/administrator/components/com_hwdmediashare/models/rules"
+        addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        addrulepath="/administrator/components/com_hwdmediashare/models/rules"  
 >
-	<fieldset>                
+	<fieldset 
+                name="details"
+                label="COM_HWDMS_DETAILS"
+        >
+                <field
+			name="keyword"
+			type="text"
+			label="COM_HWDMS_TITLE_LABEL"
+			description="COM_HWDMS_TITLE_DESC"
+			required="true"
+			hint="COM_HWDMS_HINT_SEARCH"
+                        class="input-large-text hwd-form-title"                        
+		/>           
                 <field
                         name="catid"
                         type="category"
