@@ -12,8 +12,8 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.framework', true);
 ?>
-<div class="edit">
-  <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&tmpl=component&id=' . $this->id); ?>" method="post" name="adminForm" id="adminForm" class="form-validate">
+<form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
+  <div id="hwd-container" class="hwd-modal <?php echo $this->pageclass_sfx;?>"> <a name="top" id="top"></a>
     <fieldset>
       <legend><?php echo JText::_('COM_HWDMS_REPORT_GROUP'); ?></legend>
       <?php foreach($this->form->getFieldset('details') as $field): ?>
@@ -33,5 +33,5 @@ JHtml::_('behavior.framework', true);
     <div>
     <input type="hidden" name="task" value="" />
     <?php echo JHtml::_('form.token'); ?> </div>
-  </form>
-</div>
+  </div>
+</form>  
