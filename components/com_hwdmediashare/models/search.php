@@ -1,274 +1,292 @@
 <?php
 /**
- * @version    SVN $Id: search.php 961 2013-01-30 09:07:31Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      25-Nov-2011 16:51:34
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla modelitem library
-jimport('joomla.application.component.modelform');
-
-/**
- * hwdMediaShare Model
- */
-class hwdMediaShareModelSearch extends JModelForm
+class hwdMediaShareModelSearch extends JModelList
 {
-        /**
+	/**
 	 * Model context string.
-	 *
-	 * @var		string
-	 */
-	public $_context = 'com_hwdmediashare.search';
+         * 
+         * @access      public
+	 * @var         string
+	 */   
+	public $context = 'com_hwdmediashare.search';
 
 	/**
-	 * The category context (allows other extensions to derived from this model).
-	 *
-	 * @var		string
+	 * The search data.
+         * 
+         * @access      protected
+	 * @var         object
 	 */
-	protected $_extension = 'com_hwdmediashare';
+	protected $_items;
         
-        /**
-	 * Sezrch data array
-	 *
-	 * @var array
-	 */
-	var $_data = null;
+	/**
+	 * The model used for obtaining items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */  
+	protected $_model = null;
+        
+	/**
+	 * The number of results.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
+        protected $_total = 0;
+        
+	/**
+	 * The execution time of the search query.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */        
+        protected $_time = 0;
 
 	/**
-	 * Search total
-	 *
-	 * @var integer
-	 */
-	var $_total = null;
-
+	 * Set to true if a search query is executed.
+         * 
+         * @access      protected
+	 * @var         boolean
+	 */        
+        protected $_status = false;
+        
 	/**
-	 * Search areas
-	 *
-	 * @var integer
-	 */
-	var $_area = null;
-
-	/**
-	 * Pagination object
-	 *
-	 * @var object
-	 */
-	var $_pagination = null;
-
-	/**
-	 * Constructor
-	 *
-	 * @since 1.5
-	 */
-	function __construct()
-	{
-		parent::__construct();
-
-		//Get configuration
-		$app	= JFactory::getApplication();
-		$config = JFactory::getConfig();
-
-		// Get the pagination request variables
-		$this->setState('limit', $app->getUserStateFromRequest('com_search.limit', 'limit', $config->get('list_limit'), 'int'));
-		$this->setState('limitstart', JRequest::getVar('limitstart', 0, '', 'int'));
-
-		// Set the search parameters
-		$keyword	= urldecode(JRequest::getString('searchword'));
-		$match		= JRequest::getWord('searchphrase', 'all');
-		$ordering	= JRequest::getWord('ordering', 'newest');
-		$this->setSearch($keyword, $match, $ordering);
-
-		//Set the search area
-		$area = JRequest::getVar('area', 1);               
-		$this->setArea($area);
-	}
-
-	/**
-	 * Method to set the search parameters
+	 * Class constructor. Defines a white list of column filters.
 	 *
 	 * @access	public
-	 * @param string search string
-	 * @param string mathcing option, exact|any|all
-	 * @param string ordering option, newest|oldest|popular|alpha|category
-	 */
-	function setSearch($keyword, $match = 'all', $ordering = 'newest')
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
+	public function __construct($config = array())
 	{
-		if (isset($keyword)) 
-                {
-			$this->setState('origkeyword', $keyword);
-			if($match !== 'exact') 
-                        {
-				$keyword = preg_replace('#\xE3\x80\x80#s', ' ', $keyword);
-			}
-			$this->setState('keyword', $keyword);
-		}
-
-		if (isset($match)) 
-                {
-			$this->setState('match', $match);
-		}
-
-		if (isset($ordering)) 
-                {
-			$this->setState('ordering', $ordering);
-		}
-	}
-
-	/**
-	 * Method to set the search area
-	 *
-	 * @access	public
-	 * @param	array	Active area
-	 * @param	array	Search area
-	 */
-	function setArea($active = 1, $search = array())
-	{
-            	$keys = array(1 => 'media',2 => 'albums',3 => 'groups',4 => 'playlists');       
-		$this->_area['active'] = array($keys[$active]);
-		$this->_area['search'] = $search;                  
-	}
-
-	/**
-	 * Method to get weblink item data for the category
-	 *
-	 * @access public
-	 * @return array
-	 */
-	function getData()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_data))
-		{
-			$area = $this->getArea();
-
-			JPluginHelper::importPlugin('search');
-			$dispatcher = JDispatcher::getInstance();
-			$results = $dispatcher->trigger('onContentSearch', array(
-				$this->getState('keyword'),
-				$this->getState('match'),
-				$this->getState('ordering'),
-				$area['active'])
+		if (empty($config['filter_fields'])) {
+			$config['filter_fields'] = array(
+				'title', 'a.title',
+				'likes', 'a.likes',
+				'dislikes', 'a.dislikes',
+				'ordering', 'a.ordering', 'map.ordering', 'pmap.ordering',
+				'created_user_id', 'a.created_user_id', 'created_user_id_alias', 'a.created_user_id_alias', 'author',
+                                'created', 'a.created',
+				'modified', 'a.modified',
+				'hits', 'a.hits',
+                                'random', 'random',
 			);
-
-			$rows = array();
-			foreach ($results as $result) 
-                        {
-				$rows = array_merge((array) $rows, (array) $result);
-			}
-
-			$this->_total = count($rows);
-			if ($this->getState('limit') > 0) 
-                        {
-				$this->_data	= array_splice($rows, $this->getState('limitstart'), $this->getState('limit'));
-			} 
-                        else
-                        {
-				$this->_data = $rows;
-			}
 		}
 
-		return $this->_data;
+		// Check the session for previously entered form data.
+		$this->_data = JFactory::getApplication()->getUserState('com_hwdmediashare.search.data', array());
+
+		parent::__construct($config);
 	}
 
 	/**
-	 * Method to get the total number of weblink items for the category
+	 * Method for getting the form from the model.
 	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getTotal()
-	{
-		return $this->_total;
-	}
-
-	/**
-	 * Method to get a pagination object of the weblink items for the category
-	 *
-	 * @access public
-	 * @return integer
-	 */
-	function getPagination()
-	{
-		// Lets load the content if it doesn't already exist
-		if (empty($this->_pagination))
-		{
-			jimport('joomla.html.pagination');
-			$this->_pagination = new JPagination($this->getTotal(), $this->getState('limitstart'), $this->getState('limit'));
-		}
-
-		return $this->_pagination;
-	}
-
-	/**
-	 * Method to get the search area
-	 *
-	 * @since 1.5
-	 */
-	function getArea()
-	{
-                $doc = & JFactory::getDocument();
-                
-                // Get HWDMediaShare config
-                $hwdms  = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                
-                // Load the Category data
-		if (empty($this->_area['search']))
-		{
-			$areas = array();
-                        $areas['media'] = 'Media';
-                        if ($config->get('enable_albums')) $areas['albums'] = 'Albums';    
-                        if ($config->get('enable_groups')) $areas['groups'] = 'Groups';      
-                        if ($config->get('enable_playlists')) $areas['playlists'] = 'Playlists';       
-               
-			$this->_area['search'] = $areas;
-		}
-
-		return $this->_area;
-	}
-        /**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+	 * @access  public
+	 * @param   array       $data      Data for the form.
+	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed       A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_hwdmediashare.search', 'search', array('control' => 'jform', 'load_data' => $loadData));
-                if (empty($form))
+
+		if (empty($form))
 		{
 			return false;
 		}
+
 		return $form;
 	}
+
+	/**
+	 * Method to get the data that should be injected in the form.
+	 *
+	 * @access  protected
+         * @return  mixed       The data for the form.
+	 */
+	protected function loadFormData()
+	{
+                return $this->_data;
+	}
+
+	/**
+	 * Method to set the filterFormName variable for the account pages, 
+         * allowing different filters in different layouts.
+         * 
+         * @access  public
+	 * @return  void
+	 */
+	public function getFilterFormName()
+	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                $type = $app->input->get('type', 'media', 'word');
+		$this->filterFormName = 'filter_' . $type;                  
+	}  
+        
+	/**
+	 * Method to get a list of items based on the form data.
+	 *
+	 * @access  public
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */
+	public function getItems()
+	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+                
+                // Get the type from the request.
+                $this->type = $app->input->get('type', 'media', 'word');
+                if (!in_array(strtolower($this->type), array('albums', 'channels', 'groups', 'media', 'playlists'))) $display = 'media';
+
+                // Time the search query execution (START).
+                $start = microtime(true);
+
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                $this->_model = JModelLegacy::getInstance($this->type, 'hwdMediaShareModel', array('ignore_request' => true));               
+
+		// Check a search term exists.
+		if (count($this->_data))
+                {                    
+                        $this->_status = true;
+
+                        $this->_model->context = 'com_hwdmediashare.search';
+                        $this->_model->populateState();
+                        $this->_model->setState('list.ordering', $this->getState('list.ordering'));
+                        $this->_model->setState('list.direction', $this->getState('list.direction'));
+                        
+                        // Filter by search data.
+                        $this->_model->setState('filter.search.method', 'match');
+                        $this->_model->setState('filter.search', $this->_data['keyword']);
+
+                        if ($this->_items = $this->_model->getItems())
+                        {
+                                $this->_total = $this->_model->getTotal();
+                        }
+                }
+
+                // Time the search query execution (END).
+                $this->_time = round(microtime(true) - $start, 4);
+
+		return $this->_items;
+	}
+
+	/**
+	 * Method to get total number of results.
+	 *
+         * @access  public
+	 * @return  integer The number of results.
+	 */
+	public function getTotal()
+	{
+                return (int) $this->_total; 
+	}
+
+	/**
+	 * Method to get the execution time for a search query.
+	 *
+         * @access  public
+	 * @return  float   The execution time.
+	 */
+	public function getTime()
+	{
+                return (float) $this->_time; 
+	}
+
+	/**
+	 * The status of the query execution.
+	 *
+         * @access  public
+	 * @return  boolean  True if a search query has been executed.
+	 */
+	public function getStatus()
+	{
+                return (boolean) $this->_status; 
+	}
+        
+	/**
+	 * Method to get a JPagination object for the data set.
+	 *
+         * @access  public
+	 * @return  JPagination  A JPagination object for the data set.
+	 */
+	public function getPagination()
+	{
+                return $this->_model->getPagination(); 
+	}
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	0.1
+	 * @access  protected
+	 * @param   string  $ordering   An optional ordering field.
+	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @return  void
 	 */
-	protected function populateState()
+	protected function populateState($ordering = null, $direction = null)
 	{
+		// Initialise variables.
 		$app = JFactory::getApplication();
-
-		$return = JRequest::getVar('return', null, 'default', 'base64');
-		$this->setState('return_page', base64_decode($return));
-
+                $user = JFactory::getUser();
+                
 		// Load the parameters.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 $this->setState('params', $config);
 
-		parent::populateState();
-	}        
+		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
+                {
+			// Limit to published for people who can't edit or edit.state.
+			$this->setState('filter.published',	1);
+			$this->setState('filter.status',	1);
+
+			// Filter by start and end dates.
+			$this->setState('filter.publish_date', true);
+		}
+                else
+                {
+			// Allow access to unpublished and unapproved items.
+			$this->setState('filter.published',	array(0,1));
+			$this->setState('filter.status',	array(0,1,2,3));
+                }
+                
+                // Only set these states when in the com_hwdmediashare.album context.
+                if ($this->context == 'com_hwdmediashare.search')
+                {             
+                        // Load the display state.
+                        $display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                        if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
+                        $this->setState('media.display', $display);
+
+                        // Check for list inputs and set default values if none exist
+                        // This is required as the fullordering input will not take default value unless set
+                        $orderingFull = $config->get('list_order_media', 'a.created DESC');
+                        $orderingParts = explode(' ', $orderingFull); 
+                        $ordering = $orderingParts[0];
+                        $direction = $orderingParts[1];
+                        if (!$list = $app->getUserStateFromRequest($this->context . '.list', 'list', array(), 'array'))
+                        {
+                                $list['fullordering'] = $orderingFull;
+                                $list['limit'] = $config->get('list_limit', 6);
+                                $app->setUserState($this->context . '.list', $list);
+                        }
+                }
+                
+                // List state information.
+                parent::populateState($ordering, $direction);               
+	}      
 }
