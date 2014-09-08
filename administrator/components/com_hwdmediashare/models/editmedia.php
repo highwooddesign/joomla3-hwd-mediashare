@@ -369,17 +369,31 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			return false;
 		}
 
-                // Trigger onAfterMediaAdd event.
+		// Get a table instance.
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+
+                // Load HWD library.
                 hwdMediaShareFactory::load('events');
                 $HWDevents = hwdMediaShareEvents::getInstance();
-		foreach ($pks as $id)
+                
+		foreach ($pks as $pk)
 		{
-                        $table->load($id);
+                        // Attempt to load the table row.
+                        $return = $table->load($pk);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
                         $properties = $table->getProperties(1);
-                        $row = JArrayHelper::toObject($properties, 'JObject');
-                        $HWDevents->triggerEvent('onAfterMediaAdd', $row); 
+                        $item = JArrayHelper::toObject($properties, 'JObject');
+                        
+                        // Trigger onAfterMediaAdd event.
+                        $HWDevents->triggerEvent('onAfterMediaAdd', $item); 
 		}
                 
 		// Clear the component's cache.
@@ -638,10 +652,19 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                                 }
                         }
                         
-                        // Load the media item.
+                        // Get a table instance.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                        $table->load($pk);
+                        
+                        // Attempt to load the table row.
+                        $return = $table->load($pk);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
 
                         $properties = $table->getProperties(1);
                         $item = JArrayHelper::toObject($properties, 'JObject');
@@ -939,7 +962,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         }
                 }   
                 
-                // Load media table.
+		// Get a table instance.
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
@@ -954,6 +977,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		// Loop through keys and remove media files.
 		foreach ($pks as $i => $pk)
 		{             
+                        // Attempt to load the table row.
                         if ($table->load($pk))
                         {
                                 $properties = $table->getProperties(1);
