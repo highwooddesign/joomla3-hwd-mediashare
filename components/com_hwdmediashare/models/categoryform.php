@@ -153,23 +153,4 @@ class hwdMediaShareModelCategoryForm extends CategoriesModelCategory
 	{
 		return base64_encode($this->getState('return_page'));
 	}
-        
-	/**
-	 * Method for getting the report form.
-	 *
-         * @access  public
-	 * @return  mixed  A JForm object on success, false on failure
-	 */
-	public function getReportForm()
-	{
-		// Get the form.
-		$form = JForm::getInstance('report', JPATH_SITE.'/components/com_hwdmediashare/models/forms/report.xml');
-
-		if (empty($form))
-		{
-			return false;
-		}
-
-		return $form;
-	}
 }
