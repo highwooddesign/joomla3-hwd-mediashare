@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- $Id: default.xml 425 2012-06-28 07:48:57Z dhorsfall $ -->
 <metadata>
         <layout title="COM_HWDMEDIASHARE_UPLOAD_VIEW_DEFAULT_TITLE">
                 <message>COM_HWDMEDIASHARE_UPLOAD_VIEW_DEFAULT_DESC</message>
         </layout>
+	<fields
+                name="request" 
+                addfieldpath="/administrator/components/com_hwdmediashare/models/fields/"
+        >
+		<fieldset name="request">
+                        <field
+                                name="method"
+                                type="list"
+                                label="COM_HWDMS_UPLOAD_DEFAULT_METHOD_LABEL"
+                                description="COM_HWDMS_UPLOAD_DEFAULT_METHOD_DESC"
+                                default=""
+                        >
+                                <option value="">COM_HWDMS_OPTION_UPLOAD_MEDIA_FILES</option>
+                                <option value="remote">COM_HWDMS_OPTION_ADD_REMOTE_MEDIA</option>
+                        </field>                    
+		</fieldset>
+	</fields>         
 </metadata>
 
 
