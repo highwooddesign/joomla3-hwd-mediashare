@@ -19,15 +19,17 @@ $canAdd = $user->authorise('core.create', 'com_hwdmediashare');
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <h2 class="media-playlist-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php if ($this->params->get('list_page_title') != '0') :?>
+        <h2 class="media-playlist-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php endif; ?>         
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <?php if ($canAdd): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_PLAYLIST'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=playlistform&layout=edit&return='.base64_encode(JFactory::getURI())); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_PLAYLIST'); ?></a>
         <?php endif; ?>  
-        <?php if ($this->state->get('playlists.show_featured') == 'only'): ?>
+        <?php if ($this->params->get('list_feature_button') != '0' && $this->state->get('playlists.show_featured') == 'only'): ?>
           <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getPlaylistsRoute(array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
-        <?php else: ?>  
+        <?php elseif ($this->params->get('list_feature_button') != '0'): ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getPlaylistsRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>  
         <?php if ($this->params->get('list_details_button') != '0') : ?>
