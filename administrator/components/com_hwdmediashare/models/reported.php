@@ -187,12 +187,12 @@ class hwdMediaShareModelReported extends JModelList
 	{               
 		if ($items = parent::getItems())
 		{          
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-
                         for ($x = 0, $count = count($items); $x < $count; $x++)
                         {
                                 if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
                                 
+                                // Get a table instance.
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 switch ($items[$x]->element_type)
                                 {
                                         case 1: // Media
@@ -212,11 +212,20 @@ class hwdMediaShareModelReported extends JModelList
                                         break;
                                 }
 
-                                $table->load($items[$x]->element_id);
-                                $properties = $table->getProperties(1);
-                                $row = JArrayHelper::toObject($properties, 'JObject');
+                                // Attempt to load the table row.
+                                $return = $table->load($items[$x]->element_id);
 
-                                $items[$x]->title = (isset($row->title) ? $row->title : '');                      
+                                // Check for a table object error.
+                                if ($return === false && $table->getError())
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+
+                                $properties = $table->getProperties(1);
+                                $item = JArrayHelper::toObject($properties, 'JObject');
+
+                                $items[$x]->title = (isset($item->title) ? $item->title : '');                      
                         }
                 }
 
