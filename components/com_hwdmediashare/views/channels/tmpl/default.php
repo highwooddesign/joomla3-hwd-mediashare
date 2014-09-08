@@ -18,15 +18,17 @@ $user = JFactory::getUser();
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <h2 class="media-channel-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php if ($this->params->get('list_page_title') != '0') :?>
+        <h2 class="media-channel-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php endif; ?>       
       <!-- Buttons -->
       <div class="btn-group pull-right">
         <?php if ($user->id): ?>
           <a title="<?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getChannelRoute($user->id)); ?>" class="btn"><i class="icon-user"></i> <?php echo JText::_('COM_HWDMS_MY_CHANNEL'); ?></a>
         <?php endif; ?>  
-        <?php if ($this->state->get('channels.show_featured') == 'only'): ?>
+        <?php if ($this->params->get('list_feature_button') != '0' && $this->state->get('channels.show_featured') == 'only'): ?>
           <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getChannelsRoute(array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
-        <?php else: ?>  
+        <?php elseif ($this->params->get('list_feature_button') != '0'): ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getChannelsRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>  
         <?php if ($this->params->get('list_details_button') != '0') : ?>
