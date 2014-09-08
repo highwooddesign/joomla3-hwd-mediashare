@@ -100,9 +100,21 @@ class hwdMediaShareModelFile extends JModelAdmin
 				unset($pks[$i]);
 				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
 			}
-                                        
+                                  
+                        // Get a table instance.
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('File', 'hwdMediaShareTable');
-                        $table->load($pk);
+
+                        // Attempt to load the table row.
+                        $return = $table->load($pk);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
                         $properties = $table->getProperties(1);
                         $file = JArrayHelper::toObject($properties, 'JObject');
 
@@ -135,7 +147,16 @@ class hwdMediaShareModelFile extends JModelAdmin
                                 continue;
                         }
                         
-                        $element->load($file->element_id);
+                        // Attempt to load the table row.
+                        $return = $element->load($file->element_id);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
                         $properties = $element->getProperties(1);
                         $item = JArrayHelper::toObject($properties, 'JObject');
 
