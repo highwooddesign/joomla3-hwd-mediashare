@@ -12,28 +12,53 @@ defined('_JEXEC') or die;
 
 class hwdMediaShareModelMediaItem extends JModelItem
 {
-    	/**
+	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */  
 	public $context = 'com_hwdmediashare.media';
 
 	/**
-	 * Model data
-	 * @var array
-	 */
-	protected $_media = null;
-	protected $_model = null;
-        protected $_likes = null;
-        protected $_dislikes = null;
+	 * The media data.
+         * 
+         * @access      protected
+	 * @var         object
+	 */ 
+	protected $_media;
         
 	/**
-	 * Method to get a table object, load it if necessary.
+	 * The model used for obtaining items.
+         * 
+         * @access      protected
+	 * @var         object
+	 */           
+	protected $_model;
+        
+	/**
+	 * The number of likes for the media.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */
+        protected $_likes = 0;
+        
+	/**
+	 * The number of dislikes for the media.
+         * 
+         * @access      protected
+	 * @var         integer
+	 */
+        protected $_dislikes = 0;
+        
+	/**
+	 * Method to get a table object, and load it if necessary.
 	 *
+	 * @access  public
 	 * @param   string  $name     The table name. Optional.
 	 * @param   string  $prefix   The class prefix. Optional.
 	 * @param   array   $options  Configuration array for model. Optional.
-	 *
 	 * @return  JTable  A JTable object
 	 */
 	public function getTable($name = 'Media', $prefix = 'hwdMediaShareTable', $config = array())
@@ -44,9 +69,9 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	/**
 	 * Method to get a single media item.
 	 *
-	 * @param   integer	The id of the primary key.
-         * 
-	 * @return  mixed  Object on success, false on failure.
+         * @access  public
+	 * @param   integer     $pk     The id of the primary key.
+	 * @return  mixed       Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -63,10 +88,10 @@ class hwdMediaShareModelMediaItem extends JModelItem
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-		// Get a row instance.
+		// Get a table instance.
 		$table = $this->getTable();
 
-		// Attempt to load the row.
+		// Attempt to load the table row.
 		$return = $table->load($pk);
 
 		// Check for a table object error.
@@ -202,15 +227,19 @@ class hwdMediaShareModelMediaItem extends JModelItem
 
                         // Add the custom fields.
                         hwdMediaShareFactory::load('customfields');
-                        $cf = hwdMediaShareCustomFields::getInstance();
-                        $cf->elementType = 1;
-                        $this->_media->customfields = $cf->get($this->_media);
+                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                        $HWDcustomfields->elementType = 1;
+                        $this->_media->customfields = $HWDcustomfields->load($this->_media);
+
+                        // Add the media files.
+                        hwdMediaShareFactory::load('files');
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $this->_media->mediafiles = $HWDfiles->getMediaFiles($this->_media);
                         
                         // Add the categories.
                         hwdMediaShareFactory::load('category');
                         $cat = hwdMediaShareCategory::getInstance();
-                        $cat->elementType = 1;
-                        $this->_media->categories = $cat->get($this->_media);
+                        $this->_media->categories = $cat->load($this->_media);
 
                         // Add the media type.
                         hwdMediaShareFactory::load('media');
@@ -240,19 +269,22 @@ class hwdMediaShareModelMediaItem extends JModelItem
                         $this->_media->isFavourite = $HWDfavourites->isFavourite($this->_media->id);
 
                         // Add map assets.
-                        hwdMediaShareFactory::load('googlemaps.GoogleMap');
-                        hwdMediaShareFactory::load('googlemaps.JSMin');
-                        hwdMediaShareFactory::load('googlemaps.map');
-                        $map = new hwdMediaShareMap();
-                        $map->addMarkerByAddress($this->_media->location, $this->_media->title, $this->_media->description);
-                        $map->getJavascriptHeader();
-                        $map->getJavascriptMap();
-                        $map->setWidth('100%');
-                        $this->_media->map = $map->getOnLoad().$map->getMap().$map->getSidebar();
-                        $this->_media->map = $map->getOnLoad().$map->getMap();
+                        if ($config->get('mediaitem_location_tab') != '0' && !empty($this->_media->location))
+                        {
+                                hwdMediaShareFactory::load('googlemaps.GoogleMap');
+                                hwdMediaShareFactory::load('googlemaps.JSMin');
+                                hwdMediaShareFactory::load('googlemaps.map');
+                                $map = new hwdMediaShareMap();
+                                $map->addMarkerByAddress($this->_media->location, $this->_media->title, $this->_media->description);
+                                $map->getJavascriptHeader();
+                                $map->getJavascriptMap();
+                                $map->setWidth('100%');
+                                $this->_media->map = $map->getOnLoad().$map->getMap().$map->getSidebar();
+                                $this->_media->map = $map->getOnLoad().$map->getMap();
+                        }
                         
                         // Add page navigation.
-                        $this->_media->navigation = hwdMediaShareHelperNavigation::pageNavigation($this->_media, $this->_media->params);
+                        $this->_media->navigation = hwdMediaShareHelperNavigation::pageNavigation($this->_media, $this->getState('params'));
                 
                         //$this->_media->linkedalbums = $this->getLinkedAlbums(); 
                         //$this->_media->linkedgroups = $this->getLinkedGroups();                          
@@ -267,6 +299,7 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	/**
 	 * Method to get a list of activities associated with this media item.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getActivities()
@@ -291,9 +324,9 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	public function populateState($ordering = null, $direction = null)
@@ -310,11 +343,6 @@ class hwdMediaShareModelMediaItem extends JModelItem
 		// Load state from the request.
 		$id = $app->input->getInt('id');
 		$this->setState('media.id', $id);
-
-		$return = $app->input->get('return', null, 'base64');
-		$this->setState('return_page', base64_decode($return));
-
-		$this->setState('layout', $app->input->getString('layout'));                
 
 		if ((!$user->authorise('core.edit.state', 'com_hwdmediashare')) && (!$user->authorise('core.edit', 'com_hwdmediashare')))
                 {
@@ -338,8 +366,8 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	/**
 	 * Increment the hit counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk  Optional primary key of the record to increment.
-	 *
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function hit($pk = 0)
@@ -354,6 +382,8 @@ class hwdMediaShareModelMediaItem extends JModelItem
 			$table = $this->getTable();
 			$table->load($pk);
 			$table->hit($pk);
+                        
+                        // Update the last viewed data too.
 			$table->view($pk);                        
 		}
 
@@ -363,9 +393,9 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	/**
 	 * Increment the like counter for the record.
 	 *
+         * @access  public
 	 * @param   integer  $pk     Optional primary key of the record to increment.
 	 * @param   integer  $value  The value of the property to increment.
-         * 
 	 * @return  boolean  True if successful; false otherwise and internal error set.
 	 */
 	public function like($pk = 0, $value = 1)
@@ -389,9 +419,9 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	/**
 	 * Method to change the published state of one or more records.
 	 *
+         * @access  public
 	 * @param   array    $pks    A list of the primary keys to change.
 	 * @param   integer  $value  The value of the published state.
-	 *
 	 * @return  boolean  True on success.
 	 */
 	public function publish($pks, $value = 0)
@@ -443,8 +473,10 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	}
 
 	/**
-	 * Method to report an object
-	 * @return  void
+	 * Method to report a media item.
+         * 
+         * @access  public
+	 * @return  boolean True on success, false on failure.
 	 */
 	public function report()
 	{
@@ -453,9 +485,11 @@ class hwdMediaShareModelMediaItem extends JModelItem
                 $date = JFactory::getDate();                
 		$input = JFactory::getApplication()->input;
 
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+                // Load HWD report table.
 		$table = $this->getTable('Report', 'hwdMediaShareTable');    
 
                 if (!$user->authorise('hwdmediashare.report', 'com_hwdmediashare'))
@@ -482,252 +516,210 @@ class hwdMediaShareModelMediaItem extends JModelItem
 
 		return true;
 	}  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getLinkedAlbums($pk = null)
-	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
-                JLoader::register('hwdMediaShareModelAlbums', JPATH_ROOT.'/components/com_hwdmediashare/models/albums.php');
-                $query = hwdMediaShareModelAlbums::getListQuery();
-                // Limit this query
-                //$query.= ' LIMIT 0, '.$this->getState('list.limit');                
-                $query.= ' LIMIT 0, 5';                
- 
-                $db->setQuery($query);
-                $rows = $db->loadObjectList();
-
-                if ($db->getErrorMsg())
-                {
-                        $this->setError($db->getErrorMsg());
-                        return false;
-                }
-                else
-                {
-			return $rows;
-                }
-	}
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getLinkedGroups($pk = null)
-	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
-                JLoader::register('hwdMediaShareModelGroups', JPATH_ROOT.'/components/com_hwdmediashare/models/groups.php');
-                $query = hwdMediaShareModelGroups::getListQuery();
-                // Limit this query
-                //$query.= ' LIMIT 0, '.$this->getState('list.limit');                
-                $query.= ' LIMIT 0, 5';  
-                
-                $db->setQuery($query);
-                $rows = $db->loadObjectList();
-
-                if ($db->getErrorMsg())
-                {
-                        $this->setError($db->getErrorMsg());
-                        return false;
-                }
-                else
-                {
-			return $rows;
-                }
-	}
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getLinkedPlaylists($pk = null)
-	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
-                JLoader::register('hwdMediaShareModelPlaylists', JPATH_ROOT.'/components/com_hwdmediashare/models/playlists.php');
-                $query = hwdMediaShareModelPlaylists::getListQuery();
-                // Limit this query
-                //$query.= ' LIMIT 0, '.$this->getState('list.limit');                
-                $query.= ' LIMIT 0, 5';  
-                
-                $db->setQuery($query);
-                $rows = $db->loadObjectList();
-
-                if ($db->getErrorMsg())
-                {
-                        $this->setError($db->getErrorMsg());
-                        return false;
-                }
-                else
-                {
-			return $rows;
-                }
-	}
         
         /**
-	 * Method to get a single record.
+	 * Method to process a submitted password.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getLinkedMedia($pk = null)
-	{
-	}
-        
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 */
-	public function getLinkedPages($pk = null)
-	{
-	}
-        
-        /**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * @access  public
+	 * @param   integer  $pk  Primary key of the record.
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function password($pk = null)
 	{
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
-
+                // Initialise variables.
                 $app = JFactory::getApplication();
-                
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load($app->input->get('id', '', 'integer'));
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
+
+                // Get the jform data from the request.
+		$data  = $app->input->post->get('jform', array(), 'array');
 
                 if (empty($data['password']))
                 {
                         $this->setError(JText::_('COM_HWDMS_ERROR_NO_PASSWORD_PROVIDED'));
                         return false; 
                 }
+                
+		// Get a table instance.
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
+		// Attempt to load the table row.
+		$return = $table->load($pk);
+
+		// Check for a table object error.
+		if ($return === false && $table->getError())
+                {
+			$this->setError($table->getError());
+			return false;
+		}
+
+                $properties = $table->getProperties(1);
+                $item = JArrayHelper::toObject($properties, 'JObject');
+
+                // Define the password hash.
                 $pw = md5($item->key . $data['password']);               
 
-                JFactory::getApplication()->setUserState( "media.media-password-$item->id", $pw );
+                // Store in state.
+                $app->setUserState('media.media-password-' . $item->id, $pw);
                 
                 return true; 
 	}
         
         /**
-	 * Method to get a single record.
+	 * Method to process a submitted date of birth.
 	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
+         * @access  public
+	 * @param   integer  $pk  Primary key of the record.
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function dob($pk = null)
-	{               
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
+	{           
+                // Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Get the jform data from the request.
+		$data  = $app->input->post->get('jform', array(), 'array');
 
                 if (empty($data['dob']))
                 {
                         $this->setError(JText::_('COM_HWDMS_NO_DOB_PROVIDED'));
                         return false; 
                 }
-                                
-                JFactory::getApplication()->setUserState( "media.dob", $data['dob'] );
                 
-                return true;
+		// Get a table instance.
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+
+		// Attempt to load the table row.
+		$return = $table->load($pk);
+
+		// Check for a table object error.
+		if ($return === false && $table->getError())
+                {
+			$this->setError($table->getError());
+			return false;
+		}
+
+                $properties = $table->getProperties(1);
+                $item = JArrayHelper::toObject($properties, 'JObject');
+
+                // Store in state.
+                $app->setUserState('media.dob', $data['dob']);
+                
+                return true; 
 	}
         
         /**
-	 * Increment the hit counter for the media.
+	 * Method to link a media with specific elements.
 	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+         * @access  public
+	 * @param   integer  $pk  Primary key of the record.
+	 * @return  boolean  True on success, false on fail.
 	 */
-	public function link()
+	public function link($pk = null)
 	{
+                // Initialise variables.
                 $app = JFactory::getApplication();
 
-                $array = JRequest::get( 'post' );
-                $user = JFactory::getUser();
+                // Get the jform data from the request.
+		$data  = $app->input->post->get('jform', array(), 'array');
+                
+                if (empty($data['album_id']) && empty($data['category_id']) && empty($data['group_id']) && empty($data['playlist_id']))
+                {
+                        $this->setError(JText::_('COM_HWDMS_NO_ITEM_SELECTED'));
+                        return false; 
+                }
+                
+		// Get a table instance.
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                // Base this model on the backend version.
-                JLoader::register('hwdMediaShareModelEditMedia', JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/editmedia.php');
-                $model          = JModelLegacy::getInstance('EditMedia', 'hwdMediaShareModel');                       
-                $id             = JRequest::getInt('id');
-                $album_id       = JRequest::getInt('album_id');
-                $category_id    = JRequest::getInt('category_id');
-                $group_id       = JRequest::getInt('group_id');
-                $playlist_id    = JRequest::getInt('playlist_id');
+		// Attempt to load the table row.
+		$return = $table->load($pk);
 
-                if ($album_id > 0)
+		// Check for a table object error.
+		if ($return === false && $table->getError())
                 {
-                        JRequest::setVar('assign_album_id', $album_id);
-                        if( !$model->assignAlbum( $id ) )
-                        {
-                                JError::raiseWarning(500, $model->getError());
-                        }
-                }
+			$this->setError($table->getError());
+			return false;
+		}
+
+                $properties = $table->getProperties(1);
+                $item = JArrayHelper::toObject($properties, 'JObject');
+
+		if (is_numeric($data['album_id']) && $data['album_id'] > 0)
+		{
+			$value = (int) $data['album_id'];
+                        
+                        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
+                        $modelFile = JModelLegacy::getInstance('albumMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$modelFile->link($pks, $value))
+			{
+				return false;
+			}
+		} 
                 
-                if ($category_id > 0)
-                {
-                        JRequest::setVar('assign_category_id', $category_id);
-                        if( !$model->assignCategory( $id ) )
-                        {
-                                JError::raiseWarning(500, $model->getError());
-                        }
-                }
+		if (is_numeric($data['category_id']) && $data['category_id'] > 0)
+		{
+			$value = (int) $data['category_id'];
+                        
+                        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
+                        $modelFile = JModelLegacy::getInstance('editMedia', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$modelFile->assignCategory($pks, $value))
+			{
+				return false;
+			}
+		} 
                 
-                if ($group_id > 0)
-                {
-                        JRequest::setVar('assign_group_id', $group_id);
-                        if( !$model->assignGroup( $id ) )
-                        {
-                                JError::raiseWarning(500, $model->getError());
-                        }
-                }
+		if (is_numeric($data['group_id']) && $data['group_id'] > 0)
+		{
+			$value = (int) $data['group_id'];
+                        
+                        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/administrator/components/com_hwdmediashare/models');
+                        $modelFile = JModelLegacy::getInstance('groupMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$modelFile->link($pks, $value))
+			{
+				return false;
+			}
+		} 
                 
-                if ($playlist_id > 0)
-                {
-                        JRequest::setVar('assign_playlist_id', $playlist_id);
-                        if( !$model->assignPlaylist( $id ) )
-                        {
-                                JError::raiseWarning(500, $model->getError());
-                        }
-                }     
+		if (is_numeric($data['playlist_id']) && $data['playlist_id'] > 0)
+		{
+			$value = (int) $data['playlist_id'];
+                        
+                        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
+                        $modelFile = JModelLegacy::getInstance('playlistMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$modelFile->link($pks, $value))
+			{
+				return false;
+			}
+		} 
                 
-                JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_NOTICE_SUCCESSFULLY_ADDED_MEDIA_TO_ELEMENTS') );
-                JFactory::getApplication()->redirect('index.php?option=com_hwdmediashare&task=mediaform.link&id='.$id.'&tmpl=component&Itemid='.JRequest::getInt('Itemid'));
-                return true;
+                return true; 
 	} 
+
+	/**
+	 * Method for getting the meta data associated with a media item.
+	 *
+         * @access  public
+	 * @return  array   An array of metadata.
+	 */
+	public function getMeta()
+	{
+                hwdMediaShareFactory::load('media');
+                $HWDmedia = hwdMediaShareMedia::getInstance();
+                return $HWDmedia->getMeta($this->_media);
+	}  
+                
+	/**
+	 * Method for getting the media files associated with a media item.
+	 *
+         * @access  public
+	 * @return  object  Files object.
+	 */
+	public function getDownloads()
+	{
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+                return $HWDfiles->getMediaFiles($this->_media);
+	}          
 }
