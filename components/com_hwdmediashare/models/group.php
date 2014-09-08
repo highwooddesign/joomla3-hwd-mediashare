@@ -663,15 +663,29 @@ class hwdMediaShareModelGroup extends JModelList
                                 }
                         }
                         
+                        // Get a table instance.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('Group', 'hwdMediaShareTable');
-                        $table->load($pk);
-                        $properties = $table->getProperties(1);
-                        $group = JArrayHelper::toObject($properties, 'JObject');
 
+                        // Attempt to load the table row.
+                        $return = $table->load($pk);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+                
+                        $properties = $table->getProperties(1);
+                        $item = JArrayHelper::toObject($properties, 'JObject');
+                        
+                        // Load HWD library.
                         hwdMediaShareFactory::load('events');
                         $HWDevents = hwdMediaShareEvents::getInstance();
-                        $HWDevents->triggerEvent('onAfterJoinGroup', $group);
+                        
+                        // Trigger onAfterJoinGroup event.                        
+                        $HWDevents->triggerEvent('onAfterJoinGroup', $item);
 		}
 
 		return true;
@@ -730,15 +744,29 @@ class hwdMediaShareModelGroup extends JModelList
                                 return false;
                         }
                         
+                        // Get a table instance.
                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('Group', 'hwdMediaShareTable');
-                        $table->load($pk);
-                        $properties = $table->getProperties(1);
-                        $group = JArrayHelper::toObject($properties, 'JObject');
 
+                        // Attempt to load the table row.
+                        $return = $table->load($pk);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+                
+                        $properties = $table->getProperties(1);
+                        $item = JArrayHelper::toObject($properties, 'JObject');
+                        
+                        // Load HWD library.
                         hwdMediaShareFactory::load('events');
                         $HWDevents = hwdMediaShareEvents::getInstance();
-                        $HWDevents->triggerEvent('onAfterLeaveGroup', $group);
+                        
+                        // Trigger onAfterLeaveGroup event.                        
+                        $HWDevents->triggerEvent('onAfterLeaveGroup', $item);
 		}
 
 		return true; 
