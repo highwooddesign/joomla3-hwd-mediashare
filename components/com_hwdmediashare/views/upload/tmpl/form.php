@@ -44,7 +44,7 @@ JHtml::_('formbehavior.chosen', 'select');
     </div>
     <div class="clear"></div> 
     <fieldset>
-      <div class="row-fluid form-horizontal-desktop">
+      <div class="row-fluid">
         <div class="span8">
           <div class="control-group">
             <div class="control-label hide">
