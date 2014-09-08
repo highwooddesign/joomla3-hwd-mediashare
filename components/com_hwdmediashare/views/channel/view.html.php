@@ -51,6 +51,9 @@ class hwdMediaShareViewChannel extends JViewLegacy
                 // Get the layout from the request.                
                 $this->layout = $app->input->get('layout', 'media', 'word');
 
+                // Update the filterFormName state from the request.
+                $this->get('FilterFormName');
+                
                 // Get data from the model.
                 $this->channel = $this->get('Channel');
                 $this->albums = $this->get('Albums');
