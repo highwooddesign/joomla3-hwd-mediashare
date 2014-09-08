@@ -30,9 +30,9 @@ $canAddMedia = ($user->authorise('hwdmediashare.upload','com_hwdmediashare') || 
         <?php if ($canAddMedia): ?>
           <a title="<?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=upload&category_id='.(int)$this->category->id); ?>" class="btn"><i class="icon-plus"></i> <?php echo JText::_('COM_HWDMS_ADD_MEDIA'); ?></a>
         <?php endif; ?>
-        <?php if ($this->state->get('category.show_featured') == 'only'): ?>
+        <?php if ($this->params->get('list_feature_button') != '0' && $this->state->get('category.show_featured') == 'only'): ?>
           <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
-        <?php else: ?>  
+        <?php elseif ($this->params->get('list_feature_button') != '0'): ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($this->category->id, array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>           
         <?php if ($this->params->get('list_details_button') != '0') : ?>
