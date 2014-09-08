@@ -1,147 +1,182 @@
 <?php
 /**
- * @version    SVN $Id: view.html.php 1204 2013-02-28 10:48:03Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      01-Dec-2011 09:57:02
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla view library
-jimport('joomla.application.component.view');
+class hwdMediaShareViewUpload extends JViewLegacy
+{
+	/**
+	 * The show form view variable.
+         * 
+         * @access  public
+	 * @var     boolean
+	 */ 
+	public $show_form = true;
 
-/**
- * HTML View class for the hwdMediaShare Component
- */
-class hwdMediaShareViewUpload extends JViewLegacy {
-	// Overwriting JView display method
-	function display($tpl = null)
+	/**
+	 * The upload method view variable.
+         * 
+         * @access  public
+	 * @var     boolean
+	 */ 
+	public $method = false;
+        
+	/**
+	 * Display the view.
+	 *
+	 * @access  public
+	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
+	 * @return  void
+	 */
+	public function display($tpl = null)
 	{
-		$hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
+                // Initialise variables.
+                $hwdms = hwdMediaShareFactory::getInstance();
+		$app = JFactory::getApplication();
+                $lang = JFactory::getLanguage();
+                $document = JFactory::getDocument();
+                $user = JFactory::getUser();
+                
+                // Get data from the model.
+		$this->config = $hwdms->getConfig();
+                $this->form = $this->get('Form');
+		$this->state = $this->get('State');
+		$this->params = $this->state->params;
+                $this->method = ($app->input->get('method', '', 'word') ? $app->input->get('method', '', 'word') : false);
 
-                if (!JFactory::getUser()->authorise('hwdmediashare.upload','com_hwdmediashare') 
-                 && !JFactory::getUser()->authorise('hwdmediashare.import','com_hwdmediashare'))
+                // Check access.
+                if (!$user->authorise('hwdmediashare.upload','com_hwdmediashare') && !$user->authorise('hwdmediashare.import','com_hwdmediashare'))
                 {
-                        JFactory::getApplication()->enqueueMessage( JText::_('COM_HWDMS_ERROR_NOAUTHORISED_ADDMEDIA') );
-                        JFactory::getApplication()->redirect( $config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($config->get('no_access_redirect')) : hwdMediaShareHelperRoute::getMediaRoute() );
+                        $app->enqueueMessage( JText::_('COM_HWDMS_ERROR_NOAUTHORISED_ADDMEDIA') );
+                        $app->redirect( $this->config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($this->config->get('no_access_redirect')) : hwdMediaShareHelperRoute::getMediaRoute() );
                 }
-            
+                
+                // Register classes.
+                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
+                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
+                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                
+                // Import HWD libraries.                
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('utilities');
 
-                // Get data from the model
-		$form = $this->get('Form');
-		$script = $this->get('Script');
-		$state = $this->get('State');
-                $standardExtensions = $this->get('standardExtensions');
-                $largeExtensions = $this->get('largeExtensions');
-                $platformExtensions = $this->get('platformExtensions');
-                
-                // Get any binds
-                $assocAlbum = $this->get('assocAlbum');
-                $assocGroup = $this->get('assocGroup');
-                $assocPlaylist = $this->get('assocPlaylist');
-                $assocResponse = $this->get('assocResponse');
-                $assocCategory = $this->get('assocCategory');
+                $this->utilities = hwdMediaShareUtilities::getInstance();
+		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
+                $this->return = base64_encode(JFactory::getURI()->toString());
 
-                // Download links
-                hwdMediaShareFactory::load('files');
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors')))
-                {
-			JError::raiseWarning(500, implode("\n", $errors));
-			return false;
+		// Determine if we need to show the form.
+		if ($this->config->get('upload_workflow') == 0 && $this->show_form && $this->method != 'remote') 
+		{
+			$this->setLayout('form');
 		}
+                else
+                {              
+                        $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
+                        $this->jformreg = new JRegistry($this->jformdata);
+
+                        $this->localExtensions = $this->get('localExtensions');
+                        $this->showPlatform = $this->get('platformStatus');
+
+                        if ($this->config->get('enable_uploads_file') == 1) 
+                        {
+                                if ($this->config->get('upload_tool') == 1 && count($this->localExtensions)) 
+                                {
+                                        // Add assets to the document.
+                                        $this->get('FancyUploadScript');
+                                }
+                                elseif ($this->config->get('upload_tool') == 2 && $this->config->get('upload_tool_perl') == 1) 
+                                {
+                                        $this->uberUploadHtml = $this->get('UberUploadScript');
+                                }
+                        }
+                        
+                        if ($this->method == 'remote') 
+                        {
+                                $this->setLayout('remote');
+                        }                           
+                }
                 
                 // Check for errors.
+                if (count($errors = $this->get('Errors')))
+                {
+                        JError::raiseError(500, implode('<br />', $errors));
+                        return false;
+                }
+
+                // Check for terms prompt.
 		if ($this->get('terms') === true)
 		{
                         $tpl = 'terms';                        
 		}
                 
-                if ($config->get('enable_uploads_file') == 1) 
-                {
-                        if ($config->get('upload_tool_fancy') == 1 && (is_array($standardExtensions) && count($standardExtensions) > 0)) 
-                        {
-                                $fancyUploadHtml = $this->get('FancyUploadScript');
-                        }
-                        if ($config->get('upload_tool_perl') == 1) 
-                        {
-                                $uberUploadHtml = $this->get('UberUploadScript');
-                                $this->uberUploadHtml = $uberUploadHtml;
-                        }
-                }
-                
-                $params = &$state->params;
-
-		//Escape strings for HTML output
-		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
-
-		$this->assign('template',	        JRequest::getWord( 'tmpl', '' ));
-                $this->assign('columns',	        $params->get('list_columns', 3));
-                $this->assign('return',                 base64_encode(JFactory::getURI()->toString()));
-
-                $this->assignRef('params',		$params);
-                $this->assignRef('form',		$form);
-                $this->assignRef('state',		$state);
-                $this->assignRef('standardExtensions',	$standardExtensions);
-                $this->assignRef('largeExtensions',	$largeExtensions);
-                $this->assignRef('platformExtensions',	$platformExtensions);
-                $this->assignRef('uberUploadHtml',	$uberUploadHtml);
-
-                // Binds
-                $this->assignRef('assocAlbum',          $assocAlbum);
-                $this->assignRef('assocGroup',          $assocGroup);
-                $this->assignRef('assocCategory',       $assocCategory);
-
-                $this->assignRef('utilities',		hwdMediaShareUtilities::getInstance());
-
 		$this->_prepareDocument();
-
+                
+		// Display the template.
 		parent::display($tpl);
 	}
+        
 	/**
-	 * Prepares the document
+	 * Prepares the document.
+	 *
+         * @access  protected
+	 * @return  void
 	 */
 	protected function _prepareDocument()
 	{
-		$app	= JFactory::getApplication();
-                $menus	= $app->getMenu();
-		$title	= null;
-                
-                JHtml::_('behavior.framework', true);
+		$app = JFactory::getApplication();
+		$menus = $app->getMenu();
+		$pathway = $app->getPathway();
+		$title = null;
+
+                // Add page assets.
+                JHtml::_('bootstrap.framework');
                 $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->state->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
 
-                if ($this->params->get('upload_tool_fancy') == 1) 
-                {
-                        $this->document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/Swiff.Uploader.js");
-                        $this->document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/Fx.ProgressBar.js");
-                        $this->document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/FancyUpload2.js");
-                        $this->document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/fancy.css");
-                }
-
-		// Because the application sets a default page title,
-		// we need to get it from the menu item itself
+		// Define the page title and headings. 
 		$menu = $menus->getActive();
 		if ($menu)
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+                        $title = $this->params->get('page_title');
+                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_UPLOAD'));
 		}
-                else
-                {
-			$this->params->def('page_heading', JText::_('COM_HWDMS_UPLOAD'));
+		else
+		{
+                        $title = JText::_('COM_HWDMS_UPLOAD');
+                        $heading = JText::_('COM_HWDMS_UPLOAD');
 		}
-		$title = $this->params->get('page_title', '');
+
+                $this->params->set('page_title', $title);
+                $this->params->set('page_heading', $heading);
+                
+		// If the menu item does not concern this view then add a breadcrumb.
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'upload'))
+		{       
+                        // Breadcrumb support.
+			$path = array(array('title' => JText::_('COM_HWDMS_UPLOAD'), 'link' => ''));
+                                                
+			$path = array_reverse($path);
+			foreach($path as $item)
+			{
+				$pathway->addItem($item['title'], $item['link']);
+			}                    
+		}
+                
+		// Check for empty title and add site name when configured.
 		if (empty($title))
                 {
-			$title = JText::_('COM_HWDMS_UPLOAD');
+			$title = $app->getCfg('sitename');
 		}
 		elseif ($app->getCfg('sitename_pagetitles', 0) == 1)
                 {
@@ -151,132 +186,64 @@ class hwdMediaShareViewUpload extends JViewLegacy {
                 {
 			$title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
 		}
-                $this->document->setTitle($title);
+                
+                // Set metadata.
+		$this->document->setTitle($title);
 
-		if ($this->params->get('meta_desc'))
-		{
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'upload' && $this->params->get('menu-meta_description'))
+                {
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+                } 
+                elseif ($this->params->get('meta_desc'))
+                {
 			$this->document->setDescription($this->params->get('meta_desc'));
-		}
+                }   
 
-		if ($this->params->get('meta_keys'))
-		{
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'upload' && $this->params->get('menu-meta_keywords'))
+                {
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+                } 
+		elseif ($this->params->get('meta_keys'))
+                {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
-		}
+                }
 
 		if ($this->params->get('meta_rights'))
-		{
+                {
 			$this->document->setMetadata('copyright', $this->params->get('meta_rights'));
-		}
-         	
-                if ($this->params->get('meta_author'))
-		{
-			//$this->document->setMetadata('author', $this->params->get('meta_author'));
-		}       
+                } 
 	}
         
  	/**
-	 * Method to set up the document properties
+	 * Method to render the platform upload tool.  
 	 *
-	 * @return void
+         * @access  protected
+	 * @return  void
 	 */
 	protected function getPlatformUploadForm()
 	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
                 $pluginClass = 'plgHwdmediashare'.$config->get('platform');
                 $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('platform').'/'.$config->get('platform').'.php';
-
-                // Import hwdMediaShare plugins
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $player = call_user_func(array($pluginClass, 'getInstance'));
-                        return $player->getUploadForm();
+                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+                        if ($form = $HWDplatform->getUploadForm())
+                        {
+                                return $form;
+                        }
+                        else
+                        {
+                                return $utilities->printNotice($HWDcomments->getError());
+                        }
                 }
-	}
-        
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function getReadableAllowedMediaTypes($method=null)
-	{
-		hwdMediaShareFactory::load('upload');
-                return hwdMediaShareUpload::getReadableAllowedMediaTypes($method);
-	}
-        
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function getReadableAllowedExtensions($extensions)
-	{
-		hwdMediaShareFactory::load('upload');
-                return hwdMediaShareUpload::getReadableAllowedExtensions($extensions);
-	}
-
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function getReadableAllowedRemotes()
-	{
-		hwdMediaShareFactory::load('remote');
-                return hwdMediaShareRemote::getReadableAllowedRemotes();
-	}        
-        
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	protected function getAssociated()
-	{
-		$buffer = null;
-                $messages = array();
-                
-                if (isset($this->assocAlbum->id)) 
-                {
-                    $messages[] = 'New media will be added to '.$this->escape($this->assocAlbum->title).' album';
-                    $buffer .= '<input type="hidden" name="jform[album_id]" value="'.$this->assocAlbum->id.'" />';
-                    $buffer .= '<input type="hidden" name="jform_album_id" value="'.$this->assocAlbum->id.'" />';
-                }
-                if (isset($this->assocGroup->id)) 
-                {
-                    $messages[] = 'New media will be added to '.$this->escape($this->assocGroup->title).' group';
-                    $buffer .= '<input type="hidden" name="jform[group_id]" value="'.$this->assocGroup->id.'" />';
-                    $buffer .= '<input type="hidden" name="jform_group_id" value="'.$this->assocGroup->id.'" />';
-                }
-                if (isset($this->assocCategory->id)) 
-                {
-                    $messages[] = 'New media will be added to '.$this->escape($this->assocCategory->title).' category';
-                    $buffer .= '<input type="hidden" name="jform[catid]" value="'.$this->assocCategory->id.'" />';
-                    $buffer .= '<input type="hidden" name="jform_catid" value="'.$this->assocCategory->id.'" />';
-                }
-                
-                // Build the return string. If messages exist render them
-		if (is_array($messages) && count($messages))
-		{
-                    $buffer .= "<div id=\"system-message-container\">";
-			$buffer .= "\n<dl id=\"system-message\">";
-                            $buffer .= "\n<dt class=\"message\">Message</dt>";
-                            $buffer .= "\n<dd class=\"message message\">";
-                            $buffer .= "\n\t<ul>";
-                            foreach ($messages as $message)
-                            {
-                                    $buffer .= "\n\t\t<li>" . $message . "</li>";
-                            }
-                            $buffer .= "\n\t</ul>";
-                            $buffer .= "\n</dd>";
-			$buffer .= "\n</dl>";
-                    $buffer .= "\n</div>";
-		}
-
-		return $buffer;
 	}
 }
