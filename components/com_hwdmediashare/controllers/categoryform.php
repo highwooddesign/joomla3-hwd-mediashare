@@ -240,33 +240,4 @@ class hwdMediaShareControllerCategoryForm extends JControllerForm
 
 		return $result;
 	}
-
-	/**
-	 * Method to display the report view.
-         * 
-         * @access  public
-	 * @return  void
-	 */
-	public function report()
-	{
-		// Get the document object.
-		$document	= JFactory::getDocument();
-		$vName		= 'categoryForm';
-		$vFormat	= 'html';
-
-		// Get and render the view.
-		if ($view = $this->getView($vName, $vFormat))
-		{
-			// Get the model for the view.
-			$model = $this->getModel($vName);
-
-			// Push the model into the view (as default).
-			$view->setModel($model, true);
-
-			// Push document object into the view.
-			$view->document = $document;
-
-			$view->report();
-		}
-	}
 }
