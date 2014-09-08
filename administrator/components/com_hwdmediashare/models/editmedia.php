@@ -718,42 +718,6 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			return false;
 		}                
 
-		if (is_numeric($commands['assignprocess']) && $commands['assignprocess'] > 0)
-		{
-			$value = (int) $commands['assignprocess'];
-                        
-                        if (!$this->assignProcess($pks, $value))
-			{
-				return false;
-			}
-
-			$done2 = true;
-		}                
-
-		if (is_numeric($commands['assigncategory']) && $commands['assigncategory'] > 0)
-		{
-			$value = (int) $commands['assigncategory'];
-                        
-                        if (!$this->assignCategory($pks, $value))
-			{
-				return false;
-			}
-
-			$done2 = true;
-		} 
- 
-		if (is_numeric($commands['unassigncategory']) && $commands['unassigncategory'] > 0)
-		{
-			$value = (int) $commands['unassigncategory'];
-                        
-                        if (!$this->unassignCategory($pks, $value))
-			{
-				return false;
-			}
-
-			$done2 = true;
-		} 
-
 		if (is_numeric($commands['assignalbum']) && $commands['assignalbum'] > 0)
 		{
 			$value = (int) $commands['assignalbum'];
@@ -778,8 +742,58 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			}
 
 			$done2 = true;
-		}                 
+		} 
+                
+		if (is_numeric($commands['assigncategory']) && $commands['assigncategory'] > 0)
+		{
+			$value = (int) $commands['assigncategory'];
+                        
+                        if (!$this->assignCategory($pks, $value))
+			{
+				return false;
+			}
 
+			$done2 = true;
+		} 
+ 
+		if (is_numeric($commands['unassigncategory']) && $commands['unassigncategory'] > 0)
+		{
+			$value = (int) $commands['unassigncategory'];
+                        
+                        if (!$this->unassignCategory($pks, $value))
+			{
+				return false;
+			}
+
+			$done2 = true;
+		} 
+                
+		if (is_numeric($commands['assigngroup']) && $commands['assigngroup'] > 0)
+		{
+			$value = (int) $commands['assigngroup'];
+                        
+                        $modelFile = JModelAdmin::getInstance('groupMediaItem', 'hwdMediaShareModel'); 
+                        if (!$modelFile->link($pks, $value))
+			{
+				return false;
+			}
+
+			$done2 = true;
+		} 
+ 
+		if (is_numeric($commands['unassigngroup']) && $commands['unassigngroup'] > 0)
+		{
+			$value = (int) $commands['unassigngroup'];
+                        
+                        $modelFile = JModelAdmin::getInstance('groupMediaItem', 'hwdMediaShareModel'); 
+                        if (!$modelFile->unlink($pks, $value))
+			{
+				return false;
+			}
+
+			$done2 = true;
+		} 
+                
 		if (is_numeric($commands['assignplaylist']) && $commands['assignplaylist'] > 0)
 		{
 			$value = (int) $commands['assignplaylist'];
@@ -806,31 +820,17 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 			$done2 = true;
 		} 
 
-		if (is_numeric($commands['assigngroup']) && $commands['assigngroup'] > 0)
+		if (is_numeric($commands['assignprocess']) && $commands['assignprocess'] > 0)
 		{
-			$value = (int) $commands['assigngroup'];
+			$value = (int) $commands['assignprocess'];
                         
-                        $modelFile = JModelAdmin::getInstance('groupMediaItem', 'hwdMediaShareModel'); 
-                        if (!$modelFile->link($pks, $value))
+                        if (!$this->assignProcess($pks, $value))
 			{
 				return false;
 			}
 
 			$done2 = true;
-		} 
- 
-		if (is_numeric($commands['unassigngroup']) && $commands['unassigngroup'] > 0)
-		{
-			$value = (int) $commands['unassigngroup'];
-                        
-                        $modelFile = JModelAdmin::getInstance('groupMediaItem', 'hwdMediaShareModel'); 
-                        if (!$modelFile->unlink($pks, $value))
-			{
-				return false;
-			}
-
-			$done2 = true;
-		} 
+		}                
 
 		if (!$done1 && !$done2)
 		{
