@@ -53,11 +53,23 @@ class hwdMediaShareTableMedia extends JTable
                         // Retain existing parameters when not defined.
                         if ($src['id'])
                         {
+                                // Get a table instance.
                                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                                 $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-                                $table->load($src['id']);
+                                
+                                // Attempt to load the table row.
+                                $return = $table->load($src['id']);
+
+                                // Check for a table object error.
+                                if ($return === false && $table->getError())
+                                {
+                                        $this->setError($table->getError());
+                                        return false;
+                                }
+                                
                                 $properties = $table->getProperties(1);
                                 $item = JArrayHelper::toObject($properties, 'JObject');
+                                
                                 if (property_exists($item, 'params'))
                                 {
                                         $reg = new JRegistry;
