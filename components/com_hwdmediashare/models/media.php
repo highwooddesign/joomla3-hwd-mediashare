@@ -14,21 +14,19 @@ class hwdMediaShareModelMedia extends JModelList
 {
 	/**
 	 * Model context string.
-	 * @var string
-	 */
+         * 
+         * @access      public
+	 * @var         string
+	 */   
 	public $context = 'com_hwdmediashare.media';
-
-	/**
-	 * Model data
-	 * @var array
-	 */
-	protected $_items = null;
         
-    	/**
-	 * Constructor override, defines a white list of column filters.
+	/**
+	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 */
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
+	 */ 
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -52,6 +50,7 @@ class hwdMediaShareModelMedia extends JModelList
 	/**
 	 * Method to get a list of items.
 	 *
+	 * @access  public
 	 * @return  mixed  An array of data items on success, false on failure.
 	 */
 	public function getItems()
@@ -62,11 +61,10 @@ class hwdMediaShareModelMedia extends JModelList
                         {
                                 if (empty($items[$x]->author)) $items[$x]->author = JText::_('COM_HWDMS_GUEST');
                                 
-                                // Load categories for item.
+                                // Load categories.
                                 hwdMediaShareFactory::load('category');
-                                $categoryLib = hwdMediaShareCategory::getInstance();
-                                $categoryLib->elementType = 1;
-                                $items[$x]->categories = $categoryLib->get($items[$x]);
+                                $HWDcategory = hwdMediaShareCategory::getInstance();
+                                $items[$x]->categories = $HWDcategory->load($items[$x]);
                         }
                 }
 
@@ -74,24 +72,31 @@ class hwdMediaShareModelMedia extends JModelList
 	}
         
 	/**
-	 * Method to return the first in the list of media.
+	 * Method to return the first item in the list of media.
 	 *
-	 * @return  mixed  An array of data items on success, false on failure.
+         * @access  public
+	 * @return  mixed  A media item on success, false on failure.
 	 */
 	public function getItem()
 	{
-		$items = $this->getItems();
-                reset($items);
-		return current($items);
+		if ($items = $this->getItems())
+		{            
+                        reset($items);
+                        return current($items);
+                }   
+                
+                return false;
 	}
         
 	/**
 	 * Method to get the database query.
 	 *
+	 * @access  protected
 	 * @return  JDatabaseQuery  database query
 	 */
         public function getListQuery()
         {
+                // Initialise variables.
 		$user	= JFactory::getUser();
 		$groups	= implode(',', $user->getAuthorisedViewLevels());
 
@@ -123,17 +128,16 @@ class hwdMediaShareModelMedia extends JModelList
                         $query->where('a.access IN ('.$groups.')');
                 }
                 
-                // Restrict based on privacy access.
+                // Restrict based on privacy (listed/unlisted) access.
                 $query->where('(a.private = 0 OR (a.private = 1 && a.created_user_id = '.$user->id.'))');
                 
                 // Join over the users for the author, with value based on configuration.
-                $config->get('author') == 0 ? $query->select('CASE WHEN a.created_user_id_alias > ' . $db->Quote(' ') . ' THEN a.created_user_id_alias ELSE ua.name END AS author') : $query->select('CASE WHEN a.created_user_id_alias > ' . $db->Quote(' ') . ' THEN a.created_user_id_alias ELSE ua.username END AS author');
+                $config->get('author') == 0 ? $query->select('CASE WHEN a.created_user_id_alias > ' . $db->quote(' ') . ' THEN a.created_user_id_alias ELSE ua.name END AS author') : $query->select('CASE WHEN a.created_user_id_alias > ' . $db->quote(' ') . ' THEN a.created_user_id_alias ELSE ua.username END AS author');
 		$query->join('LEFT', '#__users AS ua ON ua.id=a.created_user_id');
-		$query->join('LEFT', '#__users AS uam ON uam.id = a.modified_user_id');
 
                 // Join over the extensions table.
                 $query->select('ext.ext');
-                $query->select("CASE WHEN a.ext_id > 0 THEN ext.media_type ELSE a.media_type END AS media_type");
+                $query->select('CASE WHEN a.ext_id > 0 THEN ext.media_type ELSE a.media_type END AS media_type');
                 $query->join('LEFT', '#__hwdms_ext AS ext ON ext.id = a.ext_id');
                 
 		// Filter by published state.
@@ -179,13 +183,13 @@ class hwdMediaShareModelMedia extends JModelList
 			}
                         else
                         {
-                                if ($searchMethod == "match")
+                                if ($searchMethod == 'match')
                                 {
                                         $query->where('MATCH(a.title, a.description) AGAINST (' . $db->quote($search) . ' IN BOOLEAN MODE)');
                                 }
                                 else
                                 {
-                                        $search = $db->Quote('%'.$db->escape($search, true).'%');
+                                        $search = $db->quote('%'.$db->escape($search, true).'%');
                                         $query->where('(a.title LIKE '.$search.' OR a.alias LIKE '.$search.')');
                                 }
 			}
@@ -194,7 +198,7 @@ class hwdMediaShareModelMedia extends JModelList
 		// Filter on the language.
 		if ($this->getState('filter.language'))
                 {
-			$query->where('a.language in (' . $db->Quote(JFactory::getLanguage()->getTag()) . ',' . $db->Quote('*') . ')');
+			$query->where('a.language in (' . $db->quote(JFactory::getLanguage()->getTag()) . ',' . $db->quote('*') . ')');
 		}                
 
 		// Add the list ordering clause.
@@ -212,20 +216,21 @@ class hwdMediaShareModelMedia extends JModelList
                         }                    
 		}    
 
-		// Filter by a single or multiple categories
+		// Filter by a single or multiple categories.
 		$categoryId = $this->getState('filter.category_id');
                 if (is_numeric($categoryId) && $categoryId > 0) 
                 {
 			$type = $this->getState('filter.category_id.include', true) ? '= ' : '<> ';
 
-			// Add subcategory check
+			// Add subcategory check.
 			$includeSubcategories = $this->getState('filter.subcategories', false);
 			$categoryEquals = 'cmap.category_id '.$type.(int) $categoryId;
 
 			if ($includeSubcategories) 
                         {
 				$levels = (int) $this->getState('filter.max_category_levels', '1');
-				// Create a subquery for the subcategory list
+                                
+				// Create a subquery for the subcategory list.
 				$subQuery = $db->getQuery(true);
 				$subQuery->select('sub.id');
 				$subQuery->from('#__categories as sub');
@@ -236,7 +241,7 @@ class hwdMediaShareModelMedia extends JModelList
 					$subQuery->where('sub.level <= this.level + '.$levels);
 				}
 
-				// Add the subquery to the main query
+				// Add the subquery to the main query.
 				$query->where('('.$categoryEquals.' OR cmap.category_id IN ('.$subQuery->__toString().'))');
 			}
 			else
@@ -249,7 +254,7 @@ class hwdMediaShareModelMedia extends JModelList
                         $query->where('cmap.element_type = 1');
                         $query->where('c.access IN ('.$groups.')');
 
-                        // Filter by published category
+                        // Filter by published category.
                         $cpublished = $this->getState('filter.c.published');
                         if (is_numeric($cpublished)) 
                         {
@@ -271,7 +276,7 @@ class hwdMediaShareModelMedia extends JModelList
                                 
                                 $query->where('c.access IN ('.$groups.')');
 
-                                //Filter by published category
+                                // Filter by published category.
                                 $cpublished = $this->getState('filter.c.published');
                                 if (is_numeric($cpublished))
                                 {
@@ -280,7 +285,7 @@ class hwdMediaShareModelMedia extends JModelList
 			}
 		}
                 
-		// Filter by author
+		// Filter by author.
 		$authorId = $this->getState('filter.author_id');
 		$authorWhere = '';
 		if (is_numeric($authorId)) 
@@ -299,34 +304,29 @@ class hwdMediaShareModelMedia extends JModelList
 			}
 		}
 
-		// Filter by start and end dates.
-		$nullDate = $db->Quote($db->getNullDate());
-		$nowDate = $db->Quote(JFactory::getDate()->toSql());
+		// Filter by published start and end dates.
+		$nullDate = $db->quote($db->getNullDate());
+		$nowDate = $db->quote(JFactory::getDate()->toSql());
 		if ($this->getState('filter.publish_date'))
                 {
 			$query->where('(a.publish_up = ' . $nullDate . ' OR a.publish_up <= ' . $nowDate . ')');
 			$query->where('(a.publish_down = ' . $nullDate . ' OR a.publish_down >= ' . $nowDate . ')');
 		}
 
-		// Filter by Date Range or Relative Date
+		// Filter by date range states.
 		$dateFiltering = $this->getState('filter.date_filtering', 'off');
 		$dateField = $this->getState('filter.date_field', 'a.created');
 		switch ($dateFiltering)
 		{
 			case 'range':
-				$startDateRange = $db->Quote($this->getState('filter.start_date_range', $nullDate));
-				$endDateRange = $db->Quote($this->getState('filter.end_date_range', $nullDate));
+				$startDateRange = $db->quote($this->getState('filter.start_date_range', $nullDate));
+				$endDateRange = $db->quote($this->getState('filter.end_date_range', $nullDate));
 				$query->where('('.$dateField.' >= '.$startDateRange.' AND '.$dateField . ' <= '.$endDateRange.')');
-				break;
-
+			break;
 			case 'relative':
 				$relativeDate = (int) $this->getState('filter.relative_date', 0);
 				$query->where($dateField.' >= DATE_SUB('.$nowDate.', INTERVAL ' . $relativeDate.' DAY)');
-				break;
-
-			case 'off':
-			default:
-				break;
+			break;
 		}
 
 		// Filter by featured state.
@@ -335,17 +335,10 @@ class hwdMediaShareModelMedia extends JModelList
 		{
 			case 'hide':
 				$query->where('a.featured = 0');
-				break;
-
+			break;
                         case 'only':
 				$query->where('a.featured = 1');
-				break;
-                            
-			case 'show':
-			default:
-				// Normally we do not discriminate
-				// between featured/unfeatured items.
-				break;
+			break;
 		}                
 
                 // Filter by media type.
@@ -355,35 +348,29 @@ class hwdMediaShareModelMedia extends JModelList
                         $query->where('(ext.media_type = '.(int) $mediaType.' OR a.media_type = '.(int) $mediaType.')');
 		} 
                 
-                // Filter by album.
+                // Filter by album (allowing the display of media from a specific album).
 		if ($albumId = $this->getState('filter.album_id'))
                 {
                         $query->join('LEFT', '`#__hwdms_album_map` AS amap ON amap.media_id = a.id AND amap.album_id = '.$albumId);
                         $query->where('amap.album_id = ' . $db->quote($albumId));
 		}
 
-                // Filter by group.
+                // Filter by group (allowing the display of media from a specific group).
 		if ($groupId = $this->getState('filter.group_id'))
                 {
                         $query->join('LEFT', '`#__hwdms_group_map` AS gmap ON gmap.media_id = a.id AND gmap.group_id = '.$groupId);
                         $query->where('gmap.group_id = ' . $db->quote($groupId));
 		}
 
-                // Filter by playlist.
+                // Filter by playlist (allowing the display of media from a specific playlist).
 		if ($playlistId = $this->getState('filter.playlist_id'))
                 {
                         $query->select('pmap.ordering AS playlist_order');
                         $query->join('LEFT', '`#__hwdms_playlist_map` AS pmap ON pmap.media_id = a.id AND pmap.playlist_id = '.$playlistId);
                         $query->where('pmap.playlist_id = ' . $db->quote($playlistId));
 		}
-
-                // Filter by user.
-		if ($userId = $this->getState('filter.user_id'))
-                {
-                        $query->where('a.created_user_id = ' . $db->quote($userId));
-		}
                 
-                // Filter by user favourites
+                // Filter by user favourites (allowing the display of media favourited by a user).
 		if ($favourtiesId = $this->getState('filter.favourites_id'))
                 {
                         $query->join('LEFT', '`#__hwdms_favourites` AS fav ON fav.element_id = a.id');                                           
@@ -399,9 +386,9 @@ class hwdMediaShareModelMedia extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
+	 * @access  protected
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
 	 * @return  void
 	 */
 	public function populateState($ordering = null, $direction = null)
@@ -437,17 +424,17 @@ class hwdMediaShareModelMedia extends JModelList
                 if ($this->context == 'com_hwdmediashare.media')
                 {
                         // Load the display state.
-                        $display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details' ), 'word', false);
+                        $display = $this->getUserStateFromRequest('media.display', 'display', $config->get('list_default_display', 'details'), 'word', false);
                         if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
                         $this->setState('media.display', $display);
 
                         // Load the featured state.
-                        $featured = $this->getUserStateFromRequest('media.show_featured', 'show_featured', $config->get('show_featured', 'show' ), 'word', false);
+                        $featured = $this->getUserStateFromRequest('media.show_featured', 'show_featured', $config->get('show_featured', 'show'), 'word', false);
                         if (!in_array(strtolower($featured), array('show', 'hide', 'only'))) $display = 'show';
                         $this->setState('media.show_featured', $featured);
                         $this->setState('filter.featured', $featured);
 
-                        // Check for list inputs and set default values
+                        // Check for list inputs and set default values.
                         $orderingFull = $config->get('list_order_media', 'a.created DESC');
                         $orderingParts = explode(' ', $orderingFull);
                         $ordering = $orderingParts[0];
@@ -459,28 +446,24 @@ class hwdMediaShareModelMedia extends JModelList
                                 $app->setUserState($this->context . '.list', $list);
                         }
 
-                        //@TODO: Work out these filters.hwd
-
-
-                        $mediaType = $this->getUserStateFromRequest('filter.mediaType', 'filter_mediaType', $config->get('list_default_media_type', '' ), 'integer', false);
-                        // If we are viewing a menu item that has a media type filter applied, then we need to show that instead of the user state.
-                        if ($config->get('list_default_media_type')) $mediaType = $config->get('list_default_media_type');
-                        $this->setState('filter.mediaType', $mediaType);
-
-                        // Load the display state.
-                        $display = $this->getUserStateFromRequest('media.media-display', 'display', $config->get('list_default_display', 'details' ), 'none', false);
-                        if (!in_array(strtolower($display), array('details', 'gallery', 'list'))) $display = 'details';
-                        $this->setState('media.media-display', $display);
-
+                        // Load the media type state from the menu item parameters.
+                        if ($config->get('list_default_media_type')) 
+                        {
+                                $mediaType = $config->get('list_default_media_type');
+                                $this->setState('filter.media_type', $mediaType);                            
+                        }
+                        
+                        // Load the category filter state.
                         $catids = $config->get('catid');
-                        $this->setState('filter.category_id.include', (bool) $config->get('category_filtering_type', 1));
-
-                        // Category filter
-                        if ($catids) {                    
-                                if ($config->get('show_child_category_articles', 0) && (int) $config->get('levels', 0) > 0) {
-                                        // Get an instance of the generic categories model
+                        if (is_array($catids)) $catids = array_filter($catids); // Remove empty array elements.
+                        if ($catids) 
+                        {     
+                                $this->setState('filter.category_id.include', (bool) $config->get('category_filtering_type', 1));
+                            
+                                if ($config->get('show_child_category_articles', 0) && (int) $config->get('levels', 0) > 0)
+                                {
+                                        // Get an instance of the categories model.
                                         $categories = JModelLegacy::getInstance('Categories', 'hwdMediaShareModel', array('ignore_request' => true));
-                                        $categories->setState('params', $appParams);
                                         $levels = $config->get('levels', 1) ? $config->get('levels', 1) : 9999;
                                         $categories->setState('filter.get_children', $levels);
                                         $categories->setState('filter.published', 1);
@@ -497,10 +480,10 @@ class hwdMediaShareModelMedia extends JModelList
                                                         foreach($items as $category)
                                                         {
                                                                 $condition = (($category->level - $categories->getParent()->level) <= $levels);
-                                                                if ($condition) {
+                                                                if ($condition) 
+                                                                {
                                                                         $additional_catids[] = $category->id;
                                                                 }
-
                                                         }
                                                 }
                                         }
@@ -510,40 +493,20 @@ class hwdMediaShareModelMedia extends JModelList
 
                                 $this->setState('filter.category_id', $catids);
                         }
-
-                        // New Parameters
-                        $this->setState('filter.author_id', $config->get('created_by', ""));
-                        $this->setState('filter.author_id.include', $config->get('author_filtering_type', 1));
-                        $this->setState('filter.author_alias', $config->get('created_by_alias', ""));
-                        $this->setState('filter.author_alias.include', $config->get('author_alias_filtering_type', 1));
-                        $excluded_articles = $config->get('excluded_articles', '');
-
-                        if ($excluded_articles) 
-                        {
-                                $excluded_articles = explode("\r\n", $excluded_articles);
-                                $this->setState('filter.article_id', $excluded_articles);
-                                $this->setState('filter.article_id.include', false); // Exclude
-                        }
-
-                        $date_filtering = $config->get('date_filtering', 'off');
-                        if ($date_filtering !== 'off') 
-                        {
-                                $this->setState('filter.date_filtering', $date_filtering);
-                                $this->setState('filter.date_field', $config->get('date_field', 'a.created'));
-                                $this->setState('filter.start_date_range', $config->get('start_date_range', '1000-01-01 00:00:00'));
-                                $this->setState('filter.end_date_range', $config->get('end_date_range', '9999-12-31 23:59:59'));
-                                $this->setState('filter.relative_date', $config->get('relative_date', 30));
-                        }
-
-                        // API filter parameters, not stored in the state
-                        JRequest::getInt('filter_group_id') > 0 ? $this->setState('filter.group_id', JRequest::getInt('filter_group_id')) : null;
-                        JRequest::getInt('filter_album_id') > 0 ? $this->setState('filter.album_id', JRequest::getInt('filter_album_id')) : null;
-                        JRequest::getInt('filter_playlist_id') > 0 ? $this->setState('filter.playlist_id', JRequest::getInt('filter_playlist_id')) : null;
-                        JRequest::getInt('filter_category_id') > 0 ? $this->setState('filter.category_id', JRequest::getInt('filter_category_id')) : null;
-                        JRequest::getInt('filter_favourites_id') > 0 ? $this->setState('filter.favourites_id', JRequest::getInt('filter_favourites_id')) : null;
-                        JRequest::getInt('filter_author_id') > 0 ? $this->setState('filter.author_id', JRequest::getInt('filter_author_id')) : null;
-                        JRequest::getWord('filter_author_filtering_type') != '' ? $this->setState('filter.author_id.include', JRequest::getWord('filter_author_filtering_type')) : null;
-                        JRequest::getVar('filter_tag') != '' ? $this->setState('filter.tag', JRequest::getVar('filter_tag')) : null; 
+                        
+                        /**
+                         * When populating the state from the 'com_hwdmediashare.media' context we set the states
+                         * above from the request. That data is coming from the config, menu parameters or the user
+                         * who is viewing. We directly set other states from the request allowing various useful
+                         * filters to be applied using the HWD API.
+                         */ 
+                        if ($app->input->get('filter_group_id', '', 'integer') > 0)         $this->setState('filter.group_id', $app->input->get('filter_group_id', '', 'integer'));
+                        if ($app->input->get('filter_album_id', '', 'integer') > 0)         $this->setState('filter.album_id', $app->input->get('filter_album_id', '', 'integer'));
+                        if ($app->input->get('filter_playlist_id', '', 'integer') > 0)      $this->setState('filter.playlist_id', $app->input->get('filter_playlist_id', '', 'integer'));
+                        if ($app->input->get('filter_category_id', '', 'integer') > 0)      $this->setState('filter.category_id', $app->input->get('filter_category_id', '', 'integer'));
+                        if ($app->input->get('filter_favourites_id', '', 'integer') > 0)    $this->setState('filter.favourites_id', $app->input->get('filter_favourites_id', '', 'integer'));
+                        if ($app->input->get('filter_author_id', '', 'integer') > 0)        $this->setState('filter.author_id', $app->input->get('filter_author_id', '', 'integer'));
+                        if ($app->input->get('filter_media_type', '', 'integer') > 0)       $this->setState('filter.media_type', $app->input->get('filter_media_type', '', 'integer'));
                 }    
                 
                 // List state information.
