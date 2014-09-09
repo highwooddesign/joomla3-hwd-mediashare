@@ -35,6 +35,10 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('load_joomla_css'); ?></div>
                         </div>
                         <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('sef_advanced'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('sef_advanced'); ?></div>
+                        </div>
+                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('author'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('author'); ?></div>
                         </div>
