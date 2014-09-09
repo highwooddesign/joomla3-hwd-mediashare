@@ -59,6 +59,19 @@
 			<option	value="0">JNO</option>
 		</field> 
 		<field
+			name="sef_advanced"
+			type="radio"
+			label="COM_HWDMS_SEFADVANCED_LABEL"
+			description="COM_HWDMS_SEFADVANCED_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+			validate="integer"
+                        filter="integer"
+                >
+			<option	value="1">JON</option>
+			<option	value="0">JOFF</option>
+		</field> 
+		<field
 			name="author"
 			type="list"
 			label="COM_HWDMS_AUTHOR_LABEL"
