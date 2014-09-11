@@ -74,7 +74,11 @@ class hwdMediaShareTableGroup extends JTable
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                
+
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+
 		if ($this->id)
 		{
 			// Existing item, so set modified details.
@@ -97,14 +101,12 @@ class hwdMediaShareTableGroup extends JTable
                         
                         // Set a unique key.
                         if (empty($this->key))
-                        {
-                                hwdMediaShareFactory::load('utilities');
-                                $this->key = hwdMediaShareUtilities::generateKey();
-                                if (hwdMediaShareUtilities::keyExists($this->key))
-                                {
-                                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                                        return false;
-                                }
+                        {                            
+				if (!$this->key = $utilities->generateKey(3))
+				{
+					$this->setError($utilities->getError());
+					return false;
+				} 
                         }
 
                         // Set default values.
