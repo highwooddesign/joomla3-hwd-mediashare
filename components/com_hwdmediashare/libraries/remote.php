@@ -110,6 +110,13 @@ class hwdMediaShareRemote extends JObject
                         $data['remotes'] = $data['remote'];
                 }
 
+                // Check if we are processing a single upload, and redefine.
+                if (!isset($data['remotes'])) 
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NO_REMOTE_HOST'));
+                        return false; 
+                }
+                
                 // Get urls to import.
                 $urls = explode("\n", $data['remotes']); 
                 
@@ -344,7 +351,7 @@ class hwdMediaShareRemote extends JObject
                 
                 if (!$this->_url)
                 {
-                        // Retrieve fitlered jform data.
+                        // Retrieve filtered jform data.
                         $jform = $app->input->getArray(array(
                             'jform' => array(
                                 'remote' => 'string'
@@ -718,7 +725,7 @@ class hwdMediaShareRemote extends JObject
                         try
                         {
                                 $db->setQuery($query);
-                                $db->query(); 
+                                $db->execute(); 
                                 $ext_id = $db->loadResult();                   
                         }
                         catch (RuntimeException $e)
@@ -737,13 +744,11 @@ class hwdMediaShareRemote extends JObject
                                 }
                             
                                 // Define a key so we can copy the file into the storage directory.
-                                $key = $utilities->generateKey();
-
-                                if ($utilities->keyExists($key))
+                                if (!$key = $utilities->generateKey(1))
                                 {
-                                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
+                                        $this->setError($utilities->getError());
                                         return false;
-                                }
+                                }  
                                         
                                 if (empty($file) || empty($ext) || !file_exists($file))
                                 {
@@ -816,7 +821,8 @@ class hwdMediaShareRemote extends JObject
                                 $this->_item = JArrayHelper::toObject($properties, 'JObject');
                                         
                                 hwdMediaShareFactory::load('files');
-                                hwdMediaShareFiles::add($this->_item, 1);
+                                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                $HWDfiles->addFile($this->_item, 1);
 
                                 hwdMediaShareUpload::addProcesses($this->_item);
 
@@ -1006,7 +1012,7 @@ class hwdMediaShareRemote extends JObject
                 try
                 {
                         $db->setQuery($query);
-                        $db->query(); 
+                        $db->execute(); 
                         $rows = $db->loadObjectList();                   
                 }
                 catch (RuntimeException $e)
