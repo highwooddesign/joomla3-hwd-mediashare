@@ -183,13 +183,13 @@ class hwdMediaShareProcesses extends JObject
 	{
                 // Initialise variables. 
                 $db = JFactory::getDBO();
-                                    
+    
                 $query = $db->getQuery(true)
-                        ->select('a.*, ext.media_type')
+                        ->select('a.*, e.media_type')
                         ->from('#__hwdms_processes AS a')
-                        ->join('LEFT', '#__hwdms_media AS media ON media.id = a.media_id')
-                        ->join('LEFT', '#__hwdms_ext AS ext ON ext.id = media.ext_id')
-                        ->where('a.status = ' . $db->quote(1) . ' || a.status = ' . $db->quote(3))
+                        ->join('LEFT', '#__hwdms_media AS m ON m.id = a.media_id')
+                        ->join('LEFT', '#__hwdms_ext AS e ON e.id = m.ext_id')
+                        ->where('(a.status = ' . $db->quote(1) . ' || a.status = ' . $db->quote(3) . ')')
                         ->where('a.attempts < ' . $db->quote(5))
                         ->order('a.modified ASC');
                 
@@ -198,7 +198,7 @@ class hwdMediaShareProcesses extends JObject
                 {
                         $query->where('a.id IN ('.implode(', ', $cids).')');
                 }
-                
+
                 // If we are running over CLI then try to prevent multiple executions of the same process.
                 $args = @$GLOBALS['argv'];
                 if ($args[1] == 'process')
@@ -207,7 +207,7 @@ class hwdMediaShareProcesses extends JObject
                 }                
 
                 try
-                {                
+                {      
                         $db->setQuery($query);
                         return $db->loadObject();
                 }
@@ -232,7 +232,7 @@ class hwdMediaShareProcesses extends JObject
                 $query = $db->getQuery(true)
                         ->select('COUNT(*)')
                         ->from('#__hwdms_processes')
-                        ->where('status = ' . $db->quote(1) . ' || status = ' . $db->quote(3))
+                        ->where('(status = ' . $db->quote(1) . ' || status = ' . $db->quote(3) . ')')
                         ->where('attempts < ' . $db->quote(5));
                 try
                 {                
@@ -288,7 +288,7 @@ class hwdMediaShareProcesses extends JObject
          * @return  boolean True on success.
 	 */
 	public function update($process, $result)
-	{
+	{   
                 // Initialise variables. 
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
@@ -336,7 +336,7 @@ class hwdMediaShareProcesses extends JObject
                 
                 // Clean, trim and truncate the log data.
                 $input = $safeFilter->clean(trim($item->input));
-                $output = is_array($item->output) ? implode("\n",$item->output) : $item->output;
+                $output = is_array($item->output) ? implode("\n", $item->output) : $item->output;
                 $output = $safeFilter->clean(trim($output));
                 $output = JHtmlString::truncate($output, 5120, false, false);
                 
@@ -357,6 +357,24 @@ class hwdMediaShareProcesses extends JObject
                 }
                 
                 return true;
+	}
+        
+	/**
+	 * Method to reset a log entry.
+         * 
+         * @access  public
+         * @param   object  $process    The process being updated.
+         * @return  object  An empty log.
+	 */
+	public function resetLog($process)
+	{
+                // Setup log.
+                $log = new StdClass;
+                $log->process_id = $process->id;
+                $log->input = '';
+                $log->output = '';
+                $log->status = 3; // Default to fail.
+                return $log;
 	}
         
 	/**
