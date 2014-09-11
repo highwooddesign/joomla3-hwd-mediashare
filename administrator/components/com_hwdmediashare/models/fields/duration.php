@@ -33,8 +33,8 @@ class JFormFieldDuration extends JFormField
 
                 // Add page assets.
                 JHtml::_('bootstrap.framework');
-                $doc->addStyleSheet(JURI::root( true ).'/media/com_hwdmediashare/assets/css/bootstrap-timepicker.min.css');
-                $doc->addScript(JURI::root( true ).'/media/com_hwdmediashare/assets/javascript/bootstrap-timepicker.min.js');
+                $doc->addStyleSheet(JURI::root(true).'/media/com_hwdmediashare/assets/css/bootstrap-timepicker.min.css');
+                $doc->addScript(JURI::root(true).'/media/com_hwdmediashare/assets/javascript/bootstrap-timepicker.min.js');
                 
                 // Convert seconds into time object.
                 $duration = hwdMediaShareMedia::secondsToTime($this->value, true); 
