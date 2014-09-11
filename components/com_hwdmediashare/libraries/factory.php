@@ -139,7 +139,7 @@ class hwdMediaShareFactory extends JObject
                         $this->_params->merge($this->_config);    
                         
                         // Merge and override with menu and system parameters (if in frontend).
-                        if (!defined('_JCLI') && !$app->isAdmin()) $this->_params->merge($app->getParams());
+                        if (!defined('_JCLI') && !$app->isAdmin()) $this->_params->merge($app->getParams('com_hwdmediashare'));
                 }
 
                 //$config = JRegistryFormatJSON::stringToObject($this->_config);
