@@ -120,9 +120,27 @@ class hwdMediaShareEmbed extends JObject
                 $post = array();
 
                 // Check if we need to replace an existing media item.
-                if ($data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
+                if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                 {
-                        $post['id']                     = $data['id'];
+                        // Attempt to load the existing table row.
+                        $return = $table->load($data['id']);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
+                        $properties = $table->getProperties(1);
+                        $replace = JArrayHelper::toObject($properties, 'JObject');
+
+                        // Here, we need to remove all files already associated with this media item
+                        hwdMediaShareFactory::load('files');
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $HWDfiles->deleteMediaFiles($replace);
+
+                        //$post['id']                   = '';
                         //$post['asset_id']             = '';
                         //$post['ext_id']               = '';
                         //$post['media_type']           = '';
