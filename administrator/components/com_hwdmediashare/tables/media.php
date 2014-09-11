@@ -156,14 +156,12 @@ class hwdMediaShareTableMedia extends JTable
                         
                         // Set a unique key.
                         if (empty($this->key))
-                        {
-                                hwdMediaShareFactory::load('utilities');
-                                $this->key = hwdMediaShareUtilities::generateKey();
-                                if (hwdMediaShareUtilities::keyExists($this->key))
-                                {
-                                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                                        return false;
-                                }
+                        {                            
+				if (!$this->key = $utilities->generateKey(1))
+				{
+					$this->setError($utilities->getError());
+					return false;
+				} 
                         }
                         
                         // Set default values.
