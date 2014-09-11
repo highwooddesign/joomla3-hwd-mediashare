@@ -1,71 +1,53 @@
 <?php
 /**
- * @version    SVN $Id: utilities.php 1623 2013-08-14 14:03:42Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      20-Mar-2012 10:29:20
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * hwdMediaShare framework upload class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareUtilities extends JObject
 {
 	/**
 	 * Callback for escaping.
-	 *
-	 * @var string
-	 */
-	protected $escape = 'htmlspecialchars';
-
-	/**
-	 * Callback for escaping.
-	 *
-	 * @var string
-	 * @deprecated use $escape declare as private
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $_escape = 'htmlspecialchars';
 
 	/**
 	 * Charset to use in escaping mechanisms; defaults to urf8 (UTF-8)
-	 *
-	 * @var string
-	 */
-	protected $charset = 'UTF-8';
-
-	/**
-	 * Charset to use in escaping mechanisms; defaults to urf8 (UTF-8)
-	 *
-	 * @var string
-	 * @deprecated use $charset declare as private
+         * 
+         * @access      protected
+	 * @var         string
 	 */
 	protected $_charset = 'UTF-8';
 
-        /**
+	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
-	 * Returns the hwdMediaShareRemote object, only creating it if it
+	 * Returns the hwdMediaShareUtilities object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareMedia A hwdMediaShareRemote object.
-	 * @since   0.1
+	 * @access  public
+         * @static
+	 * @return  hwdMediaShareUtilities Object.
 	 */
 	public static function getInstance()
 	{
@@ -79,18 +61,16 @@ class hwdMediaShareUtilities extends JObject
 
 		return $instance;
 	}
-
+        
 	/**
 	 * Escapes a value for output in a view script.
 	 *
 	 * If escaping mechanism is either htmlspecialchars or htmlentities, uses
 	 * {@link $_encoding} setting.
 	 *
+         * @access  public
 	 * @param   mixed  $var  The output to escape.
-	 *
 	 * @return  mixed  The escaped value.
-	 *
-	 * @since   11.1
 	 */
 	public function escape($var)
 	{
@@ -103,140 +83,79 @@ class hwdMediaShareUtilities extends JObject
 	}
         
 	/**
-	 * Method to validate an email
+	 * Method to validate string as an email.
 	 *
-	 * @since   0.1
+         * @access  public
+	 * @param   mixed    $string  The input to validate.
+	 * @return  boolean  True if validated, false if not.
 	 */
-	public function validateEmail($data, $strict = false) 
+	public function validateEmail($string) 
 	{
-		$regex = $strict ? '/^([.0-9a-z_-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i' : '/^([*+!.&#$¦\'\\%\/0-9a-z^_`{}=?~:-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,4})$/i'; 
-		
-		if(preg_match($regex, JString::trim($data), $matches))
-		{
-			return array($matches[1], $matches[2]); 
-		}
-		else
-		{ 
-			return false; 
-		} 
+                if (filter_var($string, FILTER_VALIDATE_EMAIL))
+                { 
+                        return true;
+                }
+
+                return false;
 	}
         
 	/**
-	 * Method to validate an url
+	 * Method to validate string as an url.
 	 *
-	 * @since   0.1
+         * @access  public
+	 * @param   mixed    $string  The input to validate.
+	 * @return  boolean  True if validated, false if not.
 	 */
-        public function validateUrl($url)
+        public function validateUrl($string)
         {
-                return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url);
+                if (filter_var($string, FILTER_VALIDATE_URL))
+                { 
+                        return true;
+                }
+
+                return false;
         }
         
 	/**
-	 * Method to get the URL of an avatar
+	 * Method to send an email to all users configured to receive system emails.
 	 *
-	 * @since   0.1
-	 */
-        public function getAvatar($user)
-        {
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-
-		if (!$user) return JURI::root( true ).'/media/com_hwdmediashare/assets/images/default-avatar.png';
-                
-                if ($config->get('community_avatar') == 'cb')
-                {                   
-                        $db =& JFactory::getDBO();
-                        $query = $db->getQuery(true);
-                        $query->select('avatar');
-                        $query->from('#__comprofiler');
-                        $query->where('user_id = '.$user->id);
-                        $db->setQuery($query);
-                        $db->query();                
-                        $cbAvatar = $db->loadResult();
- 
-                        if (!empty($cbAvatar) && file_exists(JPATH_ROOT.'/images/comprofiler/tn'.$cbAvatar))
-                        {
-                                return JURI::root( true ).'/images/comprofiler/tn'.$cbAvatar;
-                        }
-                        else if (!empty($cbAvatar) && file_exists(JPATH_ROOT.'/images/comprofiler/'.$cbAvatar))
-                        {
-                                return JURI::root( true ).'/images/comprofiler/'.$cbAvatar;
-                        }                        
-                }
-                else if ($config->get('community_avatar') == 'jomsocial' && file_exists(JPATH_ROOT.'/components/com_community/libraries/core.php'))
-                {
-                        include_once(JPATH_ROOT.'/components/com_community/libraries/core.php');
-                        $JSUser = CFactory::getUser($user->id);
-                        return $JSUser->getThumbAvatar();
-                }
-                else if ($config->get('community_avatar') == 'gravatar' && isset($user->email))
-                {
-                        return "http://www.gravatar.com/avatar/".md5( strtolower( trim( $user->email ) ) );                    
-                }
-                else if ($config->get('community_avatar') == 'jomwall')
-                {
-                        include_once (JPATH_ROOT.DS.'components'.DS .'com_awdwall' .DS . 'helpers' . DS . 'user.php');
-                        return AwdwallHelperUser::getBigAvatar51($user->id);	
-                }
-                
-                if (!isset($user->key))
-                {
-                        // Load user
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table =& JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                        $table->load( $user->id );
-
-                        $properties = $table->getProperties(1);
-                        $user = JArrayHelper::toObject($properties, 'JObject');
-
-                }
-                    
-                if (isset($user->key))
-                {
-                        hwdMediaShareFactory::load('files');
-                        hwdMediaShareFiles::getLocalStoragePath();
-
-                        $folders = hwdMediaShareFiles::getFolders($user->key);
-                        $filename = hwdMediaShareFiles::getFilename($user->key, 10);
-                        $ext = hwdMediaShareFiles::getExtension($user, 10);
-
-                        $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
-                        if (file_exists($path))
-                        {
-                                return hwdMediaShareFiles::getUrl($folders, $filename, $ext);
-                        }
-                }
-                
-                return JURI::root( true ).'/media/com_hwdmediashare/assets/images/default-avatar.png';
-        }
-        
-	/**
-	 * Method to get the URL of an avatar
-	 *
-	 * @since   0.1
+         * @access  public
+	 * @param   string   $emailSubject  The subject for the email.
+	 * @param   string   $emailBody     The body for the email.
+	 * @return  boolean  True if successful, false if not.
 	 */
         public function sendSystemEmail($emailSubject, $emailBody)
         {
+                // Initialise variables.
+                $db = JFactory::getDBO();
+                $app = JFactory::getApplication();
+                
+                // Load HWD config.                
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                $db =& JFactory::getDBO();
-                $app =& JFactory::getApplication();
-                
-                // get all admin users
-                $query = 'SELECT name, email, sendEmail, id' .
-                         ' FROM #__users' .
-                         ' WHERE sendEmail=1';
 
-                $db->setQuery( $query );
-                $rows = $db->loadObjectList();
-
-                // Send mail to all users with users creating permissions and receiving system emails
-                foreach( $rows as $row )
+                // Load all users configured to receive system emails.
+                $query = $db->getQuery(true)
+                        ->select('name, email, sendEmail, id')
+                        ->from('#__users')
+                        ->where('sendEmail = ' . $db->quote(1));
+                try
+                {                
+                        $db->setQuery($query);
+                        $rows = $db->loadObjectList();
+                }
+                catch (Exception $e)
                 {
-                        $usercreator = JFactory::getUser($id = $row->id);
-                        if ($usercreator->authorise('core.create', 'com_users'))
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+
+                foreach($rows as $row)
+                {
+                        $user = JFactory::getUser($id = $row->id);
+                        if ($user->authorise('core.create', 'com_users'))
                         {
+                                // Send email.
                                 $return = JFactory::getMailer()->sendMail($app->getCfg('mailfrom'), $app->getCfg('fromname'), $row->email, $emailSubject, $emailBody, true);
 
                                 // Check for an error.
@@ -247,71 +166,16 @@ class hwdMediaShareUtilities extends JObject
                                 }
                         }
                 }
-                        
+
                 return true;
         }
         
 	/**
-	 * Method to get the size of a modal window
+	 * Method to convert an URL from relative to absolute.
 	 *
-	 * @since   0.1
-	 */
-        public function modalSize($size="small")
-        {
-                JLoader::register('hwdMediaShareHelperMobile', JPATH_ROOT.'/components/com_hwdmediashare/helpers/mobile.php');
-                $mobile = hwdMediaShareHelperMobile::getInstance();
-                if ($mobile->_isIpad)
-                {
-                        $retval = "x: 500, y: 400";
-                }
-                elseif ($mobile->_isMobile)
-                {
-                        $retval = "x: 220, y: 220";
-                }
-                else
-                {
-                        if ($size == "small")
-                        {
-                                $retval = "x: 400, y: 350";    
-                        }
-                        else
-                        {
-                                $retval = "x: 800, y: 500";
-                        } 
-                }
-                return $retval;
-        }
-        
-	/**
-	 * Method to get the width of a media item
-	 *
-	 * @since   1.0.2
-	 */
-        public function getMediaWidth()
-        {
-                // Load hwdMediaShare config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-
-                JLoader::register('hwdMediaShareHelperMobile', JPATH_ROOT.'/components/com_hwdmediashare/helpers/mobile.php');
-                $mobile = hwdMediaShareHelperMobile::getInstance();
-
-                if ($mobile->_isIpad)
-                {
-                        return "620";
-                }
-                elseif ($mobile->_isMobile)
-                {
-                        return "300";
-                }
-                else
-                {
-                        return JRequest::getInt('mediaitem_size', $config->get('mediaitem_size', '500'));
-                }
-        }
-        
-	/**
-	 * Convert links from relative to absolute
+         * @access  public
+	 * @param   string  $url  The URL to process.
+	 * @return  string  The processed URL.
 	 */
 	public function relToAbs($url)
 	{ 
@@ -320,46 +184,232 @@ class hwdMediaShareUtilities extends JObject
 	}    
         
 	/**
-	 * Convert links from relative to absolute
+	 * Method to print a notice.
+	 *
+         * @access  public
+	 * @param   string  $heading      The notice heading.
+	 * @param   string  $description  The notice description.
+	 * @param   string  $type         The type of noticed, used as class.
+	 * @return  string  The rendered notice.
 	 */
-	public function printModalNotice($error, $description=null, $reload=false)
+	public function printNotice($statement, $description = null, $type = 'info')
 	{ 
-                $document = JFactory::getDocument();            
-                $document->addStyleDeclaration('#main,.contentpane { margin: 0!important; padding: 0!important; } #system-message-container { display:none; }');                    
-                // Start output
                 ob_start();
                 ?>
-                <div id="hwd-container" style="visibility:hidden;">
-                <h2><?php echo JText::_($error); ?></h2>
-                <p><?php echo JText::_($description); ?></p>
+                <div class="alert alert-<?php echo $type; ?>">
+                  <h4 class="alert-heading"><?php echo $statement; ?></h4>
+                  <p><?php echo $description; ?></p>
                 </div>
-
-<script type='text/javascript'>
-<?php if ($reload) : ?>
-setTimeout('window.parent.location.reload(true);',3000);
-<?php else : ?>
-setTimeout('window.parent.SqueezeBox.close();',5000);
-<?php endif; ?>
-parent.document.getElementById('sbox-content').getElement('iframe').setStyles({'width':'100%','height':'100%','overflow':'hidden'});
-var delayID;
-var begin = function() {
-  delayID = (function() {
-    //do all the rotation stuff here
-    var size = $('hwd-container').getSize();
-    var width = 400;
-    var height = size.y + 10;
-    parent.document.getElementById('sbox-content').getElement('iframe').setStyles({'width':'100%','height':'100%','overflow':'hidden'});
-    window.parent.SqueezeBox.resize({x:width,y:height},false);    
-    $('hwd-container').setStyles({'visibility':'visible'});
-  }).delay(100);
-}
-begin();
-</script> 
+                <?php
+                $html = ob_get_contents();
+                ob_end_clean();
+                return $html;
+	} 
+        
+	/**
+	 * Method to print a notice in a modal window.
+	 *
+         * @access  public
+	 * @param   string  $heading      The notice heading.
+	 * @param   string  $description  The notice description.
+	 * @return  string  The rendered notice.
+	 */
+	public function printModalNotice($heading, $description = null)
+	{ 
+                ob_start();
+                ?>
+                <div id="hwd-container" class="hwd-modal"> <a name="top" id="top"></a>
+                  <h2 class="media-modal-title"><?php echo JText::_($statement); ?></h2>
+                  <p class="media-modal-description"><?php echo JText::_($description); ?></p>
+                </div>
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
                 print $html;
-                return true;
 	}           
- 
+
+	/**
+	 * Method to generate a unique key.
+	 *
+         * @access  public
+	 * @return  string  The key.
+	 */
+        public function generateKey($element = 1)
+        {
+                // Initialise variables.
+                $db = JFactory::getDBO();
+                $app = JFactory::getApplication();
+            
+                // Generate key.
+                mt_srand(microtime(true)*100000 + memory_get_usage(true));
+                $key = md5(uniqid(mt_rand(), true));
+                
+                // Define value array.
+                $values = array(1 => 'media', 2 => 'album', 3 => 'group', 4 => 'playlist', 5 => 'channel');
+
+                // Check if key exists.
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_' . $values[$element])
+                        ->where($db->quoteName('key') . ' = ' . $db->quote($key));
+                try
+                {
+                        $db->setQuery($query);
+                        $exists = $db->loadResult();                        
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                if ($exists) 
+                {
+                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
+                        return false;   
+                }
+                
+                return $key;
+        }
+
+	/**
+	 * Method to automatically generate a channel.
+	 *
+         * @access  public
+	 * @param   integer  $key  The primary channel key (the user ID).
+	 * @return  boolean  True on success, false on fail.
+	 */
+	public function autoCreateChannel($pk)
+	{
+                // Initialiase variables.
+                $app = JFactory::getApplication();
+                $user = JFactory::getUser();
+                $db = JFactory::getDBO();
+                $date = JFactory::getDate();
+                
+		// Sanitize the id.
+		$pk = (int) $pk;
+
+                // Get HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                if (empty(JFactory::getUser($pk)->id))
+                {
+			$this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+			return false;
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('1')
+                        ->from('#__hwdms_users')
+                        ->where('id = ' . $db->quote($pk));
+                try
+                {                
+                        $db->setQuery($query);
+                        $db->execute(); 
+                        $exists = $db->loadResult();
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+
+                if(!$exists)
+                {
+                        if (!$key = $utilities->generateKey(1))
+                        {
+                                $this->setError($utilities->getError());
+                                return false;
+                        }  
+                        
+                        $title = $config->get('author') == 0 ? JFactory::getUser($pk)->name : JFactory::getUser($pk)->username; 
+                        $alias = JApplication::stringURLSafe($title); 
+                        $status = (!$app->isAdmin() && $config->get('approve_new_channels') == 1) ? 2 : 1;
+                        
+                        // Insert columns.
+                        $columns = array('id', 'key', 'title', 'alias', 'status', 'published', 'access', 'created_user_id', 'created', 'language');
+
+                        // Insert values.
+                        $values = array($pk, $key, $title, $alias, $status, 1, 1, $user->id, $date->toSql(), '*');
+
+                        // Prepare the insert query.
+                        $query = $db->getQuery(true)
+                                ->insert($db->quoteName('#__hwdms_users'))
+                                ->columns($db->quoteName($columns))
+                                ->values(implode(',', $db->quote($values)));
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $db->execute();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }   
+                }
+
+		return true;
+	}
+        
+	/**
+	 * Method to get a human readable status.
+	 *
+         * @access  public
+	 * @param   object  $item  The item to process.
+	 * @return  string  The human readable string for the item status.
+	 */
+	public function getReadableStatus($item)
+	{
+                switch ($item->status)
+                {
+                        case 0:
+                                return JText::_('COM_HWDMS_UNAPPROVED');
+                        break;
+                        case 1:
+                                return JText::_('COM_HWDMS_APPROVED');
+                        break;
+                        case 2:
+                                return JText::_('COM_HWDMS_PENDING');
+                        break;
+                        case 3:
+                                return JText::_('COM_HWDMS_REPORTED');
+                        break;
+                }
+	}   
+
+	/**
+	 * Method to get a human readable element type.
+	 *
+         * @access  public
+	 * @param   object  $item  The item to process.
+	 * @return  string  The human readable string for the item element type.
+	 */
+        public static function getElementType($item)
+        {
+                switch ($item->element_type)
+                {
+                        case 1:
+                                return JText::_('COM_HWDMS_MEDIA');
+                        break;
+                        case 2:
+                                return JText::_('COM_HWDMS_ALBUM');
+                        break;
+                        case 3:
+                                return JText::_('COM_HWDMS_GROUP');
+                        break;
+                        case 4:
+                                return JText::_('COM_HWDMS_PLAYLIST');
+                        break;
+                        case 5:
+                                return JText::_('COM_HWDMS_CHANNEL');
+                        break;
+                }
+        }         
 }
