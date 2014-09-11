@@ -273,7 +273,7 @@ class hwdMediaShareTableMedia extends JTable
                         // Send system notifications.
                         if ($isNew && $config->get('notify_new_media') == 1) 
                         {
-                                if ($row->status == 2)
+                                if ($media->status == 2)
                                 {
                                         ob_start();
                                         require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia_pending.php');
