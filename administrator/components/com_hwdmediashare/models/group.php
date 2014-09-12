@@ -101,7 +101,7 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	}
 
         /**
-	 * Method to get the thumbnail for the group.
+	 * Method to get the custom thumbnail for the group.
          * 
          * @access  public
          * @param   object  $item   The group object.
@@ -109,11 +109,9 @@ class hwdMediaShareModelGroup extends JModelAdmin
 	 */
 	public function getThumbnail($item)
 	{
-                // Load the HWD downloads library.
-                hwdMediaShareFactory::load('downloads');
-                $HWDdownloads = hwdMediaShareDownloads::getInstance();
-                $HWDdownloads->elementType = 3;
-                if ($thumbnail = $HWDdownloads->getElementThumbnail($item))
+                // Load the HWD thumbnails library.
+                hwdMediaShareFactory::load('thumbnails');
+                if ($thumbnail = hwdMediaShareThumbnails::getElementThumbnail($item, 3))
                 {
                         return $thumbnail;
                 }
