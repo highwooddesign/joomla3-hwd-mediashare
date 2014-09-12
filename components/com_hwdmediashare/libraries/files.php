@@ -207,7 +207,7 @@ class hwdMediaShareFiles extends JObject
                         }    
                         else
                         {
-                                define('HWDMS_URL_MEDIA_FILES', JURI::root( true ).'/'.$urelative);
+                                define('HWDMS_URL_MEDIA_FILES', JURI::root(true).'/'.$urelative);
                         }
                 }
         }
