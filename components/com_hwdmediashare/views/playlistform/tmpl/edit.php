@@ -115,7 +115,7 @@ JHtml::_('formbehavior.chosen', 'select');
           </div> 
         </div>
         <div class="span4">
-          <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($this->item, 4)); ?>" border="0" class="img-responsive pull-right" alt="<?php echo $this->escape($this->item->title); ?>" /> 
+          <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($this->item, 4)); ?>" border="0" class="img-responsive pull-right" alt="<?php echo $this->escape($this->item->title); ?>" /> 
         </div>
       </div>  
     </fieldset> 
