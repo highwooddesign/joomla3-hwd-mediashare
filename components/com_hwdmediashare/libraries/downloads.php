@@ -115,55 +115,24 @@ class hwdMediaShareDownloads extends JObject
                 $ext = hwdMediaShareFiles::getExtension($item, $fileType);
 
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
+
+                // If the file doesn't exist, then fail.
                 if (!file_Exists($path) || filesize($path) == 0)
                 {
-                        // If trying to get an image, check if original is image.
-                        if (in_array($fileType, array(2,3,4,5,6,7)))
-                        {
-                                hwdMediaShareFactory::load('images');
-
-                                $folders = hwdMediaShareFiles::getFolders($item->key);
-                                $filename = hwdMediaShareFiles::getFilename($item->key, 1);
-                                $ext = hwdMediaShareFiles::getExtension($item, 1);
-                                $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
-                                // @TODO: Write a format cross check method to deliver fallback content.
-                                if (!file_Exists($path) || filesize($path) == 0 || !hwdMediaShareImages::isNativeImage($ext))
-                                {
-                                        jexit('COM_HWDMS_ERROR_CAN_NOT_FIND_MEDIA_FILE');
-                                }
-                        }
+                        jexit('COM_HWDMS_ERROR_CAN_NOT_FIND_MEDIA_FILE');
 		}
                
                 // Define a more friendly filename from the alias.
                 $fileTitle = $item->alias . '.' . $ext;
 
-                // Set disposition based on input
-                $disposition = 'attachment';
+                // Set disposition based on request.
                 $download = $app->input->get('download', 0, 'int');
-                if (!$download) $disposition = 'inline';
+                $disposition = $download ? 'attachment' : 'inline';
                 
-                switch ($fileType)
-                {
-                        case 11:
-                        case 12:
-                        case 13:
-                                $type = 'video/flv';
-                        break;
-                        case 14:
-                        case 15:
-                        case 16:
-                        case 17:
-                                $type = 'video/mp4';
-                        break;
-                        default:
-                        case 1:
-                                hwdMediaShareFactory::load('files');
-                                $ext = hwdMediaShareFiles::getExtension($item, 1);
-                                hwdMediaShareFactory::load('documents');
-                                $type = hwdMediaShareDocuments::getContentType($ext);
-                        break;
-                }
+                hwdMediaShareFactory::load('files');
+                $ext = hwdMediaShareFiles::getExtension($item, $fileType);
+                hwdMediaShareFactory::load('documents');
+                $type = hwdMediaShareDocuments::getContentType($ext);
                 
                 // Transfer file in chunks to preserve memory on the server.
                 header('Content-Type: ' . $type);
@@ -286,23 +255,10 @@ class hwdMediaShareDownloads extends JObject
                 }
                 else
                 {
-                        // If trying to get an image that doesn't exist, check for other images.
+                        // Check if we are trying to show an image.
                         if (in_array($fileType, array(2,3,4,5,6,7)))
-                        {
-                                // Search through all image types, starting with the largest.
-                                $fileTypes = array(7,6,5,4,3,2);
-                                foreach ($fileTypes as $fileType)
-                                {
-                                        $filename = hwdMediaShareFiles::getFilename($media->key, $fileType);
-                                        $ext = hwdMediaShareFiles::getExtension($media, $fileType);
-                                        $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-                                        if (file_exists($path))
-                                        {
-                                                return hwdMediaShareDownloads::url($media, $fileType);
-                                        }
-                                }
-                                
-                                // If trying to get an image that doesn't exist, check if the original is a native image then use that instead.
+                        {                                
+                                // Check if the original is a native image then use that instead.
                                 hwdMediaShareFactory::load('images');
 
                                 $folders = hwdMediaShareFiles::getFolders($media->key);
@@ -316,6 +272,7 @@ class hwdMediaShareDownloads extends JObject
                                 }
                         }
 
+                        // Fallback to default image.
                         return JURI::root(true).'/media/com_hwdmediashare/assets/images/default-image-'.$fileType.'.png';
 		}
         }
