@@ -48,7 +48,8 @@ class hwdMediaShareViewReported extends JViewLegacy
                 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
-                
+                hwdMediaShareFactory::load('thumbnails');
+
                 $this->return = base64_encode(JFactory::getURI()->toString());
 
                 // Check for errors.
