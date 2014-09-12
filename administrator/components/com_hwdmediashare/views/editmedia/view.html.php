@@ -36,6 +36,7 @@ class hwdMediaShareViewEditMedia extends JViewLegacy
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 
                 // Redirect new upload views to the upload page.
                 $isNew = $this->item->id == 0;
