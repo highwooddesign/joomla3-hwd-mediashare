@@ -37,8 +37,8 @@ class hwdMediaShareViewChannels extends JViewLegacy
 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('thumbnails');
                 hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('thumbnails');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
