@@ -109,7 +109,7 @@ class hwdMediaShareModelSubscriptions extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.element_type, a.element_id, a.created, a.user_id'
+				'a.id, a.element_type, a.element_id, a.user_id, a.created'
 			)
 		);
                 
