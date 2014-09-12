@@ -57,22 +57,65 @@ class hwdMediaShareThumbnails extends JObject
 	 */ 
         public static function thumbnail($item, $elementType = 1)
         {
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Load cache object.
+                $cache = JFactory::getCache();
+                $cache->setCaching(1);
+            
                 switch ($elementType)
                 {
                         case 1: // Media
-                                return hwdMediaShareThumbnails::getMediaThumbnail($item);
+                                if ($config->get('caching'))
+                                {
+                                        return $cache->call(array('hwdMediaShareThumbnails', 'getMediaThumbnail'), $item);
+                                }
+                                else 
+                                {
+                                        return hwdMediaShareThumbnails::getMediaThumbnail($item);
+                                }
                         break;                    
                         case 2: // Album
-                                return hwdMediaShareThumbnails::getAlbumThumbnail($item);
+                                if ($config->get('caching'))
+                                {
+                                        return $cache->call(array('hwdMediaShareThumbnails', 'getAlbumThumbnail'), $item);
+                                }
+                                else 
+                                {
+                                        return hwdMediaShareThumbnails::getAlbumThumbnail($item);
+                                }
                         break;
                         case 3: // Group
-                                return hwdMediaShareThumbnails::getGroupThumbnail($item);
+                                if ($config->get('caching'))
+                                {
+                                        return $cache->call(array('hwdMediaShareThumbnails', 'getGroupThumbnail'), $item);
+                                }
+                                else 
+                                {
+                                        return hwdMediaShareThumbnails::getGroupThumbnail($item);
+                                }
                         break;
                         case 4: // Playlist
-                                return hwdMediaShareThumbnails::getPlaylistThumbnail($item);
+                                if ($config->get('caching'))
+                                {
+                                        return $cache->call(array('hwdMediaShareThumbnails', 'getPlaylistThumbnail'), $item);
+                                }
+                                else 
+                                {
+                                        return hwdMediaShareThumbnails::getPlaylistThumbnail($item);
+                                }
                         break;
                         case 6: // Category
-                                return hwdMediaShareThumbnails::getCategoryThumbnail($item);
+                                if ($config->get('caching'))
+                                {
+                                        return $cache->call(array('hwdMediaShareThumbnails', 'getCategoryThumbnail'), $item);
+                                }
+                                else 
+                                {
+                                        return hwdMediaShareThumbnails::getCategoryThumbnail($item);
+                                }
                         break;
                 }
         }
