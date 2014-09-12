@@ -89,10 +89,9 @@ class hwdMediaShareModelAlbums extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.key, a.thumbnail_ext_id, a.title, a.description, a.alias, a.checked_out, a.checked_out_time,' .
-				'a.created_user_id, a.hits, a.likes, a.dislikes, a.published, a.featured,' .
-				'a.status, a.publish_up, a.publish_down, a.ordering, a.created, a.access,'.
-				'a.language, a.created_user_id_alias'
+				'a.id, a.thumbnail_ext_id, a.key, a.title, a.alias, a.description, a.likes, a.dislikes, a.status,' .
+                                'a.published, a.featured, a.checked_out, a.checked_out_time, a.access, a.ordering, a.created_user_id,' . 
+                                'a.created_user_id_alias, a.created, a.publish_up, a.publish_down, a.hits, a.language'
 			)
 		);
                 
