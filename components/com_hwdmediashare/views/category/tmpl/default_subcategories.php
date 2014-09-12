@@ -32,7 +32,7 @@ JHtml::_('bootstrap.tooltip');
               <div class="media-item">
                 <div class="media-aspect<?php echo $this->params->get('list_thumbnail_aspect'); ?>"></div>        
                 <?php if ($this->params->get('list_meta_thumbnail') != '0') :?>
-                  <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb<?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
+                  <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb<?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
                 <?php endif; ?>
               </div>    
             </div>
