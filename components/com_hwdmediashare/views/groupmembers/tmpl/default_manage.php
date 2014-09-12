@@ -61,7 +61,7 @@ if ($saveOrder)
                                         <?php echo $this->getButton($item, $i); ?>                                                                                                           
                                         <?php echo JHtml::_('HwdGrid.id', $i, $item->id, 'cb', false, 'cid', 'hide'); ?>
                                         <div class="pull-left thumb-wrapper">
-                                                <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item)); ?>" width="75" />
+                                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" width="75" />
                                         </div>
                                         <p><strong><?php echo $this->escape($item->name); ?></strong></p>
                                         <?php echo $item->username; ?>

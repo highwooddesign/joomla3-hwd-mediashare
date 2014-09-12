@@ -65,7 +65,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 				<td>
                                         <?php echo $this->getButton($item, $i); ?>                                                                                                           
                                         <div class="pull-left thumb-wrapper">
-                                                <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item)); ?>" width="75" />
+                                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" width="75" />
                                         </div>
                                         <p><strong><?php echo $this->escape($item->name); ?></strong></p>
                                         <?php echo $item->username; ?>
