@@ -126,8 +126,8 @@ class hwdMediaShareModelFiles extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.element_type, a.element_id, a.file_type, a.basename,' .
-				'a.ext, a.size, a.checked, a.published, a.publish_up, a.publish_down, a.created, a.hits'
+				'a.id, a.element_type, a.element_id, a.file_type, a.basename, a.ext, a.size, a.checked,' .
+                                'a.published, a.created, a.publish_up, a.publish_down, a.hits'
 			)
 		);
 
