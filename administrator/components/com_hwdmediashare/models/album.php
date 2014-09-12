@@ -98,7 +98,7 @@ class hwdMediaShareModelAlbum extends JModelAdmin
 	}
 
         /**
-	 * Method to get the thumbnail for the album.
+	 * Method to get the custom thumbnail for the album.
          * 
          * @access  public
          * @param   object  $item   The album object.
@@ -106,11 +106,9 @@ class hwdMediaShareModelAlbum extends JModelAdmin
 	 */
 	public function getThumbnail($item)
 	{
-                // Load the HWD downloads library.
-                hwdMediaShareFactory::load('downloads');
-                $HWDdownloads = hwdMediaShareDownloads::getInstance();
-                $HWDdownloads->elementType = 2;
-                if ($thumbnail = $HWDdownloads->getElementThumbnail($item))
+                // Load the HWD thumbnails library.
+                hwdMediaShareFactory::load('thumbnails');
+                if ($thumbnail = hwdMediaShareThumbnails::getElementThumbnail($item, 2))
                 {
                         return $thumbnail;
                 }
