@@ -212,6 +212,7 @@ abstract class JHtmlHwdPopup
                 hwdMediaShareFactory::load('audio');
                 hwdMediaShareFactory::load('documents');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('images');
                 hwdMediaShareFactory::load('remote');
                 hwdMediaShareFactory::load('videos');
 
@@ -244,9 +245,12 @@ abstract class JHtmlHwdPopup
                                                 JHtml::_('HwdPopup.ajax', 'document'); 
                                         break;
                                         case 3: // Image
-                                                $url = hwdMediaShareDownloads::url($item);    
-                                                $class = 'media-popup-image';
-                                                JHtml::_('HwdPopup.image', 'image');                                
+                                                if ($image = hwdMediaShareImages::getJpg($item))
+                                                {
+                                                        $url = $image->url;    
+                                                        $class = 'media-popup-image';
+                                                        JHtml::_('HwdPopup.image', 'image');  
+                                                }
                                         break;
                                         case 4: // Video
                                                 $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
