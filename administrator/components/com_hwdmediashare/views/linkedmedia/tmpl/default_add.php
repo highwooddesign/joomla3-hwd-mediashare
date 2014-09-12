@@ -65,7 +65,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 				<td>
                                         <?php echo $this->getButton($item, $i); ?>                                                                                                           
                                         <div class="pull-left thumb-wrapper">
-                                                <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($item)); ?>" width="75" />
+                                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" width="75" />
                                         </div>
                                         <p><strong><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>" target="_blank">
                                                 <?php echo $this->escape($item->title); ?></a></strong></p>
