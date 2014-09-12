@@ -651,8 +651,8 @@ class hwdMediaShareModelMediaItem extends JModelItem
 			$value = (int) $data['album_id'];
                         
                         JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
-                        $modelFile = JModelLegacy::getInstance('albumMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
-                        if (!$modelFile->link($pks, $value))
+                        $model = JModelLegacy::getInstance('albumMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$model->link($pks, $value))
 			{
 				return false;
 			}
@@ -663,8 +663,8 @@ class hwdMediaShareModelMediaItem extends JModelItem
 			$value = (int) $data['category_id'];
                         
                         JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
-                        $modelFile = JModelLegacy::getInstance('editMedia', 'hwdMediaShareModel', array('ignore_request' => true));
-                        if (!$modelFile->assignCategory($pks, $value))
+                        $model = JModelLegacy::getInstance('editMedia', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$model->assignCategory($pks, $value))
 			{
 				return false;
 			}
@@ -675,8 +675,8 @@ class hwdMediaShareModelMediaItem extends JModelItem
 			$value = (int) $data['group_id'];
                         
                         JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/administrator/components/com_hwdmediashare/models');
-                        $modelFile = JModelLegacy::getInstance('groupMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
-                        if (!$modelFile->link($pks, $value))
+                        $model = JModelLegacy::getInstance('groupMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$model->link($pks, $value))
 			{
 				return false;
 			}
@@ -687,8 +687,8 @@ class hwdMediaShareModelMediaItem extends JModelItem
 			$value = (int) $data['playlist_id'];
                         
                         JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
-                        $modelFile = JModelLegacy::getInstance('playlistMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
-                        if (!$modelFile->link($pks, $value))
+                        $model = JModelLegacy::getInstance('playlistMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$model->link($pks, $value))
 			{
 				return false;
 			}
