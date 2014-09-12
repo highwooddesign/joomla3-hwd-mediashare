@@ -274,13 +274,31 @@ class hwdMediaShareDownloads extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
+                // Load cache object.
+                $cache = JFactory::getCache();
+                $cache->setCaching(1);
+                
                 if (($config->get('protect_media') == 1 || $download) && $media->type == 1)
                 {
-                        return hwdMediaShareDownloads::protectedUrl($media->id, $fileType, 1, $download);
+                        if ($config->get('caching'))
+                        {
+                                return $cache->call(array('hwdMediaShareDownloads', 'protectedUrl'), $media->id, $fileType, 1, $download);
+                        }
+                        else 
+                        {
+                                return hwdMediaShareDownloads::protectedUrl($media->id, $fileType, 1, $download);
+                        }
                 }
                 else
                 {
-                        return hwdMediaShareDownloads::publicUrl($media, $fileType);
+                        if ($config->get('caching'))
+                        {
+                                return $cache->call(array('hwdMediaShareDownloads', 'publicUrl'), $media, $fileType);
+                        }
+                        else 
+                        {
+                                return hwdMediaShareDownloads::publicUrl($media, $fileType);
+                        }
                 }
         }
 
