@@ -59,9 +59,8 @@ class hwdMediaShareModelExtensions extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.ext, a.media_type, a.published,' .
-				'a.created_user_id, a.publish_up, a.checked_out, a.checked_out_time,' .
-				'a.publish_down, a.access'
+				'a.id, a.ext, a.media_type, a.published, a.checked_out, a.checked_out_time, a.access,' .
+				'a.created_user_id, a.publish_up, a.publish_down'
 			)
 		);
 
