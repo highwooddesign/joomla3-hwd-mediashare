@@ -68,11 +68,12 @@ class hwdMediaShareViewGroup extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('media');
-		hwdMediaShareFactory::load('utilities');
                 hwdMediaShareFactory::load('activities');
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
+		hwdMediaShareFactory::load('utilities');
 
                 $this->group->nummedia = $this->get('numMedia');
                 $this->group->nummembers = $this->get('numMembers');
