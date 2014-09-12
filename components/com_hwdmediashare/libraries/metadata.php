@@ -97,7 +97,7 @@ class hwdMediaShareMetaData extends JObject
                                 $remotePluginClass = $lib->getRemotePluginClass($host);
                                 $remotePluginPath = $lib->getRemotePluginPath($host);
 
-                                // Import hwdMediaShare plugins
+                                // Import HWD remote plugin.
                                 JLoader::register($remotePluginClass, $remotePluginPath);
                                 if (class_exists($remotePluginClass))
                                 {
