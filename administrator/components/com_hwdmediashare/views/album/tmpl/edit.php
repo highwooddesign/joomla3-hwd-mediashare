@@ -98,7 +98,7 @@ $isNew = $this->item->id == 0 ? true : false ;
 
 		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'thumbnail', JText::_('COM_HWDMS_CUSTOM_THUMBNAIL', true)); ?>
                         <div class="pull-right">
-                                <img src="<?php echo JRoute::_(hwdMediaShareDownloads::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" style="max-width:300px;" />
+                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" style="max-width:300px;" />
                         </div>
                         <?php if ($this->item->thumbnail) : ?>
                         <div class="control-group">
