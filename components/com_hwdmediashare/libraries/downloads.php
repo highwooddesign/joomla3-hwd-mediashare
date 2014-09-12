@@ -249,32 +249,13 @@ class hwdMediaShareDownloads extends JObject
 
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                 
-                if (file_exists($path))
+                // If the file doesn't exist, then fail.
+                if (!file_Exists($path) || filesize($path) == 0)
                 {
-                        return hwdMediaShareFiles::getUrl($folders, $filename, $ext);
-                }
-                else
-                {
-                        // Check if we are trying to show an image.
-                        if (in_array($fileType, array(2,3,4,5,6,7)))
-                        {                                
-                                // Check if the original is a native image then use that instead.
-                                hwdMediaShareFactory::load('images');
-
-                                $folders = hwdMediaShareFiles::getFolders($media->key);
-                                $filename = hwdMediaShareFiles::getFilename($media->key, 1);
-                                $ext = hwdMediaShareFiles::getExtension($media, 1);
-                                $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
-                                if (file_exists($path) && hwdMediaShareImages::isNativeImage($ext))
-                                {
-                                        return hwdMediaShareFiles::getUrl($folders, $filename, $ext);
-                                }
-                        }
-
-                        // Fallback to default image.
-                        return JURI::root(true).'/media/com_hwdmediashare/assets/images/default-image-'.$fileType.'.png';
+                        return '#';
 		}
+                
+                return hwdMediaShareFiles::getUrl($folders, $filename, $ext);
         }
         
 	/**
