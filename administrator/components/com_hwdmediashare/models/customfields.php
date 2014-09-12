@@ -62,8 +62,8 @@ class hwdMediaShareModelCustomFields extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.element_type, a.type, a.name, a.ordering, a.published,' .
-				'a.visible, a.required, a.searchable, a.fieldcode, a.tooltip'
+				'a.id, a.element_type, a.type, a.ordering, a.published, a.name, a.tooltip, ' .
+				'a.visible, a.required, a.searchable, a.fieldcode'
 			)
 		);
 
