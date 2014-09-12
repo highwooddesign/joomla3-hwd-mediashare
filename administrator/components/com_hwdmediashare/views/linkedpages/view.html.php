@@ -29,6 +29,7 @@ class hwdMediaShareViewLinkedPages extends JViewLegacy
 
                 // Import HWD libraries.
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('thumbnails');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
