@@ -43,9 +43,10 @@ class hwdMediaShareViewProcesses extends JViewLegacy
                 $this->return = base64_encode(JFactory::getURI()->toString());
 
                 // Import HWD libraries.
-                hwdMediaShareFactory::load('processes');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('processes');
+                hwdMediaShareFactory::load('thumbnails');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
