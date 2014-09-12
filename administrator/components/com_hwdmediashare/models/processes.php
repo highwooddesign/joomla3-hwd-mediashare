@@ -59,10 +59,8 @@ class hwdMediaShareModelProcesses extends JModelList
 		$query->select(
 			$this->getState(
 				'list.select',
-				'a.id, a.process_type, a.media_id, a.status, a.attempts,' .
-                                'a.checked_out, a.checked_out_time,' .
-				'a.created_user_id,' .
-				'a.status, a.created'
+				'a.id, a.process_type, a.media_id, a.status, a.attempts, a.checked_out, a.checked_out_time,' . 
+				'a.created_user_id, a.created'
 			)
 		);
 
