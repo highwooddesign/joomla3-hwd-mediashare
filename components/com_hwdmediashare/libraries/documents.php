@@ -63,7 +63,7 @@ class hwdMediaShareDocuments extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
@@ -86,16 +86,16 @@ class hwdMediaShareDocuments extends JObject
                         // Check this extension is what we expect.
                         switch ($item->media_type)
                         {
-                            case 1: // Audio
-                                if (!in_array($item->ext, array('mp3'))) $item->ext = 'mp3';
+                                case 1: // Audio
+                                        if (!in_array($item->ext, array('mp3'))) $item->ext = 'mp3';
                                 break;
-                            case 2: // Document
+                                case 2: // Document
                                 break;
-                            case 3: // Image
-                                if (!in_array($item->ext, array('jpeg','jpg','png','gif'))) $item->ext = 'jpg';
+                                case 3: // Image
+                                        if (!in_array($item->ext, array('jpeg','jpg','png','gif'))) $item->ext = 'jpg';
                                 break;
-                            case 4: // Video
-                                if (!in_array($item->ext, array('flv','mp4'))) $item->ext = 'flv';
+                                case 4: // Video
+                                        if (!in_array($item->ext, array('flv','mp4'))) $item->ext = 'flv';
                                 break;
                         }
 
@@ -123,186 +123,232 @@ class hwdMediaShareDocuments extends JObject
                 
                 switch ($item->ext) 
                 {
-                    case 'pdf':
-                        ob_start();
-                        ?>
-                        <embed width="100%" height="450" src="<?php echo $url; ?>" type="application/pdf"></embed>	
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
+                        case 'pdf':
+                                ob_start();
+                                ?>
+                                <embed width="100%" height="450" src="<?php echo $url; ?>" type="application/pdf"></embed>	
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
                         break;
-                    
-                    case 'mpg':
-                    case 'mpeg':
-                    case 'avi':
-                    case 'wmv':
-                        ob_start();
-                        ?>
-                        <object id="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" classid="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95" type="application/x-oleobject">
-                        <param name="filename" value="<?php echo $url ?>">
-                        <param name="autostart" value="<?php echo $autoplayBoolean; ?>">
-                        <param name="showcontrols" value="true">
-                        <param name="showstatusbar" value="false">
-                        <param name="showdisplay" value="false">
-                        <embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="<?php echo $url ?>" name="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" showcontrols="1" showstatusbar="0" showdisplay="0" autostart="<?php echo $autoplayNumerical; ?>"> </embed>
-                        </object>
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
+                        case 'mpg':
+                        case 'mpeg':
+                        case 'avi':
+                        case 'wmv':
+                                ob_start();
+                                ?>
+                                <object id="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" classid="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95" type="application/x-oleobject">
+                                <param name="filename" value="<?php echo $url ?>">
+                                <param name="autostart" value="<?php echo $autoplayBoolean; ?>">
+                                <param name="showcontrols" value="true">
+                                <param name="showstatusbar" value="false">
+                                <param name="showdisplay" value="false">
+                                <embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="<?php echo $url ?>" name="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" showcontrols="1" showstatusbar="0" showdisplay="0" autostart="<?php echo $autoplayNumerical; ?>"> </embed>
+                                </object>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
                         break;
+                        case 'wma':
+                                ob_start();
+                                ?>
+                                <object id="player" width="<?php echo $width; ?>" height="46" classid="CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab# Version=5,1,52,701" standby="Loading Microsoft Windows Media Player..." type="application/x-oleobject">
+                                <param name="fileName" value="<?php echo $url ?>">
+                                <param name="animationatStart" value="true">
+                                <param name="transparentatStart" value="true">
+                                <param name="autoStart" value="<?php echo $autoplayBoolean; ?>">
+                                <param name="showControls" value="true">
+                                <param name="Volume" value="-300">
+                                <embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="<?php echo $url ?>" name="player" width="<?php echo $width; ?>" height="46" autostart=<?php echo $autoplayNumerical; ?> showcontrols=1 volume=-300> </embed>
+                                </object>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
+                        break;
+                        case 'divx':  
+                                ob_start();
+                                ?>
+                                <object classid="clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616" width="<?php echo $width; ?>" height="<?php echo $height; ?>" codebase="http://go.divx.com/plugin/DivXBrowserPlugin.cab">
+                                <param name="custommode" value="none" />
+                                <param name="autoPlay" value="<?php echo $autoplayBoolean; ?>" />
+                                <param name="src" value="<?php echo $url; ?>" />
+                                <embed type="video/divx" src="<?php echo $url; ?>" custommode="none" width="<?php echo $width; ?>" height="<?php echo $height; ?>" autoPlay="<?php echo $autoplayBoolean; ?>"  pluginspage="http://go.divx.com/plugin/download/">
+                                </embed>
+                                </object>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
+                        break;
+                        case 'mov':                    
+                                ob_start();
+                                ?>
+                                <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" width="<?php echo $width; ?>" height="<?php echo $height; ?>" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
+                                <param name="src" value="<?php echo $url; ?>">
+                                <param name="autoplay" value="<?php echo $autoplayBoolean; ?>">
+                                <param name="scale" value="aspect">
+                                <embed src="<?php echo $url; ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" autoplay="<?php echo $autoplayBoolean; ?>" scale="aspect"
+                                bgcolor="#000000" pluginspage="http://www.apple.com/quicktime/download/">
+                                </embed>
+                                </object>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
+                        break;
+                        case 'flv':                    
+                        case 'f4v':                    
+                                $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
+                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
+                                if (file_exists($pluginPath))
+                                {
+                                        $jpg = hwdMediaShareThumbnails::getVideoPreview($item);
+                                        JLoader::register($pluginClass, $pluginPath);
+                                        $player = call_user_func(array($pluginClass, 'getInstance'));
+                                        $params = new JRegistry('{"flv":"'.$url.'","jpg":"'.$jpg.'"}');
+                                        return $player->getVideoPlayer($params);
+                                }
+                        break;
+                        case 'mp4':                    
+                        case 'm4v':                    
+                                $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
+                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
 
-                    case 'wma':
-                        ob_start();
-                        ?>
-                        <object id="player" width="<?php echo $width; ?>" height="46" classid="CLSID:22d6f312-b0f6-11d0-94ab-0080c74c7e95" codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab# Version=5,1,52,701" standby="Loading Microsoft Windows Media Player..." type="application/x-oleobject">
-                        <param name="fileName" value="<?php echo $url ?>">
-                        <param name="animationatStart" value="true">
-                        <param name="transparentatStart" value="true">
-                        <param name="autoStart" value="<?php echo $autoplayBoolean; ?>">
-                        <param name="showControls" value="true">
-                        <param name="Volume" value="-300">
-                        <embed type="application/x-mplayer2" pluginspage="http://www.microsoft.com/Windows/MediaPlayer/" src="<?php echo $url ?>" name="player" width="<?php echo $width; ?>" height="46" autostart=<?php echo $autoplayNumerical; ?> showcontrols=1 volume=-300> </embed>
-                        </object>
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
+                                // Import hwdMediaShare plugins
+                                if (file_exists($pluginPath))
+                                {
+                                        $jpg = hwdMediaShareThumbnails::getVideoPreview($item);
+                                        JLoader::register($pluginClass, $pluginPath);
+                                        $player = call_user_func(array($pluginClass, 'getInstance'));
+                                        $params = new JRegistry('{"mp4":"'.$url.'","jpg":"'.$jpg.'"}');
+                                        return $player->getVideoPlayer($params);
+                                }
                         break;
-                    
-                    case 'divx':  
-                        ob_start();
-                        ?>
-                        <object classid="clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616" width="<?php echo $width; ?>" height="<?php echo $height; ?>" codebase="http://go.divx.com/plugin/DivXBrowserPlugin.cab">
-                        <param name="custommode" value="none" />
-                        <param name="autoPlay" value="<?php echo $autoplayBoolean; ?>" />
-                        <param name="src" value="<?php echo $url; ?>" />
-                        <embed type="video/divx" src="<?php echo $url; ?>" custommode="none" width="<?php echo $width; ?>" height="<?php echo $height; ?>" autoPlay="<?php echo $autoplayBoolean; ?>"  pluginspage="http://go.divx.com/plugin/download/">
-                        </embed>
-                        </object>
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
-                        break;
+                        case 'mp3':                    
+                                $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
+                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
 
-                    case 'mov':                    
-                        ob_start();
-                        ?>
-                        <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" width="<?php echo $width; ?>" height="<?php echo $height; ?>" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-                        <param name="src" value="<?php echo $url; ?>">
-                        <param name="autoplay" value="<?php echo $autoplayBoolean; ?>">
-                        <param name="scale" value="aspect">
-                        <embed src="<?php echo $url; ?>" width="<?php echo $width; ?>" height="<?php echo $height; ?>" autoplay="<?php echo $autoplayBoolean; ?>" scale="aspect"
-                        bgcolor="#000000" pluginspage="http://www.apple.com/quicktime/download/">
-                        </embed>
-                        </object>
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
+                                // Import hwdMediaShare plugins
+                                if (file_exists($pluginPath))
+                                {
+                                        $jpg = hwdMediaShareThumbnails::getVideoPreview($item);
+                                        JLoader::register($pluginClass, $pluginPath);
+                                        $player = call_user_func(array($pluginClass, 'getInstance'));
+                                        $params = new JRegistry('{"mp3":"'.$url.'","jpg":"'.$jpg.'"}');
+                                        return $player->getAudioPlayer($params);
+                                }
                         break;
-                    
-                    case 'flv':                    
-                    case 'f4v':                    
-                        $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
-                        $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
-
-                        // Import hwdMediaShare plugins
-                        if (file_exists($pluginPath))
-                        {
-				$jpg = hwdMediaShareDownloads::jpgUrl($item);
-                                JLoader::register($pluginClass, $pluginPath);
-                                $player = call_user_func(array($pluginClass, 'getInstance'));
-                                $params = new JRegistry('{"flv":"'.$url.'","jpg":"'.$jpg.'"}');
-                                return $player->getVideoPlayer($params);
-                        }
+                        case 'doc':                    
+                        case 'docx':                    
+                        case 'ppt':  
+                        case 'pptx':  
+                        case 'pub':  
+                        case 'xls':  
+                        case 'xlsx':
+                                hwdMediaShareFactory::load('utilities');
+                                $utilities = hwdMediaShareUtilities::getInstance();
+                                ob_start();
+                                ?>                                
+                                <iframe src="http://docs.google.com/gview?url=<?php echo urlencode($utilities->relToAbs($url)); ?>&embedded=true" style="width:100%; height:450px;" frameborder="0"></iframe>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
                         break;
-                        
-                    case 'mp4':                    
-                    case 'm4v':                    
-                        $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
-                        $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
-
-                        // Import hwdMediaShare plugins
-                        if (file_exists($pluginPath))
-                        {
- 				$jpg = hwdMediaShareDownloads::jpgUrl($item);
-                                JLoader::register($pluginClass, $pluginPath);
-                                $player = call_user_func(array($pluginClass, 'getInstance'));
-                                $params = new JRegistry('{"mp4":"'.$url.'","jpg":"'.$jpg.'"}');
-                                return $player->getVideoPlayer($params);
-                        }
+                        case 'jpeg':
+                        case 'jpg':
+                        case 'gif':
+                        case 'png':
+                                ob_start();
+                                ?>
+                                <img src="<?php echo $url; ?>" border="0" alt="<?php echo $utilities->escape($item->title); ?>" id="media-item-image" style="max-width:<?php echo ($config->get('mediaitem_width') ? $config->get('mediaitem_width') : $config->get('mediaitem_size')); ?>px;max-height:<?php echo ($config->get('mediaitem_height') ? $config->get('mediaitem_height').'px' : '100%'); ?>;">
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
                         break;
-                        
-                    case 'mp3':                    
-                        $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
-                        $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
-
-                        // Import hwdMediaShare plugins
-                        if (file_exists($pluginPath))
-                        {
- 				$jpg = hwdMediaShareDownloads::jpgUrl($item);
-                                JLoader::register($pluginClass, $pluginPath);
-                                $player = call_user_func(array($pluginClass, 'getInstance'));
-                                $params = new JRegistry('{"mp3":"'.$url.'","jpg":"'.$jpg.'"}');
-                                return $player->getAudioPlayer($params);
-                        }
-                        break; 
-                        
-                    case 'doc':                    
-                    case 'docx':                    
-                    case 'ppt':  
-                    case 'pptx':  
-                    case 'pub':  
-                    case 'xls':  
-                    case 'xlsx':
-                        hwdMediaShareFactory::load('utilities');
-                        $utilities = hwdMediaShareUtilities::getInstance();
-                        ob_start();
-                        ?>
-                        <iframe src="http://docs.google.com/gview?url=<?php echo urlencode($utilities->relToAbs($url)); ?>&embedded=true" style="width:100%; height:450px;" frameborder="0"></iframe>
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
+                        //@TODO: Works need to be done on the sizing of the SWF display, and parameter values. 
+                        case 'swf':
+                                ob_start();
+                                ?>                     
+                                <object id="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">
+                                <param name="filename" value="<?php echo $url ?>">
+                                <param name="autostart" value="<?php echo $autoplayBoolean; ?>">
+                                <param name="showcontrols" value="true">
+                                <param name="showstatusbar" value="false">
+                                <param name="showdisplay" value="false">
+                                <embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="<?php echo $url ?>" name="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" showcontrols="1" showstatusbar="0" showdisplay="0" autostart="<?php echo $autoplayNumerical; ?>"> </embed>
+                                </object>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
                         break;
-                        
-                    case 'jpeg':
-                    case 'jpg':
-                    case 'gif':
-                    case 'png':
-                        ob_start();
-                        ?>
-                        <img src="<?php echo $url; ?>" border="0" alt="<?php echo $utilities->escape($item->title); ?>" id="media-item-image" style="max-width:<?php echo ($config->get('mediaitem_width') ? $config->get('mediaitem_width') : $config->get('mediaitem_size')); ?>px;max-height:<?php echo ($config->get('mediaitem_height') ? $config->get('mediaitem_height').'px' : '100%'); ?>;">
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
+                        default:
+                                hwdMediaShareFactory::load('utilities');
+                                $utilities = hwdMediaShareUtilities::getInstance();                            
+                                ob_start();
+                                ?>  
+                                <a title="<?php echo JText::_('COM_HWDMS_DOWNLOAD'); ?>" href="<?php echo hwdMediaShareDownloads::url($item, 1, 1); ?>">
+                                    <img src="<?php echo hwdMediaShareThumbnails::thumbnail($item); ?>" border="0" alt="<?php echo $utilities->escape($item->title); ?>">
+                                </a>
+                                <?php
+                                $html = ob_get_contents();
+                                ob_end_clean();
+                                return $html;
                         break;
-                    
-                    //@TODO: Works need to be done on the sizing of the SWF display, and parameter values. 
-                    case 'swf':
-                        ob_start();
-                        ?>                     
-                        <object id="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">
-                        <param name="filename" value="<?php echo $url ?>">
-                        <param name="autostart" value="<?php echo $autoplayBoolean; ?>">
-                        <param name="showcontrols" value="true">
-                        <param name="showstatusbar" value="false">
-                        <param name="showdisplay" value="false">
-                        <embed type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" src="<?php echo $url ?>" name="player" width="<?php echo $width; ?>" height="<?php echo $height; ?>" showcontrols="1" showstatusbar="0" showdisplay="0" autostart="<?php echo $autoplayNumerical; ?>"> </embed>
-                        </object>
-                        <?php
-                        $html = ob_get_contents();
-                        ob_end_clean();
-                        return $html;
-                        break;
-                    
-                    default:
-                       return '<img src="'.hwdMediaShareDownloads::thumbnail($item).'" border="0" alt="'.$utilities->escape($item->title).'" id="media-item-image">';
-                       break;
                 }
 	}
+        
+	/**
+	 * Method to return the internet media type for an extension.
+         * 
+         * @access  public
+         * @static
+         * @param   string  $ext  The extension.
+         * @return  string  The internet media type.
+	 */
+	public static function getContentType($ext)
+	{  
+                switch ($ext) 
+                {
+                        case 'docx':
+                                return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+                        break;                    
+                        case 'flv':
+                                return 'video/flv';
+                        break;                      
+                        case 'jpg':
+                        case 'jpeg':
+                                return 'image/jpeg';
+                        break;
+                        case 'mp4':
+                                return 'video/mp4';
+                        break;                      
+                        case 'pdf':
+                                return 'application/pdf';
+                        break; 
+                        case 'png':
+                                return 'image/gif';
+                        break;                    
+                        case 'ppt':
+                                return 'application/vnd.ms-powerpoint';
+                        break;
+                        case 'pptx':
+                                return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+                        break;                      
+                        case 'xls':
+                                return 'application/vnd.ms-excel';
+                        break;
+                        case 'xlsx':
+                                return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                        break;  
+                        default:
+                                return 'application/octet-stream';
+                        break; 
+                }
+        }      
 }
