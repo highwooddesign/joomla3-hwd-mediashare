@@ -100,12 +100,14 @@ class hwdMediaShareViewChannel extends JViewLegacy
                 JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
                 JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('media');
-		hwdMediaShareFactory::load('utilities');
+
+                // Import HWD libraries.  
                 hwdMediaShareFactory::load('activities');
+                hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('media');
                 hwdMediaShareFactory::load('thumbnails');
+		hwdMediaShareFactory::load('utilities');
                 hwdMediaShareHelperNavigation::setJavascriptVars();
 
                 $this->channel->numalbums = $this->get('numAlbums');
