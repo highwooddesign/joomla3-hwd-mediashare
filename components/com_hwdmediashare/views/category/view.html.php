@@ -51,9 +51,11 @@ class hwdMediaShareViewCategory extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
                 
                 $this->category->nummedia = $this->get('numMedia');
