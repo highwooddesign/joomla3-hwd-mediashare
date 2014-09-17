@@ -16,7 +16,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_hwdmediashare'))
 	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-// Require hwdMediaShare factory.
+// Require HWD factory.
 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
 
 // Require helper file.
