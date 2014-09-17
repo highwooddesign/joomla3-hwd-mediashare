@@ -10,13 +10,16 @@
 
 defined('_JEXEC') or die;
 
-class plgHwdmediashareRemote_vineco extends JObject
+// Load the HWD remote library.
+JLoader::register('hwdMediaShareRemote', JPATH_ROOT.'/components/com_hwdmediashare/libraries/remote.php');
+
+class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
 {
 	/**
 	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
          * 
-         * @access      public
-	 * @var         integer
+         * @access  public
+	 * @var     integer
 	 */
 	public $mediaType = 4;
         
@@ -25,6 +28,7 @@ class plgHwdmediashareRemote_vineco extends JObject
         public $_buffer;
         public $_title;
         public $_description;
+        public $_tags;
         public $_source;
         public $_duration;
         public $_thumbnail;
@@ -32,26 +36,44 @@ class plgHwdmediashareRemote_vineco extends JObject
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct()
+	public function __construct($properties = null)
 	{
-		parent::__construct();
+                /**
+                 * We extend the Joomla Platform Object Class for this plugin instead of JPlugin. This class
+                 * allows for simple but smart objects with get and set methods and an internal error handler.
+                 * The 'hwdmediashare' plugin group is loaded on some media events, such as onAfterMediaAdd.
+                 * When loaded by Joomla, it is exepected the plugin classes will extend the JPlugin class, 
+                 * and the __construct() method is passed a $subject and $config variable:
+                 *                  
+                 *     parent::__construct($subject, $config);
+                 * 
+                 * However, the JObject __construct() method expects a single $properties variable, and when loaded
+                 * by JEventDispatcher, a fatal error is thrown.
+                 * 
+                 *     Fatal error: Cannot access property started with '\0' in C:\wamp\www\joomla3-hwdmediashare\libraries\joomla\object\object.php on line 194
+                 * 
+                 * We avoid the error by overloading the parent constructs (which are not necessary for these
+                 * plugin types).
+                 */  
 	}
 
 	/**
 	 * Returns the plgHwdmediashareRemote_vineco object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @access	public
-	 * @return      object      The plgHwdmediashareRemote_vineco object.
+	 * @access  public
+	 * @return  object  The plgHwdmediashareRemote_vineco object.
 	 */
 	public static function getInstance()
 	{
 		static $instance;
 
-                if (!isset ($instance))
+		if (!isset ($instance))
                 {
 			$c = 'plgHwdmediashareRemote_vineco';
                         $instance = new $c;
@@ -63,174 +85,89 @@ class plgHwdmediashareRemote_vineco extends JObject
         /**
 	 * Get the title of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The title.
 	 */
-	public function getTitle()
+	public function getTitle($buffer = null)
 	{
-                if( !$this->_title )
+                if(!$this->_title)
 		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_title = hwdMediaShareRemote::getTitle($this->_buffer);
+                        $this->_title = parent::getTitle($this->_buffer);
                 }
+                
                 return $this->_title;
         }
 
         /**
 	 * Get the description of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The description.
 	 */
-	public function getDescription()
+	public function getDescription($buffer = null)
 	{
-                if( !$this->_description )
+                if(!$this->_description)
 		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_description = hwdMediaShareRemote::getDescription($this->_buffer);
+                        $this->_description = parent::getDescription($this->_buffer);
                 }
+                
                 return $this->_description;
-        }
-
-        /**
-	 * Get the source of the media.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function getSource()
-	{
-                if( !$this->_source )
-		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_source = hwdMediaShareRemote::getSource();
-                }
-                return $this->_source;
         }
 
         /**
 	 * Get the duration of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The duration.
 	 */
-	public function getDuration()
+	public function getDuration($buffer = null)
 	{
-                if( !$this->_duration )
+                if(!$this->_duration)
 		{
-                        $duration = 6;
-
-                        if ($duration > 0)
-                        {
-                                $this->_duration = $duration;
-                                return $this->_duration;
-                        }
+                        $this->_duration = 6;
                 }
+                
+                return $this->_duration;
         }
 
         /**
 	 * Get the thumbnail location of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The thumbnail.
 	 */
-	public function getThumbnail()
+	public function getThumbnail($buffer = null)
 	{
-                if( !$this->_thumbnail )
+                if(!$this->_thumbnail)
 		{
-                        jimport( 'joomla.filter.filterinput' );
-                        JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-
-                        // We will apply the most strict filter to the variable.
-                        $noHtmlFilter = JFilterInput::getInstance();
-
-                        $thumbnail = false;
-
-                        // Check OpenGraph tag.
-                        preg_match('/<meta property="og:image" content="([^"]+)/', $this->_buffer, $match);
-                        if (!empty($match[1]))
-                        {
-                                $thumbnail = $match[1];
-                                $thumbnail = (string)str_replace(array("\r", "\r\n", "\n"), '', $thumbnail);
-                                $thumbnail = $noHtmlFilter->clean($thumbnail);
-                                $thumbnail = JHtmlString::truncate($thumbnail, 5120);
-                                $thumbnail = trim($thumbnail);
-                        }
+                        $this->_thumbnail = parent::getThumbnail($this->_buffer);
                 }
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                $isValid = $utilities->validateUrl( $thumbnail );
-
-                if ($isValid)
-                {
-                        $this->_thumbnail = $thumbnail;
-                        return $this->_thumbnail;
-                }
+                
+                return $this->_thumbnail;
         }
 
         /**
-	 * Request the source, and set to buffer.
+	 * Get the tags for the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  array   The tags.
 	 */
-	public function getBuffer()
+	public function getTags($buffer = null)
 	{
-                $this->getHost();
-                $this->getUrl();
-
-                if (!$this->_buffer)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_buffer = hwdMediaShareRemote::getBuffer($this->_url);
-                }
-
-		return $this->_buffer;
-	}
-
-        /**
-	 * Get the host of the media source.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function getHost()
-	{
-                if (!$this->_host)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_host = hwdMediaShareRemote::getHost();
-                }
-
-		return $this->_host;
-	}
-
-        /**
-	 * Get the url of the media source.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function getUrl()
-	{
-                if (!$this->_url)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_url = hwdMediaShareRemote::getUrl();
-                }
-
-		return $this->_url;
-	}
+                return parent::getTags($this->_buffer);
+        } 
 
         /**
 	 * Render the HTML to display the media.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      void
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The HTML to render the media player.
 	 */
 	public function display($item)
 	{
@@ -261,8 +198,8 @@ class plgHwdmediashareRemote_vineco extends JObject
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Vine ID
-                $id = plgHwdmediashareRemote_vineco::parse($item->source);
+                // Get Vine ID.
+                $id = $this->parse($item->source);
                 
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 $this->width = '100%';
@@ -285,39 +222,27 @@ class plgHwdmediashareRemote_vineco extends JObject
         /**
 	 * Parse the source to extract the media.
 	 *
-	 * @access	public
-	 * @param       string      $url        The media url.
-         * @return      void
+	 * @access  protected
+	 * @param   string     $url  The media url.
+         * @return  string     The ID.
 	 */ 
         protected function parse($url)
         {
-                $pos_u = strpos($url, "v/");
-		$code = array();
-
-		if ($pos_u === false)
-		{
-			return null;
-		}
-		else if ($pos_u)
-		{
-			$pos_u_start = $pos_u + 2;
-			$pos_u_end = $pos_u_start + 11;
-
-			$length = $pos_u_end - $pos_u_start;
-			$code = substr($url, $pos_u_start, $length);
-			$code = strip_tags($code);
-                        $code = preg_replace("/[^a-zA-Z0-9s]/", "", $code);
-		}
-
-		return $code;
+                preg_match('/^http(?:s?):\/\/(?:www\.)?vine\.co\/v\/([a-zA-Z0-9]{1,13})$/', $url, $match);
+                if (isset($match[1]) && !empty($match[1]))
+                {
+                        return $match[1];
+                }
+                
+                return null;
         }
         
         /**
 	 * Method to construct the direct display location for the media.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      void
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The direct display location.
 	 */
 	public function getDirectDisplayLocation($item)
 	{
@@ -348,8 +273,8 @@ class plgHwdmediashareRemote_vineco extends JObject
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Vine ID
-                $id = plgHwdmediashareRemote_vineco::parse($item->source);
+                // Get Vine ID.
+                $id = $this->parse($item->source);
 
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 
@@ -359,9 +284,9 @@ class plgHwdmediashareRemote_vineco extends JObject
         /**
 	 * Method to determine the type of media that will be displayed.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      integer     The API value of the media type being displayed.
+	 * @access  public
+	 * @param   object   $item  The media item being displayed.
+         * @return  integer  The API value of the media type being displayed.
 	 */
 	public function getDirectDisplayType($item)
 	{
