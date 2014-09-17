@@ -455,25 +455,14 @@ class hwdMediaShareRemote extends JObject
 	public function getTitle($buffer = null)
 	{
                 if (empty($buffer)) $buffer = $this->getBuffer($this->_url);
-                
-                // We will filter input from the buffer.
-                $noHtmlFilter = JFilterInput::getInstance();
 
-                $title = false;
-                
 		// Check OpenGraph tag.
                 preg_match('/<meta property="og:title" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $title = $match[1];
-                        $title = (string)str_replace(array("\r", "\r\n", "\n"), '', $title);
-			$title = $noHtmlFilter->clean($title);
-                        $title = JHtmlString::truncate($title, 255);
-                        $title = trim($title);
-                        
-                        if ($title)
+                        if ($title = $this->clean($match[1], 255))
                         {
-                                return $title;
+                                return $title;                             
                         }
                 }
                 
@@ -481,14 +470,13 @@ class hwdMediaShareRemote extends JObject
                 preg_match("/<title>(.*)<\/title>/siU", $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $title = $match[1];
-                        $title = (string)str_replace(array("\r", "\r\n", "\n"), '', $title);
-			$title = $noHtmlFilter->clean($title);
-                        $title = JHtmlString::truncate($title, 255);
-                        $title = trim($title);
+                        if ($title = $this->clean($match[1], 255))
+                        {
+                                return $title;                             
+                        }
                 }
                 
-                return $title;
+                return false;
 	}
         
 	/**
@@ -501,25 +489,14 @@ class hwdMediaShareRemote extends JObject
 	public function getDescription($buffer = null)
 	{
                 if (empty($buffer)) $buffer = $this->getBuffer($this->_url);
-                
-                // We will filter input from the buffer.
-                $noHtmlFilter = JFilterInput::getInstance();
-
-                $description = false;
-                                
+                              
 		// Check OpenGraph tag.
                 preg_match('/<meta property="og:description" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $description = $match[1];
-                        $description = (string)str_replace(array("\r", "\r\n", "\n"), '', $description);
-			$description = $noHtmlFilter->clean($description);
-                        $description = JHtmlString::truncate($description, 5120);
-                        $description = trim($description);
-                        
-                        if ($description)
+                        if ($description = $this->clean($match[1]))
                         {
-                                return $description;
+                                return $description;                             
                         }
                 }
                 
@@ -527,14 +504,13 @@ class hwdMediaShareRemote extends JObject
 		preg_match('/<meta name="description" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $description = $match[1];
-                        $description = (string)str_replace(array("\r", "\r\n", "\n"), '', $description);
-			$description = $noHtmlFilter->clean($description);
-                        $description = JHtmlString::truncate($description, 5120);
-                        $description = trim($description);
+                        if ($description = $this->clean($match[1]))
+                        {
+                                return $description;                             
+                        }
                 }
                 
-                return $description;
+                return false;
 	}
        
 	/**
@@ -547,26 +523,21 @@ class hwdMediaShareRemote extends JObject
 	public function getThumbnail($buffer = null)
 	{
                 if (empty($buffer)) $buffer = $this->getBuffer($this->_url);
+
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // We will filter input from the buffer.
-                $noHtmlFilter = JFilterInput::getInstance();
-          
 		// Check OpenGraph tag.
                 preg_match('/<meta property="og:image" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $thumbnail = $match[1];
-                        $thumbnail = (string)str_replace(array("\r", "\r\n", "\n"), '', $thumbnail);
-			$thumbnail = $noHtmlFilter->clean($thumbnail);
-                        $thumbnail = JHtmlString::truncate($thumbnail, 5120);
-                        $thumbnail = trim($thumbnail);
-
-                        hwdMediaShareFactory::load('utilities');
-                        $utilities = hwdMediaShareUtilities::getInstance();
-                        
-                        if ($utilities->validateUrl($thumbnail))
+                        if ($thumbnail = $this->clean($match[1], 255))
                         {
-                                return $thumbnail;
+                                if ($utilities->validateUrl($thumbnail))
+                                {
+                                        return $thumbnail; 
+                                }                            
                         }
                 }
                 
@@ -598,16 +569,27 @@ class hwdMediaShareRemote extends JObject
                         
                         foreach($tagArray as $tagElement)
                         {
-                                $tag = (string)str_replace(array("\r", "\r\n", "\n", "..."), '', $tagElement);
-                                $tag = $noHtmlFilter->clean($tag);
-                                $tag = JHtmlString::truncate($tag, 100);
-                                $tag = trim($tag);
-
-                                // Add the tag.
-                                if ($tag) $tags[] = $tag;                                
+                                if ($tag = $this->clean($tagElement))
+                                {
+                                        $tags[] = $tag;     
+                                }                               
                         }
                 }
-                                
+                else
+                {
+                        preg_match_all('/<meta property="video:tag" content="([^"]+)/', $buffer, $match);
+                        if (!empty($match[1]) && is_array($match[1]))
+                        {
+                                foreach ($match[1] as $tagElement)
+                                {
+                                        if ($tag = $this->clean($tagElement))
+                                        {
+                                                $tags[] = $tag;     
+                                        } 
+                                }
+                        }
+                }
+                      
                 return $tags;
 	}
         
@@ -1099,6 +1081,31 @@ class hwdMediaShareRemote extends JObject
                 $tagsHelper = new JHelperTags;
                 $tagsHelper->createTagsFromField($tags);                                
                 return $tagsHelper->tags;
+	}
+        
+	/**
+	 * Method to clean strings extracted from buffers.
+         * 
+         * @access  public
+	 * @param   string  $string  The string to clean.Tags text array.
+	 * @return  mixed   If successful then the cleaned string. Otherwise false.
+	 */
+	public function clean($string, $truncate = 5120)
+	{
+                // We will filter input from the buffer.
+                $noHtmlFilter = JFilterInput::getInstance();
+
+                $string = (string) str_replace(array("\r", "\r\n", "\n"), '', $string);
+                $string = $noHtmlFilter->clean($string);
+                $string = JHtmlString::truncate($string, $truncate);
+                $string = trim($string);
+                                
+                if (!empty($string))
+                {
+                        return $string;
+                }
+                
+                return false;
 	}
 }
                 
