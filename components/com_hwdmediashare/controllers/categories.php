@@ -46,7 +46,7 @@ class hwdMediaShareControllerCategories extends JControllerForm
                 $this->registerTask('unapprove', 'approve');
                 $this->registerTask('dislike', 'like');
                 
-		// Check if the cid array exists, otherwise populate with the id
+		// Check if the cid array exists, otherwise populate with the id.
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
                 $id = JFactory::getApplication()->input->get('id', 0, 'int');
                 if (empty($cid) && $id) JFactory::getApplication()->input->set('cid', array($id));
