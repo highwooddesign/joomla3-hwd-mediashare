@@ -18,24 +18,24 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 	/**
 	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
          * 
-         * @access      public
-	 * @var         integer
+         * @access  public
+	 * @var     integer
 	 */
 	public $mediaType = 4;
 
 	/**
 	 * The API buffer (holding the snippet part).
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
         public $_v3snippet = false;
         
 	/**
 	 * The API buffer (holding the contentDetails part).
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
         public $_v3content = false;
         
@@ -82,8 +82,8 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 	 * Returns the plgHwdmediashareRemote_youtubecom object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @access	public
-	 * @return      object      The plgHwdmediashareRemote_youtubecom object.
+	 * @access  public
+	 * @return  object  The plgHwdmediashareRemote_youtubecom object.
 	 */
 	public static function getInstance()
 	{
@@ -101,148 +101,194 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
         /**
 	 * Get the title of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The title.
 	 */
 	public function getTitle($buffer = null)
 	{
-		// Initialise variables.
-                $app = JFactory::getApplication();
-            
-                // Request the required API buffer.
-                if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
-            
-                if ($this->_v3snippet)
-                {
-                        $json = json_decode($this->_v3snippet);
-                        if (!isset($json->error) && isset($json->items[0]->snippet->title))
+                if(!$this->_title)
+		{            
+                        // Initialise variables.
+                        $app = JFactory::getApplication();
+
+                        // Request the required API buffer.
+                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+
+                        // Check request was successful.
+                        if ($this->_v3snippet)
                         {
-                                if ($this->_title = parent::clean($json->items[0]->snippet->title, 255))
+                                $json = json_decode($this->_v3snippet);
+                                if (!isset($json->error) && isset($json->items[0]->snippet->title))
                                 {
-                                        return $this->_title; 
+                                        if ($this->_title = parent::clean($json->items[0]->snippet->title, 255))
+                                        {
+                                                return $this->_title; 
+                                        }
                                 }
-                        }
-                        else
-                        {
-                                foreach ($json->error->errors as $error)
+                                else
                                 {
-                                        $app->enqueueMessage(JText::sprintf('COM_HWDMS_WARNING_YOUTUBE_API_REQUEST_FAILED_REASON_N', $error->reason));
+                                        foreach ($json->error->errors as $error)
+                                        {
+                                                $app->enqueueMessage(JText::sprintf('COM_HWDMS_WARNING_YOUTUBE_API_REQUEST_FAILED_REASON_N', $error->reason));
+                                        }
                                 }
                         }
                 }
-       
-                $this->_title = parent::getTitle($this->_buffer);
-                $this->_title = str_replace(" - YouTube", "", $this->_title);
-                return $this->_title;            
+                
+                if(!$this->_title)
+		{
+                        $this->_title = parent::getTitle($this->_buffer);
+                        $this->_title = str_replace(" - YouTube", "", $this->_title);
+                }
+
+                return $this->_title;               
         }   
 
         /**
 	 * Get the description of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The description.
 	 */
 	public function getDescription($buffer = null)
 	{
-                // Request the required API buffer.
-                if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
-            
-                if ($this->_v3snippet)
-                {
-                        $json = json_decode($this->_v3snippet);
-                        if (!isset($json->error) && isset($json->items[0]->snippet->description))
+                if(!$this->_description)
+		{            
+                        // Request the required API buffer.
+                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+
+                        // Check request was successful.                        
+                        if ($this->_v3snippet)
                         {
-                                if ($this->_description = parent::clean($json->items[0]->snippet->description))
+                                $json = json_decode($this->_v3snippet);
+                                if (!isset($json->error) && isset($json->items[0]->snippet->description))
                                 {
-                                        return $this->_description; 
+                                        if ($this->_description = parent::clean($json->items[0]->snippet->description))
+                                        {
+                                                return $this->_description; 
+                                        }
                                 }
                         }
                 }
-				
-                return parent::getDescription($this->_buffer);          
+                
+                if(!$this->_description)
+		{
+                        $this->_description = parent::getDescription($this->_buffer);    
+                }
+                
+                return $this->_description;         
         }  
 
         /**
 	 * Get the duration of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The duration.
 	 */
 	public function getDuration($buffer = null)
 	{
-                // Request the required API buffer.
-                if (!$this->_v3content) $this->_v3content = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
-            
-                if ($this->_v3content)
-                {
-                        $json = json_decode($this->_v3content);
-                        if (!isset($json->error) && isset($json->items[0]->contentDetails->duration))
-                        {
-                                // Get duration from ISO 8601 string.
-                                preg_match('/(\d+)H/', $json->items[0]->contentDetails->duration, $match);
-                                $h = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
-                                preg_match('/(\d+)M/', $json->items[0]->contentDetails->duration, $match);
-                                $m = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
-                                preg_match('/(\d+)S/', $json->items[0]->contentDetails->duration, $match);
-                                $s = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
+                if(!$this->_duration)
+		{            
+                        // Request the required API buffer.
+                        if (!$this->_v3content) $this->_v3content = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
 
-                                $this->_duration = ($h * 60 * 60) + ($m * 60) + ($s);
-                                if ($this->_duration > 0) 
+                        // Check request was successful.                                                
+                        if ($this->_v3content)
+                        {
+                                $json = json_decode($this->_v3content);
+                                if (!isset($json->error) && isset($json->items[0]->contentDetails->duration))
                                 {
-                                        return $this->_duration;
+                                        // Get duration from ISO 8601 string.
+                                        preg_match('/(\d+)H/', $json->items[0]->contentDetails->duration, $match);
+                                        $h = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
+                                        preg_match('/(\d+)M/', $json->items[0]->contentDetails->duration, $match);
+                                        $m = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
+                                        preg_match('/(\d+)S/', $json->items[0]->contentDetails->duration, $match);
+                                        $s = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
+
+                                        $duration = ($h * 60 * 60) + ($m * 60) + ($s);
+                                        if ($duration > 0) 
+                                        {
+                                                $this->_duration = $duration;
+                                        }
                                 }
                         }
                 }
+
+                if(!$this->_duration)
+		{
+                        //preg_match("/amp;length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
+                        //preg_match("/length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
+                        preg_match("/\"length_seconds\": (.*),/siU", $this->_buffer, $match);
+                        $this->_duration = isset($match[1]) ? filter_var($match[1], FILTER_SANITIZE_NUMBER_INT) : 0;  
+                }
                 
-                //preg_match("/amp;length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
-                //preg_match("/length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
-                preg_match("/\"length_seconds\": (.*),/siU", $this->_buffer, $match);
-                $this->_duration = isset($match[1]) ? filter_var($match[1], FILTER_SANITIZE_NUMBER_INT) : 0;
+                if(!$this->_duration)
+		{
+                        $this->_duration = parent::getDuration($this->_buffer);    
+                }
                 
-                return $this->_duration;
+                return $this->_duration; 
         } 
 
         /**
 	 * Get the thumbnail location of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The thumbnail.
 	 */
 	public function getThumbnail($buffer = null)
 	{
-                // Load HWD utilities.
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
+                if(!$this->_thumbnail)
+		{            
+                        // Load HWD utilities.
+                        hwdMediaShareFactory::load('utilities');
+                        $utilities = hwdMediaShareUtilities::getInstance();
 
-                // Request the required API buffer.
-                if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
-            
-                if ($this->_v3snippet)
-                {
-                        // Check for high resolution thumbnail.
-                        $json = json_decode($this->_v3snippet);
-                        if (!isset($json->error) && isset($json->items[0]->snippet->thumbnails->maxres->url))
+                        // Request the required API buffer.
+                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+
+                        // Check request was successful.                                                
+                        if ($this->_v3snippet)
                         {
-                                if ($this->_thumbnail = parent::clean($json->items[0]->snippet->thumbnails->maxres->url, 255))
+                                // Check for high resolution thumbnail.
+                                $json = json_decode($this->_v3snippet);
+                                if (!isset($json->error) && isset($json->items[0]->snippet->thumbnails->maxres->url))
                                 {
-                                        if ($utilities->validateUrl($this->_thumbnail))
+                                        if ($this->_thumbnail = parent::clean($json->items[0]->snippet->thumbnails->maxres->url, 255))
                                         {
-                                                return $this->_thumbnail; 
-                                        }                                      
+                                                if ($utilities->validateUrl($this->_thumbnail))
+                                                {
+                                                        return $this->_thumbnail; 
+                                                }                                      
+                                        }
                                 }
                         }
                 }
-
-                // Use fallback method.
-                $this->_thumbnail = $this->parse($this->_url, 'hqthumb');
+                
+                if(!$this->_thumbnail)
+		{
+                        $this->_thumbnail = $this->parse($this->_url, 'hqthumb'); 
+                }
+                
+                if(!$this->_thumbnail)
+		{
+                        $this->_thumbnail = parent::getThumbnail($this->_buffer);    
+                }
+                
                 return $this->_thumbnail;              
         } 
         
         /**
 	 * Get the tags for the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  array   The tags.
 	 */
 	public function getTags($buffer = null)
 	{
@@ -252,9 +298,9 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
         /**
 	 * Render the HTML to display the media.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      void
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The HTML to render the media player.
 	 */
 	public function display($item)
 	{
@@ -286,7 +332,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
                 // Get Youtube ID
-                $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
+                $id = $this->parse($item->source, '');
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
                 $url = parse_url($item->source);
@@ -332,15 +378,15 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
         /**
 	 * Parse the source to extract the media.
 	 *
-	 * @access	public
-	 * @param       string      $url        The media url.
-	 * @param       string      $return     The format to return.
-	 * @param       integer     $width      The width.
-	 * @param       integer     $height     The height.
-	 * @param       integer     $rel        The option to display relative videos after the video finishes playing.
-         * @return      void
+	 * @access  protected
+	 * @param   string     $url     The media url.
+	 * @param   string     $return  The format to return.
+	 * @param   integer    $width   The width.
+	 * @param   integer    $height  The height.
+	 * @param   integer    $rel     The option to display relative videos after the video finishes playing.
+         * @return  string     The ID.
 	 */      
-        protected function parse($url, $return='embed', $width='', $height='', $rel=0)
+        protected function parse($url, $return = 'embed', $width = '', $height = '', $rel = 0)
         {
                 $urls = parse_url($url);
 
@@ -389,9 +435,9 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
         /**
 	 * Method to construct the direct display location for the media.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      void
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The direct display location.
 	 */
 	public function getDirectDisplayLocation($item)
 	{
@@ -423,7 +469,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
                 // Get Youtube ID
-                $id = plgHwdmediashareRemote_youtubecom::parse($item->source, '');
+                $id = $this->parse($item->source, '');
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
                 $url = parse_url($item->source);
@@ -440,9 +486,9 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
         /**
 	 * Method to determine the type of media that will be displayed.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      integer     The API value of the media type being displayed.
+	 * @access  public
+	 * @param   object   $item  The media item being displayed.
+         * @return  integer  The API value of the media type being displayed.
 	 */
 	public function getDirectDisplayType($item)
 	{
