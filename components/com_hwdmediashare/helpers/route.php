@@ -84,8 +84,8 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id     The id of the content.
-         * @param   array   $params An array of additional url parameters.
+         * @param   integer  $id      The id of the content.
+         * @param   array    $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getAlbumRoute($id, $params = array())
@@ -103,7 +103,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getAlbumsRoute($params = array())
@@ -120,7 +120,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getCategoriesRoute($params = array())
@@ -137,9 +137,9 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id     The id of the content.
-         * @param   array   $params An array of additional url parameters.
-         * @return  string  The url to the content.
+         * @param   integer  $id      The id of the content.
+         * @param   array    $params  An array of additional url parameters.
+         * @return  string   The url to the content.
 	 */
 	public static function getCategoryRoute($id, $params = array())
 	{
@@ -156,9 +156,9 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id     The id of the content.
-         * @param   array   $params An array of additional url parameters.
-         * @return  string  The url to the content.
+         * @param   integer  $id      The id of the content.
+         * @param   array    $params  An array of additional url parameters.
+         * @return  string   The url to the content.
 	 */
 	public static function getGroupRoute($id, $params = array())
 	{
@@ -175,7 +175,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getGroupsRoute($params = array())
@@ -192,7 +192,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getMediaRoute($params=array())
@@ -209,10 +209,10 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id         The id of the content.
-         * @param   array   $params     An array of additional url parameters.
-         * @param   boolean $associate  Add associated data to the url.
-         * @return  string  The url to the content.
+         * @param   integer  $id         The id of the content.
+         * @param   array    $params     An array of additional url parameters.
+         * @param   boolean  $associate  Add associated data to the url.
+         * @return  string   The url to the content.
 	 */
 	public static function getMediaItemRoute($id, $params=array(), $associate=true)
 	{
@@ -273,9 +273,9 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id     The id of the content.
-         * @param   array   $params An array of additional url parameters.
-         * @return  string  The url to the content.
+         * @param   integer  $id      The id of the content.
+         * @param   array    $params  An array of additional url parameters.
+         * @return  string   The url to the content.
 	 */
 	public static function getPlaylistRoute($id, $params = array())
 	{
@@ -292,7 +292,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getPlaylistsRoute($params = array())
@@ -309,10 +309,10 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id         The id of the content.
-         * @param   array   $params     An array of additional url parameters.
-         * @param   boolean $associate  Add associated data to the url.
-         * @return  string  The url to the content.
+         * @param   integer  $id         The id of the content.
+         * @param   array    $params     An array of additional url parameters.
+         * @param   boolean  $associate  Add associated data to the url.
+         * @return  string   The url to the content.
 	 */
 	public static function getSlideshowRoute($id, $params=array(), $associate=true)
 	{
@@ -357,9 +357,9 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id     The id of the content.
-         * @param   array   $params An array of additional url parameters.
-         * @return  string  The url to the content.
+         * @param   integer  $id      The id of the content.
+         * @param   array    $params  An array of additional url parameters.
+         * @return  string   The url to the content.
 	 */
 	public static function getUserRoute($id, $params = array())
 	{
@@ -402,9 +402,9 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   integer $id     The id of the content.
-         * @param   array   $params An array of additional url parameters.
-         * @return  string  The url to the content.
+         * @param   integer  $id      The id of the content.
+         * @param   array    $params  An array of additional url parameters.
+         * @return  string   The url to the content.
 	 */
 	public static function getChannelRoute($id, $params = array())
 	{
@@ -426,7 +426,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getChannelsRoute($params = array())
@@ -443,9 +443,10 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
-	public static function getMyMediaRoute()
+	public static function getMyMediaRoute($params = array())
 	{                
 		$needles = array(
 			'account'  => null
@@ -459,7 +460,7 @@ class hwdMediaShareHelperRoute
          * 
          * @access  public
          * @static
-         * @param   array   $params An array of additional url parameters.
+         * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
 	public static function getUploadRoute($params = array())
@@ -492,9 +493,9 @@ class hwdMediaShareHelperRoute
          * 
          * @access  protected
          * @static
-         * @param   string  $link       The current link.
-         * @param   array   $params     An array of additional url parameters.
-         * @param   array   $needles    An array of needles used to located an appropriate menu link.
+         * @param   string  $link     The current link.
+         * @param   array   $params   An array of additional url parameters.
+         * @param   array   $needles  An array of needles used to located an appropriate menu link.
          * @return  string  The completed url.
 	 */
 	protected static function _buildUrl($link, $params = array(), $needles = null)
