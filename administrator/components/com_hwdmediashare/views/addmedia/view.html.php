@@ -175,13 +175,13 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                $pluginClass = 'plgHwdmediashare'.$config->get('platform');
-                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('platform').'/'.$config->get('platform').'.php';
+                $pluginClass = 'plgHwdmediashare' . $config->get('platform');
+                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $config->get('platform') . '/' . $config->get('platform') . '.php';
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $player = call_user_func(array($pluginClass, 'getInstance'));
-                        return $player->getUploadForm();
+                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+                        return $HWDplatform->getUploadForm();
                 }
 	}
         
