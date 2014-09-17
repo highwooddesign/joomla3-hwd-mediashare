@@ -568,10 +568,9 @@ class hwdMediaShareModelMediaItem extends JModelItem
 	 * Method to process a submitted date of birth.
 	 *
          * @access  public
-	 * @param   integer  $pk  Primary key of the record.
 	 * @return  boolean  True on success, false on fail.
 	 */
-	public function dob($pk = null)
+	public function dob()
 	{           
                 // Initialise variables.
                 $app = JFactory::getApplication();
@@ -584,23 +583,6 @@ class hwdMediaShareModelMediaItem extends JModelItem
                         $this->setError(JText::_('COM_HWDMS_NO_DOB_PROVIDED'));
                         return false; 
                 }
-                
-		// Get a table instance.
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
-
-		// Attempt to load the table row.
-		$return = $table->load($pk);
-
-		// Check for a table object error.
-		if ($return === false && $table->getError())
-                {
-			$this->setError($table->getError());
-			return false;
-		}
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
 
                 // Store in state.
                 $app->setUserState('media.dob', $data['dob']);
