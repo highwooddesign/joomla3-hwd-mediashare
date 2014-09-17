@@ -1,196 +1,357 @@
 <?php
 /**
- * @version    SVN $Id: media.php 428 2012-07-04 13:47:20Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      27-Nov-2011 16:53:02
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerMedia extends JControllerForm
 {
 	/**
-	 * Constructor.
+	 * The prefix to use with controller messages.
+         * 
+         * @access      protected
+	 * @var         string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+        
+	/**
+	 * The URL view list variable to use with this controller.
 	 *
-	 * @param	array	$config	An optional associative array of configuration settings.
-
-	 * @return	hwdMediaShareControllerMedia
-	 * @see		JController
-	 * @since	0.1
+         * @access      protected
+	 * @var         string
+	 */
+    	protected $view_list = "media";
+        
+	/**
+	 * Class constructor.
+	 *
+	 * @access	public
+	 * @param       array       $config     An optional associative array of configuration settings.
+         * @return      void
 	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
-                $this->registerTask('unpublish', 'publish');
                 
-                $this->registerTask('assignCategory', 'assign');
-                $this->registerTask('unassignCategory', 'assign');
-                $this->registerTask('assignAlbum', 'assign');
-                $this->registerTask('unassignAlbum', 'assign');
-                $this->registerTask('assignPlaylist', 'assign');
-                $this->registerTask('unassignPlaylist', 'assign');
-                $this->registerTask('assignGroup', 'assign');
-                $this->registerTask('unassignGroup', 'assign');
+		// Define standard task mappings.                
+                $this->registerTask('unpublish', 'publish');
+                $this->registerTask('delete', 'publish');
+                $this->registerTask('unfeature', 'feature');
+                $this->registerTask('unapprove', 'approve');
+                $this->registerTask('dislike', 'like');
+                $this->registerTask('unfavourite', 'favourite');
+
+		// Check if the cid array exists, otherwise populate with the id.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
+                $id = JFactory::getApplication()->input->get('id', 0, 'int');
+                if (empty($cid) && $id) JFactory::getApplication()->input->set('cid', array($id));
 	}
         
         /**
 	 * Proxy for getModel.
-	 * @since	0.1
+	 *
+	 * @access  public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
 	 */
-	public function getModel($name = 'MediaItem', $prefix = 'hwdMediaShareModel')
+	public function getModel($name = 'MediaItem', $prefix = 'hwdMediaShareModel', $config = array('ignore_request' => true))
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
                 return $model;
 	}
         
 	/**
-	 * Method to toggle the publish setting of a list of items.
+	 * Method to toggle the published value of a list of media.
 	 *
-	 * @return	void
-	 * @since	0.1
+	 * @access	public
+         * @return      void
 	 */
-	function publish()
+	public function publish()
 	{
-		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// Check for request forgeries.
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
 		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', JRequest::getInt('id', array()), '', 'array');
-		$values	= array('publish' => 1, 'unpublish' => 0);
+		$values	= array('publish' => 1, 'unpublish' => 0, 'delete' => -2);
 		$task	= $this->getTask();
-
 		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_array($cid) || count($cid) < 1)
 		{
-			// Get a level row instance.
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-			$table = JTable::getInstance('Media', 'hwdMediaShareTable');
-			$table->load($id);
-			// Convert the JTable to a clean JObject.
-			$properties = $table->getProperties(1);
-			$item = JArrayHelper::toObject($properties, 'JObject');
- 
-			if (!($user->authorise('core.edit.state', 'com_hwdmediashare.media.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare') && ($item->created_user_id == $user->id)))) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
+		{
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->publish($ids, $value))
-                        {
-				JError::raiseWarning(500, $model->getError());
+			// Make sure the item ids are integers.
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Publish/unpublish the media.
+			if ($model->publish($cid, $value))
+			{
+                                switch ($task)
+                                {
+                                        case 'delete':
+                                                $this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_DELETED', count($cid)));
+                                        break;
+                                        default:
+                                                $this->setMessage(JText::plural($this->text_prefix . '_N_MEDIA_'.strtoupper($task).'ED', count($cid)));
+                                }
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
-
-                $this->setRedirect(base64_decode(JRequest::getVar('return', '')));
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
+
 	/**
-	 * Method to toggle the delete setting of a list of items.
+	 * Method to like or dislike a single media.
 	 *
-	 * @return	void
-	 * @since	0.1
+	 * @access	public
+         * @return      void
 	 */
-	function delete()
+	public function like()
 	{
-		// Check for request forgeries
-		//JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// Check for request forgeries.
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to like from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
 
 		// Initialise variables.
-		$user	= JFactory::getUser();
-		$ids	= JRequest::getVar('cid', JRequest::getInt('id', array()), '', 'array');
+		$values	= array('like' => 1, 'dislike' => 0);
 		$task	= $this->getTask();
+		$value	= JArrayHelper::getValue($values, $task, 0, 'int');
 
-		// Access checks.
-		foreach ($ids as $i => $id)
+		if (!is_numeric($cid) || $cid < 1)
 		{
-			// Get a level row instance.
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-			$table = JTable::getInstance('Media', 'hwdMediaShareTable');
-			$table->load($id);
-			// Convert the JTable to a clean JObject.
-			$properties = $table->getProperties(1);
-			$item = JArrayHelper::toObject($properties, 'JObject');
- 
-			if (!($user->authorise('core.edit.state', 'com_hwdmediashare.media.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare') && ($item->created_user_id == $user->id)))) 
-                        {
-				// Prune items that you can't change.
-				unset($ids[$i]);
-				JError::raiseNotice(403, JText::_('JLIB_APPLICATION_ERROR_EDITSTATE_NOT_PERMITTED'));
-			}
-		}
-
-		if (empty($ids))
-                {
-			JError::raiseWarning(500, JText::_('JERROR_NO_ITEMS_SELECTED'));
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
 		else
-                {
+		{
 			// Get the model.
 			$model = $this->getModel();
 
-			// Publish the items.
-			if (!$model->delete($ids))
-                        {
-				JError::raiseWarning(500, $model->getError());
+			// Like/dislike the media.
+			if ($model->like($cid, $value))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_MEDIA_'.strtoupper($task).'D'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
 			}
 		}
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
 
-                $this->setRedirect(base64_decode(JRequest::getVar('return', '')));
+	/**
+	 * Method to add and remove a media from favourite list.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function favourite()
+	{
+		// Check for request forgeries.
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to like from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		// Initialise variables.
+		$values	= array('favourite' => 'addFavourite', 'unfavourite' => 'removeFavourite');
+		$task	= $this->getTask();
+		$value	= JArrayHelper::getValue($values, $task, 'addFavourite', 'word');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+                        hwdMediaShareFactory::load('favourites');
+                        $model = hwdMediaShareFavourites::getInstance();                        
+                        $model->elementType = 1;
+                        
+			// Add/remove media to favourites.
+			if ($model->$value($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_MEDIA_'.strtoupper($task).'D'));
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}
+        
+	/**
+	 * Method to report a single media.
+	 *
+	 * @access	public
+         * @return      void
+	 */
+	public function report()
+	{
+		// Check for request forgeries.
+		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
+
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+		// Get items to report from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Report the album.
+			if ($model->report($cid))
+			{
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_MEDIA_REPORTED', 'COM_HWDMS_NOTICE_MEDIA_REPORTED_DESC'); 
+			}
+			else
+			{
+				$utilities->printModalNotice('COM_HWDMS_NOTICE_MEDIA_REPORT_FAILED', $model->getError()); 
+			}
+		}
+	}          
+
+        /**
+	 * Method to process a submitted password.
+	 *
+         * @access  public
+	 * @return  void
+	 */
+	public function password()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to process from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Process the password data.
+			if (!$model->password($cid))
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
         
         /**
-	 * Method to toggle the publish setting of a list of items.
+	 * Method to process a submitted date of birth.
 	 *
-	 * @return	void
-	 * @since	0.1
+         * @access  public
+	 * @return  void.
 	 */
-	function assign()
-	{               
-                // Base this model on the backend version.
-                JLoader::register('hwdMediaShareModelEditMedia', JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/editmedia.php');
-                $model          = JModelLegacy::getInstance('EditMedia','hwdMediaShareModel');
-                $id		= JRequest::getVar( 'cid' , '' , 'post' );
-		$message	= JText::_('COM_HWDMS_SUCCESSFULLY_PERFORMED_BATCH_TASK');
-		$task           = $this->getTask();
+	public function dob()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                if( empty($id) )
+		// Get items to process from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
 		{
-			JError::raiseError( '500' , JText::_('COM_HWDMS_INVALID_ID') );
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
 		}
-
-		for( $i = 0; $i < count($id); $i++ )
+		else
 		{
-			if( !$model->$task( $id[ $i ] ) )
+			// Get the model.
+			$model = $this->getModel();
+
+			// Process the date of birth data.
+			if (!$model->dob($cid))
 			{
-				JError::raiseWarning(500, $model->getError());
+				$this->setMessage($model->getError());
 			}
 		}
-
-                $this->setRedirect('index.php?option=com_hwdmediashare&view=account&layout=media', $message);
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
 	}
+        
+        /**
+	 * Method to link a media with specific elements.
+	 *
+         * @access  public
+	 * @return  void.
+	 */
+	public function link()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to process from the request.
+		$cid = JFactory::getApplication()->input->get('id', 0, 'int');
+
+		if (!is_numeric($cid) || $cid < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+			// Get the model.
+			$model = $this->getModel();
+
+			// Link the media.
+			if ($model->link($cid))
+			{
+				$this->setMessage(JText::_($this->text_prefix . '_NOTICE_MEDIA_LINKED_TO_ELEMENTS'));          
+			}
+			else
+			{
+				$this->setMessage($model->getError());
+			}
+		}
+                
+                $return = base64_decode($this->input->get('return', null, 'base64'));
+		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+	}        
 }
