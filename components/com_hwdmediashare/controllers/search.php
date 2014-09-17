@@ -23,7 +23,7 @@ class hwdMediaShareControllerSearch extends JControllerLegacy
                 // Initialise variables.
                 $app = JFactory::getApplication();
 
-                // Retrieve fitlered jform data.
+                // Retrieve filtered jform data.
                 $jform = $app->input->getArray(array(
                     'jform' => array(
                         'keyword' => 'string',
