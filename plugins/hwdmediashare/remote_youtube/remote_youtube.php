@@ -21,8 +21,8 @@ class plgHwdmediashareRemote_youtube extends plgHwdmediashareRemote_youtubecom
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function __construct()
 	{
@@ -33,8 +33,8 @@ class plgHwdmediashareRemote_youtube extends plgHwdmediashareRemote_youtubecom
 	 * Returns the plgHwdmediashareRemote_youtube object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @access	public
-	 * @return      object      The plgHwdmediashareRemote_youtube object.
+	 * @access  public
+	 * @return  object  The plgHwdmediashareRemote_youtube object.
 	 */
 	public static function getInstance()
 	{
@@ -52,8 +52,8 @@ class plgHwdmediashareRemote_youtube extends plgHwdmediashareRemote_youtubecom
         /**
 	 * Get the url of the media source.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function getUrl()
 	{
