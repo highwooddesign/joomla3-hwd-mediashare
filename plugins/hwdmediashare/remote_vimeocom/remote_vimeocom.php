@@ -18,16 +18,16 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
 	/**
 	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
          * 
-         * @access      public
-	 * @var         integer
+         * @access  public
+	 * @var     integer
 	 */
 	public $mediaType = 4;
         
 	/**
 	 * The API buffer.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
         public $_v2api = false;
 
@@ -74,8 +74,8 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
 	 * Returns the plgHwdmediashareRemote_vimeocom object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @access	public
-	 * @return      object      The plgHwdmediashareRemote_vimeocom object.
+	 * @access  public
+	 * @return  object  The plgHwdmediashareRemote_vimeocom object.
 	 */
 	public static function getInstance()
 	{
@@ -93,132 +93,176 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
         /**
 	 * Get the title of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The title.
 	 */
 	public function getTitle($buffer = null)
 	{
-                // Request the required API buffer.
-                if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
-            
-                if ($this->_v2api)
-                {
-                        $json = json_decode($this->_v2api);
-                        if (!isset($json->error) && isset($json[0]->title))
+                if(!$this->_title)
+		{
+                        // Request the required API buffer.
+                        if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
+
+                        // Check request was successful.
+                        if ($this->_v2api)
                         {
-                                if ($this->_title = parent::clean($json[0]->title, 255))
+                                $json = json_decode($this->_v2api);
+                                if (!isset($json->error) && isset($json[0]->title))
                                 {
-                                        return $this->_title; 
+                                        if ($this->_title = parent::clean($json[0]->title, 255))
+                                        {
+                                                return $this->_title; 
+                                        }
                                 }
                         }
                 }
+                
+                if(!$this->_title)
+		{
+                        $this->_title = parent::getTitle($this->_buffer);
+                        $this->_title = str_replace(" on Vimeo", "", $this->_title);                        
+                }
 
-                $this->_title = parent::getTitle($this->_buffer);
-                $this->_title = str_replace(" on Vimeo", "", $this->_title);
                 return $this->_title;           
         }   
 
         /**
 	 * Get the description of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The description.
 	 */
 	public function getDescription($buffer = null)
 	{
-                // Request the required API buffer.
-                if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
-            
-                if ($this->_v2api)
-                {
-                        $json = json_decode($this->_v2api);
-                        if (!isset($json->error) && isset($json[0]->description))
+                if(!$this->_description)
+		{
+                        // Request the required API buffer.
+                        if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
+
+                        // Check request was successful.                        
+                        if ($this->_v2api)
                         {
-                                if ($this->_description = parent::clean($json[0]->description))
+                                $json = json_decode($this->_v2api);
+                                if (!isset($json->error) && isset($json[0]->description))
                                 {
-                                        return $this->_description; 
+                                        if ($this->_description = parent::clean($json[0]->description))
+                                        {
+                                                return $this->_description; 
+                                        }
                                 }
                         }
                 }
-				
-                return parent::getDescription($this->_buffer);          
+                
+                if(!$this->_description)
+		{
+                        $this->_description = parent::getDescription($this->_buffer);    
+                }
+                
+                return $this->_description;     
         }  
 
         /**
 	 * Get the duration of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The duration.
 	 */
 	public function getDuration($buffer = null)
 	{
-                // Request the required API buffer.
-                if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
-            
-                if ($this->_v2api)
-                {
-                        $json = json_decode($this->_v2api);                        
-                        if (!isset($json->error) && isset($json[0]->duration))
+                if(!$this->_duration)
+		{
+                        // Request the required API buffer.
+                        if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
+
+                        // Check request was successful.                                                
+                        if ($this->_v2api)
                         {
-                                $this->_duration = (int) $json[0]->duration;
-                                if ($this->_duration > 0) 
+                                $json = json_decode($this->_v2api);                        
+                                if (!isset($json->error) && isset($json[0]->duration))
                                 {
-                                        return $this->_duration;
+                                        $this->_duration = (int) $json[0]->duration;
+                                        if ($this->_duration > 0) 
+                                        {
+                                                return $this->_duration;
+                                        }
                                 }
-                        }
-                }               
+                        }  
+                }
+                
+                if(!$this->_duration)
+		{
+                        $this->_duration = parent::getDuration($this->_buffer);    
+                }
+                
+                return $this->_duration;              
         }  
         
         /**
 	 * Get the thumbnail location of the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The thumbnail.
 	 */
 	public function getThumbnail($buffer = null)
 	{
-                // Load HWD utilities.
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                        
-                // Request the required API buffer.
-                if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
-            
-                if ($this->_v2api)
-                {
-                        $json = json_decode($this->_v2api); 
-                        
-                        // Look for large thumbnail.
-                        if (!isset($json->error) && isset($json[0]->thumbnail_large))
+                if(!$this->_thumbnail)
+		{
+                        // Load HWD utilities.
+                        hwdMediaShareFactory::load('utilities');
+                        $utilities = hwdMediaShareUtilities::getInstance();
+
+                        // Request the required API buffer.
+                        if (!$this->_v2api) $this->_v2api = parent::getBuffer('https://vimeo.com/api/v2/video/' . $this->parse($this->_url) . '.json', true);
+
+                        // Check request was successful.                                                
+                        if ($this->_v2api)
                         {
-                                if ($this->_thumbnail = parent::clean($json[0]->thumbnail_large, 255))
+                                $json = json_decode($this->_v2api); 
+
+                                // Look for large thumbnail.
+                                if (!isset($json->error) && isset($json[0]->thumbnail_large))
                                 {
-                                        if ($utilities->validateUrl($this->_thumbnail))
+                                        if ($this->_thumbnail = parent::clean($json[0]->thumbnail_large, 255))
                                         {
-                                                return $this->_thumbnail; 
-                                        }      
+                                                if ($utilities->validateUrl($this->_thumbnail))
+                                                {
+                                                        return $this->_thumbnail; 
+                                                }      
+                                        }
                                 }
-                        }
-                        
-                        // Look for medium thumbnail.
-                        if (!isset($json->error) && isset($json[0]->thumbnail_medium))
-                        {
-                                if ($this->_thumbnail = parent::clean($json[0]->thumbnail_medium, 255))
+
+                                // Look for medium thumbnail.
+                                if (!isset($json->error) && isset($json[0]->thumbnail_medium))
                                 {
-                                        if ($utilities->validateUrl($this->_thumbnail))
+                                        if ($this->_thumbnail = parent::clean($json[0]->thumbnail_medium, 255))
                                         {
-                                                return $this->_thumbnail; 
-                                        }  
+                                                if ($utilities->validateUrl($this->_thumbnail))
+                                                {
+                                                        return $this->_thumbnail; 
+                                                }  
+                                        }
                                 }
-                        }
-                }          
+                        }      
+                }
+
+                if(!$this->_thumbnail)
+		{
+                        $this->_thumbnail = parent::getThumbnail($this->_buffer);    
+                }
+                
+                return $this->_thumbnail; 
         } 
         
         /**
 	 * Get the tags for the media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  array   The tags.
 	 */
 	public function getTags($buffer = null)
 	{
@@ -228,9 +272,9 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
         /**
 	 * Render the HTML to display the media.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      void
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The HTML to render the media player.
 	 */
 	public function display($item)
 	{
@@ -262,7 +306,7 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
                 // Get Vimeo ID.
-                $id = plgHwdmediashareRemote_vimeocom::parse($item->source);
+                $id = $this->parse($item->source);
               
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 $this->width = '100%';
@@ -284,9 +328,9 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
         /**
 	 * Parse the source to extract the media.
 	 *
-	 * @access	public
-	 * @param       string      $url        The media url.
-         * @return      void
+	 * @access  protected
+	 * @param   string     $url  The media url.
+         * @return  string     The ID.
 	 */         
         protected function parse($url)
         {
@@ -304,9 +348,9 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
         /**
 	 * Method to construct the direct display location for the media.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      void
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The direct display location.
 	 */
 	public function getDirectDisplayLocation($item)
 	{
@@ -338,7 +382,7 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
                 // Get Vimeo ID.
-                $id = plgHwdmediashareRemote_vimeocom::parse($item->source);
+                $id = $this->parse($item->source);
             
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
 
@@ -348,9 +392,9 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
         /**
 	 * Method to determine the type of media that will be displayed.
 	 *
-	 * @access	public
-	 * @param       object      $item       The media item being displayed.
-         * @return      integer     The API value of the media type being displayed.
+	 * @access  public
+	 * @param   object   $item  The media item being displayed.
+         * @return  integer  The API value of the media type being displayed.
 	 */
 	public function getDirectDisplayType($item)
 	{
