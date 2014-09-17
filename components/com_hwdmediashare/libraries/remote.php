@@ -396,7 +396,7 @@ class hwdMediaShareRemote extends JObject
          * @param   boolean $ssl    Request secure connection.
          * @return  string  The buffer.
 	 */
-	public function getBuffer($url, $ssl=false)
+	public function getBuffer($url, $ssl = true)
 	{  
                 // Check if curl supports ssl connections.
                 $version = curl_version();
