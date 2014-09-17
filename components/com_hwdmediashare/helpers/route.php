@@ -452,7 +452,7 @@ class hwdMediaShareHelperRoute
 			'account'  => null
 		);
                 
-                $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=account&layout=media', $params, $needles);
+                return self::_buildUrl('index.php?option=com_hwdmediashare&view=account&layout=media', $params, $needles);
 	} 
         
 	/**
