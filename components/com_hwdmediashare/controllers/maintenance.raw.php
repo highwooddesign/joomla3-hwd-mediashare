@@ -1,32 +1,35 @@
 <?php
 /**
- * @version    SVN $Id: maintenance.raw.php 1274 2013-03-13 14:14:36Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-class HwdMediaShareControllerMaintenance extends JControllerLegacy {
-        /**
-	 * Method to run the mainenance
-	 * @since	0.1
+class HwdMediaShareControllerMaintenance extends JControllerLegacy
+{
+	/**
+	 * Method to run media processing tasks.
+         * 
+         * @access  public
+	 * @return  void
 	 */
-        function process()
+        public function process()
         {
-                $app =& JFactory::getApplication();
+                // Initialise variables.
+                $app = JFactory::getApplication();
 
-                // Check token
-                if ($app->getCfg('secret') != JRequest::getVar('token'))
+                // Check token in request.
+                if ($app->getCfg('secret') != $app->input->get('token', '', 'var'))
                 {
-                    die('Invalid secret token');
+                        die('Invalid secret token');
                 }
 
-                // Require hwdMediaShare factory
+                // Require HWD factory.
                 JLoader::register('hwdMediaShareFactory', JPATH_BASE.'/components/com_hwdmediashare/libraries/factory.php');
 
                 // Load process object
@@ -39,32 +42,38 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy {
                 }
         }
 
-        function cdn()
+	/**
+	 * Method to run cdn file transfer matinenance.
+         * 
+         * @access  public
+	 * @return  void
+	 */        
+        public function cdn()
         {
-                $app =& JFactory::getApplication();
+                // Initialise variables.
+                $app = JFactory::getApplication();
 
-                // Check token
-                if ($app->getCfg('secret') != JRequest::getVar('token'))
-                {
-                    die('Invalid secret token');
-                }
-                
-                // Require hwdMediaShare factory
-                JLoader::register('hwdMediaShareFactory', JPATH_BASE.'/components/com_hwdmediashare/libraries/factory.php');
-
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                $pluginClass = 'plgHwdmediashare'.$config->get('cdn','cdn_amazons3');
-                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('cdn','cdn_amazons3').'/'.$config->get('cdn','cdn_amazons3').'.php';
+                // Check token in request.
+                if ($app->getCfg('secret') != $app->input->get('token', '', 'var'))
+                {
+                        die('Invalid secret token');
+                }
+                
+                // Require HWD factory.
+                JLoader::register('hwdMediaShareFactory', JPATH_BASE.'/components/com_hwdmediashare/libraries/factory.php');
 
-                // Import hwdMediaShare CDN plugin and run maintenance method
+                // Import HWD CDN plugin and run maintenance method.
+                $pluginClass = 'plgHwdmediashare' . $config->get('cdn', 'cdn_amazons3');
+                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $config->get('cdn', 'cdn_amazons3') . '/' . $config->get('cdn', 'cdn_amazons3') . '.php';
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $cdn = call_user_func(array($pluginClass, 'getInstance'));
-                        return $cdn->maintenance();
+                        $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
+                        return $HWDcdn->maintenance();
                 }
         }
 }
