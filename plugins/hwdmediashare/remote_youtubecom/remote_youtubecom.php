@@ -109,9 +109,6 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 		// Initialise variables.
                 $app = JFactory::getApplication();
             
-                // We will filter input from the buffer.
-                $noHtmlFilter = JFilterInput::getInstance();
-
                 // Request the required API buffer.
                 if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
             
