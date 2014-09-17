@@ -243,10 +243,13 @@ class hwdMediaShareTableMedia extends JTable
                         }
 
                         // Add custom field data.
-                        hwdMediaShareFactory::load('customfields');                
-                        $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
-                        $HWDcustomfields->elementType = 1;
-                        $HWDcustomfields->save($media);
+                        if (!$isNew)
+                        {
+                                hwdMediaShareFactory::load('customfields');                
+                                $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
+                                $HWDcustomfields->elementType = 1;
+                                $HWDcustomfields->save($media); 
+                        }
 
                         // Add thumbnail.
                         hwdMediaShareFactory::load('upload');
