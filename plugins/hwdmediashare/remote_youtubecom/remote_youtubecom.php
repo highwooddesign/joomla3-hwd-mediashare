@@ -10,7 +10,10 @@
 
 defined('_JEXEC') or die;
 
-class plgHwdmediashareRemote_youtubecom extends JObject
+// Load the HWD remote library.
+JLoader::register('hwdMediaShareRemote', JPATH_ROOT.'/components/com_hwdmediashare/libraries/remote.php');
+
+class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 {    
 	/**
 	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
@@ -19,12 +22,29 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 * @var         integer
 	 */
 	public $mediaType = 4;
+
+	/**
+	 * The API buffer (holding the snippet part).
+         * 
+         * @access      public
+	 * @var         string
+	 */
+        public $_v3snippet = false;
+        
+	/**
+	 * The API buffer (holding the contentDetails part).
+         * 
+         * @access      public
+	 * @var         string
+	 */
+        public $_v3content = false;
         
         public $_url;
         public $_host;
         public $_buffer;
         public $_title;
         public $_description;
+        public $_tags;
         public $_source;
         public $_duration;
         public $_thumbnail;
@@ -32,12 +52,30 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct()
+	public function __construct($properties = null)
 	{
-		parent::__construct();
+                /**
+                 * We extend the Joomla Platform Object Class for this plugin instead of JPlugin. This class
+                 * allows for simple but smart objects with get and set methods and an internal error handler.
+                 * The 'hwdmediashare' plugin group is loaded on some media events, such as onAfterMediaAdd.
+                 * When loaded by Joomla, it is exepected the plugin classes will extend the JPlugin class, 
+                 * and the __construct() method is passed a $subject and $config variable:
+                 *                  
+                 *     parent::__construct($subject, $config);
+                 * 
+                 * However, the JObject __construct() method expects a single $properties variable, and when loaded
+                 * by JEventDispatcher, a fatal error is thrown.
+                 * 
+                 *     Fatal error: Cannot access property started with '\0' in C:\wamp\www\joomla3-hwdmediashare\libraries\joomla\object\object.php on line 194
+                 * 
+                 * We avoid the error by overloading the parent constructs (which are not necessary for these
+                 * plugin types).
+                 */  
 	}
         
 	/**
@@ -66,15 +104,38 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 * @access	public
          * @return      void
 	 */
-	public function getTitle()
+	public function getTitle($buffer = null)
 	{
-                if( !$this->_title )
-		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_title = hwdMediaShareRemote::getTitle($this->_buffer);
-                        $this->_title = str_replace(" - YouTube", "", $this->_title);
+		// Initialise variables.
+                $app = JFactory::getApplication();
+            
+                // We will filter input from the buffer.
+                $noHtmlFilter = JFilterInput::getInstance();
+
+                // Request the required API buffer.
+                if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+            
+                if ($this->_v3snippet)
+                {
+                        $json = json_decode($this->_v3snippet);
+                        if (!isset($json->error) && isset($json->items[0]->snippet->title))
+                        {
+                                if ($this->_title = parent::clean($json->items[0]->snippet->title, 255))
+                                {
+                                        return $this->_title; 
+                                }
+                        }
+                        else
+                        {
+                                foreach ($json->error->errors as $error)
+                                {
+                                        $app->enqueueMessage(JText::sprintf('COM_HWDMS_WARNING_YOUTUBE_API_REQUEST_FAILED_REASON_N', $error->reason));
+                                }
+                        }
                 }
+       
+                $this->_title = parent::getTitle($this->_buffer);
+                $this->_title = str_replace(" - YouTube", "", $this->_title);
                 return $this->_title;            
         }   
 
@@ -84,33 +145,25 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 * @access	public
          * @return      void
 	 */
-	public function getDescription()
+	public function getDescription($buffer = null)
 	{
-                if( !$this->_description )
-		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_description = hwdMediaShareRemote::getDescription($this->_buffer); 
-                }             
-                return $this->_description;            
+                // Request the required API buffer.
+                if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+            
+                if ($this->_v3snippet)
+                {
+                        $json = json_decode($this->_v3snippet);
+                        if (!isset($json->error) && isset($json->items[0]->snippet->description))
+                        {
+                                if ($this->_description = parent::clean($json->items[0]->snippet->description))
+                                {
+                                        return $this->_description; 
+                                }
+                        }
+                }
+				
+                return parent::getDescription($this->_buffer);          
         }  
-        
-        /**
-	 * Get the source of the media.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function getSource()
-	{
-                if( !$this->_source )
-		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_source = hwdMediaShareRemote::getSource();
-                }             
-                return $this->_source;             
-        } 
 
         /**
 	 * Get the duration of the media.
@@ -118,24 +171,37 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 * @access	public
          * @return      void
 	 */
-	public function getDuration()
+	public function getDuration($buffer = null)
 	{
-                if( !$this->_duration )
-		{
-                        $duration = '';
-                        
-                        //preg_match("/amp;length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
-                        //preg_match("/length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
-                        preg_match("/\"length_seconds\": (.*),/siU", $this->_buffer, $match);
-                        
-                        if (!empty($match[1]))
+                // Request the required API buffer.
+                if (!$this->_v3content) $this->_v3content = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+            
+                if ($this->_v3content)
+                {
+                        $json = json_decode($this->_v3content);
+                        if (!isset($json->error) && isset($json->items[0]->contentDetails->duration))
                         {
-                                $duration = (int) $match[1];
-                        }
-   
-                        $duration == 0 ? $this->_duration = null : $this->_duration = $duration;
-                }   
+                                // Get duration from ISO 8601 string.
+                                preg_match('/(\d+)H/', $json->items[0]->contentDetails->duration, $match);
+                                $h = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
+                                preg_match('/(\d+)M/', $json->items[0]->contentDetails->duration, $match);
+                                $m = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
+                                preg_match('/(\d+)S/', $json->items[0]->contentDetails->duration, $match);
+                                $s = isset($match[0]) ? filter_var($match[0], FILTER_SANITIZE_NUMBER_INT) : 0;
 
+                                $this->_duration = ($h * 60 * 60) + ($m * 60) + ($s);
+                                if ($this->_duration > 0) 
+                                {
+                                        return $this->_duration;
+                                }
+                        }
+                }
+                
+                //preg_match("/amp;length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
+                //preg_match("/length_seconds=(.*)\\\\u/siU", $this->_buffer, $match);
+                preg_match("/\"length_seconds\": (.*),/siU", $this->_buffer, $match);
+                $this->_duration = isset($match[1]) ? filter_var($match[1], FILTER_SANITIZE_NUMBER_INT) : 0;
+                
                 return $this->_duration;
         } 
 
@@ -145,68 +211,46 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 	 * @access	public
          * @return      void
 	 */
-	public function getThumbnail()
+	public function getThumbnail($buffer = null)
 	{
-                if( !$this->_thumbnail )
-		{
-                        $this->_thumbnail = plgHwdmediashareRemote_youtubecom::parse($this->_url, 'hqthumb');
-                }             
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+
+                // Request the required API buffer.
+                if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+            
+                if ($this->_v3snippet)
+                {
+                        // Check for high resolution thumbnail.
+                        $json = json_decode($this->_v3snippet);
+                        if (!isset($json->error) && isset($json->items[0]->snippet->thumbnails->maxres->url))
+                        {
+                                if ($this->_thumbnail = parent::clean($json->items[0]->snippet->thumbnails->maxres->url, 255))
+                                {
+                                        if ($utilities->validateUrl($this->_thumbnail))
+                                        {
+                                                return $this->_thumbnail; 
+                                        }                                      
+                                }
+                        }
+                }
+
+                // Use fallback method.
+                $this->_thumbnail = $this->parse($this->_url, 'hqthumb');
                 return $this->_thumbnail;              
         } 
         
         /**
-	 * Request the source, and set to buffer.
+	 * Get the tags for the media.
 	 *
 	 * @access	public
          * @return      void
 	 */
-	public function getBuffer()
+	public function getTags($buffer = null)
 	{
-                $this->getHost();
-                $this->getUrl();
-
-                if (!$this->_buffer)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_buffer = hwdMediaShareRemote::getBuffer($this->_url);
-                }
-
-		return $this->_buffer;
-	}
-
-        /**
-	 * Get the host of the media source.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function getHost()
-	{
-                if (!$this->_host)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_host = hwdMediaShareRemote::getHost();
-                }
-
-		return $this->_host;
-	}
-        
-        /**
-	 * Get the url of the media source.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function getUrl()
-	{
-                if (!$this->_url)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_url = hwdMediaShareRemote::getUrl();
-                }
-
-		return $this->_url;
-	}
+                return parent::getTags($this->_buffer);
+        } 
         
         /**
 	 * Render the HTML to display the media.
@@ -249,7 +293,7 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
                 $url = parse_url($item->source);
-                parse_str($url['query'], $ytvars);
+                if (isset($url['query'])) parse_str($url['query'], $ytvars);
                 if (isset($ytvars['cc_load_policy'])) $params->set('cc_load_policy', $ytvars['cc_load_policy']);
                 if (isset($ytvars['cc_lang_pref'])) $params->set('cc_lang_pref', $ytvars['cc_lang_pref']);
                 if (isset($ytvars['hl'])) $params->set('hl', $ytvars['hl']);
@@ -386,7 +430,7 @@ class plgHwdmediashareRemote_youtubecom extends JObject
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
                 $url = parse_url($item->source);
-                parse_str($url['query'], $ytvars);
+                if (isset($url['query'])) parse_str($url['query'], $ytvars);
                 if (isset($ytvars['cc_load_policy'])) $params->set('cc_load_policy', $ytvars['cc_load_policy']);
                 if (isset($ytvars['cc_lang_pref'])) $params->set('cc_lang_pref', $ytvars['cc_lang_pref']);
                 if (isset($ytvars['hl'])) $params->set('hl', $ytvars['hl']);
