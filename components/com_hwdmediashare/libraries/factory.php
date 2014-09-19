@@ -128,8 +128,14 @@ class hwdMediaShareFactory extends JObject
                                 return false;
                         }
 
-                        // Bind the user saved configuration.
-                        $this->_config->loadObject(json_decode($table->params));
+                        // Load and manipulate the saved configruation.
+                        $config = json_decode($table->params);
+                        $config->upload_limits = json_encode($config->upload_limits);
+                        
+                        // Merge the user saved configuration.
+                        $this->_config->loadObject($config);
+
+                        // Merge the user saved configuration.
                         $this->_config->loadObject($params);
 
                         // Load component parameters and create JRegistry object.
