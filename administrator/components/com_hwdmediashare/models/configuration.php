@@ -100,21 +100,22 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
                 // Load default configuration.
                 $config	= new JRegistry($defaultConfig);
 
+                // Remove rules from data.
                 $dataWithoutRules = $data;
                 unset($dataWithoutRules['rules']);
+                
+                // Create registry from request data.
+                $reg = new JRegistry($dataWithoutRules);
 
-                // Bind the user saved configuration.
-                $config->loadArray($dataWithoutRules);
-
-                $configObject = JRegistryFormatJSON::stringToObject($config);
-                $configJson = JRegistryFormatJSON::objectToString($configObject);
+                // Merge the user saved configuration.
+                $config->merge($reg);
 
                 $array['id'] = 1;
                 $array['name'] = 'config';
                 $array['date'] = $date->toSql();
-                $array['params'] = (string)$configJson;
+                $array['params'] = (string) $config->toString();
                 $array['rules'] = $data['rules'];
-                        
+
                 if (parent::save($array))
                 {
                         return true;
