@@ -42,13 +42,16 @@ class JFormFieldLimits extends JFormFieldRules
                 $number->name = 'number'; 
                 $number->title = JText::_('COM_HWDMS_LIMIT_NUMBER_LABEL'); 
                 $number->description = JText::_('COM_HWDMS_LIMIT_NUMBER_DESC'); 
-                
+
                 // Get the actions for the asset.
 		$actions = array($space,$number);
 
 		// Get the available user groups.
 		$groups = $this->getUserGroups();
 
+		// Encode the limit value.
+                $this->value = json_decode($this->value, true);
+                
 		// Build the form control.
 		$curLevel = 0;
 
