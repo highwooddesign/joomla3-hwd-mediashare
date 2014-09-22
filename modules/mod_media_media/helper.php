@@ -117,10 +117,13 @@ class modMediaMediaHelper extends JViewLegacy
 
                 // Extract the layout.
                 list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
-
+                
+                // Calculate carousel limit.
+                $climit = (4 * $this->params->get('slidesToScroll')) * 2;
+                
 		// Set the start and limit states.
 		$this->_model->setState('list.start', 0);
-		$this->_model->setState('list.limit', (int) ($layout == 'carousel' ? ($this->params->get('slidesToShow') * $this->params->get('slidesToScroll')) : $this->params->get('count', 0)));
+		$this->_model->setState('list.limit', (int) ($layout == 'carousel' ? $climit : $this->params->get('count', 0)));
 
 		// Set the ordering states.
                 $ordering = $this->params->get('list_order_media', 'a.created DESC');
