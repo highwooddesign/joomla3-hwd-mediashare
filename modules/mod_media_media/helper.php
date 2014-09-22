@@ -10,11 +10,16 @@
 
 defined('_JEXEC') or die;
 
-// Base this helper on the component view model.
-require_once JPATH_SITE.'/components/com_hwdmediashare/views/media/view.html.php';
-
-class modMediaMediaHelper extends hwdMediaShareViewMedia
+class modMediaMediaHelper extends JViewLegacy
 {
+	/**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   array  $module  The module object.
+	 * @param   array  $params  The module parameters.
+         * @return  void
+	 */       
 	public function __construct($module, $params)
 	{
                 // Load HWD assets.
@@ -25,9 +30,10 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                 JLoader::register('JHtmlHwdDropdown', JPATH_ROOT.'/components/com_hwdmediashare/helpers/dropdown.php');
                 
                 // Load and register libraries.
-                hwdMediaShareFactory::load('media');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
                 hwdMediaShareFactory::load('utilities');
 
                 // Load HWD config.
@@ -56,6 +62,12 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                 $this->addHead();
 	}
 
+	/**
+	 * Method to add page assets to the <head> tags.
+	 *
+	 * @access  public
+         * @return  void
+	 */        
 	public function addHead()
 	{
                 JHtml::_('bootstrap.framework');
@@ -64,8 +76,28 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                 if ($this->params->get('load_joomla_css') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
                 if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+
+                if (file_exists(JPATH_ROOT.'/modules/mod_media_media/css/' . $layout . '.css'))
+                {
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_media/css/' . $layout . '.css');
+                }
+
+                if ($layout == 'carousel')
+                {
+                        $doc->addStyleSheet(JURI::root() . 'modules/mod_media_media/slick/slick.css');
+                        $doc->addScript(JURI::root() . 'modules/mod_media_media/slick/slick.min.js');
+                }
 	}
 
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @access  public
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */        
 	public function getItems()
 	{
 		// Initialise variables.
@@ -83,9 +115,12 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                 $this->_model->context = 'mod_media_media';
 		$this->_model->populateState();
 
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+
 		// Set the start and limit states.
 		$this->_model->setState('list.start', 0);
-		$this->_model->setState('list.limit', (int) $this->params->get('count', 0));
+		$this->_model->setState('list.limit', (int) ($layout == 'carousel' ? ($this->params->get('slidesToShow') * $this->params->get('slidesToScroll')) : $this->params->get('count', 0)));
 
 		// Set the ordering states.
                 $ordering = $this->params->get('list_order_media', 'a.created DESC');
@@ -115,7 +150,7 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                                         {
                                                 // Get an instance of the categories model.
                                                 $categories = JModelLegacy::getInstance('Categories', 'hwdMediaShareModel', array('ignore_request' => true));
-                                                $categories->setState('params', $appParams);
+                                                $categories->setState('params', $app->getParams());
                                                 $levels = $this->params->get('levels', 1) ? $this->params->get('levels', 1) : 9999;
                                                 $categories->setState('filter.get_children', $levels);
                                                 $categories->setState('filter.published', 1);
@@ -242,7 +277,8 @@ class modMediaMediaHelper extends hwdMediaShareViewMedia
                 $this->_model->setState('filter.media_type', $this->params->get('list_default_media_type', ''));                
 		$this->_model->setState('filter.featured', $this->params->get('show_featured', 'show'));
 
-                $this->items = $this->_model->getItems();
+                // $this->items = $this->getItems($params);
+                $this->items = $cache->call(array($this->_model, 'getItems'), $this->_model);
 
                 return $this->items;               
 	}
