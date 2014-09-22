@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 class hwdMigratorViewDashboard extends JViewLegacy
 {
 	/**
-	 * Display the view
+	 * Display the view.
 	 *
+	 * @access  public
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
 	 * @return  void
 	 */
-	function display($tpl = null)
+	public function display($tpl = null)
 	{
                 // Get data from the model.
                 $this->video_items = $this->get('VideoItems');
@@ -55,6 +55,7 @@ class hwdMigratorViewDashboard extends JViewLegacy
 	/**
 	 * Add the page title and toolbar.
 	 *
+	 * @access  protected
 	 * @return  void
 	 */
 	protected function addToolBar()
@@ -62,9 +63,7 @@ class hwdMigratorViewDashboard extends JViewLegacy
 		JToolBarHelper::title(JText::_('COM_HWDMIGRATOR_MIGRATOR'), 'home');
 
 		JToolBarHelper::custom('maintenance.refresh', 'refresh', 'refresh', JText::_('COM_HWDMIGRATOR_REFRESH'), false);
-		JToolbarHelper::divider();
 		JToolBarHelper::custom('maintenance.run', 'apply', 'apply', JText::_('COM_HWDMIGRATOR_RUN'), false);
-		JToolbarHelper::divider();
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs/59-getting-started/migration/115-migrating-from-hwdvideoshare-to-hwdmediashare');
 	}
 }
