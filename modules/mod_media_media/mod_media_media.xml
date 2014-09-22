@@ -11,6 +11,8 @@
 	<description>MOD_MEDIA_MEDIA_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_media_media">mod_media_media.php</filename>
+		<folder>css</folder>
+		<folder>slick</folder>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
@@ -93,15 +95,15 @@
 				<field 
                                         name="list_order_media" 
                                         type="mediafullordering"
-					label="MOD_MEDIA_FIELD_ITEMORDERING_LABEL"
-					description="MOD_MEDIA_FIELD_ITEMORDERING_DESC"
+					label="MOD_MEDIA_FIELD_ORDERING_LABEL"
+					description="MOD_MEDIA_FIELD_ORDERING_DESC"
 					default="a.created DESC"
 				>                      
 				</field> 
 			</fieldset>
                         <fieldset 
                                 name="filtering"
-				label="MOD_MEDIA_FIELD_GROUP_FILTERING_LABEL"
+				label="MOD_MEDIA_FIELDSET_FILTERING_LABEL"
 			>
 				<field name="spacer_albumfiltering" label="MOD_MEDIA_SPACER_ALBUMFILTERING" type="spacer" />
 				<field 
@@ -147,8 +149,8 @@
                                         validate="integer"
                                         filter="integer"    
 				>
-					<option value="1">MOD_MEDIA_OPTION_INCLUDE_VALUE</option>
-					<option value="0">MOD_MEDIA_OPTION_EXCLUDE_VALUE</option>
+					<option value="1">MOD_MEDIA_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_OPTION_EXCLUSIVE_VALUE</option>
 				</field>
 				<field 
                                         name="levels" 
@@ -254,23 +256,8 @@
 			</fieldset>
 			<fieldset 
                                 name="display"
-				label="MOD_MEDIA_FIELD_GROUP_DISPLAY_LABEL"
+				label="MOD_MEDIA_FIELDSET_DISPLAY_LABEL"
 			>
-                                <field 
-                                        name="list_item_heading" 
-                                        type="list" 
-                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
-                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
-                                        default=""
-                                >
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                        <option value="1">JH1</option>
-                                        <option value="2">JH2</option>
-                                        <option value="3">JH3</option>
-                                        <option value="4">JH4</option>
-                                        <option value="5">JH5</option>
-                                        <option value="6">JH6</option>
-                                </field>
                                 <field
                                         name="list_columns"
                                         type="list"
@@ -285,45 +272,7 @@
                                         <option value="4">4</option>
                                         <option value="5">5</option>
                                         <option value="6">6</option>
-                                </field>
-                                <field 
-                                        name="list_link_titles" 
-                                        type="radio" 
-                                        label="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
-                                        description="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
-                                        class="btn-group btn-group-yesno"
-                                        default=""
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
-                                <field 
-                                        name="list_link_thumbnails" 
-                                        type="radio" 
-                                        label="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
-                                        description="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
-                                        class="btn-group btn-group-yesno"
-                                        default=""
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
-                                <field
-                                        name="list_title_truncate"
-                                        type="text"
-                                        label="MOD_MEDIA_FIELD_TRUNCATE_TITLE_LABEL"
-                                        description="MOD_MEDIA_FIELD_TRUNCATE_TITLE_DESC"
-                                        default=""
-                                />
-                                <field
-                                        name="list_desc_truncate"
-                                        type="text"
-                                        label="MOD_MEDIA_FIELD_TRUNCATE_DESC_LABEL"
-                                        description="MOD_MEDIA_FIELD_TRUNCATE_DESC_DESC"
-                                        default=""
-                                />
+                                </field>                            
                                 <field
                                         name="list_meta_title"
                                         type="radio"
@@ -359,12 +308,36 @@
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>   
+                                </field>  
+                                <field
+                                        name="list_meta_duration"
+                                        type="radio"
+                                        label="MOD_MEDIA_FIELD_SHOW_DURATION_LABEL"
+                                        description="MOD_MEDIA_FIELD_SHOW_DURATION_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default=""
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>                                 
                                 <field
                                         name="list_meta_description"
                                         type="radio"
                                         label="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_LABEL"
                                         description="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default=""
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field> 
+                                <field
+                                        name="list_meta_category"
+                                        type="radio"
+                                        label="MOD_MEDIA_FIELD_SHOW_CATEGORY_LABEL"
+                                        description="MOD_MEDIA_FIELD_SHOW_CATEGORY_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -419,7 +392,60 @@
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>                                                                               
+                                <field 
+                                        name="list_item_heading" 
+                                        type="list" 
+                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
+                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
+                                        default=""
+                                >
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                        <option value="1">JH1</option>
+                                        <option value="2">JH2</option>
+                                        <option value="3">JH3</option>
+                                        <option value="4">JH4</option>
+                                        <option value="5">JH5</option>
+                                        <option value="6">JH6</option>
                                 </field>
+                                <field 
+                                        name="list_link_titles" 
+                                        type="radio" 
+                                        label="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
+                                        description="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
+                                        class="btn-group btn-group-yesno"
+                                        default=""
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>
+                                <field 
+                                        name="list_link_thumbnails" 
+                                        type="radio" 
+                                        label="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
+                                        description="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
+                                        class="btn-group btn-group-yesno"
+                                        default=""
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>
+                                <field
+                                        name="list_title_truncate"
+                                        type="text"
+                                        label="MOD_MEDIA_FIELD_TRUNCATE_TITLE_LABEL"
+                                        description="MOD_MEDIA_FIELD_TRUNCATE_TITLE_DESC"
+                                        default=""
+                                />
+                                <field
+                                        name="list_desc_truncate"
+                                        type="text"
+                                        label="MOD_MEDIA_FIELD_TRUNCATE_DESC_LABEL"
+                                        description="MOD_MEDIA_FIELD_TRUNCATE_DESC_DESC"
+                                        default=""
+                                />
 				<field
 					name="show_more_link"
 					type="menuitem"
@@ -438,6 +464,92 @@
                                         default=""
                                 />
 			</fieldset>
+                        <fieldset 
+                                name="carousel"
+				label="MOD_MEDIA_FIELDSET_CAROUSEL_LABEL"
+                                description="MOD_MEDIA_FIELDSET_CAROUSEL_DESC"
+                        >		
+				<field
+					name="slidesToShow"
+					type="text"
+					label="MOD_MEDIA_SLIDESTOSHOW_LABEL"
+					description="MOD_MEDIA_SLIDESTOSHOW_DESC"                                        
+					default="4"
+                                        filter="integer"
+                                />
+				<field
+					name="slidesToScroll"
+					type="text"
+					label="MOD_MEDIA_SLIDESTOSCROLL_LABEL"
+					description="MOD_MEDIA_SLIDESTOSCROLL_DESC"                                        
+					default="1"
+                                        filter="integer"
+                                />
+				<field
+					name="autoplay"
+					type="radio"
+					label="MOD_MEDIA_AUTOPLAY_LABEL"
+					description="MOD_MEDIA_AUTOPLAY_DESC"                                        
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+					filter="integer"                                     
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field> 
+				<field
+					name="autoplaySpeed"
+					type="text"
+					label="MOD_MEDIA_AUTOPLAY_SPEED_LABEL"
+					description="MOD_MEDIA_AUTOPLAY_SPEED_DESC"                                        
+					default="3000"
+                                        filter="integer"
+                                />                  
+				<field
+					name="arrows"
+					type="radio"
+					label="MOD_MEDIA_ARROWS_LABEL"
+					description="MOD_MEDIA_ARROWS_DESC"                                        
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+					filter="integer"                                     
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+				<field
+					name="dots"
+					type="radio"
+					label="MOD_MEDIA_DOTS_LABEL"
+					description="MOD_MEDIA_DOTS_DESC"                                        
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+					filter="integer"                                     
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+				<field
+					name="infinite"
+					type="radio"
+					label="MOD_MEDIA_INFINITE_LABEL"
+					description="MOD_MEDIA_INFINITE_DESC"                                        
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+					filter="integer"                                     
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+				<field
+					name="speed"
+					type="text"
+					label="MOD_MEDIA_SPEED_LABEL"
+					description="MOD_MEDIA_SPEED_DESC"                                        
+					default="300"
+                                        filter="integer"
+                                />	                          
+			</fieldset>                        
 			<fieldset name="advanced">
 				<field 
                                         name="layout" 
@@ -455,9 +567,9 @@
 				<field 
                                         name="owncache" 
                                         type="list" 
-                                        default="1"
 					label="COM_MODULES_FIELD_CACHING_LABEL" 
                                         description="COM_MODULES_FIELD_CACHING_DESC" 
+                                        default="1"
                                 >
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
@@ -465,9 +577,9 @@
 				<field 
                                         name="cache_time" 
                                         type="text" 
-                                        default="900"
 					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
                                         description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                        default="900"
                                 />
 			</fieldset>
 		</fields>
