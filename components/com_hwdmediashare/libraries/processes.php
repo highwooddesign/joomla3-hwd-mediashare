@@ -776,9 +776,9 @@ class hwdMediaShareProcesses extends JObject
 	 */
 	public function process20($process)
 	{
-                hwdMediaShareFactory::load('videos');
-                $HWDvideos = hwdMediaShareVideos::getInstance();
-                return $HWDvideos->injectMetaData($process);
+                $log = $this->resetLog($process);
+                $log->status = 4;
+                return $log;
 	} 
         
         /**
@@ -791,9 +791,9 @@ class hwdMediaShareProcesses extends JObject
 	 */
 	public function process21($process)
 	{
-                hwdMediaShareFactory::load('videos');
-                $HWDvideos = hwdMediaShareVideos::getInstance();
-                return $HWDvideos->checkMoovAtoms($process);
+                $log = $this->resetLog($process);
+                $log->status = 4;
+                return $log;
 	} 
         
 	/**
