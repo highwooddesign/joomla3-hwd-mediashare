@@ -89,7 +89,7 @@ window.addEvent( 'domready', function() {
                         }
 
                         try {
-                                if(object.complete)
+                                if(object['data']['complete'])
                                 {
                                         $('ajax-process-error').set('html', '');
                                         $('ajax-process-result').set('html', '<span class="label label-success">$textComplete</span>');       
