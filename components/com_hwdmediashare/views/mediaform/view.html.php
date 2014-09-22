@@ -43,9 +43,11 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
@@ -102,6 +104,22 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 if ($app->input->get('view', '', 'word') == 'mediaform')
                 {
                         $this->params->set('page_heading', JText::sprintf('COM_HWDMS_EDIT_MEDIAX', $this->escape($this->item->title)));
+                }
+                elseif ($app->input->get('task', '', 'word') == 'share')
+                {
+                        $this->params->set('page_heading', JText::_('COM_HWDMS_SHARE_THIS_MEDIA'));
+                        JHtml::_('jquery.framework');
+                        
+                        // Add script to select input when focused.
+                        $this->document->addScriptDeclaration('
+                            
+                        (function($){
+                          $(document).ready(function() {
+                            $("input:text").focus(function () { $(this).select(); } ).mouseup(function (e) {e.preventDefault(); });
+                          });
+                        })(jQuery);
+                        
+                        ');         
                 }
                 else
                 {
@@ -177,9 +195,11 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
@@ -220,9 +240,11 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
@@ -271,9 +293,11 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
@@ -321,9 +345,11 @@ class hwdMediaShareViewMediaForm extends JViewLegacy
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
