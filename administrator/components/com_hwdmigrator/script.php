@@ -15,50 +15,62 @@ class com_hwdMigratorInstallerScript
         /**
 	 * Method to install the component.
 	 *
-	 * @return void
+	 * @access	public
+         * @param       string      $parent     The class calling this method.
+         * @return      void
 	 */
-	function install($parent)
+	public function install($parent)
 	{
-		//echo '<p>' . JText::_('COM_HWDMIGRATOR_INSTALL_TEXT') . '</p>';
+		// echo '<p>' . JText::_('COM_HWDMIGRATOR_INSTALL_TEXT') . '</p>';
 	}
 
 	/**
 	 * Method to uninstall the component.
 	 *
-	 * @return void
+	 * @access	public
+         * @param       string      $parent     The class calling this method.
+         * @return      void
 	 */
-	function uninstall($parent)
+	public function uninstall($parent)
 	{
-		//echo '<p>' . JText::_('COM_HWDMIGRATOR_UNINSTALL_TEXT') . '</p>';
+                // echo '<p>' . JText::_('COM_HWDMIGRATOR_UNINSTALL_TEXT') . '</p>';
 	}
 
 	/**
 	 * Method to update the component.
 	 *
-	 * @return void
+	 * @access	public
+         * @param       string      $parent     The class calling this method.
+         * @return      void
 	 */
-	function update($parent)
+	public function update($parent)
 	{
-		//echo '<p>' . JText::_('COM_HWDMIGRATOR_UPDATE_TEXT') . '</p>';
+		// echo '<p>' . JText::_('COM_HWDMIGRATOR_UPDATE_TEXT') . '</p>';
 	}
 
 	/**
 	 * Method to run before an install/update/uninstall method.
 	 *
-	 * @return void
+	 * @access	public
+         * @param       string      $type       The type of change (install, update or discover_install).
+         * @param       string      $parent     The class calling this method.
+         * @return      void
 	 */
-	function preflight($type, $parent)
+	public function preflight($type, $parent)
 	{
-		//echo '<p>' . JText::_('COM_HWDMIGRATOR_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+		// echo '<p>' . JText::_('COM_HWDMIGRATOR_PREFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 
 	/**
 	 * Method to run after an install/update/uninstall method.
 	 *
-	 * @return void
+	 * @access	public
+         * @param       string      $type       The type of change (install, update or discover_install).
+         * @param       string      $parent     The class calling this method.
+         * @return      void
 	 */
-	function postflight($type, $parent)
+	public function postflight($type, $parent)
 	{
-		//echo '<p>' . JText::_('COM_HWDMIGRATOR_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+		// echo '<p>' . JText::_('COM_HWDMIGRATOR_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 	}
 }
