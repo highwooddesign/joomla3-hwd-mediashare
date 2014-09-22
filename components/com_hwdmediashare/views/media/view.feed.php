@@ -31,17 +31,21 @@ class hwdMediaShareViewMedia extends JViewLegacy
                 $this->items = $this->get('Items');
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
-                
+
                 // Register classes.
                 JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
-                //hwdMediaShareFactory::load('renderer.xml');
+                
+                hwdMediaShareFactory::load('renderer.mrss');
                 //hwdMediaShareFactory::load('renderer.rssgeo');
+                //hwdMediaShareFactory::load('renderer.xml');
                 //hwdMediaShareFactory::load('renderer.xspf');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
@@ -60,75 +64,44 @@ class hwdMediaShareViewMedia extends JViewLegacy
                         // Load individual feed creator class.
 			$feed = new JFeedItem();
                         
-                        // Define the feed elements (RSS).
+                        // Having access to the original media object in the renderer may be useful.
+			$feed->_media		= $item;
+                        
+                        // Define standard feed attributes.
 			$feed->title		= $title;
 			$feed->link		= JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($item->slug));
 			$feed->description	= JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false);
 			$feed->date		= date('r', strtotime($item->created));
 			$feed->author		= $item->author;
-			$feed->image		= JRoute::_(hwdMediaShareDownloads::thumbnail($item));
+			$feed->image		= JRoute::_(hwdMediaShareThumbnails::thumbnail($item));
                             
-                        // Define additional elements (GEO-RSS).                        
-			$feed->location		= $item->location;
+                        // Define specific feed attributes.
 
-                        // Define content specific elements.
+                        // RSS.
                         switch ($item->type) 
                         {
                                 case 1: // Local
-                                        switch ($item->media_type) 
+                                        hwdMediaShareFactory::load('media');
+                                        if ($original = hwdMediaShareMedia::getOriginal($item))
                                         {
-                                                case 1: // Audio
-                                                        hwdMediaShareFactory::load('audio');
-                                                        if ($mp3 = hwdMediaShareAudio::getMp3($item))
-                                                        {
-                                                                $enclosure = new JFeedEnclosure;
-                                                                $enclosure->url = $mp3->url;
-                                                                $enclosure->length = $mp3->size;
-                                                                $enclosure->type = $mp3->type;
-                                                                $feed->setEnclosure($enclosure);
-                                                        }
-                                                break;
-                                                case 3: // Image
-                                                        hwdMediaShareFactory::load('images');
-                                                        if ($jpg = hwdMediaShareImages::getJpg($item))
-                                                        {
-                                                                $enclosure = new JFeedEnclosure;
-                                                                $enclosure->url = $jpg->url;
-                                                                $enclosure->length = $jpg->size;
-                                                                $enclosure->type = $jpg->type;
-                                                                $feed->setEnclosure($enclosure);
-                                                        }
-                                                break;                                                
-                                                case 4: // Video
-                                                        hwdMediaShareFactory::load('videos');
-                                                        if ($mp4 = hwdMediaShareVideos::getMp4($item))
-                                                        {
-                                                                $feed->enclosure->url = $mp4;
-                                                                $feed->enclosure->length = "";
-                                                                $feed->enclosure->type = "video/mp4";
-                                                        }
-                                                        elseif ($flv = hwdMediaShareVideos::getFlv($item))
-                                                        {
-                                                                $feed->enclosure->url = $flv;
-                                                                $feed->enclosure->length = "";
-                                                                $feed->enclosure->type = "video/flv";
-                                                        }
-                                                break;
+                                                $enclosure = new JFeedEnclosure;
+                                                $enclosure->url = $original->url;
+                                                $enclosure->length = $original->size;
+                                                $enclosure->type = $original->type;
+                                                $feed->setEnclosure($enclosure);
                                         }
                                 break;
                         }
+                        
+                        // GEO-RSS.                        
+			$feed->location		= $item->location;
 
-                        // If no enclosure set, then add original.
-			if ($feed->enclosure == null && $original = hwdMediaShareMedia::getOriginal($item))
-			{
-                                $enclosure = new JFeedEnclosure;
-                                $enclosure->url = $original->url;
-                                $enclosure->length = $original->size;
-                                $enclosure->type = $original->type;
-                                $feed->setEnclosure($enclosure);
-			}
+                        // MRSS.
+                        hwdMediaShareFactory::load('files');
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $feed->mediafiles = $HWDfiles->getMediaFiles($item);                               
                                 
-			// Add feed item into rss array.
+			// Add item into feed array.
 			$this->document->addItem($feed);
 		}
 	}
