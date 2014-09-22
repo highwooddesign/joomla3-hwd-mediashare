@@ -14,8 +14,13 @@ class HwdMigratorControllerMigrate extends JControllerAdmin
 {
         /**
 	 * Proxy for getModel.
-	 * @return	void
-	 */ 
+	 *
+	 * @access  public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
+	 */
 	public function getModel($name = 'Migrate', $prefix = 'hwdMigratorModel', $config = array())
 	{
                 $model = parent::getModel($name, $prefix, array('ignore_request' => true));
@@ -24,9 +29,11 @@ class HwdMigratorControllerMigrate extends JControllerAdmin
         
         /**
 	 * Method to run the maintenance.
-	 * @return	void
+	 *
+	 * @access	public
+         * @return      void
 	 */
-        function run()
+        public function run()
         {
 		/*
 		 * Note: we don't do a token check as we're fetching information
