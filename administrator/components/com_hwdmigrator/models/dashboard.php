@@ -10,314 +10,470 @@
 
 defined('_JEXEC') or die;
 
-class hwdMigratorModelDashboard extends JModelAdmin
+class hwdMigratorModelDashboard extends JModelLegacy
 {
-	public function getVideoItems($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdvidsvideos')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdvidsvideos')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('1')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getVideoCategories($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdvidscategories')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdvidscategories')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('2')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getVideoGroups($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdvidsgroups')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdvidsgroups')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('3')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getVideoPlaylists($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdvidsplaylists')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdvidsplaylists')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('4')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getPhotoItems($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdpsphotos')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdpsphotos')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('5')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getPhotoCategories($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdpscategories')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdpscategories')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('6')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getPhotoGroups($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdpsgroups')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdpsgroups')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('7')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	public function getPhotoAlbums($pk = null)
-	{
-                $app = JFactory::getApplication();
-                $db = JFactory::getDBO();
-
-                $retval = new stdClass;
-                $retval->count = "0";
-                $retval->migrated = "0";
-
-                $db->setQuery( 'SHOW TABLES' );
-                $tables = $db->loadColumn();
-
-                foreach ($tables as $table)
-                {
-                        if ($table == $app->getCfg( 'dbprefix' ).'hwdpsalbums')
-                        {
-                                $query = "
-                                    SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdpsalbums')."
-                                ";
-                                $db->setQuery($query);
-                                $retval->count = $db->loadResult();
-                        }
-                }
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('8')."
-                    AND ".$db->quoteName('status')." = ".$db->quote('1')."
-                ";
-                $db->setQuery($query);
-                $retval->migrated = $db->loadResult();
-
-                return $retval;
-	}
-
-	/**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
+        /**
+	 * Method to count the video items for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
 	 */
-	public function getForm($data = array(), $loadData = true)
+	public function getVideoItems()
 	{
-		parent::getForm($data, $loadData);
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdvidsvideos')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdvidsvideos');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(1))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the video categories for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getVideoCategories()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdvidscategories')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdvidscategories');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(2))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the video groups for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getVideoGroups()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdvidsgroups')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdvidsgroups');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(3))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the video playlists for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getVideoPlaylists()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdvidsplaylists')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdvidsplaylists');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(4))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the photo items for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getPhotoItems()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdpsphotos')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdpsphotos');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(5))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the photo categories for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getPhotoCategories()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdpscategories')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdpscategories');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(6))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the photo groups for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getPhotoGroups()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdpsgroups')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdpsgroups');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(7))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
+	}
+
+        /**
+	 * Method to count the photo albums for migration.
+         * 
+         * @access  public
+	 * @return  mixed   The integer count on success, false on failure.
+	 */
+	public function getPhotoAlbums()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDBO();
+
+                $retval = new stdClass;
+                $retval->count = "0";
+                $retval->migrated = "0";
+
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+
+                foreach ($tables as $table)
+                {
+                        if ($table == $app->getCfg('dbprefix').'hwdpsalbums')
+                        {
+                                $query = $db->getQuery(true)
+                                        ->select('COUNT(*)')
+                                        ->from('#__hwdpsalbums');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $retval->count = $db->loadResult();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
+                        }
+                }
+
+                $query = $db->getQuery(true)
+                        ->select('COUNT(*)')
+                        ->from('#__hwdms_migrator')
+                        ->where($db->quoteName('element_type') . ' = ' . $db->quote(8))
+                        ->where($db->quoteName('status') . ' = ' . $db->quote(1));
+                try
+                {
+                        $db->setQuery($query);
+                        $retval->migrated = $db->loadResult();
+                }
+                catch (RuntimeException $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;                            
+                }
+                
+                return $retval;
 	}
 }
+
