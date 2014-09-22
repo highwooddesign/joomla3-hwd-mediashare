@@ -44,9 +44,9 @@ class hwdMediaShareViewMedia extends JViewLegacy
 		hwdMediaShareFactory::load('utilities');
                 
                 hwdMediaShareFactory::load('renderer.mrss');
-                //hwdMediaShareFactory::load('renderer.rssgeo');
-                //hwdMediaShareFactory::load('renderer.xml');
-                //hwdMediaShareFactory::load('renderer.xspf');
+                hwdMediaShareFactory::load('renderer.rssgeo');
+                hwdMediaShareFactory::load('renderer.xml');
+                hwdMediaShareFactory::load('renderer.xspf');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
                 $this->return = base64_encode(JFactory::getURI()->toString());
