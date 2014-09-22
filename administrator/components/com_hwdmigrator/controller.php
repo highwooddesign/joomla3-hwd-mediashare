@@ -13,14 +13,14 @@ defined('_JEXEC') or die;
 class hwdMigratorController extends JControllerLegacy
 {
 	/**
-	 * Method to display a view.
+	 * Proxy view method for MVC based architecture.
 	 *
-	 * @param   boolean         If true, the view output will be cached
-	 * @param   array           An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
-	 *
-	 * @return  JController     This object to support chaining.
+	 * @access	public
+	 * @param       boolean     $cachable       If true, the view output will be cached
+	 * @param       array       $urlparams      An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @return      object      A JControllerLegacy object to support chaining.
 	 */
-	function display($cachable = false, $urlparams = array())
+	public function display($cachable = false, $urlparams = array())
 	{
 		// Set the default view name.
 		$view = $this->input->get('view', 'dashboard');
