@@ -41,7 +41,7 @@ class hwdMediaShareControllerProcess extends JControllerForm
 	 * @access	public
          * @return      void
 	 */
-        function run()
+        public function run()
         {
 		// Check for request forgeries.
 		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));

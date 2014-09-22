@@ -33,7 +33,7 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy
 	 * @access	public
          * @return      void
 	 */
-        function run()
+        public function run()
         {
 		/*
 		 * Note: we don't do a token check as we're fetching information
