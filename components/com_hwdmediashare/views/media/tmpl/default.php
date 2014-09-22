@@ -16,12 +16,14 @@ defined('_JEXEC') or die;
     <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
     <!-- Media Header -->
     <div class="media-header">
-      <h2 class="media-media-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php if ($this->params->get('list_page_title') != '0') :?>
+        <h2 class="media-media-title"><?php echo $this->escape($this->params->get('page_heading')); ?></h2>
+      <?php endif; ?>         
       <!-- Buttons -->
       <div class="btn-group pull-right"> 
-        <?php if ($this->state->get('media.show_featured') == 'only'): ?>
+        <?php if ($this->params->get('list_feature_button') != '0' && $this->state->get('media.show_featured') == 'only'): ?>
           <a title="<?php echo JText::_('COM_HWDMS_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getMediaRoute(array('show_featured' => 'show'))); ?>" class="btn btn-info active"><?php echo JText::_('COM_HWDMS_FEATURED'); ?></a>
-        <?php else: ?>  
+        <?php elseif ($this->params->get('list_feature_button') != '0'): ?>  
           <a title="<?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getMediaRoute(array('show_featured' => 'only'))); ?>" class="btn"><?php echo JText::_('COM_HWDMS_SHOW_FEATURED'); ?></a>
         <?php endif; ?>  
         <?php if ($this->params->get('list_details_button') != '0') : ?>
