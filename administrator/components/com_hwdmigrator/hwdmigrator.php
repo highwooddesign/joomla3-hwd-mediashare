@@ -16,10 +16,7 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_hwdmigrator'))
 	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
 }
 
-// Require helper file.
-JLoader::register('hwdMigratorHelper', dirname(__FILE__).'/helpers/hwdmigrator.php');
-
-// Get an instance of the controller prefixed by hwdMediaShare.
+// Get an instance of the controller.
 $controller = JControllerLegacy::getInstance('hwdMigrator');
 
 // Perform the task.
