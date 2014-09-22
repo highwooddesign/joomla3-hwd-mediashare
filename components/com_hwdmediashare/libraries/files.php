@@ -635,5 +635,40 @@ class hwdMediaShareFiles extends JObject
                 }
             
                 return true;
-        }        
+        } 
+        
+	/**
+	 * Method to check if a file has been generated and return file data.
+         * 
+         * @access  public
+         * @static
+         * @param   object  $item      The media item.
+         * @param   object  $fileType  The type of file.
+         * @return  mixed   The mp3 file object, false on fail.
+	 */
+	public static function getFileData($item, $fileType)
+	{
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('documents');
+                $folders = hwdMediaShareFiles::getFolders($item->key);
+                $filename = hwdMediaShareFiles::getFilename($item->key, $fileType);
+                $ext = hwdMediaShareFiles::getExtension($item, $fileType);
+                $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
+ 
+                if (file_exists($path))
+                {
+                        // Create file object.
+                        $file = new JObject;
+                        $file->local = true;
+                        $file->path = $path;
+                        $file->url = hwdMediaShareDownloads::url($item, $fileType);
+                        $file->size = filesize($path);
+                        $file->ext = $ext;
+                        $file->type = hwdMediaShareDocuments::getContentType($ext);
+                  
+                        return $file;
+                }
+
+                return false;
+	}         
 }
