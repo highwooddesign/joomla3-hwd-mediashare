@@ -58,10 +58,9 @@ class hwdMediaShareViewUpload extends JViewLegacy
                         $app->redirect( $this->config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($this->config->get('no_access_redirect')) : hwdMediaShareHelperRoute::getMediaRoute() );
                 }
                 
-                // Register classes.
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
+                JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
                 
                 // Import HWD libraries.                
                 hwdMediaShareFactory::load('activities');
@@ -76,6 +75,12 @@ class hwdMediaShareViewUpload extends JViewLegacy
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
                 $this->return = base64_encode(JFactory::getURI()->toString());
 
+                // Check upload limits.
+                if (!hwdMediaShareUpload::checkLimits())
+                {
+                        $app->redirect(hwdMediaShareHelperRoute::getMyMediaRoute());   
+                }
+                
 		// Determine if we need to show the form.
 		if ($this->config->get('upload_workflow') == 0 && $this->show_form && $this->method != 'remote') 
 		{
@@ -141,11 +146,7 @@ class hwdMediaShareViewUpload extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
-                JHtml::_('bootstrap.framework');
-                $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                JHtml::_('hwdhead.core', $this->params);
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
