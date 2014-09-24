@@ -45,7 +45,8 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
                 $this->registerTask('unfeature', 'feature');
                 $this->registerTask('unapprove', 'approve');
                 $this->registerTask('dislike', 'like');
-                
+                $this->registerTask('unsubscribe', 'subscribe');
+
 		// Check if the cid array exists, otherwise populate with the id.
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
                 $id = JFactory::getApplication()->input->get('id', 0, 'int');
@@ -204,7 +205,7 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 	}
 
 	/**
-	 * Method to subscribe to a single channel.
+	 * Method to subscribe/unsubscribe to a single channel.
 	 *
 	 * @access	public
          * @return      void
@@ -217,9 +218,14 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 		// Get items to subscribe from the request.
 		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
 
+		// Initialise variables.
+		$values	= array('subscribe' => 'subscribe', 'unsubscribe' => 'unsubscribe');
+		$task	= $this->getTask();
+		$value	= JArrayHelper::getValue($values, $task, 'subscribe', 'word');
+
 		if (!is_array($cid) || count($cid) < 1)
 		{
-			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');     
 		}
 		else
 		{
@@ -233,53 +239,9 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 			JArrayHelper::toInteger($cid);
 
 			// Subscribe to the channel.
-			if ($model->subscribe($cid))
+			if ($model->$value($cid))
 			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_CHANNELS_SUBSCRIBED', count($cid)));
-			}
-			else
-			{
-				$this->setMessage($model->getError());
-			}
-		}
-                
-                $return = base64_decode($this->input->get('return', null, 'base64'));
-		$this->setRedirect($return ? $return : JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
-	}
-
-	/**
-	 * Method to unsubscribe from a single channel.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function unsubscribe()
-	{
-		// Check for request forgeries.
-		JSession::checkToken('request') or die(JText::_('JINVALID_TOKEN'));
-
-		// Get items to unsubscribe from the request.
-		$cid = JFactory::getApplication()->input->get('cid', array(), 'array');
-
-		if (!is_array($cid) || count($cid) < 1)
-		{
-			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
-		}
-		else
-		{
-			// Get the model.
-                        hwdMediaShareFactory::load('subscriptions');
-                        $model = hwdMediaShareSubscriptions::getInstance();                     
-                        $model->elementType = 5;
-
-                        // Make sure the item ids are integers.
-			jimport('joomla.utilities.arrayhelper');
-			JArrayHelper::toInteger($cid);
-
-			// Unsubscribe from the channel.
-			if ($model->unsubscribe($cid))
-			{
-				$this->setMessage(JText::plural($this->text_prefix . '_N_CHANNELS_UNSUBSCRIBED', count($cid)));
+				$this->setMessage(JText::plural($this->text_prefix . '_N_CHANNELS_'.strtoupper($task).'D', count($cid)));
 			}
 			else
 			{
