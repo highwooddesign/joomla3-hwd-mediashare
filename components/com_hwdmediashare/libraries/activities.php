@@ -178,7 +178,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtmlString::truncate($item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
                                             return $return;
                                 }
                         break;
@@ -203,7 +203,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=album.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtmlString::truncate($item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
                                             return $return;
                                 }
                         break;  
@@ -230,7 +230,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=album.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtmlString::truncate($item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
                                             return $return;
                                 }
                         break; 
@@ -255,7 +255,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=playlist.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getPlaylistRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtmlString::truncate($item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
                                             return $return;
                                 }
                         break; 
