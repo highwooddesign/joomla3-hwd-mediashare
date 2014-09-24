@@ -29,6 +29,10 @@ class hwdMediaShareViewDiscover extends JViewLegacy
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
 
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
+                JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+                                
                 // Register classes.
                 JLoader::register('hwdMediaShareHelperModule', JPATH_COMPONENT . '/helpers/module.php');
 
@@ -62,11 +66,7 @@ class hwdMediaShareViewDiscover extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
-                JHtml::_('bootstrap.framework');
-                $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                JHtml::_('hwdhead.core', $this->params);
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
