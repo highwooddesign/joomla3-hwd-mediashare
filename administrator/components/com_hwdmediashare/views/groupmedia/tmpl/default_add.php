@@ -69,7 +69,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                         </div>
                                         <p><strong><a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>" target="_blank">
                                                 <?php echo $this->escape($item->title); ?></a></strong></p>
-                                        <p><?php echo $this->escape(JHtmlString::truncate($item->description, 160, true, false)); ?></p>
+                                        <p><?php echo $this->escape(JHtml::_('string.truncate', $item->description, 160, true, false)); ?></p>
 				</td>
 			</tr>
 		<?php endforeach; ?>
