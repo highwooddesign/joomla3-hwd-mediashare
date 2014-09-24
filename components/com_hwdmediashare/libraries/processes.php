@@ -338,7 +338,7 @@ class hwdMediaShareProcesses extends JObject
                 $input = $safeFilter->clean(trim($item->input));
                 $output = is_array($item->output) ? implode("\n", $item->output) : $item->output;
                 $output = $safeFilter->clean(trim($output));
-                $output = JHtmlString::truncate($output, 5120, false, false);
+                $output = JHtml::_('string.truncate', $output, 5120, false, false);
                 
                 // Define a new entry.
                 $post                       = array();
