@@ -37,7 +37,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                 <div class="pull-left">
                         <?php if ($canEdit) : ?>
                                 <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $item->element->id . '&return=' . $this->return); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
-                                        <?php echo $this->escape(JHtmlString::truncate($item->element->title, 20, false, false)); ?></a>
+                                        <?php echo $this->escape(JHtml::_('string.truncate', $item->element->title, 20, false, false)); ?></a>
                         <?php else : ?>
                                 <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->element->alias)); ?>"><?php echo $this->escape($item->element->title); ?></span>
                         <?php endif; ?>                             
