@@ -46,7 +46,7 @@ $class = ' class="first"';
       </div>
       <?php endif; ?>        
       <?php if ($this->params->get('list_meta_title') != '0') :?>
-        <span class="item-title<?php echo ($this->params->get('list_tooltip_location') > '1' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>">
+        <span class="item-title<?php echo ($this->params->get('list_tooltip_location') > '1' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>">
         <?php if ($this->params->get('list_link_titles') == 1) :?><a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($item->slug)); ?>"><?php endif; ?>
           <?php echo $this->escape($item->title); ?>
         <?php if ($this->params->get('list_link_titles') == 1) :?></a><?php endif; ?>
@@ -64,12 +64,12 @@ $class = ' class="first"';
           </div>
           <?php endif; ?>
           <?php if ($this->params->get('list_link_thumbnails') == 1) :?><a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($item->slug)); ?>"><?php endif; ?>
-             <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb <?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
+             <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb <?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
           <?php if ($this->params->get('list_link_thumbnails') == 1) :?></a><?php endif; ?>
           <?php endif; ?>
         </div>
         <?php if ($this->params->get('category_list_meta_category_desc') != '0') :?>
-          <?php echo $this->escape(JHtmlString::truncate(strip_tags($item->description), $this->params->get('list_desc_truncate'))); ?>
+          <?php echo $this->escape(JHtml::_('string.truncate', strip_tags($item->description), $this->params->get('list_desc_truncate'))); ?>
         <?php endif; ?>
       </div>
       <!-- Item Meta -->
