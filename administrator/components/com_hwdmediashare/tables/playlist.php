@@ -79,6 +79,9 @@ class hwdMediaShareTablePlaylist extends JTable
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
+                // Load cache object.
+                $cache = JFactory::getCache('com_hwdmediashare');
+                
 		if ($this->id)
 		{
 			// Existing item, so set modified details.
@@ -93,6 +96,9 @@ class hwdMediaShareTablePlaylist extends JTable
                                 unset($this->featured);
                                 unset($this->access);
                         } 
+                        
+                        // Clean cache.
+                        $cache->clean('com_hwdmediashare');
 		}
 		else
 		{

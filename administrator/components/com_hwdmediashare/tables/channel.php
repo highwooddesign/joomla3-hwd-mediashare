@@ -79,6 +79,9 @@ class hwdMediaShareTableChannel extends JTable
                 // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
+                                
+                // Load cache object.
+                $cache = JFactory::getCache('com_hwdmediashare');
                 
                 // We don't want to store a channel that doesn't have an ID.
 		if (!$this->id)
@@ -100,7 +103,10 @@ class hwdMediaShareTableChannel extends JTable
                                 unset($this->status);
                                 unset($this->featured);
                                 unset($this->access);
-                        }                         
+                        }
+                        
+                        // Clean cache.
+                        $cache->clean('com_hwdmediashare');
 		}
 		else
 		{

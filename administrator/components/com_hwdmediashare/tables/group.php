@@ -78,7 +78,10 @@ class hwdMediaShareTableGroup extends JTable
                 // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-
+                
+                // Load cache object.
+                $cache = JFactory::getCache('com_hwdmediashare');
+                
 		if ($this->id)
 		{
 			// Existing item, so set modified details.
@@ -92,7 +95,10 @@ class hwdMediaShareTableGroup extends JTable
                                 unset($this->status);
                                 unset($this->featured);
                                 unset($this->access);
-                        }                         
+                        }
+                        
+                        // Clean cache.
+                        $cache->clean('com_hwdmediashare');             
 		}
 		else
 		{
