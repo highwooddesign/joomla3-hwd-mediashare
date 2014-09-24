@@ -16,8 +16,8 @@ JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php')
 
 // Initialise variables.
 $share_url            = hwdMediaShareMedia::getPermalink($this->item->id);
-$share_title          = JHtmlString::truncate($this->item->title, 100, true, false);
-$share_description    = JHtmlString::truncate($this->item->description, 500, true, false);
+$share_title          = JHtml::_('string.truncate', $this->item->title, 100, true, false);
+$share_description    = JHtml::_('string.truncate', $this->item->description, 500, true, false);
 $share_thumbnail      = JRoute::_(hwdMediaShareThumbnails::thumbnail($this->item));
 $share_thumbnail      = strpos($share_thumbnail, 'http') === 0 ? $share_thumbnail : rtrim(JURI::base(), '/') . $share_thumbnail;
 $share_permalink      = hwdMediaShareMedia::getPermalink($this->item->id);
