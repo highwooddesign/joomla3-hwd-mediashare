@@ -31,7 +31,7 @@ JLoader::register('ContentHelperRoute', JPATH_ROOT.'/components/com_content/help
     <div class="btn-toolbar">
       <div class="btn-group">
         <button type="button" class="btn btn-primary" onclick="Joomla.submitbutton('addmedia.accepttos')">
-          <span class="icon-ok"></span>&#160;<?php echo JText::_('COM_HWDMS_BUTTON_ACCEPT') ?>
+          <span class="icon-checkmark"></span>&#160;<?php echo JText::_('COM_HWDMS_BUTTON_ACCEPT') ?>
         </button>
       </div>
       <div class="btn-group">
