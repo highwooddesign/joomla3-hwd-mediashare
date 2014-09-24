@@ -40,7 +40,7 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.category.'.$ite
       </div>
       <?php endif; ?>
       <?php if ($this->params->get('list_link_thumbnails') == 1) :?><a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($item->slug)); ?>"><?php endif; ?>
-         <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb<?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
+         <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb<?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
       <?php if ($this->params->get('list_link_thumbnails') == 1) :?></a><?php endif; ?>
       <?php endif; ?>
     </div>
@@ -65,9 +65,9 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.category.'.$ite
     <?php endif; ?>
     <!-- Title -->
     <?php if ($this->params->get('list_meta_title') != '0') :?>
-      <h<?php echo $this->params->get('list_item_heading'); ?> class="contentheading<?php echo ($this->params->get('list_tooltip_location') > '1' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>">
+      <h<?php echo $this->params->get('list_item_heading'); ?> class="contentheading<?php echo ($this->params->get('list_tooltip_location') > '1' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>">
         <?php if ($this->params->get('list_link_titles') == 1) :?><a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($item->slug)); ?>"><?php endif; ?>
-          <?php echo $this->escape(JHtmlString::truncate($item->title, $this->params->get('list_title_truncate'))); ?> 
+          <?php echo $this->escape(JHtml::_('string.truncate', $item->title, $this->params->get('list_title_truncate'))); ?> 
         <?php if ($this->params->get('list_link_titles') == 1) :?></a><?php endif; ?>
       </h<?php echo $this->params->get('list_item_heading'); ?>>
     <?php endif; ?>        
@@ -82,7 +82,7 @@ $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.category.'.$ite
     <dl class="media-info">
       <dt class="media-info-term"><?php echo JText::_('COM_HWDMS_DETAILS'); ?> </dt>
       <?php if ($this->params->get('list_meta_description') != '0') :?>
-        <dd class="media-info-description"><?php echo $this->escape(JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false)); ?></dd>
+        <dd class="media-info-description"><?php echo $this->escape(JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false)); ?></dd>
       <?php endif; ?>
       <div class="clearfix"></div>       
       <?php if ($this->params->get('category_list_meta_media_count') != '0') :?>
