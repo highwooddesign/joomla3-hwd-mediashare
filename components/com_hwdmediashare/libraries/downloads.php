@@ -275,7 +275,7 @@ class hwdMediaShareDownloads extends JObject
                 $config = $hwdms->getConfig();
 
                 // Load cache object.
-                $cache = JFactory::getCache();
+                $cache = JFactory::getCache('com_hwdmediashare');
                 $cache->setCaching(1);
                 
                 if (($config->get('protect_media') == 1 || $download) && $media->type == 1)
