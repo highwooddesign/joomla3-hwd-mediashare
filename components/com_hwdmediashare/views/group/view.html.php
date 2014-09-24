@@ -62,10 +62,9 @@ class hwdMediaShareViewGroup extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
 
-                // Register classes.
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
+                JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
                 
                 // Import HWD libraries.                
                 hwdMediaShareFactory::load('activities');
@@ -113,11 +112,8 @@ class hwdMediaShareViewGroup extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
-                JHtml::_('bootstrap.framework');
-                $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                JHtml::_('hwdhead.core', $this->params);
+
                 if ($this->params->get('groupitem_media_map') != 0) $this->document->addScript('http://maps.googleapis.com/maps/api/js?key='.$this->params->get('google_maps_api_v3_key').'&sensor=false');
 
 		// Define the page title and headings. 
@@ -181,7 +177,7 @@ class hwdMediaShareViewGroup extends JViewLegacy
 		}
                 elseif ($this->group->description)
                 {                        
-			$this->document->setDescription($this->escape(JHtmlString::truncate($this->group->description, 160, true, false)));   
+			$this->document->setDescription($this->escape(JHtml::_('string.truncate', $this->group->description, 160, true, false)));   
                 }                 
                 elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'group' && (int) @$menu->query['id'] == $this->group->id && $this->params->get('menu-meta_description'))
                 {
