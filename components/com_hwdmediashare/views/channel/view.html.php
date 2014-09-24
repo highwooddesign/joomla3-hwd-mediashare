@@ -96,11 +96,10 @@ class hwdMediaShareViewChannel extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->filterForm = $this->get('FilterForm');
 
-                // Load libraries.
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
+                JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+                
                 // Import HWD libraries.  
                 hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
@@ -108,7 +107,6 @@ class hwdMediaShareViewChannel extends JViewLegacy
                 hwdMediaShareFactory::load('media');
                 hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
-                hwdMediaShareHelperNavigation::setJavascriptVars();
 
                 $this->channel->numalbums = $this->get('numAlbums');
                 $this->channel->numfavourites = $this->get('numFavourites');
@@ -152,11 +150,7 @@ class hwdMediaShareViewChannel extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
-                JHtml::_('bootstrap.framework');
-                $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                JHtml::_('hwdhead.core', $this->params);
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
@@ -219,7 +213,7 @@ class hwdMediaShareViewChannel extends JViewLegacy
 		}
                 elseif ($this->channel->description)
                 {                        
-			$this->document->setDescription($this->escape(JHtmlString::truncate($this->channel->description, 160, true, false)));   
+			$this->document->setDescription($this->escape(JHtml::_('string.truncate', $this->channel->description, 160, true, false)));   
                 }                 
                 elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'channel' && (int) @$menu->query['id'] == $this->channel->id && $this->params->get('menu-meta_description'))
                 {
