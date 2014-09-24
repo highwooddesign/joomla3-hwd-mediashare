@@ -200,7 +200,7 @@ JHtml::_('formbehavior.chosen', 'select');
                                 <p class="small"><?php echo $this->jformreg->get('alias'); ?></p>
                         <?php endif; ?>                        
                         <?php if ($this->jformreg->get('description')): ?>
-                                <p><?php echo JHtmlString::truncate($this->jformreg->get('description'), 160, false, false); ?></p>
+                                <p><?php echo JHtml::_('string.truncate', $this->jformreg->get('description'), 160, false, false); ?></p>
                         <?php endif; ?>  
                         <?php echo JLayoutHelper::render('joomla.edit.global', $this); ?>  
                 </div>
