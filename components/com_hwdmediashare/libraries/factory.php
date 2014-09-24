@@ -97,16 +97,17 @@ class hwdMediaShareFactory extends JObject
          *
          * @access  public
          * @static
-         * @param   object  $params Additional parameters to merge with the configuration.
+         * @param   object   $params  Additional parameters to merge with the configuration.
+         * @param   boolean  $reset   Flag to reset the config to the default values.
          * @return  void
 	 */
-        public function getConfig($params = null)
+        public function getConfig($params = null, $reset = false)
         {
                 // Initialise variables.            
                 $app = JFactory::getApplication();
                 
                 // Check if the config is already loaded.
-                if(!$this->_config)
+                if(!$this->_config || $reset)
 		{
                         jimport('joomla.filesystem.file');
                         $ini	= JPATH_ROOT . '/administrator/components/com_hwdmediashare/config.ini';
