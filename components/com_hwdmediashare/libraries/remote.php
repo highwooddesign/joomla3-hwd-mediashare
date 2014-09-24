@@ -628,7 +628,7 @@ class hwdMediaShareRemote extends JObject
                 $source = $this->_url;
                 $source = (string)str_replace(array("\r", "\r\n", "\n"), '', $source);
                 $source = $noHtmlFilter->clean($source);
-                $source = JHtmlString::truncate($source, 255);
+                $source = JHtml::_('string.truncate', $source, 255);
                 $source = trim($source);
 
                 hwdMediaShareFactory::load('utilities');
@@ -1097,7 +1097,7 @@ class hwdMediaShareRemote extends JObject
 
                 $string = (string) str_replace(array("\r", "\r\n", "\n"), '', $string);
                 $string = $noHtmlFilter->clean($string);
-                $string = JHtmlString::truncate($string, $truncate);
+                $string = JHtml::_('string.truncate', $string, $truncate);
                 $string = trim($string);
                                 
                 if (!empty($string))
