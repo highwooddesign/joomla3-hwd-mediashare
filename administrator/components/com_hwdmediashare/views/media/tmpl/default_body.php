@@ -81,7 +81,7 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare.media.'.$it
         <td class="nowrap-todo has-context-todo">
                 <div class="pull-right"><span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText($this->getMediaType($item)); ?>" ><img src="<?php echo $this->getMediaTypeIcon($item); ?>" width="24" /></span></div>
                 <div class="pull-left thumb-wrapper">
-                        <span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText($item->title, JHtmlString::truncate($item->description, 160, true, false)); ?>" ><img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" width="75" /></span>
+                        <span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText($item->title, JHtml::_('string.truncate', $item->description, 160, true, false)); ?>" ><img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" width="75" /></span>
                 </div>
                 <div class="pull-left-todo">
                         <?php if ($item->checked_out) : ?>
