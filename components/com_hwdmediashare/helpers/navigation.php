@@ -13,21 +13,6 @@ defined('_JEXEC') or die;
 class hwdMediaShareHelperNavigation
 {
 	/**
-	 * Method to insert Javascript declaration for live site variable.
-         * 
-         * @access  public
-         * @static
-         * @return  void
-	 */
-	public static function setJavascriptVars()
-	{
-                $doc = JFactory::getDocument();
-                $js = array();
-                $js[] = 'var hwdms_live_site = "' . JURI::root() . 'index.php";';
-                $doc->addScriptDeclaration( implode("\n", $js) );
-        }    
-        
-	/**
 	 * Method to insert internal navigation using hwdMediaShare Joomla menu,
          * or fallback static menu.
          * 
@@ -109,7 +94,7 @@ class hwdMediaShareHelperNavigation
 	public static function pageNavigation($current, $params)
 	{
                 // We force method caching for this potentially complex query.
-                $cache = JFactory::getCache();
+                $cache = JFactory::getCache('com_hwdmediashare');
                 $cache->setCaching(1);
                 return $cache->call(array('hwdMediaShareHelperNavigation', 'cachedPageNavigation' ), $current, $params);                        
 	}
