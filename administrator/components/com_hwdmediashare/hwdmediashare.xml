@@ -47,6 +47,12 @@
 	<administration>
                 <!-- Administrator menu -->
 		<menu>COM_HWDMEDIASHARE_MENU</menu>
+		<submenu>
+			<menu link="option=com_hwdmediashare&amp;view=dashboard" view="dashboard" img="class:hwd-dashboard" alt="COM_HWDMS_SUBMENU_DASHBOARD">COM_HWDMS_SUBMENU_DASHBOARD</menu>
+			<menu link="option=com_hwdmediashare&amp;view=media" view="media" img="class:hwd-media" alt="COM_HWDMS_SUBMENU_MEDIA">COM_HWDMS_SUBMENU_MEDIA</menu>
+			<menu link="option=com_categories&amp;extension=com_hwdmediashare" view="categories" img="class:hwd-categories" alt="COM_HWDMS_SUBMENU_CATEGORIES">COM_HWDMS_SUBMENU_CATEGORIES</menu>
+			<menu link="option=com_hwdmediashare&amp;view=configuration" view="configuration" img="class:hwd-configuation" alt="COM_HWDMS_SUBMENU_CONFIGURATION">COM_HWDMS_SUBMENU_CONFIGURATION</menu>
+		</submenu>                
                 <!-- Administrator files -->
 		<files folder="admin">
 			<filename>access.xml</filename>
