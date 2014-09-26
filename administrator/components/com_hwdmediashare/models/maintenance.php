@@ -111,5 +111,73 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
                 }
                 
                 return $result;
-        }    
+        }   
+        
+        /**
+	 * Method to purge old processes
+         * 
+         * @access  public
+	 * @return  boolean True if successful, false if an error occurs.
+	 */
+	public function uninstallOldExtensions()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDbo();
+                $installer = JInstaller::getInstance();
+                
+                // Find player_hwdjwplayer.
+		$row = JTable::getInstance('extension');
+		$eid = $row->find(array('type' => 'plugin', 'folder' => 'hwdmediashare', 'element' => 'player_hwdjwplayer'));
+                if ($eid)
+		{
+                        $result = $installer->uninstall('plugin', $eid);               
+                        if ($result === false)
+                        {
+                                $this->setError($installer->getError());
+                                return false;                               
+                        }
+		}
+                
+                // Find player_flowplayerreloaded.
+		$row = JTable::getInstance('extension');
+		$eid = $row->find(array('type' => 'plugin', 'folder' => 'hwdmediashare', 'element' => 'player_flowplayerreloaded'));
+                if ($eid)
+		{
+                        $result = $installer->uninstall('plugin', $eid);               
+                        if ($result === false)
+                        {
+                                $this->setError($installer->getError());
+                                return false;                               
+                        }
+		}
+                
+                // Find player_hwdflowplayer.
+		$row = JTable::getInstance('extension');
+		$eid = $row->find(array('type' => 'plugin', 'folder' => 'hwdmediashare', 'element' => 'player_hwdflowplayer'));
+                if ($eid)
+		{
+                        $result = $installer->uninstall('plugin', $eid);               
+                        if ($result === false)
+                        {
+                                $this->setError($installer->getError());
+                                return false;                               
+                        }
+		}
+                
+                // Find player_bo_videojs.
+		$row = JTable::getInstance('extension');
+		$eid = $row->find(array('type' => 'plugin', 'folder' => 'hwdmediashare', 'element' => 'player_bo_videojs'));
+                if ($eid)
+		{
+                        $result = $installer->uninstall('plugin', $eid);               
+                        if ($result === false)
+                        {
+                                $this->setError($installer->getError());
+                                return false;                               
+                        }
+		}
+                
+                return true;
+        }          
 }
