@@ -31,12 +31,6 @@ JHtml::_('behavior.framework', true);
                         </tr>
                         <tr>
                                 <td>
-                                        <div id="ajax-container-cleantagmap" class="pull-right"></div>
-                                        <?php echo JText::_('COM_HWDMS_CLEAN_TAG_MAP'); ?>
-                                </td>
-                        </tr>
-                        <tr>
-                                <td>
                                         <div id="ajax-container-emptyuploadtokens" class="pull-right"></div>
                                         <?php echo JText::_('COM_HWDMS_EMPTY_UPLOAD_TOKENS'); ?>
                                 </td>
@@ -45,6 +39,12 @@ JHtml::_('behavior.framework', true);
                                 <td>
                                         <div id="ajax-container-purgeoldprocesses" class="pull-right"></div>
                                         <?php echo JText::_('COM_HWDMS_PURGE_OLD_PROCESSES'); ?>
+                                </td>
+                        </tr>
+                        <tr>
+                                <td>
+                                        <div id="ajax-container-uninstalloldextensions" class="pull-right"></div>
+                                        <?php echo JText::_('COM_HWDMS_UNINSTALL_OLD_EXTENSIONS'); ?>
                                 </td>
                         </tr>
                 </tbody>
