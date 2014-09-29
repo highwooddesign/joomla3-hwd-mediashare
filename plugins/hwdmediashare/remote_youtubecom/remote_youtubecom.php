@@ -348,11 +348,17 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                         if (file_exists($pluginPath))
                         {
                                 JLoader::register($pluginClass, $pluginPath);
-                                $player = call_user_func(array($pluginClass, 'getInstance'));
-                                if (method_exists($player, 'getYoutubePlayer'))
-                                {
-                                        $params = new JRegistry('{"id":"'.$id.'"}');
-                                        return $player->getYoutubePlayer($params);
+                                $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
+                                if (method_exists($HWDplayer, 'getYoutubePlayer'))
+                                {                          
+                                        if ($player = $HWDplayer->getYoutubePlayer($item, $id))
+                                        {
+                                                return $player;
+                                        }
+                                        else
+                                        {
+                                                return $utilities->printNotice($HWDplayer->getError());
+                                        }
                                 }
                         }
                 }
