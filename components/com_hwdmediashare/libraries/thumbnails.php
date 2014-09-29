@@ -514,6 +514,37 @@ class hwdMediaShareThumbnails extends JObject
 	 */ 
         public static function getVideoPreview($item)
 	{
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFiles::getLocalStoragePath();
+                
+                // Check for good quality thumbnails.
+                $fileTypes = array(7,6,5);
+                foreach ($fileTypes as $fileType)
+                {
+                        $folders = hwdMediaShareFiles::getFolders($item->key);
+                        $filename = hwdMediaShareFiles::getFilename($item->key, $fileType);
+                        $ext = hwdMediaShareFiles::getExtension($item, $fileType);
+                        $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
+                        if (file_exists($path))
+                        {
+                                if ($config->get('protect_media') == 1)
+                                {
+                                        return hwdMediaShareDownloads::protectedUrl($item->id, $fileType);
+                                }
+                                else
+                                {
+                                        return hwdMediaShareFiles::getUrl($folders, $filename, $ext);
+                                }
+                        }
+                }
+                
+                // Check for a custom thumbnail.
+                if ($custom = hwdMediaShareThumbnails::getElementThumbnail($item))
+                {
+                        return $custom;
+                }
+                
+                return false;            
         }       
         
 	/**
