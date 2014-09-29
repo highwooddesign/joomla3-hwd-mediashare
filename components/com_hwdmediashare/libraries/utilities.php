@@ -244,8 +244,8 @@ class hwdMediaShareUtilities extends JObject
                 mt_srand(microtime(true)*100000 + memory_get_usage(true));
                 $key = md5(uniqid(mt_rand(), true));
                 
-                // Define value array.
-                $values = array(1 => 'media', 2 => 'album', 3 => 'group', 4 => 'playlist', 5 => 'channel');
+                // Define value array for tbale names.
+                $values = array(1 => 'media', 2 => 'albums', 3 => 'groups', 4 => 'playlists', 5 => 'users');
 
                 // Check if key exists.
                 $query = $db->getQuery(true)
