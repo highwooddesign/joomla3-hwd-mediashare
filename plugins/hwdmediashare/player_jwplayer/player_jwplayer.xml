@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="hwdmediashare" version="3.0" method="upgrade">
+	<name>plg_hwdmediashare_player_jwplayer</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version> 
+	<description>PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="player_jwplayer">player_jwplayer.php</filename>
+		<folder>assets</folder>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_jwplayer.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_jwplayer.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">  
+                                <field
+					name="hosting"
+					type="list"
+					label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_HOSTING_LABEL"
+					description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_HOSTING_DESC"
+					default="self"
+                                >
+					<option value="cloud">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_CLOUD_HOSTING</option>
+					<option value="self">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SELF_HOSTING</option>
+				</field> 
+				<field
+					name="cloud_host_key"
+					type="text"
+					label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_CLOUD_HOST_KEY_LABEL"
+					description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_CLOUD_HOST_KEY_DESC"
+					default=""
+                                />
+				<field
+					name="self_host_key"
+					type="text"
+					label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_SELF_HOST_KEY_LABEL"
+					description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_SELF_HOST_KEY_DESC"
+					default=""
+                                />
+                                <field
+					name="skin"
+					type="list"
+					label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_SKIN_LABEL"
+					description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_SKIN_DESC"
+					default="six"
+                                >
+					<option value="six">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_SIX</option>
+					<option value="beelden">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_BEELDEN</option>
+					<option value="bekle">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_BEKLE</option>
+					<option value="five">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_FIVE</option>
+					<option value="glow">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_GLOW</option>
+					<option value="roundster">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_ROUNDSTER</option>
+					<option value="stormtrooper">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_STORMTROOPER</option>
+					<option value="vapor">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_SKIN_VAPOR</option>                                          
+				</field> 
+			</fieldset>                            
+			<fieldset 
+                                name="logo"
+				label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_LOGO_LABEL"
+                                description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_LOGO_DESC"
+			>
+                                <field
+                                        name="logofile"
+                                        type="media"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_FILE_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_FILE_DESC"
+                                        default=""
+                                />
+                                <field
+                                        name="logolink"
+                                        type="text"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_LINK_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_LINK_DESC"
+                                        default=""
+                                />
+                                <field 
+                                        name="logohide" 
+                                        type="radio" 
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_HIDE_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_HIDE_DESC"
+                                        default="1"
+                                        class="btn-group btn-group-yesno"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+                                <field
+                                        name="logomargin"
+                                        type="text"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_MARGIN_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_MARGIN_DESC"
+                                        default="8"
+                                />
+                                <field 
+                                        name="logoposition" 
+                                        type="list" 
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_POSITION_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_LOGO_POSITION_DESC"
+                                        default="bottom-left"
+                                >
+                                        <option value="bottom-left">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_BOTTOMLEFT</option>
+                                        <option value="bottom-right">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_BOTTOMRIGHT</option>
+                                        <option value="top-left">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_TOPLEFT</option>
+                                        <option value="top-right">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_TOPRIGHT</option>
+                                </field>
+                                <field
+                                        name="abouttext"
+                                        type="text"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_ABOUTTEXT_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_ABOUTTEXT_DESC"
+                                        default=""
+                                />
+                                <field
+                                        name="aboutlink"
+                                        type="text"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_ABOUTLINK_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_ABOUTLINK_DESC"
+                                        default=""
+                                />
+			</fieldset>                        
+		</fields>
+	</config>
+</extension>
