@@ -67,7 +67,7 @@ class hwdMediaShareAudio extends JObject
                 $mp3 = hwdMediaShareAudio::getMp3($item);
                 $ogg = hwdMediaShareAudio::getOgg($item);
 
-                if ($mp3 && $ogg)
+                if ($mp3)
                 {
                         $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
                         $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
@@ -76,13 +76,13 @@ class hwdMediaShareAudio extends JObject
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
                                 
-                                // Setup parameters for player.
-                                $params = new JRegistry(array(
+                                // Setup sources for player.
+                                $sources = new JRegistry(array(
                                     'mp3' => $mp3,
                                     'ogg' => $ogg
                                 ));
 
-                                if ($player = $HWDplayer->getAudioPlayer($item, $params))
+                                if ($player = $HWDplayer->getAudioPlayer($item, $sources))
                                 {
                                         return $player;
                                 }
