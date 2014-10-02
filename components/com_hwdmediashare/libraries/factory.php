@@ -130,8 +130,11 @@ class hwdMediaShareFactory extends JObject
                         }
 
                         // Load and manipulate the saved configruation.
-                        $config = json_decode($table->params);
-                        $config->upload_limits = json_encode($config->upload_limits);
+                        $config = json_decode($table->params);                       
+                        if (isset($config->upload_limits))
+                        {
+                                $config->upload_limits = json_encode($config->upload_limits);
+                        }
                         
                         // Merge the user saved configuration.
                         $this->_config->loadObject($config);
@@ -147,6 +150,9 @@ class hwdMediaShareFactory extends JObject
                         
                         // Merge and override with menu and system parameters (if in frontend).
                         if (!defined('_JCLI') && !$app->isAdmin()) $this->_params->merge($app->getParams('com_hwdmediashare'));
+                        
+                        // Merge the 'debug' parameter from the Global Configuration.
+                        $this->_params->set('debug', $app->getCfg('debug'));                            
                 }
 
                 //$config = JRegistryFormatJSON::stringToObject($this->_config);
