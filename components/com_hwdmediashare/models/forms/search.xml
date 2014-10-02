@@ -14,44 +14,7 @@
 			description="COM_HWDMS_TITLE_DESC"
 			required="true"
 			hint="COM_HWDMS_HINT_SEARCH"
-                        class="input-large-text hwd-form-title"                        
-		/>           
-                <field
-                        name="catid"
-                        type="category"
-                        extension="com_hwdmediashare"
-                        class="inputbox"
-                        default=""
-                        label="COM_HWDMS_CATEGORY_LABEL"
-                        description="COM_HWDMS_CATEGORY_DESC"
-                >
-                        <option value="0">JOPTION_SELECT_CATEGORY</option>
-                </field>
-                <field
-			name="tag"
-			type="text"
-			label="COM_HWDMS_TAG_LABEL"
-			description="COM_HWDMS_TAGS_DESC"
-			size="40"
-			class="inputbox"
-			default=""
-		/>
-		<field 
-                        name="access" 
-                        type="accesslevel" 
-                        label="JFIELD_ACCESS_LABEL"
-			description="JFIELD_ACCESS_DESC" 
-                        class="inputbox" 
-                        size="1" 
-                />
-		<field 
-                        name="language" 
-                        type="contentlanguage" 
-                        label="JFIELD_LANGUAGE_LABEL"
-			description="COM_HWDMS_LANGUAGE_DESC" 
-                        class="inputbox"
-		>
-			<option value="*">JALL</option>
-		</field>
+                        class="hwd-form-keyword"                        
+		/> 
 	</fieldset>
 </form>
