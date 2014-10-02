@@ -113,9 +113,27 @@ class hwdMediaShareRtmp extends JObject
                 $post = array();
                 
                 // Check if we need to replace an existing media item.
-                if ($data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
+                if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                 {
-                        $post['id']                     = $data['id'];
+                        // Attempt to load the existing table row.
+                        $return = $table->load($data['id']);
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
+                        $properties = $table->getProperties(1);
+                        $replace = JArrayHelper::toObject($properties, 'JObject');
+
+                        // Here, we need to remove all files already associated with this media item
+                        hwdMediaShareFactory::load('files');
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $HWDfiles->deleteMediaFiles($replace);
+
+                        //$post['id']                   = '';
                         //$post['asset_id']             = '';
                         //$post['ext_id']               = '';
                         $post['media_type']             = (($data['media_type'] > 0) ? $data['media_type'] : '');
@@ -227,10 +245,10 @@ class hwdMediaShareRtmp extends JObject
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Get HWD utilities.
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                
+
                 // Check for cloudfront services.
                 if (strpos($item->streamer, '.cloudfront.net') !== false)
                 {
@@ -244,22 +262,19 @@ class hwdMediaShareRtmp extends JObject
                         $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
                         $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
 
-                        $jpg = hwdMediaShareDownloads::jpgUrl($item);
-                        
                         // Import HWD player plugin.
                         if (file_exists($pluginPath))
                         {
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
                                 
-                                // Setup parameters for player.
-                                $params = new JRegistry(array(
+                                // Setup sources for player.
+                                $sources = new JRegistry(array(
                                     'streamer' => $item->streamer,
                                     'file' => $item->file,
-                                    'jpg' => $jpg 
                                 ));
 
-                                if ($player = $HWDplayer->getRtmpPlayer($params))
+                                if ($player = $HWDplayer->getRtmpPlayer($item, $sources))
                                 {
                                         return $player;
                                 }
