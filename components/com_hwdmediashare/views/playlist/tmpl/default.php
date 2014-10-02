@@ -47,8 +47,10 @@ $canManageMedia = ($this->playlist->created_user_id == $user->id);
         <?php endif; ?>
         <?php if ($this->playlist->published != 1) : ?>
           <div class="btn btn-danger"><i class="icon-unpublish"></i> <?php echo JText::_('COM_HWDMS_UNPUBLISHED'); ?></div>
-        <?php endif; ?>           
-        <a title="<?php echo JText::_('COM_HWDMS_PLAY_NOW'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getSlideshowRoute(null, array('playlist_id' => $this->playlist->id), false)); ?>" class="btn"><i class="icon-play"></i> <?php echo JText::_('COM_HWDMS_PLAY_NOW'); ?></a>            
+        <?php endif; ?> 
+        <?php if (count($this->items)): ?>  
+          <a title="<?php echo JText::_('COM_HWDMS_PLAY_NOW'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute(reset($this->items)->id)); ?>" class="btn"><i class="icon-play"></i> <?php echo JText::_('COM_HWDMS_PLAY_NOW'); ?></a>            
+        <?php endif; ?>
         <?php if ($this->params->get('item_meta_report') != '0'): ?>  
           <a title="<?php echo JText::_('COM_HWDMS_REPORT'); ?>" href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&task=playlistform.report&id=' . $this->playlist->id . '&return=' . $this->return . '&tmpl=component'); ?>" class="btn media-popup-iframe-form"><i class="icon-flag"></i> <?php echo JText::_('COM_HWDMS_REPORT'); ?></a>
         <?php endif; ?>
