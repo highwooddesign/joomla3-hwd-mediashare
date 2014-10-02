@@ -14,11 +14,14 @@ defined('_JEXEC') or die;
   <!-- Media Navigation -->
   <?php echo hwdMediaShareHelperNavigation::getInternalNavigation(); ?>
   <div class="media-featured-view">
+    <?php if ($this->document->countModules('media-discover-leading')): ?>
     <div class="row-fluid">
       <div class="span12">
         <?php echo hwdMediaShareHelperModule::_loadpos('media-discover-leading'); ?>
       </div>
     </div>
+    <?php endif; ?>  
+    <?php if ($this->document->countModules('media-discover-1') || $this->document->countModules('media-discover-2')): ?>
     <div class="row-fluid">
       <div class="span6">
         <?php echo hwdMediaShareHelperModule::_loadpos('media-discover-1'); ?>
@@ -27,6 +30,8 @@ defined('_JEXEC') or die;
         <?php echo hwdMediaShareHelperModule::_loadpos('media-discover-2'); ?>
       </div>
     </div>
+    <?php endif; ?>  
+    <?php if ($this->document->countModules('media-discover-3') || $this->document->countModules('media-discover-4')): ?>
     <div class="row-fluid">
       <div class="span6">
         <?php echo hwdMediaShareHelperModule::_loadpos('media-discover-3'); ?>
@@ -35,5 +40,6 @@ defined('_JEXEC') or die;
         <?php echo hwdMediaShareHelperModule::_loadpos('media-discover-4'); ?>
       </div>
     </div>
+    <?php endif; ?>  
   </div>
 </div>
