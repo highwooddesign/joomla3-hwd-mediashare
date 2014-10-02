@@ -155,7 +155,8 @@ class hwdMediaShareModelAddMedia extends JModelAdmin
                 $flashUploadUrl = hwdMediaShareUpload::getFlashUploadURI();
                 $swfUrl = JURI::root(true) . '/media/com_hwdmediashare/assets/swf/Swiff.Uploader.swf';
                 $editTask = ($app->isAdmin() ? 'editmedia' : 'mediaform');
-
+                $verbose = ($config->get('debug') ? 'true' : 'false');
+                
                 // Check if we need to limit to a single upload and redirect on success
                 if ($config->get('upload_workflow', 1) == 0)
                 {
@@ -180,7 +181,7 @@ class hwdMediaShareModelAddMedia extends JModelAdmin
 window.addEvent('domready', function() { 
 	var up = new FancyUpload2($('hwd-upload-status'), $('hwd-upload-list'), {
 		// We console.log infos, remove that in production!!
-		verbose: true,
+		verbose: $verbose,
 
 		url: '$flashUploadUrl',
 
