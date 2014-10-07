@@ -15,36 +15,21 @@ class com_hwdMediaShareInstallerScript
         /**
 	 * Method to install the component.
 	 *
-	 * @access	public
-         * @param       string      $parent     The class calling this method.
-         * @return      void
+	 * @access  public
+         * @param   string  $parent  The class calling this method.
+         * @return  void
 	 */
 	public function install($parent)
 	{
 		// echo '<p>' . JText::_('COM_HWDMEDIASHARE_INSTALL_TEXT') . '</p>';
-                
-                // Define language
-                $images = 'Recent images';
-                $media = 'Recent media';
-                $albums = 'Recent albums';
-                $groups = 'Recent groups';
-                $users = 'Recent channels';
-                $playlists = 'Recent playlists';
-                
-                com_hwdMediaShareInstallerScript::setupModule('mod_media_images', 'media-discover-leading', $images, '{"count":"6","height":"350"}');
-                com_hwdMediaShareInstallerScript::setupModule('mod_media_media', 'media-discover-leading', $media, '{"count":"3","columns":"3","header":"2"}');
-                com_hwdMediaShareInstallerScript::setupModule('mod_media_albums', 'media-discover-1', $albums, '{"count":"2","columns":"2","header":"2"}');
-                com_hwdMediaShareInstallerScript::setupModule('mod_media_groups', 'media-discover-2', $groups, '{"count":"2","columns":"2","header":"2"}');
-                com_hwdMediaShareInstallerScript::setupModule('mod_media_channels', 'media-discover-3', $users, '{"count":"2","columns":"2","header":"2"}');
-                com_hwdMediaShareInstallerScript::setupModule('mod_media_playlists', 'media-discover-4', $playlists, '{"count":"2","columns":"2","header":"2"}');
 	}
 
 	/**
 	 * Method to uninstall the component.
 	 *
-	 * @access	public
-         * @param       string      $parent     The class calling this method.
-         * @return      void
+	 * @access  public
+         * @param   string  $parent  The class calling this method.
+         * @return  void
 	 */
 	public function uninstall($parent)
 	{
@@ -54,29 +39,30 @@ class com_hwdMediaShareInstallerScript
 	/**
 	 * Method to update the component.
 	 *
-	 * @access	public
-         * @param       string      $parent     The class calling this method.
-         * @return      void
+	 * @access  public
+         * @param   string  $parent  The class calling this method.
+         * @return  void
 	 */
 	public function update($parent)
 	{
-		// $parent is the class calling this method
 		// echo '<p>' . JText::_('COM_HWDMEDIASHARE_UPDATE_TEXT') . '</p>';
-                
-                // Remove old files.
-                com_hwdMediaShareInstallerScript::removeOldFiles();
+
+		// Initialise variables.
+                $app = JFactory::getApplication();
                 
                 // Update database.
-                com_hwdMediaShareInstallerScript::databaseFixes();            
+                $this->databaseFixes();
+                
+                $app->enqueueMessage(JText::_('COM_HWDMEDIASHARE_MESSAGE_RECOMMEND_MAINTENANCE'));
 	}
 
 	/**
 	 * Method to run before an install/update/uninstall method.
 	 *
-	 * @access	public
-         * @param       string      $type       The type of change (install, update or discover_install).
-         * @param       string      $parent     The class calling this method.
-         * @return      void
+	 * @access  public
+         * @param   string  $type    The type of change (install, update or discover_install).
+         * @param   string  $parent  The class calling this method.
+         * @return  void
 	 */
 	public function preflight($type, $parent)
 	{
@@ -99,93 +85,70 @@ class com_hwdMediaShareInstallerScript
 	/**
 	 * Method to run after an install/update/uninstall method.
 	 *
-	 * @access	public
-         * @param       string      $type       The type of change (install, update or discover_install).
-         * @param       string      $parent     The class calling this method.
-         * @return      void
+	 * @access  public
+         * @param   string  $type    The type of change (install, update or discover_install).
+         * @param   string  $parent  The class calling this method.
+         * @return  void
 	 */
 	public function postflight($type, $parent)
 	{
-		// $parent is the class calling this method
-		// $type is the type of change (install, update or discover_install)
 		// echo '<p>' . JText::_('COM_HWDMEDIASHARE_POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 
                 // Add content types.
-                com_hwdMediaShareInstallerScript::addContentTypes();
+                $this->addContentTypes();
 
+                // Remove unwanted legacy files.
+                $this->removeLegacyFiles();
+                
                 // Check if the HWD menu exists.
-                if (!com_hwdMediaShareInstallerScript::checkMenuExists())
+                if (!$this->checkMenuExists())
                 {
-                        com_hwdMediaShareInstallerScript::writeMenu();
+                        $this->writeMenu();
                 }
                 
                 // Fix any broken menu links.
-                com_hwdMediaShareInstallerScript::fixBrokenMenuItems();
+                $this->fixBrokenMenuItems();
 	}
 
         /**
-	 * Method to check if hwdMediaShare menu exists.
+	 * Method to check if the HWD menu exists.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function checkMenuExists()
 	{
+        	// Initialise variables.
+                $app = JFactory::getApplication();
                 $db = JFactory::getDbo();
+                
                 $query = $db->getQuery(true)
-                        ->select('COUNT(*)')
+                        ->select('1')
                         ->from('#__menu_types')
                         ->where('menutype = ' . $db->quote('hwdmediashare'));
                 try
                 {
                         $db->setQuery($query);
-                        return $db->loadResult() > 0;
+                        return $db->loadResult();
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
+			$app->enqueueMessage($e->getMessage());
 			return false;                        
                 }
 	}
         
         /**
-	 * Method to check if a module is installed.
+	 * Method to create the HWD menu.
 	 *
-	 * @access	public
-         * @param       string      $module     The name of the module.
-         * @param       string      $parent     The class calling this method.
-         * @return      void
-	 */
-	public function checkModuleInstalled($module)
-	{
-                $db = JFactory::getDbo();
-                $query = $db->getQuery(true)
-                        ->select('COUNT(*)')
-                        ->from('#__extensions')
-                        ->where('type = ' . $db->quote('module'))
-                        ->where('element = ' . $db->quote($module));
-                try
-                {
-                        $db->setQuery($query);
-                        return $db->loadResult() > 0;
-                }
-                catch (RuntimeException $e)
-                {
-			JError::raiseError(500, $e->getMessage());
-			return false;                            
-                }
-	}
-
-        /**
-	 * Method to create hwdMediaShare menu.
-	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function writeMenu()
         {
-                // Initialise variables.
-                $db = JFactory::getDBO();
+        	// Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDbo();
                 
                 // Define the menu strings.
                 $title = 'HWDMediaShare Menu';
@@ -206,27 +169,29 @@ class com_hwdMediaShareInstallerScript
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
-			return false;                            
+			$app->enqueueMessage($e->getMessage());
+			return false;                           
                 }
 
                 // Add default menu items.
-                com_hwdMediaShareInstallerScript::addDefaultMenuItems();
+                $this->addDefaultMenuItems();
                 
                 return true;
         }
         
         /**
-	 * Method to add default hwdMediaShare menu items.
+	 * Method to add default HWD menu items.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function addDefaultMenuItems()
         {
-                $db		= JFactory::getDBO();
-                $file           = JPATH_ROOT.'/administrator/components/com_hwdmediashare/toolbar.xml';
-                $xml            = new SimpleXMLElement($file, null, true);
+        	// Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDbo();
+                $file = JPATH_ROOT . '/administrator/components/com_hwdmediashare/toolbar.xml';
+                $xml = new SimpleXMLElement($file, null, true);
 
                 if ($xml) 
                 {
@@ -262,8 +227,8 @@ class com_hwdMediaShareInstallerScript
                                 }
                                 catch (RuntimeException $e)
                                 {
-                                        JError::raiseError(500, $e->getMessage());
-                                        return false;                            
+                                        $app->enqueueMessage($e->getMessage());
+                                        return false;                           
                                 }
 
                                 // Insert menu item.
@@ -273,8 +238,8 @@ class com_hwdMediaShareInstallerScript
                                 }
                                 catch (RuntimeException $e)
                                 {
-                                        JError::raiseError(500, $e->getMessage());
-                                        return false;                            
+                                        $app->enqueueMessage($e->getMessage());
+                                        return false;                             
                                 }                       
                         }
                 }
@@ -283,16 +248,21 @@ class com_hwdMediaShareInstallerScript
         }
         
         /**
-	 * Method to fix broken menu items and reassociate them with the hwdMediaShare asset.
+	 * Method to fix broken menu items and reassociate them with the HWD asset.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function fixBrokenMenuItems()
         {
+        	// Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDbo();
+                
                 // Get HWD component id.
                 $component      = JComponentHelper::getComponent('com_hwdmediashare');
                 $component_id   = 0;
+                
                 if (is_object($component) && isset($component->id))
                 {
                         $component_id = $component->id;
@@ -300,21 +270,17 @@ class com_hwdMediaShareInstallerScript
 
                 if ($component_id > 0)
                 {
-                        // Update the existing menu items.
-                        $db = JFactory::getDBO();
-                        
-                        // Fields to update.
+                        // Re-associate HWD menu items with component ID.
                         $fields = array(
                             $db->quoteName('component_id') . ' = ' . $db->quote($component_id)
                         );
 
-                        // Conditions for which records should be updated.
                         $conditions = array(
                             $db->quoteName('link') . ' LIKE ' . $db->Quote('%option=com_hwdmediashare%')
                         );
 
                         $query = $db->getQuery(true)
-                                ->update($db->quoteName('#__menu'))->set($fields)->where($conditions);
+                                    ->update($db->quoteName('#__menu'))->set($fields)->where($conditions);
                         try
                         {
                                 $db->setQuery($query);
@@ -322,8 +288,33 @@ class com_hwdMediaShareInstallerScript
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;                            
+                                $app->enqueueMessage($e->getMessage());
+                                return false;                             
+                        }
+                        
+                        // Update 'users' view menu links to 'channels'.
+                        $fields = array(
+                            $db->quoteName('title') . ' = ' . $db->quote('Channels'),
+                            $db->quoteName('alias') . ' = ' . $db->quote('channels'),
+                            $db->quoteName('path') . ' = ' . $db->quote('channels'),
+                            $db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_hwdmediashare&view=channels'),
+                        );
+
+                        $conditions = array(
+                            $db->quoteName('link') . ' LIKE ' . $db->Quote('%option=com_hwdmediashare&view=users%')
+                        );
+
+                        $query = $db->getQuery(true)
+                                    ->update($db->quoteName('#__menu'))->set($fields)->where($conditions);
+                        try
+                        {
+                                $db->setQuery($query);
+                                $db->execute();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $app->enqueueMessage($e->getMessage());
+                                return false;                             
                         }
                 }
                 
@@ -333,19 +324,22 @@ class com_hwdMediaShareInstallerScript
         /**
 	 * Method to validate the alias, and prevent duplciates.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function getAlias($alias)
         {
+        	// Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDbo();
+                
                 // Sanitise the alias.
-                jimport('joomla.filter.output');
 		$alias = JFilterOutput::stringURLSafe($alias);
                 
                 // Check for duplicates.
                 $db = JFactory::getDBO();
                 $query = $db->getQuery(true)
-                        ->select('COUNT(*)')
+                        ->select('1')
                         ->from('#__menu')
                         ->where($db->quoteName('alias') . '=' . $db->quote($alias));
                 try
@@ -355,144 +349,143 @@ class com_hwdMediaShareInstallerScript
                 }
                 catch (RuntimeException $e)
                 {
-                        JError::raiseError(500, $e->getMessage());
-                        return false;                            
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                           
                 }
 
 		if ($duplicate)
                 {                       
                         $alias = $alias . '-media';
-                        return com_hwdMediaShareInstallerScript::getAlias($alias);     
+                        return $this->getAlias($alias);     
                 }
                 else
                 {
                         return $alias;                    
                 }
-        } 
-               
-        /**
-	 * Method to setup modules for the discover page during initial installation.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function setupModule($module, $position, $title, $params=null)
-	{
-                if (com_hwdMediaShareInstallerScript::checkModuleInstalled($module))
-                {
-                        if (!com_hwdMediaShareInstallerScript::checkModuleConfigured($module, $position))
-                        {
-                                com_hwdMediaShareInstallerScript::configureModule($module, $position, $title, $params);
-                        }
-                }
-                return true;
-	}
-        
-        /**
-	 * Method to check if any modules are configured in a specific position.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function checkModuleConfigured($module, $position)
-	{
-		$db = JFactory::getDBO();
-                $query = $db->getQuery(true)
-                        ->select('COUNT(*)')
-                        ->from('#__modules')
-                        ->where('module = ' . $db->quote($module))
-                        ->where('position = ' . $db->quote($position));
-                try
-                {                
-                        $db->setQuery($query);
-                        return $db->loadResult() > 0;
-                }
-                catch (Exception $e)
-                {
-                        $this->setError($e->getMessage());
-                        return false;
-                }
-	}
-        
-        /**
-	 * Method to add and configure a new module.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function configureModule($module, $position, $title, $params=null)
-	{
-                // Initialise variables.
-                $db = JFactory::getDBO();
-
-                // Columns and values to insert.
-                $columns = array($db->quoteName('title'), $db->quoteName('note'), $db->quoteName('content'), $db->quoteName('ordering'), $db->quoteName('position'), $db->quoteName('checked_out'), $db->quoteName('checked_out_time'), $db->quoteName('publish_up'), $db->quoteName('publish_down'), $db->quoteName('published'), $db->quoteName('module'), $db->quoteName('access'), $db->quoteName('showtitle'), $db->quoteName('params'), $db->quoteName('client_id'), $db->quoteName('language'));
-                $values = array($db->quote($title), $db->quote(''), $db->quote(''), $db->quote('0'), $db->quote($position), $db->quote('0'), $db->quote('0000-00-00 00:00:00'), $db->quote('0000-00-00 00:00:00'), $db->quote('0000-00-00 00:00:00'), $db->quote('1'), $db->Quote($module), $db->quote('1'), $db->quote('1'), $db->quote($params), $db->quote('0'), $db->quote('*'));
-
-                $query = $db->getQuery(true)
-                        ->insert($db->quoteName('#__modules'))
-                        ->columns($db->quoteName($columns))
-                        ->values(implode(',', $values));
-                try
-                {
-                        $db->setQuery($query);
-                        $db->execute();
-                        $id = $db->insertid();
-                }
-                catch (RuntimeException $e)
-                {
-			JError::raiseError(500, $e->getMessage());
-			return false;                            
-                }
-
-                if ($id > 0)
-                {
-                        // Setup module to display on all pages
-                        $columns = array($db->quoteName('moduleid'), $db->quoteName('menuid'));
-                        $values = array($db->quote($id), $db->quote('0'));
-
-                        $query = $db->getQuery(true)
-                                ->insert($db->quoteName('#__modules_menu'))
-                                ->columns($db->quoteName($columns))
-                                ->values(implode(',', $values));
-                        try
-                        {
-                                $db->setQuery($query);
-                                $db->execute();
-                        }
-                        catch (RuntimeException $e)
-                        {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;                            
-                        }                       
-                }
-
-                return true;
-	}
+        }  
         
         /**
 	 * Method to remove any deprecated files from previous installations.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
-	public function removeOldFiles()
+	public function removeLegacyFiles()
 	{
-                jimport('joomla.filesystem.file');
-
                 $files = array();
-                $files[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/extension.php';
-                $files[] = JPATH_SITE.'/components/com_hwdmediashare/libraries/layouts/media_item_details.php';
-                $files[] = JPATH_SITE.'/components/com_hwdmediashare/libraries/layouts/media_item_display.php';
-       
-                foreach($files as $file)
-                {
-                        if (file_exists($file))
-                        {
-                                JFile::delete($file);
-                        }
-                }
+                $folders = array();
+                
+                // Administrator/components/com_hwdmediashare
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/activities.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/activity.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/reported.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/tag.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/tags.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/user.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/controllers/users.php';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/helpers/html/hwdadminusers.php'; 
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/fields/article.php';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/fields/editorhwd.php';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/fields/userchannel.php';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/fields/userchannelfullordering.php';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/activity.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/activity.xml';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/album.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/configuration.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/filter_users.xml';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/group.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/playlist.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/tag.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/tag.xml';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/user.js';                
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/forms/user.xml';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/activity.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/tag.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/tags.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models/user.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/extension.php';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/tag.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/tagmap.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/userchannel.php';  
+                $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/activity';
+                $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/tag';
+                $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/tags';
+                $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/user';
+                $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/users';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/com_hwdmediashare.xml';
 
+                // Components/com_hwdmediashare
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/activities.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/activity.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/activityform.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/album.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/category.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/group.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/mediaitem.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/playlist.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/user.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/userform.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/controllers/users.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/helpers/dropdown.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/helpers/icon.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/helpers/mobile.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/fields/label.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/fields/label.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/fields/list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/fields/list.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/fields/singleselect.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/fields/singleselect.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/layouts/media_item_details.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/layouts/media_item_display.php';                
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/layouts/users_details.php';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/libraries/opengraph';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/libraries/recaptcha';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/form.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/maintenance.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/reports.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/libraries/tags.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/fields/editorhwd.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/fields/element.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/forms/activity.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/forms/comment.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/forms/filter.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/forms/link.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/forms/user.xml';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/activity.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/activityform.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/tags.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/tags.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/user.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/userform.php';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/activities';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/activity';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/activityform';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/user';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/userform';
+                $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/users';
+
+		foreach ($files as $file)
+		{
+			if (JFile::exists($file))
+			{
+                                if (!JFile::delete($file))
+                                {
+                                        $app->enqueueMessage(JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $file));
+                                }
+			}
+		}
+                
+		foreach ($folders as $folder)
+		{
+			if (JFolder::exists($folder))
+			{
+                                if (!JFolder::delete($folder))
+                                {
+                                        $app->enqueueMessage(JText::sprintf('FILES_JOOMLA_ERROR_FILE_FOLDER', $folder));
+                                }
+			}
+		}
+                
                 return true;
 	}   
         
@@ -676,11 +669,11 @@ SQL;
                         }
                 }
                 
-                // com_hwdmediashare.user
+                // com_hwdmediashare.channel
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
-                        ->where($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.user'));
+                        ->where($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.channel'));
                 try
                 {
                         $db->setQuery($query);
@@ -696,7 +689,7 @@ SQL;
                 {
 $query = <<<SQL
 INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media User', 'com_hwdmediashare.user', '{"special":{"dbtable":"#__hwdms_users","key":"id","type":"UserChannel","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
+('Media User', 'com_hwdmediashare.channel', '{"special":{"dbtable":"#__hwdms_users","key":"id","type":"Channel","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
 SQL;
                         try
                         {
@@ -750,8 +743,8 @@ SQL;
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
-			return false;  
+                        $app->enqueueMessage($e->getMessage());
+                        return false;    
                 }
 
                 //
@@ -781,8 +774,8 @@ SQL;
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;                            
+                                $app->enqueueMessage($e->getMessage());
+                                return false;                             
                         }
                 }
         }                                
