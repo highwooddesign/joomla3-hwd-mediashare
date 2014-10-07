@@ -332,7 +332,10 @@ class hwdMediaShareModelCategory extends JModelList
                                 $list['fullordering'] = $orderingFull;
                                 $list['limit'] = $config->get('list_limit', 6);
                                 $app->setUserState($this->context . '.list', $list);
-                        }                        
+                        }   
+
+                        // Since Joomla 3.3.6, any zero limitstart parameter is unset, meaning you can't return to page 1.
+                        $app->setUserState($this->context . '.limitstart', $app->input->get('limitstart', 0, 'uint'));                     
                 }
                 
                 // List state information.
