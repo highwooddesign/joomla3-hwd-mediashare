@@ -48,6 +48,9 @@ class JFormFieldCdn extends JFormFieldList
                         return false;                            
                 }
 
+                // Define empty array to hold options.
+                $options = array();
+                
                 // Loop all plugins and check if a cdn plugin.
 		for($i = 0; $i < count($rows); $i++)
 		{
