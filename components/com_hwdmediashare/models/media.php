@@ -113,7 +113,7 @@ class hwdMediaShareModelMedia extends JModelList
 			$this->getState(
 				'list.select',
 				'a.id, a.ext_id, a.key, a.title, a.alias, a.description, a.type, a.source, a.storage, a.duration,' .
-                                'a.thumbnail, a.thumbnail_ext_id, a.location, a.likes, a.dislikes, a.status, a.published, a.featured,' .
+                                'a.streamer, a.file, a.thumbnail, a.thumbnail_ext_id, a.location, a.likes, a.dislikes, a.status, a.published, a.featured,' .
                                 'a.checked_out, a.checked_out_time, a.access, a.ordering, a.created_user_id, a.created_user_id_alias,' .
                                 'a.created, a.publish_up, a.publish_down, a.modified, a.hits, a.language'
 			)
@@ -446,6 +446,9 @@ class hwdMediaShareModelMedia extends JModelList
                                 $app->setUserState($this->context . '.list', $list);
                         }
 
+                        // Since Joomla 3.3.6, any zero limitstart parameter is unset, meaning you can't return to page 1.
+                        $app->setUserState($this->context . '.limitstart', $app->input->get('limitstart', 0, 'uint'));
+                                                        
                         // Load the media type state from the menu item parameters.
                         if ($config->get('list_default_media_type')) 
                         {
