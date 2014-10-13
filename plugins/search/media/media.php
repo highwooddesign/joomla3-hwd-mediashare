@@ -15,8 +15,8 @@ class plgSearchMedia extends JPlugin
 	/**
 	 * Affects constructor behavior. If true, language files will be loaded automatically.
 	 *
-	 * @access protected
-	 * @var    boolean
+	 * @access  protected
+	 * @var     boolean
 	 */
 	protected $autoloadLanguage = true;
 
@@ -37,29 +37,17 @@ class plgSearchMedia extends JPlugin
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
-                JLoader::register('JHtmlHwdIcon', JPATH_ROOT.'/components/com_hwdmediashare/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_ROOT.'/components/com_hwdmediashare/helpers/dropdown.php');
-                
-                // Load and register libraries.
-                hwdMediaShareFactory::load('media');
-                hwdMediaShareFactory::load('downloads');
-                hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('utilities');
 
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
                 // Merge with plugin parameters.
-                $config->merge($this->params);
+                $this->config->merge($this->params);
 
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
-                
-                // Get data.             
-                $this->params = $config;                
+                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);               
 	}
 
 	/**
@@ -72,10 +60,11 @@ class plgSearchMedia extends JPlugin
         {
 		static $areas = array();
 
-		if($this->params->get('search_media', 1))                                               $areas['media'] = 'PLG_SEARCH_MEDIA_MEDIA';
-		if($this->params->get('search_albums', 1) && $this->params->get('enable_albums'))       $areas['albums'] = 'PLG_SEARCH_MEDIA_ALBUMS';
-		if($this->params->get('search_groups', 1) && $this->params->get('enable_groups'))       $areas['groups'] = 'PLG_SEARCH_MEDIA_GROUPS';
-		if($this->params->get('search_playlists', 1) && $this->params->get('enable_playlists')) $areas['playlists'] = 'PLG_SEARCH_MEDIA_PLAYLISTS';
+		if($this->config->get('search_media', 1))                                               $areas['media'] = 'PLG_SEARCH_MEDIA_MEDIA';
+		if($this->config->get('search_albums', 1) && $this->config->get('enable_albums'))       $areas['albums'] = 'PLG_SEARCH_MEDIA_ALBUMS';
+		if($this->config->get('search_groups', 1) && $this->config->get('enable_groups'))       $areas['groups'] = 'PLG_SEARCH_MEDIA_GROUPS';
+		if($this->config->get('search_playlists', 1) && $this->config->get('enable_playlists')) $areas['playlists'] = 'PLG_SEARCH_MEDIA_PLAYLISTS';
+		if($this->config->get('search_channels', 1) && $this->config->get('enable_channels'))   $areas['channels'] = 'PLG_SEARCH_MEDIA_CHANNELS';
 
 		return $areas;
 	}
@@ -95,12 +84,12 @@ class plgSearchMedia extends JPlugin
 	function onContentSearch($text, $phrase='', $ordering='', $areas=null)
 	{
 		$app = JFactory::getApplication();
-                $use_caching = $this->params->def('use_caching', 1);
+                $use_caching = $this->config->def('use_caching', 1);
 
                 if ($use_caching)
                 {
                         // Get a reference to the global cache object.
-                        $cache = JFactory::getCache();
+                        $cache = JFactory::getCache('com_hwdmediashare');
                         $cache->setCaching(1);
 
                         return $cache->call(array($this, 'onContentSearchCache'), $text, $phrase, $ordering, $areas);
@@ -139,12 +128,12 @@ class plgSearchMedia extends JPlugin
 			}
 		}
 
-                $search_title		= $this->params->def('search_title',		1);
-                $search_description	= $this->params->def('search_description',	1);
-                $search_metadata	= $this->params->def('search_metadata',		0);
-                $search_alias		= $this->params->def('search_alias',		0);
-                $search_method		= $this->params->def('search_method',		1);
-                $relation_method        = $this->params->def('relation_method',		0);
+                $search_title		= $this->config->def('search_title',		1);
+                $search_description	= $this->config->def('search_description',	1);
+                $search_metadata	= $this->config->def('search_metadata',		0);
+                $search_alias		= $this->config->def('search_alias',		0);
+                $search_method		= $this->config->def('search_method',		1);
+                $relation_method        = $this->config->def('relation_method',		0);
 
                 // Remove white space from input.
 		$text = trim($text);
@@ -166,21 +155,37 @@ class plgSearchMedia extends JPlugin
                                 }
                         }
 
-                        // Define ordering.
+                        // Load the model.
+                        JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
+                        $model = JModelLegacy::getInstance($searchKey, 'hwdMediaShareModel', array('ignore_request' => true));               
+
+                        // Populate state (and set the context).
+                        $model->context = 'plg_search_media';
+                        $model->populateState();
+                        
+                        // Set the start and limit states.
+                        $model->setState('list.start', 0);
+                        $model->setState('list.limit', (int) $this->params->def('search_limit', 50));
+
+                        // Set the ordering states.
                         switch ($ordering)
                         {
                                 case 'oldest':
-                                        $order = 'a.created ASC';
-                                        break;
+                                        $model->setState('list.ordering', 'a.created');
+                                        $model->setState('list.direction', 'ASC');
+                                break;
                                 case 'popular':
-                                        $order = 'a.hits DESC';
-                                        break;
+                                        $model->setState('list.ordering', 'a.hits');
+                                        $model->setState('list.direction', 'DESC');
+                                break;
                                 case 'alpha':
-                                        $order = 'a.title ASC';
-                                        break;
+                                        $model->setState('list.ordering', 'a.title');
+                                        $model->setState('list.direction', 'ASC');
+                                break;
                                 case 'newest':
                                 default:
-                                        $order = 'a.created DESC';
+                                        $model->setState('list.ordering', 'a.created');
+                                        $model->setState('list.direction', 'DESC');
                         }
 
                         // Define search method.
@@ -188,37 +193,21 @@ class plgSearchMedia extends JPlugin
                         {
                                 // When searching for exact word or phrase.
                                 case 'exact':
-                                        break;
+                                        $model->setState('filter.search.method', 'like');
+                                break;
                                 // When searching for all words or any words.
                                 case 'all':
                                 case 'any':
                                 default:
-                                        break;
+                                        $model->setState('filter.search.method', 'match');
+                                break;
                         }
                         
-                        // Perform the search.
-                        JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                        $this->_model = JModelLegacy::getInstance($searchKey, 'hwdMediaShareModel', array('ignore_request' => true));               
+                        // Define search term.
+                        $model->setState('filter.search', $text);
 
-                        // Populate state (and set the context).
-                        $this->_model->context = 'plg_search_media';
-                        $this->_model->populateState();
-
-                        // Set the start and limit states.
-                        $this->_model->setState('list.start', 0);
-                        $this->_model->setState('list.limit', (int) $this->params->def('search_limit', 50));
-
-                        // Set the ordering states.
-                        $ordering = $order;
-                        $orderingParts = explode(' ', $ordering); 
-                        $this->_model->setState('list.ordering', $orderingParts[0]);
-                        $this->_model->setState('list.direction', $orderingParts[1]);
-
-                        $this->_model->setState('filter.search.method', 'match');
-                        $this->_model->setState('filter.search', $text);
-
-                        $items = $this->_model->getItems();
-
+                        // Perform search.
+                        $items = $model->getItems();
                         if (count($items))
                         {
                                 foreach($items as $key => $item)
@@ -248,14 +237,12 @@ class plgSearchMedia extends JPlugin
                                                         $row->href = hwdMediaShareHelperRoute::getPlaylistRoute($item->id);
                                                         break;
 
-                                                case 'users':
+                                                case 'channels':
                                                         $row->href = hwdMediaShareHelperRoute::getUserRoute($item->id);
                                                         break;
                                         }
-
-                                        $result = array($row);
                                         
-                                        $results = array_merge($results, $result);                                                
+                                        $results = array_merge($results, array($row));                                                
                                 }
                         }
                 }

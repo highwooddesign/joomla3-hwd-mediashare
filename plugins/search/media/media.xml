@@ -73,6 +73,19 @@
 					<option value="0">JNO</option>
 				</field> 
                                 <field 
+                                        name="search_channels" 
+                                        type="radio"
+					label="PLG_SEARCH_MEDIA_SEARCH_CHANNELS_LABEL"
+					description="PLG_SEARCH_MEDIA_SEARCH_CHANNELS_DESC"
+                                        class="btn-group btn-group-yesno"
+					default="1"
+                                        validate="integer"
+                                        filter="integer"                                          
+				>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>                                 
+                                <field 
                                         name="search_groups" 
                                         type="radio"
 					label="PLG_SEARCH_MEDIA_SEARCH_GROUPS_LABEL"
@@ -155,36 +168,7 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field>   	                          
-			</fieldset>    
-			<fieldset 
-                                name="method"
-                                label="PLG_SEARCH_MEDIA_FIELD_GROUP_METHOD_LABEL"
-			>    
-                                <field 
-                                        name="search_method" 
-                                        type="list"
-					label="PLG_SEARCH_MEDIA_SEARCH_METHOD_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_METHOD_DESC"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
-				>
-					<option value="0">PLG_SEARCH_MEDIA_OPTION_MATCH</option>
-					<option value="1">PLG_SEARCH_MEDIA_OPTION_LIKE</option>
-				</field>
- 				<field 
-                                        name="relation_method" 
-                                        type="list"
-					label="PLG_SEARCH_MEDIA_RELATION_METHOD_LABEL"
-					description="PLG_SEARCH_MEDIA_RELATION_METHOD_DESC"
-					default="0"
-                                        validate="integer"
-                                        filter="integer"                                          
-				>
-					<option value="0">PLG_SEARCH_MEDIA_OPTION_MATCH</option>
-					<option value="1">PLG_SEARCH_MEDIA_OPTION_LIKE</option>
-				</field>
-			</fieldset>                       
+			</fieldset>                          
 		</fields>
 	</config>
 </extension>
