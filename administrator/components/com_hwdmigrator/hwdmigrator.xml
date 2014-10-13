@@ -9,8 +9,6 @@
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
 	<version>@@VERSION@@</version>  
 	<description>COM_HWDMIGRATOR_DESCRIPTION</description>
-        <!-- Installation script -->
-	<scriptfile>script.php</scriptfile>
         <!-- SQL files -->
 	<install> 
 		<sql>
@@ -22,11 +20,6 @@
 			<file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
 		</sql>
 	</uninstall>
-	<update>
-		<schemas>
-			<schemapath type="mysql">sql/updates/mysql</schemapath>
-		</schemas>
-	</update>
         <!-- Site files -->
 	<files folder="site">
                 <filename>hwdmigrator.php</filename>

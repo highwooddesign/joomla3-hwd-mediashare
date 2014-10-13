@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.framework', true);
 JHtml::_('behavior.tooltip');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_hwdmigrator'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_hwdmigrator&view=maintenance'); ?>" method="post" name="adminForm" id="adminForm">
         <table class="table table-striped table-hover">
                 <thead>
                         <tr>
@@ -259,6 +259,5 @@ JHtml::_('behavior.tooltip');
                 </tbody>
         </table>
 	<input type="hidden" name="task" value="" />
-        <input type="hidden" name="view" value="maintenance" />
         <?php echo JHtml::_('form.token'); ?>
 </form>
