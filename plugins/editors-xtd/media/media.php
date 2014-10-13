@@ -15,19 +15,19 @@ class plgButtonMedia extends JPlugin
 	/**
 	 * Load the language file on instantiation.
 	 *
-	 * @access      protected
-	 * @var         boolean
+	 * @access  protected
+	 * @var     boolean
 	 */
 	protected $autoloadLanguage = true;
         
 	/**
 	 * Display the button.
 	 *
-	 * @access      protected
-	 * @param       string      $name    The name of the button to display.
-	 * @param       string      $asset   The name of the asset being edited.
-	 * @param       integer     $author  The id of the author owning the asset being edited.
-	 * @return      object      JObject.
+	 * @access  protected
+	 * @param   string     $name    The name of the button to display.
+	 * @param   string     $asset   The name of the asset being edited.
+	 * @param   integer    $author  The id of the author owning the asset being edited.
+	 * @return  object     JObject.
 	 */
 	public function onDisplay($name, $asset, $author)
 	{
@@ -38,8 +38,8 @@ class plgButtonMedia extends JPlugin
 		 * and closes the select frame.
 		 */
 		$js = "
-		function jSelectMedia(id, title) {
-			var tag = '<div>{media load=media,id=' + id + ',width=" . $this->params->get('width', '320') . ",align=" . $this->params->get('align', '320') . ",display=" . $this->params->get('display', 'inline') . "}</div><br />';
+		function jSelectMedia(id, title, layout) {
+			var tag = '<div>{media id=' + id + ',layout=' + layout + '}</div><br />';
 			jInsertEditorText(tag, '" . $name . "');
 			SqueezeBox.close();
 		}";
