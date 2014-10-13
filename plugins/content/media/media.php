@@ -51,18 +51,18 @@ class plgContentMedia extends JPlugin
                 hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
 
-                // Load the HWD language file.
-                $lang = JFactory::getLanguage();
-                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
-
                 // Load HWD config (and force reset).
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig(null, true);
                 $config->set('load_lite_css', 1);
+                
+                // Load the HWD language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
+
 
                 // Add assets to the head tag.
                 JHtml::_('hwdhead.core', $config);
-
 	}
         
 	/**
