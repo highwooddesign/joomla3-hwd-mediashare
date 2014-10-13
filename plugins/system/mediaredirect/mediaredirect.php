@@ -15,8 +15,8 @@ class plgSystemMediaRedirect extends JPlugin
 	/**
 	 * Check for a necessary redirection after Joomla initialises.
 	 *
-	 * @access      protected
-	 * @return      void
+	 * @access  public
+	 * @return  void
 	 */    
 	public function onAfterInitialise()
 	{                
