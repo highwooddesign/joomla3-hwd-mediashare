@@ -410,9 +410,6 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 	 */
 	public function lookupEmbedCode($item)
 	{
-                // We force method caching to lookup the embed code.
-                $cache = JFactory::getCache('com_hwdmediashare');
-                $cache->setCaching(1);
                 $buffer = $this->getBuffer('http://blip.tv/rss/view/' . $this->parse($item->source));
                 if (!empty($buffer))
                 {
