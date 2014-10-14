@@ -120,10 +120,10 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	}
 
 	/**
-	 * Method to get the icon for the media type.
+	 * Method to get the icon class for the media type.
 	 *
 	 * @access  public
-	 * @para    object  $item   Media object
+	 * @para    object  $item  Media object
 	 * @return  string  Icon URL
 	 **/
 	public function getMediaTypeIcon($item)
@@ -131,32 +131,38 @@ class hwdMediaShareViewMedia extends JViewLegacy
                 switch ($item->media_type) 
                 {
                         case 1:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/audio.png';
+                                return 'audio';
                         break;
                         case 2:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/document.png';
+                                return 'file';
                         break;
                         case 3:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/image.png';
+                                return 'image';
                         break;
                         case 4:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/video.png';
+                                return 'video';
                         break;
                 }
                 switch ($item->type) 
                 {
-                        case 2:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/remote.png';
+                        case 2: // REMOTE
+                                return 'remote';
                         break;
-                        case 3:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/embed.png';
+                        case 3: // EMBED
+                                return 'embed';
                         break;
-                        case 4:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/rtmp.png';
+                        case 4: // RTMP
+                                return 'broadcast';
                         break;
-                        case 4:
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/32/cdn.png';
+                        case 5: // CDN
+                                return 'database';
                         break;
+                        case 6: // PLATFORM
+                                return 'database';
+                        break;  
+                        case 6: // REMOTE (FILE)
+                                return 'remote';
+                        break; 
                 }
 	}
 
