@@ -32,3 +32,61 @@
         width:50px;
         height:50px;    
 }
+/* Media type icons */
+#mediaList [data-icon]:before {
+	font-family: 'HwdIcoMoon', 'IcoMoon';
+	content: attr(data-icon);
+	speak: none;
+}
+#mediaList [class^="icon-"], 
+#mediaList [class*=" icon-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	*margin-right: .3em;
+	line-height: 14px;
+        background:none!important; /* Prevent use of glyphicons background image */
+}
+#mediaList [class^="icon-"]:before,
+#mediaList [class*=" icon-"]:before {
+	font-family: 'HwdIcoMoon', 'IcoMoon';
+	font-style: normal;
+	speak: none;
+}
+#mediaList [class^="icon-"].disabled,
+#mediaList [class*=" icon-"].disabled {
+	font-weight: normal;
+}
+#mediaList .icon-audio:before {
+	content: "\e60f";
+}
+#mediaList .icon-document:before {
+	content: "\e61b";
+}
+#mediaList .icon-image:before {
+	content: "\e60e";
+}
+#mediaList .icon-video:before {
+	content: "\e619";
+}
+#mediaList .icon-remote:before {
+	content: "\e61d";
+}
+#mediaList .icon-embed:before {
+	content: "\e60b";
+}
+#mediaList .icon-rtmp:before {
+	content: "\e61a";
+}
+#mediaList .icon-cdn:before,
+#mediaList .icon-platform:before {
+	content: "\e61c";
+}
+#mediaList i.media-type {
+	display: inline-block;
+        font-size:24px;
+	width:24px;
+	height:24px;
+	line-height:24px;
+        margin-right:5px;
+}
