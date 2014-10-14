@@ -134,7 +134,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
                                 return 'audio';
                         break;
                         case 2:
-                                return 'file';
+                                return 'document';
                         break;
                         case 3:
                                 return 'image';
@@ -152,13 +152,13 @@ class hwdMediaShareViewMedia extends JViewLegacy
                                 return 'embed';
                         break;
                         case 4: // RTMP
-                                return 'broadcast';
+                                return 'rtmp';
                         break;
                         case 5: // CDN
-                                return 'database';
+                                return 'cdn';
                         break;
                         case 6: // PLATFORM
-                                return 'database';
+                                return 'platform';
                         break;  
                         case 6: // REMOTE (FILE)
                                 return 'remote';
