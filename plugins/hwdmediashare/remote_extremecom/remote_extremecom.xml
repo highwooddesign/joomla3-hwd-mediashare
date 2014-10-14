@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="hwdmediashare" version="3.0" method="upgrade">
+	<name>plg_hwdmediashare_remote_extremecom</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version> 
+	<description>PLG_HWDMEDIASHARE_REMOTE_EXTREMECOM_XML_DESCRIPTION</description>
+	<url>http://extreme.com</url>
+	<files>
+		<filename plugin="remote_extremecom">remote_extremecom.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_extremecom.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_extremecom.sys.ini</language>
+	</languages>
+</extension>
