@@ -3,17 +3,18 @@
    This sheet loads FancyUpload2 styles */
 /**********************************************************************************************/
 @import url("hwd.css");
+/* AJAX loader */
 .ajax-loading {
-    background:transparent url(../images/ajax-loader.gif) center center no-repeat;
-    width:16px;
-    height:11px;
+        background:transparent url(../images/ajax-loader.gif) center center no-repeat;
+        width:16px;
+        height:11px;
 }
-/* The directory import iframe */
+/* Directory import iframe */
 #folderframe { 
 	border:0;
         margin-left:20px;
 }
-/* The thumbnail wrapper for floats */
+/* Thumbnail wrapper for floats */
 .pull-right.thumb-wrapper {
         margin-bottom:0;
         margin-left:5px;
@@ -25,4 +26,9 @@
         margin-left:0;
         margin-right:5px;
         margin-top:0;
+}
+/* Avatar */
+.media-avatar-50 {
+        width:50px;
+        height:50px;    
 }
