@@ -471,13 +471,7 @@ class com_hwdMediaShareInstallerScript
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/ajaxupload/success.png';
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/ajaxupload/uploading.png';
                 $folders[] = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/16';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/process-all.png';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/process.png';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/sample-data.png';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/social-icon-facebook.png';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/social-icon-googleplus.png';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/social-icon-pinterest.png';
-                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32/social-icon-twitter.png';                
+                $folders[] = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/32';              
                 $folders[] = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/48';
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/ajax-loader-slideshow.gif';                
 
