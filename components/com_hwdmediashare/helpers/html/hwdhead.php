@@ -31,12 +31,13 @@ class JHtmlHwdHead
 
                 // Add page assets.
                 JHtml::_('bootstrap.framework');
-                $doc->addStyleSheet(JURI::base( true ) . '/media/com_hwdmediashare/assets/css/hwd.css');
-                $doc->addScript(JURI::base( true ) . '/media/com_hwdmediashare/assets/javascript/hwd.min.js');
-                if ($params->get('load_joomla_css') != 0)         $doc->addStyleSheet(JURI::base( true ) . '/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($params->get('list_thumbnail_aspect') != 0)   $doc->addStyleSheet(JURI::base( true ) . '/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($params->get('list_thumbnail_aspect') != 0)   $doc->addScript(JURI::base( true ) . '/media/com_hwdmediashare/assets/javascript/aspect.js'); 
-                
+                $doc->addStyleSheet(JURI::root( true ) . '/media/com_hwdmediashare/assets/css/hwd.css');
+                $doc->addScript(JURI::root( true ) . '/media/com_hwdmediashare/assets/javascript/hwd.min.js');
+                if ($params->get('load_lite_css') != 0)           $doc->addStyleSheet(JURI::root( true ) . '/media/com_hwdmediashare/assets/css/lite.css');
+                if ($params->get('load_joomla_css') != 0)         $doc->addStyleSheet(JURI::root( true ) . '/media/com_hwdmediashare/assets/css/joomla.css');
+                if ($params->get('list_thumbnail_aspect') != 0)   $doc->addStyleSheet(JURI::root( true ) . '/media/com_hwdmediashare/assets/css/aspect.css');
+                if ($params->get('list_thumbnail_aspect') != 0)   $doc->addScript(JURI::root( true ) . '/media/com_hwdmediashare/assets/javascript/aspect.js'); 
+
                 // Insert variables.
                 $js   = array();
                 $js[] = 'var hwdms_live_site = "' . JURI::root() . 'index.php";';
