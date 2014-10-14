@@ -3,29 +3,29 @@
    This sheet loads FancyUpload2 styles */
 /**********************************************************************************************/
 .swiff-uploader-box a {
-	display: none !important;
+	display:none !important;
 }
 /* Class .hover simulates the flash interactions */
 a:hover, a.hover {
-	color: #ffffff;
+	color:#ffffff;
 }
 #hwd-upload-status {
-	/* padding: 10px 15px; */
+	/* padding:10px 15px; */
 }
 #hwd-upload-status p {
-	padding: 0;
-	margin: 0 0 10px 0;
+	padding:0;
+	margin:0 0 10px 0;
 }
 #hwd-upload-status .current-text {
-	padding: 0;
-	margin: 10px 0 10px 0;
+	padding:0;
+	margin:10px 0 10px 0;
 }
 #hwd-upload-status .progress {
-	background: url(../images/ajaxupload/progress-bar/progress.gif) no-repeat;
-	background-position: +50% 0;
-	margin-right: 0.5em;
-	vertical-align: middle;
-        margin-bottom: 0;
+	background:url(../images/ajaxupload/progress-bar/progress.gif) no-repeat;
+	background-position:+50% 0;
+	margin-right:0.5em;
+	vertical-align:middle;
+        margin-bottom:0;
 }
 #hwd-upload-status .overall-title,
 #hwd-upload-status .current-title {
@@ -35,73 +35,72 @@ a:hover, a.hover {
 	margin-top:5px;
 }
 #hwd-upload-status .progress-text {
-	font-size: 0.9em;
-	font-weight: bold;
+	font-size:0.9em;
+	font-weight:bold;
 }
 /* File list */
 #hwd-upload-list {
-	list-style: none;
-	padding: 0;
-        margin: 0;
+	list-style:none;
+	padding:0;
+        margin:0;
         clear:both;
 }
 #hwd-upload-list li.validation-error {
-	padding-left: 44px;
-	display: block;
-	clear: left;
-	line-height: 40px;
-	color: #8a1f11;
-	cursor: pointer;
-	border-bottom: 1px solid #fbc2c4;
-	background: #fbe3e4 url(../images/ajaxupload/failed.png) no-repeat 4px 4px;
+	overflow:auto;
+        margin:10px 0;
+        padding:20px;
+        border-left:3px solid #eee;
+        background-color:#f4f8fa;
+        border-color:#bce8f1;      
+        background-color:#fdf7f7;
+        border-color:#eed3d7;
 }
 #hwd-upload-list li.file {
-
-	overflow: auto;
-        margin: 10px 0;
-        padding: 20px;
-        border-left: 3px solid #eee;
-        background-color: #f4f8fa;
-        border-color: #bce8f1;      
+	overflow:auto;
+        margin:10px 0;
+        padding:20px;
+        border-left:3px solid #eee;
+        background-color:#f4f8fa;
+        border-color:#bce8f1;      
 }
 #hwd-upload-list li.file.file-uploading {
-        background-color: #faf8f0;
-        border-color: #faebcc;
+        background-color:#faf8f0;
+        border-color:#faebcc;
 }
 #hwd-upload-list li.file.file-success {
-        background-color: #D6E9C6;
-        border-color: #468847;
+        background-color:#D6E9C6;
+        border-color:#468847;
 }
 #hwd-upload-list li.file.file-failed {
-        background-color: #fdf7f7;
-        border-color: #eed3d7;
+        background-color:#fdf7f7;
+        border-color:#eed3d7;
 }
 #hwd-upload-list li.file .file-name {
-	font-size: 1.2em;
-	display: block;
-	clear: left;
-	line-height: 40px;
-	height: 40px;
-	font-weight: bold;
+	font-size:1.2em;
+	display:block;
+	clear:left;
+	line-height:40px;
+	height:40px;
+	font-weight:bold;
 }
 #hwd-upload-list li.file .file-size {
-	font-size: 0.9em;
-	line-height: 18px;
-	float: right;
-	margin-top: 2px;
-	margin-right: 6px;
+	font-size:0.9em;
+	line-height:18px;
+	float:right;
+	margin-top:2px;
+	margin-right:6px;
 }
 #hwd-upload-list li.file .file-info {
-	display: block;
-	font-size: 0.9em;
-	line-height: 20px;
-	font-weight: normal;        
+	display:block;
+	font-size:0.9em;
+	line-height:20px;
+	font-weight:normal;        
 }
 #hwd-upload-list li.file .file-remove {
-	clear: right;
-	float: right;
-	line-height: 18px;
-	margin-right: 6px;
+	clear:right;
+	float:right;
+	line-height:18px;
+	margin-right:6px;
 }
 #upload_slots div {
 	display:block;
