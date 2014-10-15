@@ -293,8 +293,8 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Dailymotion ID.
-                $id = $this->parse($item->source);
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source);
               
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 $this->width = '100%';
@@ -304,7 +304,7 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
                 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                   <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                   <div class="media-content">
-                    <iframe frameborder="0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="//www.dailymotion.com/embed/video/<?php echo $id; ?>?autoPlay=<?php echo $this->autoplay; ?>" allowfullscreen></iframe>	
+                    <iframe frameborder="0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="//www.dailymotion.com/embed/video/<?php echo $embedLookup; ?>?autoPlay=<?php echo $this->autoplay; ?>" allowfullscreen></iframe>	
                   </div>
                 </div>
                 <?php
@@ -367,12 +367,12 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Dailymotion ID.
-                $id = $this->parse($item->source);
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source);
             
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
      
-                return JURI::getInstance()->getScheme() .'://www.dailymotion.com/embed/video/' . $id . '?autoPlay=' . $this->autoplay;
+                return JURI::getInstance()->getScheme() .'://www.dailymotion.com/embed/video/' . $embedLookup . '?autoPlay=' . $this->autoplay;
         }  
 
         /**
