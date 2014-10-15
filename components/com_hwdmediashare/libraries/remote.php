@@ -466,6 +466,16 @@ class hwdMediaShareRemote extends JObject
                         }
                 }
                 
+		// Check title tag.
+                preg_match('/<meta name="title" content="([^"]+)/', $buffer, $match);               
+                if (!empty($match[1]))
+                {
+                        if ($title = $this->clean($match[1], 255))
+                        {
+                                return $title;                             
+                        }
+                }
+                
                 // Check standard title tag.
                 preg_match("/<title>(.*)<\/title>/siU", $buffer, $match);
                 if (!empty($match[1]))
