@@ -331,8 +331,8 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Youtube ID
-                $id = $this->parse($item->source, '');
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source, '');
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
                 $url = parse_url($item->source);
@@ -351,7 +351,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                                 $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
                                 if (method_exists($HWDplayer, 'getYoutubePlayer'))
                                 {                          
-                                        if ($player = $HWDplayer->getYoutubePlayer($item, $id))
+                                        if ($player = $HWDplayer->getYoutubePlayer($item, $embedLookup))
                                         {
                                                 return $player;
                                         }
@@ -371,7 +371,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                   <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                   <div class="media-content">
-                    <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://www.youtube.com/embed/<?php echo $id; ?>?wmode=opaque&amp;autoplay=<?php echo $this->autoplay; ?>&amp;autohide=<?php echo $params->get('autohide',2); ?>&amp;border=<?php echo $params->get('border',0); ?>&amp;cc_load_policy=<?php echo $params->get('cc_load_policy',1); ?>&amp;cc_lang_pref=<?php echo $params->get('cc_lang_pref','en'); ?>&amp;hl=<?php echo $params->get('hl','en'); ?>&amp;color=<?php echo $params->get('color','red'); ?>&amp;color1=<?php echo $params->get('color1'); ?>&amp;color2=<?php echo $params->get('color2'); ?>&amp;controls=<?php echo $params->get('controls',1); ?>&amp;fs=<?php echo $params->get('fs',1); ?>&amp;hd=<?php echo $params->get('hd',0); ?>&amp;iv_load_policy=<?php echo $params->get('iv_load_policy',1); ?>&amp;modestbranding=<?php echo $params->get('modestbranding',1); ?>&amp;rel=<?php echo $params->get('rel',1); ?>&amp;theme=<?php echo $params->get('theme','dark'); ?>" frameborder="0" allowfullscreen></iframe>	
+                    <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://www.youtube.com/embed/<?php echo $embedLookup; ?>?wmode=opaque&amp;autoplay=<?php echo $this->autoplay; ?>&amp;autohide=<?php echo $params->get('autohide',2); ?>&amp;border=<?php echo $params->get('border',0); ?>&amp;cc_load_policy=<?php echo $params->get('cc_load_policy',1); ?>&amp;cc_lang_pref=<?php echo $params->get('cc_lang_pref','en'); ?>&amp;hl=<?php echo $params->get('hl','en'); ?>&amp;color=<?php echo $params->get('color','red'); ?>&amp;color1=<?php echo $params->get('color1'); ?>&amp;color2=<?php echo $params->get('color2'); ?>&amp;controls=<?php echo $params->get('controls',1); ?>&amp;fs=<?php echo $params->get('fs',1); ?>&amp;hd=<?php echo $params->get('hd',0); ?>&amp;iv_load_policy=<?php echo $params->get('iv_load_policy',1); ?>&amp;modestbranding=<?php echo $params->get('modestbranding',1); ?>&amp;rel=<?php echo $params->get('rel',1); ?>&amp;theme=<?php echo $params->get('theme','dark'); ?>" frameborder="0" allowfullscreen></iframe>	
                   </div>
                 </div>
                 <?php
@@ -474,8 +474,8 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Youtube ID
-                $id = $this->parse($item->source, '');
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source, '');
 
                 // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
                 $url = parse_url($item->source);
@@ -486,7 +486,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
 
-                return JURI::getInstance()->getScheme() .'://www.youtube.com/embed/' . $id . '?wmode=opaque&amp;autoplay=' . $this->autoplay . '&amp;autohide=' . $params->get('autohide',2) . '&amp;border=' . $params->get('border',0) . '&amp;cc_load_policy=' . $params->get('cc_load_policy',1) . '&amp;cc_lang_pref=' . $params->get('cc_lang_pref','en') . '&amp;hl=' . $params->get('hl','en') . '&amp;color=' . $params->get('color','red') . '&amp;color1=' . $params->get('color1') . '&amp;color2=' . $params->get('color2') . '&amp;controls=' . $params->get('controls',1) . '&amp;fs=' . $params->get('fs',1) . '&amp;hd=' . $params->get('hd',0) . '&amp;iv_load_policy=' . $params->get('iv_load_policy',1) . '&amp;modestbranding=' . $params->get('modestbranding',1) . '&amp;rel=' . $params->get('rel',1) . '&amp;theme=' . $params->get('theme','dark');
+                return JURI::getInstance()->getScheme() .'://www.youtube.com/embed/' . $embedLookup . '?wmode=opaque&amp;autoplay=' . $this->autoplay . '&amp;autohide=' . $params->get('autohide',2) . '&amp;border=' . $params->get('border',0) . '&amp;cc_load_policy=' . $params->get('cc_load_policy',1) . '&amp;cc_lang_pref=' . $params->get('cc_lang_pref','en') . '&amp;hl=' . $params->get('hl','en') . '&amp;color=' . $params->get('color','red') . '&amp;color1=' . $params->get('color1') . '&amp;color2=' . $params->get('color2') . '&amp;controls=' . $params->get('controls',1) . '&amp;fs=' . $params->get('fs',1) . '&amp;hd=' . $params->get('hd',0) . '&amp;iv_load_policy=' . $params->get('iv_load_policy',1) . '&amp;modestbranding=' . $params->get('modestbranding',1) . '&amp;rel=' . $params->get('rel',1) . '&amp;theme=' . $params->get('theme','dark');
         }
         
         /**
