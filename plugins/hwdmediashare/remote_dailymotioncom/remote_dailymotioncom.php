@@ -344,7 +344,7 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
                 $app = JFactory::getApplication();
 
                 // Load plugin.
-		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_dailymotionocom');
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_dailymotioncom');
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
