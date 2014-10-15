@@ -198,8 +198,8 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Vine ID.
-                $id = $this->parse($item->source);
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source);
                 
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 $this->width = '100%';
@@ -209,7 +209,7 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
                 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                   <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                   <div class="media-content">
-                    <iframe class="vine-embed" src="https://vine.co/v/<?php echo $id ?>/embed/simple" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                    <iframe class="vine-embed" src="https://vine.co/v/<?php echo $embedLookup ?>/embed/simple" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
                   </div>
                 </div>
                 <?php
@@ -273,12 +273,12 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
                 
-                // Get Vine ID.
-                $id = $this->parse($item->source);
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source);
 
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
                 
-                return JURI::getInstance()->getScheme() .'://vine.co/v/' . $id . '/embed/simple';
+                return JURI::getInstance()->getScheme() .'://vine.co/v/' . $embedLookup . '/embed/simple';
         }
         
         /**
