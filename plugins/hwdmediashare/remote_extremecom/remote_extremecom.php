@@ -220,6 +220,11 @@ class plgHwdmediashareRemote_extremecom extends hwdMediaShareRemote
                         ob_end_clean();
                         return $html;
                 }
+                else
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_EXTREMECOM_ERROR_PLAYBACK_PROBLEM_SEE_ORIGINAL'));
+                        return false;
+                }
 	}
         
         /**
