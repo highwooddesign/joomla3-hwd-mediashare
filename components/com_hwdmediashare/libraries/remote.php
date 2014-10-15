@@ -608,9 +608,9 @@ class hwdMediaShareRemote extends JObject
                 preg_match('/<meta property="video:duration" content="([^"]+)/', $buffer, $match);
                 if (!empty($match[1]))
                 {
-                        $duration = (int)$match[1];
+                        return (int)$match[1];
                 }
-                
+
                 return false;
 	}
 
