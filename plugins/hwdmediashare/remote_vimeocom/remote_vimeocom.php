@@ -307,22 +307,31 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
                 
                 // Lookup the embed code.
                 $embedLookup = $this->parse($item->source);
-              
-                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
-                $this->width = '100%';
-                $this->height = '100%';
-                ob_start();
-                ?>
-                <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
-                  <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
-                  <div class="media-content">
-                    <iframe src="<?php echo JURI::getInstance()->getScheme(); ?>://player.vimeo.com/video/<?php echo $embedLookup; ?>?title=0&amp;autoplay=<?php echo $this->autoplay; ?>&amp;byline=0&amp;portrait=0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>	
-                  </div>
-                </div>
-                <?php
-                $html = ob_get_contents();
-                ob_end_clean();
-		return $html;
+                if ($embedLookup)
+                {
+                        $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+                        $this->width = '100%';
+                        $this->height = '100%';
+                        ob_start();
+                        ?>
+                        <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
+                          <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
+                          <div class="media-content">
+                            <iframe src="<?php echo JURI::getInstance()->getScheme(); ?>://player.vimeo.com/video/<?php echo $embedLookup; ?>?title=0&amp;autoplay=<?php echo $this->autoplay; ?>&amp;byline=0&amp;portrait=0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>	
+                          </div>
+                        </div>
+                        <?php
+                        $html = ob_get_contents();
+                        ob_end_clean();
+                        return $html;
+                }
+                else
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VIMEOCOM_ERROR_PLAYBACK_PROBLEM_SEE_ORIGINAL'));
+                        return false;
+                }
+                
+
 	}
         
         /**
