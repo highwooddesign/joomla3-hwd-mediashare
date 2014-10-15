@@ -284,7 +284,7 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 
                 if (!$plugin)
                 {
-                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_BLIPCOM_ERROR_NOT_PUBLISHED'));
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_BLIPTV_ERROR_NOT_PUBLISHED'));
                         return false;
                 }
 
@@ -321,6 +321,11 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
                         ob_end_clean();
                         return $html;
                 }
+                else
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_BLIPTV_ERROR_PLAYBACK_PROBLEM_SEE_ORIGINAL'));
+                        return false;
+                }                
 	}
         
         /**
@@ -362,7 +367,7 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 
                 if (!$plugin)
                 {
-                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_BLIPCOM_ERROR_NOT_PUBLISHED'));
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_BLIPTV_ERROR_NOT_PUBLISHED'));
                         return false;
                 }
 
