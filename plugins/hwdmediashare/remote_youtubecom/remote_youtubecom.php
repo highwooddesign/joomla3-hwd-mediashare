@@ -333,52 +333,58 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 
                 // Lookup the embed code.
                 $embedLookup = $this->parse($item->source, '');
-
-                // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
-                $url = parse_url($item->source);
-                if (isset($url['query'])) parse_str($url['query'], $ytvars);
-                if (isset($ytvars['cc_load_policy'])) $params->set('cc_load_policy', $ytvars['cc_load_policy']);
-                if (isset($ytvars['cc_lang_pref'])) $params->set('cc_lang_pref', $ytvars['cc_lang_pref']);
-                if (isset($ytvars['hl'])) $params->set('hl', $ytvars['hl']);
-
-                if ($params->get('play_local') == 1)
+                if ($embedLookup)
                 {
-                        $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
-                        $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
-                        if (file_exists($pluginPath))
+                        // Pull parameters from the original Youtube url and transfer these to the iframe tag where appropriate
+                        $url = parse_url($item->source);
+                        if (isset($url['query'])) parse_str($url['query'], $ytvars);
+                        if (isset($ytvars['cc_load_policy'])) $params->set('cc_load_policy', $ytvars['cc_load_policy']);
+                        if (isset($ytvars['cc_lang_pref'])) $params->set('cc_lang_pref', $ytvars['cc_lang_pref']);
+                        if (isset($ytvars['hl'])) $params->set('hl', $ytvars['hl']);
+
+                        if ($params->get('play_local') == 1)
                         {
-                                JLoader::register($pluginClass, $pluginPath);
-                                $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
-                                if (method_exists($HWDplayer, 'getYoutubePlayer'))
-                                {                          
-                                        if ($player = $HWDplayer->getYoutubePlayer($item, $embedLookup))
-                                        {
-                                                return $player;
-                                        }
-                                        else
-                                        {
-                                                return $utilities->printNotice($HWDplayer->getError());
+                                $pluginClass = 'plgHwdmediashare'.$config->get('media_player');
+                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('media_player').'/'.$config->get('media_player').'.php';
+                                if (file_exists($pluginPath))
+                                {
+                                        JLoader::register($pluginClass, $pluginPath);
+                                        $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
+                                        if (method_exists($HWDplayer, 'getYoutubePlayer'))
+                                        {                          
+                                                if ($player = $HWDplayer->getYoutubePlayer($item, $embedLookup))
+                                                {
+                                                        return $player;
+                                                }
+                                                else
+                                                {
+                                                        return $utilities->printNotice($HWDplayer->getError(), '', 'info', true);
+                                                }
                                         }
                                 }
                         }
-                }
 
-                $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
-                $this->width = '100%';
-                $this->height = '100%';
-                ob_start();
-                ?>
-                <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
-                  <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
-                  <div class="media-content">
-                    <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://www.youtube.com/embed/<?php echo $embedLookup; ?>?wmode=opaque&amp;autoplay=<?php echo $this->autoplay; ?>&amp;autohide=<?php echo $params->get('autohide',2); ?>&amp;border=<?php echo $params->get('border',0); ?>&amp;cc_load_policy=<?php echo $params->get('cc_load_policy',1); ?>&amp;cc_lang_pref=<?php echo $params->get('cc_lang_pref','en'); ?>&amp;hl=<?php echo $params->get('hl','en'); ?>&amp;color=<?php echo $params->get('color','red'); ?>&amp;color1=<?php echo $params->get('color1'); ?>&amp;color2=<?php echo $params->get('color2'); ?>&amp;controls=<?php echo $params->get('controls',1); ?>&amp;fs=<?php echo $params->get('fs',1); ?>&amp;hd=<?php echo $params->get('hd',0); ?>&amp;iv_load_policy=<?php echo $params->get('iv_load_policy',1); ?>&amp;modestbranding=<?php echo $params->get('modestbranding',1); ?>&amp;rel=<?php echo $params->get('rel',1); ?>&amp;theme=<?php echo $params->get('theme','dark'); ?>" frameborder="0" allowfullscreen></iframe>	
-                  </div>
-                </div>
-                <?php
-                $html = ob_get_contents();
-                ob_end_clean();
-                
-                return $html;
+                        $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+                        $this->width = '100%';
+                        $this->height = '100%';
+                        ob_start();
+                        ?>
+                        <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
+                          <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
+                          <div class="media-content">
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://www.youtube.com/embed/<?php echo $embedLookup; ?>?wmode=opaque&amp;autoplay=<?php echo $this->autoplay; ?>&amp;autohide=<?php echo $params->get('autohide',2); ?>&amp;border=<?php echo $params->get('border',0); ?>&amp;cc_load_policy=<?php echo $params->get('cc_load_policy',1); ?>&amp;cc_lang_pref=<?php echo $params->get('cc_lang_pref','en'); ?>&amp;hl=<?php echo $params->get('hl','en'); ?>&amp;color=<?php echo $params->get('color','red'); ?>&amp;color1=<?php echo $params->get('color1'); ?>&amp;color2=<?php echo $params->get('color2'); ?>&amp;controls=<?php echo $params->get('controls',1); ?>&amp;fs=<?php echo $params->get('fs',1); ?>&amp;hd=<?php echo $params->get('hd',0); ?>&amp;iv_load_policy=<?php echo $params->get('iv_load_policy',1); ?>&amp;modestbranding=<?php echo $params->get('modestbranding',1); ?>&amp;rel=<?php echo $params->get('rel',1); ?>&amp;theme=<?php echo $params->get('theme','dark'); ?>" frameborder="0" allowfullscreen></iframe>	
+                          </div>
+                        </div>
+                        <?php
+                        $html = ob_get_contents();
+                        ob_end_clean();
+                        return $html;
+                }
+                else
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_ERROR_PLAYBACK_PROBLEM_SEE_ORIGINAL'));
+                        return false;
+                }
 	}
         
         /**
