@@ -88,7 +88,7 @@ class hwdMediaShareAudio extends JObject
                                 }
                                 else
                                 {
-                                        return $utilities->printNotice($HWDplayer->getError());
+                                        return $utilities->printNotice($HWDplayer->getError(), '', 'info', true);
                                 }
                         }
                 }
