@@ -67,7 +67,7 @@ class hwdMediaShareImages extends JObject
                 if ($image = hwdMediaShareImages::getJpg($item))
                 {
                         ob_start(); ?>
-                        <img src="<?php echo $image->url; ?>" border="0" alt="<?php echo $utilities->escape($item->title); ?>" id="media-item-image" style="width:100%;max-width:<?php echo ($config->get('mediaitem_width') ? $config->get('mediaitem_width') : $config->get('mediaitem_size')); ?>px;max-height:<?php echo ($config->get('mediaitem_height') ? $config->get('mediaitem_height').'px' : 'auto'); ?>;">
+                        <img src="<?php echo $image->url; ?>" border="0" alt="<?php echo $utilities->escape($item->title); ?>" style="max-width:<?php echo ($config->get('mediaitem_width') ? $config->get('mediaitem_width') : $config->get('mediaitem_size')); ?>px;max-height:<?php echo ($config->get('mediaitem_height') ? $config->get('mediaitem_height').'px' : 'auto'); ?>;">
                         <?php
                         $return = ob_get_contents();
                         ob_end_clean();
@@ -75,7 +75,7 @@ class hwdMediaShareImages extends JObject
                         return $return;
                 }
 
-                return $utilities->printNotice(JText::_('COM_HWDMS_MSG_FAILED_LOAD_IMAGE'));               
+                return $utilities->printNotice(JText::_('COM_HWDMS_MSG_FAILED_LOAD_IMAGE'), '', 'info', true);         
 	}
         
 	/**
