@@ -51,16 +51,17 @@
 				<field 
                                         name="list_order_playlist" 
                                         type="playlistfullordering"
-					label="MOD_MEDIA_FIELD_ITEMORDERING_LABEL"
-					description="MOD_MEDIA_FIELD_ITEMORDERING_DESC"
+					label="MOD_MEDIA_FIELD_ORDERING_LABEL"
+					description="MOD_MEDIA_FIELD_ORDERING_DESC"
 					default="a.created DESC"
 				>                      
 				</field>                                 
 			</fieldset>
                         <fieldset 
                                 name="filtering"
-				label="MOD_MEDIA_FIELD_GROUP_FILTERING_LABEL"
+				label="MOD_MEDIA_FIELDSET_FILTERING_LABEL"
 			>
+				<field name="spacer_authorfiltering" label="MOD_MEDIA_SPACER_AUTHORFILTERING" type="spacer" />
 				<field 
                                         name="author_filtering_type" 
                                         type="radio"
@@ -85,6 +86,7 @@
 				>
 					<option value="">JOPTION_SELECT_AUTHORS</option>
 				</field>
+				<field name="spacer_datefiltering" label="MOD_MEDIA_SPACER_DATEFILTERING" type="spacer" />                             
 				<field 
                                         name="date_filtering" 
                                         type="list" 
@@ -135,23 +137,8 @@
 			</fieldset>
 			<fieldset 
                                 name="display"
-				label="MOD_MEDIA_FIELD_GROUP_DISPLAY_LABEL"
+				label="MOD_MEDIA_FIELDSET_DISPLAY_LABEL"
 			>
-                                <field 
-                                        name="list_item_heading" 
-                                        type="list" 
-                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
-                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
-                                        default=""
-                                >
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                        <option value="1">JH1</option>
-                                        <option value="2">JH2</option>
-                                        <option value="3">JH3</option>
-                                        <option value="4">JH4</option>
-                                        <option value="5">JH5</option>
-                                        <option value="6">JH6</option>
-                                </field>
                                 <field
                                         name="list_columns"
                                         type="list"
@@ -166,45 +153,7 @@
                                         <option value="4">4</option>
                                         <option value="5">5</option>
                                         <option value="6">6</option>
-                                </field>
-                                <field 
-                                        name="list_link_titles" 
-                                        type="radio" 
-                                        label="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
-                                        description="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
-                                        class="btn-group btn-group-yesno"
-                                        default=""
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
-                                <field 
-                                        name="list_link_thumbnails" 
-                                        type="radio" 
-                                        label="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
-                                        description="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
-                                        class="btn-group btn-group-yesno"
-                                        default=""
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
-                                <field
-                                        name="list_title_truncate"
-                                        type="text"
-                                        label="MOD_MEDIA_FIELD_TRUNCATE_TITLE_LABEL"
-                                        description="MOD_MEDIA_FIELD_TRUNCATE_TITLE_DESC"
-                                        default=""
-                                />
-                                <field
-                                        name="list_desc_truncate"
-                                        type="text"
-                                        label="MOD_MEDIA_FIELD_TRUNCATE_DESC_LABEL"
-                                        description="MOD_MEDIA_FIELD_TRUNCATE_DESC_DESC"
-                                        default=""
-                                />
+                                </field>                            
                                 <field
                                         name="list_meta_title"
                                         type="radio"
@@ -240,7 +189,7 @@
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
+                                </field>                                
                                 <field
                                         name="list_meta_description"
                                         type="radio"
@@ -252,7 +201,7 @@
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
+                                </field> 
                                 <field
                                         name="list_meta_author"
                                         type="radio"
@@ -300,7 +249,60 @@
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>                                                                               
+                                <field 
+                                        name="list_item_heading" 
+                                        type="list" 
+                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
+                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
+                                        default=""
+                                >
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                        <option value="1">JH1</option>
+                                        <option value="2">JH2</option>
+                                        <option value="3">JH3</option>
+                                        <option value="4">JH4</option>
+                                        <option value="5">JH5</option>
+                                        <option value="6">JH6</option>
                                 </field>
+                                <field 
+                                        name="list_link_titles" 
+                                        type="radio" 
+                                        label="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
+                                        description="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
+                                        class="btn-group btn-group-yesno"
+                                        default=""
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>
+                                <field 
+                                        name="list_link_thumbnails" 
+                                        type="radio" 
+                                        label="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
+                                        description="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
+                                        class="btn-group btn-group-yesno"
+                                        default=""
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>
+                                <field
+                                        name="list_title_truncate"
+                                        type="text"
+                                        label="MOD_MEDIA_FIELD_TRUNCATE_TITLE_LABEL"
+                                        description="MOD_MEDIA_FIELD_TRUNCATE_TITLE_DESC"
+                                        default=""
+                                />
+                                <field
+                                        name="list_desc_truncate"
+                                        type="text"
+                                        label="MOD_MEDIA_FIELD_TRUNCATE_DESC_LABEL"
+                                        description="MOD_MEDIA_FIELD_TRUNCATE_DESC_DESC"
+                                        default=""
+                                />
 				<field
 					name="show_more_link"
 					type="menuitem"
@@ -336,9 +338,9 @@
 				<field 
                                         name="owncache" 
                                         type="list" 
-                                        default="1"
 					label="COM_MODULES_FIELD_CACHING_LABEL" 
                                         description="COM_MODULES_FIELD_CACHING_DESC" 
+                                        default="1"
                                 >
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
@@ -346,9 +348,9 @@
 				<field 
                                         name="cache_time" 
                                         type="text" 
-                                        default="900"
 					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
                                         description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                        default="900"
                                 />
 			</fieldset>
 		</fields>
