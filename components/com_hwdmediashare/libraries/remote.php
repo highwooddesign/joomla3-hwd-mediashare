@@ -551,6 +551,19 @@ class hwdMediaShareRemote extends JObject
                         }
                 }
                 
+		// Check OpenGraph tag.
+                preg_match('/<meta name="og:image" content="([^"]+)/', $buffer, $match);
+                if (!empty($match[1]))
+                {
+                        if ($thumbnail = $this->clean($match[1], 255))
+                        {
+                                if ($utilities->validateUrl($thumbnail))
+                                {
+                                        return $thumbnail; 
+                                }                            
+                        }
+                }
+                
                 return false;
 	}
         
@@ -620,6 +633,13 @@ class hwdMediaShareRemote extends JObject
                 {
                         return (int)$match[1];
                 }
+
+		// Check item-duration" tag.
+                preg_match('/<meta name="item-duration" content="([^"]+)/', $buffer, $match);
+                if (!empty($match[1]))
+                {
+                        return (int)$match[1];
+                }  
 
                 return false;
 	}
