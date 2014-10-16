@@ -27,33 +27,28 @@
                                         type="category"
                                         extension="com_hwdmediashare"
                                         published=""
-                                        label="MOD_MEDIA_FIELD_PARENT_LABEL"
-                                        description="MOD_MEDIA_FIELD_PARENT_DESC" 
+                                        label="MOD_MEDIA_CATEGORIES_FIELD_PARENT_LABEL"
+                                        description="MOD_MEDIA_CATEGORIES_FIELD_PARENT_DESC" 
                                 >
-                                        <option value="">MOD_MEDIA_OPTION_ROOT_VALUE</option>
+                                        <option value="">MOD_MEDIA_CATEGORIES_OPTION_ROOT_VALUE</option>
 
-                                </field>
-                                <field 
-                                        name="list_item_heading" 
-                                        type="list" 
-                                        label="MOD_MEDIA_TITLE_HEADING_LABEL"
-                                        description="MOD_MEDIA_TITLE_HEADING_DESC"
-                                        default="0"
+                                </field>  
+                                <field
+                                        name="show_media_count"
+                                        type="radio"
+                                        label="MOD_MEDIA_CATEGORIES_FIELD_SHOW_NUMMEDIA_LABEL"
+                                        description="MOD_MEDIA_CATEGORIES_FIELD_SHOW_NUMMEDIA_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
                                 >
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                        <option value="0">MOD_MEDIA_OPTION_PARAGRAPH</option>
-                                        <option value="1">JH1</option>
-                                        <option value="2">JH2</option>
-                                        <option value="3">JH3</option>
-                                        <option value="4">JH4</option>
-                                        <option value="5">JH5</option>
-                                        <option value="6">JH6</option>
-                                </field>                                
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>                                                           
                                 <field
                                         name="show_description"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_DESC"
+                                        label="MOD_MEDIA_CATEGORIES_FIELD_SHOW_DESCRIPTION_LABEL"
+                                        description="MOD_MEDIA_CATEGORIES_FIELD_SHOW_DESCRIPTION_DESC"
                                         class="btn-group btn-group-yesno"
                                         default="0"
                                 >
@@ -63,10 +58,10 @@
                                 <field
                                         name="show_children"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_CHILDREN_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_CHILDREN_DESC"
+                                        label="MOD_MEDIA_CATEGORIES_FIELD_SHOW_CHILDREN_LABEL"
+                                        description="MOD_MEDIA_CATEGORIES_FIELD_SHOW_CHILDREN_DESC"
                                         class="btn-group btn-group-yesno"
-                                        default="0"
+                                        default="1"
                                 >
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
@@ -74,8 +69,8 @@
                                 <field 
                                         name="count" 
                                         type="list"
-                                        label="MOD_MEDIA_FIELD_COUNT_LABEL"
-                                        description="MOD_MEDIA_FIELD_COUNT_DESC"
+                                        label="MOD_MEDIA_CATEGORIES_FIELD_SUBCOUNT_LABEL"
+                                        description="MOD_MEDIA_CATEGORIES_FIELD_SUBCOUNT_DESC"
                                         default="0"
                                 >
                                         <option value="0">JALL</option>
@@ -93,8 +88,8 @@
                                 <field 
                                         name="maxlevel" 
                                         type="list"
-                                        label="MOD_MEDIA_FIELD_MAXLEVEL_LABEL"
-                                        description="MOD_MEDIA_FIELD_MAXLEVEL_DESC"
+                                        label="MOD_MEDIA_CATEGORIES_FIELD_MAXLEVEL_LABEL"
+                                        description="MOD_MEDIA_CATEGORIES_FIELD_MAXLEVEL_DESC"
                                         default="0"
                                 >
                                         <option value="0">JALL</option>
@@ -123,6 +118,19 @@
 					type="text"
 					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
 					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" 
+                                />
+				<field
+					name="list_id"
+					type="text"
+					label="MOD_MEDIA_CATEGORIES_FIELD_LISTID_LABEL"
+					description="MOD_MEDIA_CATEGORIES_FIELD_LISTID_DESC"
+                                />
+				<field
+					name="list_class_sfx"
+					type="text"
+					label="MOD_MEDIA_CATEGORIES_FIELD_LISTCLASS_SFX_LABEL"
+					description="MOD_MEDIA_CATEGORIES_FIELD_LISTCLASS_SFX_DESC"
+                                        default=" nav menu"
                                 />
 				<field
 					name="cache"

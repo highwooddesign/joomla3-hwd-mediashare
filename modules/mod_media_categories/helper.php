@@ -12,31 +12,42 @@ defined('_JEXEC') or die;
 
 class modMediaCategoriesHelper extends JViewLegacy 
 {
+	/**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   array  $module  The module object.
+	 * @param   array  $params  The module parameters.
+         * @return  void
+	 */       
 	public function __construct($module, $params)
 	{
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
-                JLoader::register('JHtmlHwdIcon', JPATH_ROOT.'/components/com_hwdmediashare/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_ROOT.'/components/com_hwdmediashare/helpers/dropdown.php');
+
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/helpers/html');
+                JHtml::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/helpers/html');
                 
-                // Load and register libraries.
-                hwdMediaShareFactory::load('media');
+                // Import HWD libraries.                
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('utilities');
+                hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
+		hwdMediaShareFactory::load('utilities');
 
-                // Load HWD config.
+                // Load HWD config (and force reset).
                 $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
+                $config = $hwdms->getConfig(null, true);
                 
-                // We need to reset this varaible to avoid issues where other modules set this value in earlier position.
-                $config->set('list_default_media_type', '');
-
                 // Merge with module parameters.
                 $config->merge($params);
 
+                // Load lite CSS.
+                $config->set('load_lite_css', 1);
+                
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
                 $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
@@ -52,34 +63,34 @@ class modMediaCategoriesHelper extends JViewLegacy
                 $this->startLevel = reset($this->items)->getParent()->level;
 
                 // Add assets to the head tag.
-                $this->addHead();
+                JHtml::_('hwdhead.core', $config);
 	}
 
-	public function addHead()
-	{
-                JHtml::_('bootstrap.framework');
-		$doc = JFactory::getDocument();
-		$doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/lite.css');
-                if ($this->params->get('load_joomla_css') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
-	}
-
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @access  public
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */           
 	public function getItems()
 	{
-		// Get an instance with a dummy option array to load a complete category node tree.
-                $categories = JCategories::getInstance('hwdMediaShare', array('module' => true));
-		$category = $categories->get($this->params->get('parent', 'root'));
+		$options               = array();
+		$options['countItems'] = $this->params->get('numitems', 1);
+		$options['module']     = true; // Dummy option array to load a complete category node tree.
 
-		if($category != null)
+		$categories = JCategories::getInstance('hwdMediaShare', $options);
+		$category   = $categories->get($this->params->get('parent', 'root'));
+
+		if ($category != null)
 		{
-			$this->items = $category->getChildren();
-			if($this->params->get('count', 0) > 0 && count($items) > $this->params->get('count', 0))
+			$items = $category->getChildren();
+
+			if ($this->params->get('count', 0) > 0 && count($items) > $this->params->get('count', 0))
 			{
-				$this->items = array_slice($items, 0, $this->params->get('count', 0));
+				$items = array_slice($items, 0, $this->params->get('count', 0));
 			}
-                        
-			return $this->items;
+
+			return $items;
 		}
 	}
 }

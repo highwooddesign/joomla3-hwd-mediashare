@@ -10,6 +10,6 @@
 
 defined('_JEXEC') or die;
 ?>
-<ul class="categories-module<?php echo $helper->moduleclass_sfx; ?>">
+<ul id="<?php echo $params->get('list_id'); ?>" class="categories-module<?php echo $params->get('list_class', ' nav menu'); ?>">
 <?php require JModuleHelper::getLayoutPath('mod_media_categories', $params->get('layout', 'default').'_items'); ?>
 </ul>
