@@ -38,13 +38,10 @@ class modMediaAlbumsHelper extends JViewLegacy
                 hwdMediaShareFactory::load('thumbnails');
 		hwdMediaShareFactory::load('utilities');
 
-                // Load HWD config (and force reset).
+                // Load HWD config, merge with module parameters (and force reset).
                 $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig(null, true);
+                $config = $hwdms->getConfig($params, true);
                 
-                // Merge with module parameters.
-                $config->merge($params);
-
                 // Load lite CSS.
                 $config->set('load_lite_css', 1);
                 
@@ -113,7 +110,6 @@ class modMediaAlbumsHelper extends JViewLegacy
                 }
                                 
 		// Additional filters.
-                $model->setState('filter.media_type', $this->params->get('list_default_media_type', ''));                
 		$model->setState('filter.featured', $this->params->get('show_featured', 'show'));
 
                 $this->items = $model->getItems();
