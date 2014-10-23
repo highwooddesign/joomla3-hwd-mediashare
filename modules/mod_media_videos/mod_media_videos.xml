@@ -12,6 +12,7 @@
 	<files>
 		<filename module="mod_media_videos">mod_media_videos.php</filename>
 		<folder>css</folder>
+		<folder>slick</folder>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
