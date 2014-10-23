@@ -102,7 +102,7 @@ class modMediaMediaHelper extends JViewLegacy
 		// Initialise variables.
 		$app = JFactory::getApplication();
                 $doc = JFactory::getDocument();
-                $cache = JFactory::getCache();
+                $cache = JFactory::getCache('com_hwdmediashare');
                 
                 // Force method caching.
                 $cache->setCaching(1);
@@ -232,7 +232,6 @@ class modMediaMediaHelper extends JViewLegacy
 
                         // Filter by viewed album.
                         case 12:
-                                //if (!$album_id = $cache->call(array($this, 'getAlbum'))) return;
                                 if (!$album_id = $this->getAlbum()) return;
                                 $model->setState('filter.album_id', (int) $album_id);
                                 break; 
