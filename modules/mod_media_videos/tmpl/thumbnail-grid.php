@@ -30,33 +30,24 @@ $user = JFactory::getUser();
       $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.media.'.$item->id);
       $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.media.'.$item->id) && ($item->created_user_id == $user->id))); 
       ?>
-      <?php if ($rowcount == 1 || $rowcount == 2) : ?>
-        <div class="row-fluid">
-      <?php endif; ?>
-        <div class="span<?php echo intval($rowspan); ?>">
-          <?php 
-          ob_start();
-          ?>
-      
-      
-
-
-    <!-- Thumbnail Image -->
-    <div class="media-transform">
-      <div class="media-item">
-      <div class="media-aspect<?php echo $helper->params->get('list_thumbnail_aspect'); ?>"></div>        
-      <div class="media-video-module-overlay">
-        <div class="pad">
-          <?php echo JHtml::_('string.truncate', $item->title, 100, false, false); ?> 
-        </div>
-      </div>
-      <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" border="0" alt="<?php echo $helper->escape($item->title); ?>" class="media-thumb<?php echo ($helper->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($helper->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $helper->params->get('list_desc_truncate'), false, false) : '')); ?>" />
-      </div>
-    </div>
-
-
-
-      
+        <?php if ($rowcount == 1 || $rowcount == 2) : ?>
+          <div class="row-fluid">
+        <?php endif; ?>
+          <div class="span<?php echo intval($rowspan); ?>">
+            <?php 
+            ob_start();
+            ?>
+            <div class="media-transform-container">
+              <div class="media-item">
+              <div class="media-aspect<?php echo $helper->params->get('list_thumbnail_aspect'); ?>"></div>        
+              <div class="media-thumbnail-grid-overlay">
+                <div class="media-title">
+                  <?php echo JHtml::_('string.truncate', $item->title, 100, false, false); ?> 
+                </div>
+              </div>
+              <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" border="0" alt="<?php echo $helper->escape($item->title); ?>" class="media-thumb" />
+              </div>
+            </div>
             <?php
             $html = ob_get_contents();
             ob_end_clean();

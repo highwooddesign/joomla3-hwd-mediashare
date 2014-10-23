@@ -2,66 +2,59 @@
 /* CSS Document © Copyright 2011, All rights reserved
    This sheet loads a set of styles for the HWD videos module - thumbnail-grid layout */
 /**********************************************************************************************/
-/* Details Specific Styles */
-
-
-.hwd-container .media-details-view.thumbnail-grid .media-item {
-	-webkit-box-shadow: 1px 1px 0 0 #dfdfdf;
-	box-shadow: 1px 1px 0 0 #dfdfdf;
-	-webkit-transition: all 0.4s ease;
-        -moz-transition: all 0.4s ease;
-        -o-transition: all 0.4s ease;
-        -ms-transition: all 0.4s ease;
-        transition: all 0.4s ease;
+.hwd-container .media-details-view.thumbnail-grid .media-transform-container {
+    overflow:hidden;
 }
-.hwd-container .media-details-view.thumbnail-grid .media-item:hover{
-	-webkit-box-shadow: 1px 1px 0 0 #cccccc;
-	box-shadow: 1px 1px 0 0 #cccccc;
-	transform:scale(1.05);
-        -ms-transform:scale(1.05); /* IE 9 */
-        -moz-transform:scale(1.05); /* Firefox */
-        -webkit-transform:scale(1.05); /* Safari and Chrome */
-        -o-transform:scale(1.05); /* Opera */       
+.hwd-container .media-details-view.thumbnail-grid .media-item {
+    -webkit-box-shadow: 1px 1px 0 0 #dfdfdf;
+    box-shadow: 1px 1px 0 0 #dfdfdf;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    -ms-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+.hwd-container .media-details-view.thumbnail-grid .media-item:hover {
+    -webkit-box-shadow: 1px 1px 0 0 #cccccc;
+    box-shadow: 1px 1px 0 0 #cccccc;
+    transform:scale(1.05);
+    -ms-transform:scale(1.05); /* IE 9 */
+    -moz-transform:scale(1.05); /* Firefox */
+    -webkit-transform:scale(1.05); /* Safari and Chrome */
+    -o-transform:scale(1.05); /* Opera */   
+    background-color:#000;
 }
 .hwd-container .media-details-view.thumbnail-grid .media-item:hover > img.media-thumb {
-    background-color:#000;
-    opacity:0.5;        
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 */
+    filter: alpha(opacity=50); /* IE 5-7 */
+    -moz-opacity: 0.5; /* Netscape */
+    -khtml-opacity: 0.5; /* Safari 1.x */
+    opacity: 0.5; /* Good browsers */
+  
 }
-
-
-.hwd-container .media-details-view.thumbnail-grid .media-transform{
-	overflow:hidden;     
-}
-
-.hwd-container .media-details-view.thumbnail-grid .media-video-module-overlay
-{
-    display: none;
-	position:absolute;
-        top:50%;
-        left:50%;
-	color:#fff;
-        z-index:3;
-        width:80%;
-        height:2em;
-        text-align: center;
-        font-size: 30px;
-        line-height:30px;
-        color:#fff;
-        
-        
-}
-.hwd-container .media-details-view.thumbnail-grid .media-video-module-overlay .pad
-{
-    position: relative; left: -50%; top: -50%;
-    width:100%;height:2em;overflow:hidden;
-}
-
-.hwd-container .media-details-view.thumbnail-grid .media-video-module-overlay .pad:hover
-{
-
-}
-
-.hwd-container .media-details-view.thumbnail-grid .media-item:hover > div.media-video-module-overlay {
+.hwd-container .media-details-view.thumbnail-grid .media-item:hover > .media-thumbnail-grid-overlay {
     display: block;
-    
 } 
+.hwd-container .media-details-view.thumbnail-grid .media-item .media-thumbnail-grid-overlay {
+    display: none;
+    position:absolute;
+    top:50%;
+    left:50%;
+    color:#fff;
+    z-index:3;
+    width:80%;
+    height:2em;
+    text-align: center;
+    font-size: 30px;
+    line-height:30px;
+    color:#fff;        
+}
+.hwd-container .media-details-view.thumbnail-grid .media-item .media-thumbnail-grid-overlay .media-title {
+    position: relative;
+    left: -50%;
+    top: -50%;
+    width:100%;
+    height:2em;
+    overflow:hidden;
+    word-break: break-all;
+}
