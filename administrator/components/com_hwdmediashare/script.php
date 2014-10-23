@@ -475,6 +475,16 @@ class com_hwdMediaShareInstallerScript
                 $folders[] = JPATH_SITE.'/media/com_hwdmediashare/assets/images/icons/48';
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/images/ajax-loader-slideshow.gif';                
 
+                // Modules
+                $files[]   = JPATH_SITE.'/modules/mod_media_images/css/slideshow.css';
+                $folders[] = JPATH_SITE.'/modules/mod_media_images/images';              
+                $folders[] = JPATH_SITE.'/modules/mod_media_images/js';              
+                $files[]   = JPATH_SITE.'/modules/mod_media_media/tmpl/compact-horizontal.php';
+                $files[]   = JPATH_SITE.'/modules/mod_media_media/tmpl/compact-vertical.php';
+                $files[]   = JPATH_SITE.'/modules/mod_media_videos/css/sidebar-simple.css';
+                $files[]   = JPATH_SITE.'/modules/mod_media_videos/tmpl/compact.php';
+                $files[]   = JPATH_SITE.'/modules/mod_media_videos/tmpl/sidebar-simple.php';
+
                 foreach ($files as $file)
 		{
 			if (JFile::exists($file))
