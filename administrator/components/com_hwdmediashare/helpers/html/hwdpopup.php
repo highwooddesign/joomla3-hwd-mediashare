@@ -177,7 +177,10 @@ abstract class JHtmlHwdPopup
       type: 'ajax',
       mainClass: '" . $mainClass . "',
       removalDelay: 0,
-      closeOnBgClick: false
+      closeOnBgClick: false,
+      gallery: {
+        enabled: true
+      }      
     });
   });
 })(jQuery);
@@ -200,6 +203,9 @@ abstract class JHtmlHwdPopup
 	 */
 	public static function link($item, $text, $attribs = array())
 	{
+                // Initialise variables.
+		$app = JFactory::getApplication();
+                
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
@@ -222,6 +228,9 @@ abstract class JHtmlHwdPopup
                 // Set an empty class.
                 $class = '';
 
+                // Get our required view.
+                $view = $app->isAdmin() ? 'editmedia' : 'mediaitem';
+                
                 if(!isset($item->media_type) || $item->media_type == 0)
                 {
                         $item->media_type = hwdMediaShareMedia::loadMediaType($item);
@@ -235,12 +244,12 @@ abstract class JHtmlHwdPopup
                                 switch ($item->media_type) 
                                 {
                                         case 1: // Audio
-                                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                                $url = 'index.php?option=com_hwdmediashare&view=' . $view . '&layout=modal&tmpl=component&id=' . $item->id;
                                                 $class = 'media-popup-ajax-audio';
                                                 JHtml::_('HwdPopup.ajax', 'audio'); 
                                         break;
                                         case 2: // Document
-                                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                                $url = 'index.php?option=com_hwdmediashare&view=' . $view . '&layout=modal&tmpl=component&id=' . $item->id;
                                                 $class = 'media-popup-ajax-document';
                                                 JHtml::_('HwdPopup.ajax', 'document'); 
                                         break;
@@ -253,7 +262,7 @@ abstract class JHtmlHwdPopup
                                                 }
                                         break;
                                         case 4: // Video
-                                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                                $url = 'index.php?option=com_hwdmediashare&view=' . $view . '&layout=modal&tmpl=component&id=' . $item->id;
                                                 $class = 'media-popup-ajax-video';
                                                 JHtml::_('HwdPopup.ajax', 'video'); 
                                         break;
@@ -321,7 +330,7 @@ abstract class JHtmlHwdPopup
                                 }
                                 break;
                         case 3: // Embed code
-                                $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                                $url = 'index.php?option=com_hwdmediashare&view=' . $view . '&layout=modal&tmpl=component&id=' . $item->id;
                                 $class = 'media-popup-ajax-embed';
                                 JHtml::_('HwdPopup.ajax', 'embed'); 
                         break;
@@ -332,7 +341,7 @@ abstract class JHtmlHwdPopup
                 // If we still don't have an URL then we use the default modal display.
                 if (!$url) 
                 {
-                        $url = 'index.php?option=com_hwdmediashare&view=editmedia&layout=modal&tmpl=component&id=' . $item->id;
+                        $url = 'index.php?option=com_hwdmediashare&view=' . $view . '&layout=modal&tmpl=component&id=' . $item->id;
                 }
                 
                 // Define the default class.
