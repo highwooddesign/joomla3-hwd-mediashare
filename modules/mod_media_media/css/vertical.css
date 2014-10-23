@@ -1,0 +1,14 @@
+.hwd-container .media-details-view.vertical h1.contentheading,
+.hwd-container .media-details-view.vertical h2.contentheading,
+.hwd-container .media-details-view.vertical h3.contentheading,
+.hwd-container .media-details-view.vertical h4.contentheading,
+.hwd-container .media-details-view.vertical h5.contentheading,
+.hwd-container .media-details-view.vertical h6.contentheading {
+        font-size:100%;
+	line-height:1;
+	word-wrap: break-word;
+        line-height:22px;
+	font-weight:700;
+        margin:0;
+        padding:0;        
+}

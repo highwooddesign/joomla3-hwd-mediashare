@@ -25,27 +25,26 @@ class modMediaMediaHelper extends JViewLegacy
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
-                JLoader::register('JHtmlHwdIcon', JPATH_ROOT.'/components/com_hwdmediashare/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_ROOT.'/components/com_hwdmediashare/helpers/dropdown.php');
+
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/helpers/html');
+                JHtml::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/helpers/html');
                 
-                // Load and register libraries.
+                // Import HWD libraries.                
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
                 hwdMediaShareFactory::load('thumbnails');
-                hwdMediaShareFactory::load('utilities');
+		hwdMediaShareFactory::load('utilities');
 
-                // Load HWD config.
+                // Load HWD config, merge with module parameters (and force reset).
                 $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                
-                // We need to reset this varaible to avoid issues where other modules set this value in earlier position.
-                $config->set('list_default_media_type', '');
-                
-                // Merge with module parameters.
-                $config->merge($params);
+                $config = $hwdms->getConfig($params, true);
 
+                // Load lite CSS.
+                $config->set('load_lite_css', 1);
+                                
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
                 $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
@@ -70,13 +69,13 @@ class modMediaMediaHelper extends JViewLegacy
 	 */        
 	public function addHead()
 	{
-                JHtml::_('bootstrap.framework');
+                // Initialise variables.
 		$doc = JFactory::getDocument();
+                
+                // Add page assets.
+                JHtml::_('hwdhead.core', $this->params);
 		$doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/lite.css');
-                if ($this->params->get('load_joomla_css') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
-
+                
                 // Extract the layout.
                 list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
 
@@ -109,11 +108,11 @@ class modMediaMediaHelper extends JViewLegacy
                 $cache->setCaching(1);
                 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $this->_model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));               
+                $model = JModelLegacy::getInstance('Media', 'hwdMediaShareModel', array('ignore_request' => true));               
 
                 // Populate state (and set the context).
-                $this->_model->context = 'mod_media_media';
-		$this->_model->populateState();
+                $model->context = 'mod_media_media';
+		$model->populateState();
 
                 // Extract the layout.
                 list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
@@ -122,26 +121,26 @@ class modMediaMediaHelper extends JViewLegacy
                 $climit = (4 * $this->params->get('slidesToScroll')) * 2;
                 
 		// Set the start and limit states.
-		$this->_model->setState('list.start', 0);
-		$this->_model->setState('list.limit', (int) ($layout == 'carousel' ? $climit : $this->params->get('count', 0)));
+		$model->setState('list.start', 0);
+		$model->setState('list.limit', (int) ($layout == 'carousel' ? $climit : $this->params->get('count', 0)));
 
 		// Set the ordering states.
                 $ordering = $this->params->get('list_order_media', 'a.created DESC');
                 $orderingParts = explode(' ', $ordering); 
-                $this->_model->setState('list.ordering', $orderingParts[0]);
-                $this->_model->setState('list.direction', $orderingParts[1]);
+                $model->setState('list.ordering', $orderingParts[0]);
+                $model->setState('list.direction', $orderingParts[1]);
 
                 switch ($this->params->get('display_filter')) 
                 {
                         // Filter by selected album.
                         case 1:
                                 if ((int) $this->params->get('album_id', 0) == 0) return;
-                                $this->_model->setState('filter.album_id', (int) $this->params->get('album_id', 0));
+                                $model->setState('filter.album_id', (int) $this->params->get('album_id', 0));
                                 break; 
                             
                         // Filter by selected or viewed category.
                         case 2:
-                                $this->_model->setState('filter.category_id.include', (bool) $this->params->get('category_filtering_type', 1));
+                                $model->setState('filter.category_id.include', (bool) $this->params->get('category_filtering_type', 1));
                                 $catids = $this->params->get('catid');                                        
 
                                 // Clean empty elements.
@@ -180,26 +179,26 @@ class modMediaMediaHelper extends JViewLegacy
                                                 $catids = array_unique(array_merge($catids, $additional_catids));
                                         }
 
-                                        $this->_model->setState('filter.category_id', $catids);
+                                        $model->setState('filter.category_id', $catids);
                                 }
                                 break;  
                             
                         // Filter by selected group.
                         case 3:
                                 if ((int) $this->params->get('group_id', 0) == 0) return;
-                                $this->_model->setState('filter.group_id', (int) $this->params->get('group_id', 0));
+                                $model->setState('filter.group_id', (int) $this->params->get('group_id', 0));
                                 break; 
 
                         // Filter by selected playlist.
                         case 4:
                                 if ((int) $this->params->get('playlist_id', 0) == 0) return;
-                                $this->_model->setState('filter.playlist_id', (int) $this->params->get('playlist_id', 0));
+                                $model->setState('filter.playlist_id', (int) $this->params->get('playlist_id', 0));
                                 break; 
                             
                         // Filter by selected user.
                         case 5:
-                                $this->_model->setState('filter.author_id', $this->params->get('created_by', ''));
-                                $this->_model->setState('filter.author_id.include', $this->params->get('author_filtering_type', 1));
+                                $model->setState('filter.author_id', $this->params->get('created_by', ''));
+                                $model->setState('filter.author_id.include', $this->params->get('author_filtering_type', 1));
                                 break; 
 
                         // Filter by selected dates.
@@ -207,62 +206,62 @@ class modMediaMediaHelper extends JViewLegacy
                                 $date_filtering = $this->params->get('date_filtering', 'off');
                                 if ($date_filtering !== 'off') 
                                 {
-                                        $this->_model->setState('filter.date_filtering', $date_filtering);
-                                        $this->_model->setState('filter.date_field', $this->params->get('date_field', 'a.created'));
-                                        $this->_model->setState('filter.start_date_range', $this->params->get('start_date_range', '1000-01-01 00:00:00'));
-                                        $this->_model->setState('filter.end_date_range', $this->params->get('end_date_range', '9999-12-31 23:59:59'));
-                                        $this->_model->setState('filter.relative_date', $this->params->get('relative_date', 30));
+                                        $model->setState('filter.date_filtering', $date_filtering);
+                                        $model->setState('filter.date_field', $this->params->get('date_field', 'a.created'));
+                                        $model->setState('filter.start_date_range', $this->params->get('start_date_range', '1000-01-01 00:00:00'));
+                                        $model->setState('filter.end_date_range', $this->params->get('end_date_range', '9999-12-31 23:59:59'));
+                                        $model->setState('filter.relative_date', $this->params->get('relative_date', 30));
                                 }
                                 break; 
                             
                         // Filter by being watched now.
                         case 10:
-                                $this->_model->setState('filter.date_filtering', 'relative');
-                                $this->_model->setState('filter.date_field', 'a.viewed');
-                                $this->_model->setState('filter.relative_date', 1);
-                                $this->_model->setState('list.ordering', 'a.viewed');
-                                $this->_model->setState('list.direction', 'desc');
+                                $model->setState('filter.date_filtering', 'relative');
+                                $model->setState('filter.date_field', 'a.viewed');
+                                $model->setState('filter.relative_date', 1);
+                                $model->setState('list.ordering', 'a.viewed');
+                                $model->setState('list.direction', 'desc');
                                 break; 
 
                         // Filter by relation to current page.
                         case 11:
                                 $title = $doc->getTitle();
-                                $this->_model->setState('filter.search.method', 'match');
-                                $this->_model->setState('filter.search', $title);
+                                $model->setState('filter.search.method', 'match');
+                                $model->setState('filter.search', $title);
                                 break;
 
                         // Filter by viewed album.
                         case 12:
                                 //if (!$album_id = $cache->call(array($this, 'getAlbum'))) return;
                                 if (!$album_id = $this->getAlbum()) return;
-                                $this->_model->setState('filter.album_id', (int) $album_id);
+                                $model->setState('filter.album_id', (int) $album_id);
                                 break; 
                                 
                         // Filter by viewed category.
                         case 13:
                                 if (!$category_id = $this->getCategory()) return;
-                                $this->_model->setState('filter.category_id', (int) $category_id);
+                                $model->setState('filter.category_id', (int) $category_id);
                                 break; 
                                 
                         // Filter by viewed group.
                         case 14:
                                 if (!$group_id = $this->getGroup()) return;
-                                $this->_model->setState('filter.group_id', (int) $group_id);
+                                $model->setState('filter.group_id', (int) $group_id);
                                 break; 
                                 
                         // Filter by viewed playlist.
                         case 15:
                                 if (!$playlist_id = $this->getPlaylist()) return;
-                                $this->_model->setState('filter.playlist_id', (int) $playlist_id);
+                                $model->setState('filter.playlist_id', (int) $playlist_id);
                                 break; 
                                 
                         // Filter by viewed user.
                         case 16:
                                 if (!$user_id = $cache->call(array($this, 'getUser'), $app->input)) return;
-                                $this->_model->setState('filter.author_id', $user_id);
-                                $this->_model->setState('filter.author_id.include', 1);
-                                $this->_model->setState('filter.author_alias', '');
-                                $this->_model->setState('filter.author_alias.include', 1);
+                                $model->setState('filter.author_id', $user_id);
+                                $model->setState('filter.author_id.include', 1);
+                                $model->setState('filter.author_alias', '');
+                                $model->setState('filter.author_alias.include', 1);
                                 break; 
                                 
                         // Filter by linked media of viewed media.
@@ -277,11 +276,11 @@ class modMediaMediaHelper extends JViewLegacy
                 }
 
 		// Additional filters.
-                $this->_model->setState('filter.media_type', $this->params->get('list_default_media_type', ''));                
-		$this->_model->setState('filter.featured', $this->params->get('show_featured', 'show'));
+                $model->setState('filter.media_type', $this->params->get('list_media_type', 0));                
+		$model->setState('filter.featured', $this->params->get('show_featured', 'show'));
 
                 // $this->items = $this->getItems($params);
-                $this->items = $cache->call(array($this->_model, 'getItems'), $this->_model);
+                $this->items = $model->getItems();
 
                 return $this->items;               
 	}
