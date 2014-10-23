@@ -308,7 +308,7 @@
 					type="menuitem"
 					label="MOD_MEDIA_FIELD_SHOWMORELINK_LABEL"
 					description="MOD_MEDIA_FIELD_SHOWMORELINK_DESC"
-					default="show"
+					default="hide"
 				>
                                         <option value="show">JSHOW</option>
                                         <option value="hide">JHIDE</option>
