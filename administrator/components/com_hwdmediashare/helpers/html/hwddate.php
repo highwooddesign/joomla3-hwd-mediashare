@@ -25,6 +25,9 @@ abstract class JHtmlHwdDate
 	 */
 	public static function relative($date, $unit = null, $time = null)
 	{
+		// To return the absolute time, uncomment the following.
+		// return JHtml::_('date', $date);
+                
 		if (is_null($time))
 		{
 			// Get now.
