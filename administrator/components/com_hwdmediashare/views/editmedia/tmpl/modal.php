@@ -19,5 +19,5 @@ $config = $hwdms->getConfig();
 $config->set('mediaitem_size', 900);
 ?>  
 <div id="hwd-container">
-        <?php echo hwdMediaShareMedia::get($this->item); ?>
+  <?php echo hwdMediaShareMedia::get($this->item); ?>
 </div>
