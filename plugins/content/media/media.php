@@ -60,7 +60,7 @@ class plgContentMedia extends JPlugin
                 
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
+                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag());
 
                 // Add assets to the head tag.
                 JHtml::_('hwdhead.core', $config);
