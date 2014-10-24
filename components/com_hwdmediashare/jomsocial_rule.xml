@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE jomsocial>
+<jomsocial>
+     <component>com_hwdmediashare</component>
+     <rules>
+          <rule>
+                <name>Add new media to HWD MediaShare</name>
+                <description>Give points when a registered user adds new media.</description>
+                <action_string>com_hwdmediashare.media.add</action_string>
+                <publish>true</publish>
+                <points>2</points>
+                <access_level>1</access_level>       
+          </rule>
+     </rules>
+</jomsocial>
