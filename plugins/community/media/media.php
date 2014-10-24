@@ -127,9 +127,9 @@ class plgCommunityMedia extends CApplications
                 $toolbar = CFactory::getToolbar();
 
                 // Adding new toolbar options.
-                if ($this->params->get('toolbar_media_menu')) $toolbar->addGroup('HWDMS', JText::_('PLG_COMMUNITY_MENU_MEDIA'), JRoute::_(hwdMediaShareHelperRoute::getMediaRoute()));
-                if ($this->params->get('toolbar_mymedia_menu')) $toolbar->addItem('HWDMS', 'HWDVS_ALL', JText::_('PLG_COMMUNITY_MENU_MYMEDIA'), JRoute::_(hwdMediaShareHelperRoute::getMyMediaRoute()));
-                if ($this->params->get('toolbar_upload_menu')) $toolbar->addItem('HWDMS', 'HWDVS_UPLOAD', JText::_('PLG_COMMUNITY_MENU_UPLOAD'), JRoute::_(hwdMediaShareHelperRoute::getUploadRoute()));
+                if ($this->params->get('toolbar_media_menu')) $toolbar->addGroup('HWDMS', JText::_('PLG_COMMUNITY_MEDIA_MENU_MEDIA'), JRoute::_(hwdMediaShareHelperRoute::getMediaRoute()));
+                if ($this->params->get('toolbar_mymedia_menu')) $toolbar->addItem('HWDMS', 'HWDVS_ALL', JText::_('PLG_COMMUNITY_MEDIA_MENU_MYMEDIA'), JRoute::_(hwdMediaShareHelperRoute::getMyMediaRoute()));
+                if ($this->params->get('toolbar_upload_menu')) $toolbar->addItem('HWDMS', 'HWDVS_UPLOAD', JText::_('PLG_COMMUNITY_MEDIA_MENU_UPLOAD'), JRoute::_(hwdMediaShareHelperRoute::getUploadRoute()));
 	}
 
 	/**
