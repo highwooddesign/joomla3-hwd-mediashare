@@ -18,25 +18,6 @@ defined('_JEXEC') or die;
 class getMediaTab extends cbTabHandler 
 {
 	/**
-	 * Method to generate a profile view tab title.
-         * 
-         * @access  public
-	 * @param   TabTable   $tab       The tab database entry.
-	 * @param   UserTable  $user      The user being displayed.
-	 * @param   int        $ui        1 for front-end, 2 for back-end.
-	 * @param   array      $postdata  The _POST data for saving edited tab content as generated with getEditTab.
-	 * @return  mixed      Either string HTML for tab content, or false if ErrorMSG generated.
-	 */
-	public function getTabTitle($tab, $user, $ui, $postdata)
-	{
-		$plugin	= cbarticlesClass::getPlugin();
-		$viewer	= CBuser::getMyUserDataInstance();
-		$total = cbarticlesModel::getArticlesTotal( null, $viewer, $user, $plugin );
-
-		return parent::getTabTitle( $tab, $user, $ui, $postdata ) . ' <span class="badge badge-default">' . (int) $total . '</span>';
-	}
-        
-	/**
 	 * Generates the HTML to display the user profile tab.
 	 *
          * @access  public
@@ -74,6 +55,9 @@ class getMediaTab extends cbTabHandler
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
                 $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
+                                
+		// Get the user.
+                $this->user = $user;
                 
                 // Get data.
                 $helper = new JViewLegacy;
@@ -85,10 +69,7 @@ class getMediaTab extends cbTabHandler
 
                 // Add assets to the head tag.
                 JHtml::_('hwdhead.core', $config);
-                
-		// Get the user.
-                $this->user = $user;
-                
+
                 ob_start();
                 ?>
 <div id="hwd-container">
