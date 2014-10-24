@@ -485,6 +485,9 @@ class com_hwdMediaShareInstallerScript
                 $files[]   = JPATH_SITE.'/modules/mod_media_videos/tmpl/compact.php';
                 $files[]   = JPATH_SITE.'/modules/mod_media_videos/tmpl/sidebar-simple.php';
 
+                // Plugins
+                $folders[] = JPATH_SITE.'/plugins/community/media/assets';              
+
                 foreach ($files as $file)
 		{
 			if (JFile::exists($file))
