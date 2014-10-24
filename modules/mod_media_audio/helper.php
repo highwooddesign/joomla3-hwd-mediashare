@@ -47,7 +47,7 @@ class modMediaAudioHelper extends JViewLegacy
                                 
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
+                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag());
                 
                 // Get data.
                 $this->module = $module;                
