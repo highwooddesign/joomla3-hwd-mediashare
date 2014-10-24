@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cbinstall version="1.0" type="plugin" group="user">
+	<name>HWD Media</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version> 
+	<description>Display content from HWD MediaShare in Community Builder.</description>
+	<files>
+		<filename plugin="media">media.php</filename>
+		<filename plugin="media">index.html</filename>
+		<filename plugin="media">assets/index.html</filename>
+		<filename plugin="media">assets/tmpl/default.php</filename>
+	</files>
+	<params>
+		<param	
+                        name="enabled"
+                        type="radio" 
+                        label="Enabled"
+                        description="Select Yes to enable media plugin."
+                        default="1" 
+                >
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+	<tabs>
+		<tab 
+                        name="Media" 
+                        description="Display content from HWDMediaShare in Community Builder." 
+                        class="getMediaTab" 
+                        fields="0" 
+                        position="cb_tabmain" 
+                        displaytype="tab"
+                >
+                        <params>
+                                <param name="display_media" type="list" default="1" label="Display media tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>     
+                                <param name="display" type="list" default="modal" label="Media display method" description="">
+                                        <option value="modal">Listing that opens in lightbox</option>
+                                        <option value="link">Listing that links to media page</option>
+                                </param>    
+                                <param name="display_favourites" type="list" default="0" label="Display favourites tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>  
+                                <param name="display_groups" type="list" default="0" label="Display groups tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>      
+                                <param name="display_playlists" type="list" default="0" label="Display playlists tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>      
+                                <param name="display_albums" type="list" default="0" label="Display albums tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>                             
+                                <param name="display_activities" type="list" default="0" label="Display activities tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>                          
+                                <param name="display_subscribers" type="list" default="0" label="Display subscribers tab" description="">
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                </param>    
+                                <param name="@spacer" type="spacer" label="Listing Display Options" default=" " description="" />
+                                <param name="list_item_heading" type="list" default="0" label="Heading level" description="">
+                                        <option value="">Global</option>
+                                        <option value="1">h1</option>
+                                        <option value="2">h2</option>
+                                        <option value="3">h3</option>
+                                        <option value="4">h4</option>
+                                        <option value="5">h5</option>
+                                        <option value="6">h6</option>
+                                </param>  
+                        </params>
+		</tab>
+	</tabs>
+</cbinstall>
