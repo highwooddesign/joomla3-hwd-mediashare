@@ -29,8 +29,8 @@
                                 <field
 					name="layout"
 					type="list"
-					label="PLG_CONTENT_MEDIA_LAYOUT_LABEL"
-					description="PLG_CONTENT_MEDIA_LAYOUT_DESC"                                        
+					label="PLG_CONTENT_MEDIA_FIELD_LAYOUT_LABEL"
+					description="PLG_CONTENT_MEDIA_FIELD_LAYOUT_DESC"                                        
 					default="blog"
                                 >
 					<option value="blog">PLG_CONTENT_MEDIA_OPTION_BLOG</option>
