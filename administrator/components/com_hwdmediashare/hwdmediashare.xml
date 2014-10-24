@@ -32,6 +32,7 @@
                 <filename>controller.php</filename>
                 <filename>hwdmediashare.php</filename>
                 <filename>index.html</filename>
+                <filename>jomsocial_rule.xml</filename>
                 <filename>router.php</filename>
 		<folder>controllers</folder>
                 <folder>helpers</folder>
