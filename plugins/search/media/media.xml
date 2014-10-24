@@ -25,8 +25,8 @@
                                 <field 
                                         name="use_caching" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_USE_CACHING_LABEL"
-					description="PLG_SEARCH_MEDIA_USE_CACHING_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_USE_CACHING_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_USE_CACHING_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -38,19 +38,20 @@
 				<field 
                                         name="search_limit" 
                                         type="text"
-					label="PLG_SEARCH_MEDIA_SEARCHLIMIT_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCHLIMIT_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCHLIMIT_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCHLIMIT_DESC"
 					default="50"
 				/>                                                                                              
 			</fieldset>                    
-			<fieldset name="areas"
-				  label="PLG_SEARCH_MEDIA_FIELD_GROUP_AREAS_LABEL"
+			<fieldset 
+                                name="areas"
+				label="PLG_SEARCH_MEDIA_FIELDSET_AREAS_LABEL"
 			>    
                                 <field 
                                         name="search_media" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_MEDIA_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_MEDIA_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_MEDIA_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_MEDIA_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -62,8 +63,8 @@
                                 <field 
                                         name="search_albums" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_ALBUMS_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALBUMS_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALBUMS_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -75,8 +76,8 @@
                                 <field 
                                         name="search_channels" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_CHANNELS_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_CHANNELS_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_CHANNELS_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_CHANNELS_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -88,8 +89,8 @@
                                 <field 
                                         name="search_groups" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_GROUPS_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_GROUPS_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_GROUPS_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_GROUPS_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -101,8 +102,8 @@
                                 <field 
                                         name="search_playlists" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_PLAYLISTS_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_PLAYLISTS_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_PLAYLISTS_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -114,13 +115,13 @@
 			</fieldset>   
 			<fieldset 
                                 name="fields"
-                                label="PLG_SEARCH_MEDIA_FIELD_GROUP_FIELDS_LABEL"
+                                label="PLG_SEARCH_MEDIA_FIELDSET_FIELDS_LABEL"
 			>    
                                 <field 
                                         name="search_title" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_TITLE_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_TITLE_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_TITLE_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_TITLE_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -132,8 +133,8 @@
                                 <field 
                                         name="search_description" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_DESCRIPTION_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_DESCRIPTION_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_DESCRIPTION_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
@@ -145,8 +146,8 @@
                                 <field 
                                         name="search_alias" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_ALIAS_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_ALIAS_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALIAS_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALIAS_DESC"
                                         class="btn-group btn-group-yesno"
 					default="0"
                                         validate="integer"
@@ -158,8 +159,8 @@
                                 <field 
                                         name="search_metadata" 
                                         type="radio"
-					label="PLG_SEARCH_MEDIA_SEARCH_METADATA_LABEL"
-					description="PLG_SEARCH_MEDIA_SEARCH_METADATA_DESC"
+					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_METADATA_LABEL"
+					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_METADATA_DESC"
                                         class="btn-group btn-group-yesno"
 					default="0"
                                         validate="integer"
