@@ -25,54 +25,53 @@
                                 <field 
 					name="textColor" 
 					type="text"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_TEXTCOLOUR_LABEL" 
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_TEXTCOLOUR_DESC" 
 					default="000000"
-					label="MOD_HWD_FIELD_TEXTCOLOUR_LABEL" 
-					description="MOD_HWD_FIELD_TEXTCOLOUR_DESC" 
                                 />                              
 				<field 
                                         name="backgroundColor" 
                                         type="text"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_BACKGROUNDCOLOUR_LABEL" 
+                                        description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_BACKGROUNDCOLOUR_DESC" 
                                         default="bdbfbf"
-					label="MOD_HWD_FIELD_BACKGROUNDCOLOUR_LABEL" 
-                                        description="MOD_HWD_FIELD_BACKGROUNDCOLOUR_DESC" 
                                 />
                                 <field 
 					name="buttonColor" 
 					type="text"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_BUTTONCOLOR_LABEL" 
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_BUTTONCOLOR_DESC" 
 					default="f63c77"
-					label="MOD_HWD_FIELD_BUTTONCOLOR_LABEL" 
-					description="MOD_HWD_FIELD_BUTTONCOLOR_DESC" 
                                 />  
                                 <field 
 					name="glowColor" 
 					type="text"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GLOWCOLOUR_LABEL" 
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GLOWCOLOUR_DESC" 
 					default="f779a1"
-					label="MOD_HWD_FIELD_GLOWCOLOUR_LABEL" 
-					description="MOD_HWD_FIELD_GLOWCOLOUR_DESC" 
                                 />  
                                 <field 
                                         name="playerSize" 
                                         type="list"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_PLAYERSIZE_LABEL"
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_PLAYERSIZE_DESC"
 					default="240"
-					label="MOD_HWD_FIELD_PLAYERSIZE_LABEL"
-					description="MOD_HWD_FIELD_PLAYERSIZE_DESC"
-                                        filter="integer"
 				>
 				        <option value="200">200</option>
 				        <option value="220">220</option>
 				        <option value="240">240</option>
                                </field>   
 			</fieldset>
-			<fieldset 
+                        <fieldset 
                                 name="genre"
-				label="MOD_HWD_FIELD_GROUP_GENRE_LABEL"
-			>
+				label="MOD_HWD_RADIOTUNA_WIDGET_FIELDSET_GENRE_LABEL"
+                        >
 				<field 
                                         name="styleSelection0" 
                                         type="list"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GENREONE_LABEL"
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GENREONE_DESC"
 					default="96"
-					label="MOD_HWD_FIELD_GENREONE_LABEL"
-					description="MOD_HWD_FIELD_GENREONE_DESC"
 				>
                                         <option value="96">Alternative Rock</option>
 					<option value="116">- Avantgarde</option>
@@ -343,9 +342,9 @@
                                <field 
                                         name="styleSelection1" 
                                         type="list"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GENRETWO_LABEL"
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GENRETWO_DESC"
 					default="100"
-					label="MOD_HWD_FIELD_GENRETWO_LABEL"
-					description="MOD_HWD_FIELD_GENRETWO_DESC"
 				>
                                         <option value="96">Alternative Rock</option>
 					<option value="116">- Avantgarde</option>
@@ -616,8 +615,8 @@
                                 <field 
                                         name="styleSelection2" 
                                         type="list"
-					description="MOD_HWD_FIELD_GENRETHREE_DESC"
-					label="MOD_HWD_FIELD_GENRETHREE_LABEL"
+					label="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GENRETHREE_LABEL"
+					description="MOD_HWD_RADIOTUNA_WIDGET_FIELD_GENRETHREE_DESC"
                                         default="51" 
 				>
                                         <option value="96">Alternative Rock</option>
@@ -915,4 +914,3 @@
 		</fields>
 	</config>
 </extension>
-
