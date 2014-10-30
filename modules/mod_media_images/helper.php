@@ -74,15 +74,20 @@ class modMediaImagesHelper extends JViewLegacy
                 
                 // Add page assets.
                 JHtml::_('hwdhead.core', $this->params);
-                $doc->addStyleSheet(JURI::root() . 'modules/mod_media_media/slick/slick.css');
-                $doc->addScript(JURI::root() . 'modules/mod_media_media/slick/slick.min.js');
-                        
+                
                 // Extract the layout.
                 list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
-
-                if (file_exists(JPATH_ROOT.'/modules/mod_media_images/css/' . $layout . '.css'))
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
                 {
                         $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_images/css/' . $layout . '.css');
+                }
+                
+                if ($layout == 'carousel' || $layout == 'single-fader')
+                {
+                        $doc->addStyleSheet(JURI::root() . 'modules/mod_media_media/slick/slick.css');
+                        $doc->addScript(JURI::root() . 'modules/mod_media_media/slick/slick.min.js');
                 }
 	}
 
