@@ -278,7 +278,6 @@ class modMediaMediaHelper extends JViewLegacy
                 $model->setState('filter.media_type', $this->params->get('list_media_type', 0));                
 		$model->setState('filter.featured', $this->params->get('show_featured', 'show'));
 
-                // $this->items = $this->getItems($params);
                 $this->items = $model->getItems();
 
                 return $this->items;               
