@@ -74,12 +74,12 @@ class modMediaItemHelper extends JViewLegacy
                 
                 // Add page assets.
                 JHtml::_('hwdhead.core', $this->params);
-		$doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/lite.css');
                 
                 // Extract the layout.
                 list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
-
-                if (file_exists(JPATH_ROOT.'/modules/mod_media_item/css/' . $layout . '.css'))
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
                 {
                         $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_item/css/' . $layout . '.css');
                 }
