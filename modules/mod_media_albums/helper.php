@@ -81,7 +81,7 @@ class modMediaAlbumsHelper extends JViewLegacy
                 // Check for layout stylesheet.
                 if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
                 {
-                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_item/css/' . $layout . '.css');
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_albums/css/' . $layout . '.css');
                 }
 	}
 
