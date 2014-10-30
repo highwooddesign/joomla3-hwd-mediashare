@@ -26,16 +26,16 @@
                                         name="url" 
                                         type="text" 
                                         default=""
-					label="MOD_HWD_FIELD_URL_LABEL"
-					description="MOD_HWD_FIELD_URL_DESC"
+					label="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_URL_LABEL"
+					description="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_URL_DESC"
 				>
 				</field>	
                                 <field 
                                         name="autoplay" 
                                         type="list" 
                                         default="false"
-					label="MOD_HWD_FIELD_AUTOPLAY_LABEL"
-					description="MOD_HWD_FIELD_AUTOPLAY_DESC"
+					label="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_AUTOPLAY_LABEL"
+					description="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_AUTOPLAY_DESC"
 				>
 					<option value="true">JYES</option>
 					<option value="false">JNO</option>
@@ -44,8 +44,8 @@
                                         name="artwork" 
                                         type="list" 
                                         default="true"
-					label="MOD_HWD_FIELD_ARTWORK_LABEL"
-					description="MOD_HWD_FIELD_ARTWORK_DESC"
+					label="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_ARTWORK_LABEL"
+					description="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_ARTWORK_DESC"
 				>
 					<option value="true">JYES</option>
 					<option value="false">JNO</option>
@@ -54,8 +54,8 @@
                                         name="colour" 
                                         type="text" 
                                         default=""
-					label="MOD_HWD_FIELD_COLOUR_LABEL"
-					description="MOD_HWD_FIELD_COLOUR_DESC"
+					label="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_COLOUR_LABEL"
+					description="MOD_HWD_SOUNDCLOUD_AUDIOBOX_FIELD_COLOUR_DESC"
 				>
 				</field>                                                
 			</fieldset>
