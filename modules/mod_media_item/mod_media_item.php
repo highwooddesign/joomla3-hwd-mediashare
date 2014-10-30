@@ -14,4 +14,4 @@ JLoader::register('modMediaItemHelper', dirname(__FILE__).'/helper.php');
 
 $helper = new modMediaItemHelper($module, $params);
 
-require JModuleHelper::getLayoutPath('mod_media_item', $params->get('layout', 'default'));
+require JModuleHelper::getLayoutPath('mod_media_item', $params->get('layout', 'blog'));

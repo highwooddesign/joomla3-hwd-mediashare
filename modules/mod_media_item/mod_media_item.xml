@@ -28,75 +28,121 @@
                         <fieldset 
                                 name="basic"
                         >
-				<field 
-                                        name="display" 
-                                        type="mediafullordering"
-                                        label="MOD_MEDIA_FIELD_DISPLAY_LABEL"
-                                        description="MOD_MEDIA_FIELD_DISPLAY_DESC"
-					default="selected"
-				>                      
-                                        <option value="selected">MOD_MEDIA_OPTION_SELECTED_MEDIA_VALUE</option>
-				</field>                                 
+                                <field
+                                        name="display_filter"
+                                        type="groupedlist"
+                                        label="MOD_MEDIA_ITEM_FIELD_DISPLAY_LABEL"
+                                        description="MOD_MEDIA_ITEM_FIELD_DISPLAY_DESC"
+                                        default=""                                       
+                                >
+                                        <option value="100">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_SINGLE_MEDIA</option>
+                                        <option value="">MOD_MEDIA_ITEM_OPTION_FILTER_ALL_MEDIA</option>
+
+                                        <group label="MOD_MEDIA_ITEM_GROUP_LABEL_STATIC_FILTER">
+                                                <option value="1">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_ALBUM</option>
+                                                <option value="2">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_CATEGORIES</option>
+                                                <option value="3">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_GROUP</option>
+                                                <option value="4">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_PLAYLIST</option>
+                                                <option value="5">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_USER</option>
+                                                <option value="6">MOD_MEDIA_ITEM_OPTION_FILTER_SELECTED_DATES</option>
+                                        </group>
+                                        <group label="MOD_MEDIA_ITEM_GROUP_LABEL_DYNAMIC_FILTER">
+                                                <option value="10">MOD_MEDIA_ITEM_OPTION_FILTER_BEING_WATCHED</option>
+                                                <option value="11">MOD_MEDIA_ITEM_OPTION_FILTER_RELATED_CURRENT</option>
+                                                <option value="12">MOD_MEDIA_ITEM_OPTION_FILTER_VIEWED_ALBUM</option>
+                                                <option value="13">MOD_MEDIA_ITEM_OPTION_FILTER_VIEWED_CATEGORY</option>
+                                                <option value="14">MOD_MEDIA_ITEM_OPTION_FILTER_VIEWED_GROUP</option>
+                                                <option value="15">MOD_MEDIA_ITEM_OPTION_FILTER_VIEWED_PLAYLIST</option>
+                                                <option value="16">MOD_MEDIA_ITEM_OPTION_FILTER_VIEWED_CHANNEL</option>
+                                                <option value="17">MOD_MEDIA_ITEM_OPTION_FILTER_MEDIA_LINKED</option>
+                                                <option value="18">MOD_MEDIA_ITEM_OPTION_FILTER_MEDIA_RESPONSES</option>
+                                        </group>
+                                </field>  
                                 <field 
                                         name="media_id" 
                                         type="mediaitem" 
-                                        default="show"
-					label="MOD_MEDIA_FIELD_MEDIAID_LABEL"
-					description="MOD_MEDIA_FIELD_MEDIAID_DESC"
-				/>                                                                                               
-			</fieldset>
-			<fieldset 
-                                name="filtering"
-				label="MOD_MEDIA_FIELD_GROUP_FILTERING_LABEL"
-			>
+					label="MOD_MEDIA_ITEM_FIELD_MEDIAID_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_MEDIAID_DESC"
+                                        default=""
+				/>                           
 				<field 
                                         name="show_featured" 
                                         type="list" 
-					label="MOD_MEDIA_FIELD_SHOWFEATURED_LABEL"
-					description="MOD_MEDIA_FIELD_SHOWFEATURED_DESC"
+					label="MOD_MEDIA_ITEM_FIELD_SHOWFEATURED_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_SHOWFEATURED_DESC"
                                         default="show"
 				>
 					<option value="show">JSHOW</option>
 					<option value="hide">JHIDE</option>
-					<option value="only">MOD_MEDIA_OPTION_ONLYFEATURED_VALUE</option>
+					<option value="only">MOD_MEDIA_ITEM_OPTION_ONLYFEATURED_VALUE</option>
 				</field>
                                 <field
-                                        name="list_default_media_type"
+                                        name="list_media_type"
                                         type="list"
-                                        label="MOD_MEDIA_FIELD_MEDIA_TYPE_LABEL"
-                                        description="MOD_MEDIA_FIELD_MEDIA_TYPE_DESC"
+                                        label="MOD_MEDIA_ITEM_FIELD_MEDIA_TYPE_LABEL"
+                                        description="MOD_MEDIA_ITEM_FIELD_MEDIA_TYPE_DESC"
                                         default=""                                       
                                 >
-                                        <option value="">MOD_MEDIA_OPTION_ANY_VALUE</option>
-                                        <option value="1">MOD_MEDIA_OPTION_AUDIO_VALUE</option>
-                                        <option value="2">MOD_MEDIA_OPTION_DOCUMENT_VALUE</option>
-                                        <option value="3">MOD_MEDIA_OPTION_IMAGE_VALUE</option>
-                                        <option value="4">MOD_MEDIA_OPTION_VIDEO_VALUE</option>
-                                </field>  
+                                        <option value="0">MOD_MEDIA_ITEM_OPTION_ANY_VALUE</option>
+                                        <option value="1">MOD_MEDIA_ITEM_OPTION_AUDIO_VALUE</option>
+                                        <option value="2">MOD_MEDIA_ITEM_OPTION_DOCUMENT_VALUE</option>
+                                        <option value="3">MOD_MEDIA_ITEM_OPTION_IMAGE_VALUE</option>
+                                        <option value="4">MOD_MEDIA_ITEM_OPTION_VIDEO_VALUE</option>
+                                </field> 
 				<field 
-                                        name="show_featured" 
-                                        type="list" 
-                                        default="show"
-					label="MOD_MEDIA_FIELD_SHOWFEATURED_LABEL"
-					description="MOD_MEDIA_FIELD_SHOWFEATURED_DESC"
-				>
-					<option value="show">JSHOW</option>
-					<option value="hide">JHIDE</option>
-					<option value="only">MOD_MEDIA_OPTION_ONLYFEATURED_VALUE</option>
-				</field>
-				<field name="spacer_categoryfiltering" label="MOD_MEDIA_SPACER_CATEGORYFILTERING" type="spacer" hr="true" />
+                                        name="list_order_media" 
+                                        type="mediafullordering"
+					label="MOD_MEDIA_ITEM_FIELD_ORDERING_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_ORDERING_DESC"
+					default="a.created DESC"
+				>                      
+				</field>                                
+                                <field
+                                        name="media_autoplay"
+                                        type="radio"
+                                        label="MOD_MEDIA_ITEM_FIELD_MEDIA_AUTOPLAY_LABEL"
+                                        description="MOD_MEDIA_ITEM_FIELD_MEDIA_AUTOPLAY_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default=""                                        
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                        <option value="">JGLOBAL_USE_GLOBAL</option>
+                                </field>                                                                 
+				<field 
+                                        name="layout" 
+                                        type="modulelayout"
+					label="MOD_MEDIA_ITEM_FIELD_LAYOUT_LABEL" 
+                                        description="MOD_MEDIA_ITEM_FIELD_LAYOUT_DESC" 
+                                        default="_:blog"
+                                />                                                                                                          
+			</fieldset>
+                        <fieldset 
+                                name="filtering"
+				label="MOD_MEDIA_ITEM_FIELDSET_FILTERING_LABEL"
+			>
+				<field name="spacer_albumfiltering" label="MOD_MEDIA_ITEM_SPACER_ALBUMFILTERING" type="spacer" />
+				<field 
+                                        name="album_id" 
+                                        type="album"
+					label="MOD_MEDIA_ITEM_FIELD_ALBUM_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_ALBUM_DESC"
+                                        validate="integer"
+                                        filter="integer"    
+				/>
+				<field name="spacer_categoryfiltering" label="MOD_MEDIA_ITEM_SPACER_CATEGORYFILTERING" type="spacer" />
 				<field 
                                         name="category_filtering_type" 
                                         type="radio"
-					label="MOD_MEDIA_FIELD_CATFILTERINGTYPE_LABEL"
-					description="MOD_MEDIA_FIELD_CATFILTERINGTYPE_DESC"
+					label="MOD_MEDIA_ITEM_FIELD_CATFILTERINGTYPE_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_CATFILTERINGTYPE_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
                                         filter="integer"    
 				>
-					<option value="1">MOD_MEDIA_OPTION_INCLUSIVE_VALUE</option>
-					<option value="0">MOD_MEDIA_OPTION_EXCLUSIVE_VALUE</option>
+					<option value="1">MOD_MEDIA_ITEM_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_ITEM_OPTION_EXCLUSIVE_VALUE</option>
 				</field>
 				<field 
                                         name="catid" 
@@ -105,120 +151,126 @@
 					multiple="true" 
                                         size="5"
 					label="JCATEGORY"
-					description="MOD_MEDIA_FIELD_CATEGORY_DESC"
+					description="MOD_MEDIA_ITEM_FIELD_CATEGORY_DESC"
 				>
 					<option value="">JOPTION_ALL_CATEGORIES</option>
 				</field>
 				<field 
                                         name="show_child_category_articles" 
                                         type="radio"
-					label="MOD_MEDIA_FIELD_SHOWCHILDCATEGORYITEMS_LABEL"
-					description="MOD_MEDIA_FIELD_SHOWCHILDCATEGORYITEMS_DESC"
+					label="MOD_MEDIA_ITEM_FIELD_SHOWCHILDCATEGORYMEDIA_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_SHOWCHILDCATEGORYMEDIA_DESC"
                                         class="btn-group btn-group-yesno"
 					default="0"
                                         validate="integer"
                                         filter="integer"    
 				>
-					<option value="1">MOD_MEDIA_OPTION_INCLUDE_VALUE</option>
-					<option value="0">MOD_MEDIA_OPTION_EXCLUDE_VALUE</option>
+					<option value="1">MOD_MEDIA_ITEM_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_ITEM_OPTION_EXCLUSIVE_VALUE</option>
 				</field>
 				<field 
                                         name="levels" 
                                         type="text"
-					label="MOD_MEDIA_FIELD_CATDEPTH_LABEL"
-					description="MOD_MEDIA_FIELD_CATDEPTH_DESC"
+					label="MOD_MEDIA_ITEM_FIELD_CATDEPTH_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_CATDEPTH_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
                                         validate="integer"
                                         filter="integer"    
                                 />
-				<field name="spacer_authorfiltering" label="MOD_MEDIA_SPACER_AUTHORFILTERING" type="spacer" hr="true" />
+				<field name="spacer_groupfiltering" label="MOD_MEDIA_ITEM_SPACER_GROUPFILTERING" type="spacer" />
+				<field 
+                                        name="group_id" 
+                                        type="group"
+					label="MOD_MEDIA_ITEM_FIELD_GROUP_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_GROUP_DESC"
+                                        validate="integer"
+                                        filter="integer"    
+				/>
+				<field name="spacer_playlistfiltering" label="MOD_MEDIA_ITEM_SPACER_PLAYLISTFILTERING" type="spacer" />
+				<field 
+                                        name="playlist_id" 
+                                        type="playlist"
+					label="MOD_MEDIA_ITEM_FIELD_PLAYLIST_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_PLAYLIST_DESC"
+                                        validate="integer"
+                                        filter="integer"    
+				/>                                
+				<field name="spacer_authorfiltering" label="MOD_MEDIA_ITEM_SPACER_AUTHORFILTERING" type="spacer" />
 				<field 
                                         name="author_filtering_type" 
                                         type="radio"
-					label="MOD_MEDIA_FIELD_AUTHORFILTERING_LABEL"
-					description="MOD_MEDIA_FIELD_AUTHORFILTERING_DESC"
+					label="MOD_MEDIA_ITEM_FIELD_AUTHORFILTERING_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_AUTHORFILTERING_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
 				>
-					<option value="1">MOD_MEDIA_OPTION_INCLUSIVE_VALUE</option>
-					<option value="0">MOD_MEDIA_OPTION_EXCLUSIVE_VALUE</option>
+					<option value="1">MOD_MEDIA_ITEM_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_ITEM_OPTION_EXCLUSIVE_VALUE</option>
 				</field>
 				<field 
                                         name="created_by" 
                                         type="sql"
 					multiple="true" 
                                         size="5"
-					label="MOD_MEDIA_FIELD_AUTHOR_LABEL"
-					description="MOD_MEDIA_FIELD_AUTHOR_DESC"
+					label="MOD_MEDIA_ITEM_FIELD_AUTHOR_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_AUTHOR_DESC"
 					query="select id, name, username from #__users where id IN (select distinct(created_user_id) from #__hwdms_albums) order by name ASC"
 					key_field="id" 
                                         value_field="name"
 				>
 					<option value="">JOPTION_SELECT_AUTHORS</option>
 				</field>
-			</fieldset>
-			<fieldset 
-                                name="display"
-				label="MOD_MEDIA_FIELD_GROUP_DISPLAY_LABEL"
-			>
-                                <field
-                                        name="mediaitem_size"
-                                        type="text"
-                                        label="MOD_MEDIA_FIELD_MAXIMUM_MEDIA_SIZE_LABEL"
-                                        description="MOD_MEDIA_FIELD_MAXIMUM_MEDIA_SIZE_DESC"
-                                        class="inputbox"
-                                        default="500"
-                                        filter="integer"
-                                />
-                                <field
-                                        name="media_autoplay"
-                                        type="radio"
-                                        label="MOD_MEDIA_FIELD_MEDIA_AUTOPLAY_LABEL"
-                                        description="MOD_MEDIA_FIELD_MEDIA_AUTOPLAY_DESC"
-                                        class="btn-group btn-group-yesno"
-                                        default=""                                        
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field> 
-                                <field
-                                        name="item_meta_title"
-                                        type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_TITLE_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_TITLE_DESC"
-                                        class="btn-group btn-group-yesno"
-                                        default=""
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                </field>
-                                <field 
-                                        name="item_meta_heading" 
+				<field name="spacer_datefiltering" label="MOD_MEDIA_ITEM_SPACER_DATEFILTERING" type="spacer" />                             
+				<field 
+                                        name="date_filtering" 
                                         type="list" 
-                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
-                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
-                                        default=""
-                                >
-                                        <option value="">JGLOBAL_USE_GLOBAL</option>
-                                        <option value="1">JH1</option>
-                                        <option value="2">JH2</option>
-                                        <option value="3">JH3</option>
-                                        <option value="4">JH4</option>
-                                        <option value="5">JH5</option>
-                                        <option value="6">JH6</option>
-                                </field> 
+					label="MOD_MEDIA_ITEM_FIELD_DATEFILTERING_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_DATEFILTERING_DESC"
+                                        default="off"
+				>
+					<option value="off">MOD_MEDIA_ITEM_OPTION_OFF_VALUE</option>
+					<option value="range">MOD_MEDIA_ITEM_OPTION_DATERANGE_VALUE</option>
+					<option value="relative">MOD_MEDIA_ITEM_OPTION_RELATIVEDAY_VALUE</option>
+				</field>
+				<field 
+                                        name="date_field" 
+                                        type="list" 
+					label="MOD_MEDIA_ITEM_FIELD_DATERANGEFIELD_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_DATERANGEFIELD_DESC"
+                                        default="a.created"
+				>
+					<option value="a.created">MOD_MEDIA_ITEM_OPTION_CREATED_VALUE</option>
+					<option value="a.modified">MOD_MEDIA_ITEM_OPTION_MODIFIED_VALUE</option>
+					<option value="a.publish_up">MOD_MEDIA_ITEM_OPTION_STARTPUBLISHING_VALUE</option>
+				</field>
+				<field 
+                                        name="start_date_range" 
+                                        type="calendar"
+					format="%Y-%m-%d %H:%M:%S"
+					label="MOD_MEDIA_ITEM_FIELD_STARTDATE_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_STARTDATE_DESC"
+					size="22"
+					filter="user_utc" 
+                                />
+				<field 
+                                        name="end_date_range" 
+                                        type="calendar"
+					format="%Y-%m-%d %H:%M:%S"
+					label="MOD_MEDIA_ITEM_FIELD_ENDDATE_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_ENDDATE_DESC"
+					size="22"
+					filter="user_utc" 
+                                />
+				<field 
+                                        name="relative_date" 
+                                        type="text" 
+					label="MOD_MEDIA_ITEM_FIELD_RELATIVEDATE_LABEL"
+					description="MOD_MEDIA_ITEM_FIELD_RELATIVEDATE_DESC" 
+                                        default="30"
+                                />
 			</fieldset>
 			<fieldset name="advanced">
-				<field 
-                                        name="layout" 
-                                        type="modulelayout"
-					label="JFIELD_ALT_LAYOUT_LABEL" 
-                                        description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
-                                        default="_:default"                                        
-                                />
 				<field 
                                         name="moduleclass_sfx" 
                                         type="text"
@@ -228,9 +280,9 @@
 				<field 
                                         name="owncache" 
                                         type="list" 
-                                        default="1"
 					label="COM_MODULES_FIELD_CACHING_LABEL" 
                                         description="COM_MODULES_FIELD_CACHING_DESC" 
+                                        default="1"
                                 >
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
@@ -238,9 +290,9 @@
 				<field 
                                         name="cache_time" 
                                         type="text" 
-                                        default="900"
 					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
                                         description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                        default="900"
                                 />
 			</fieldset>
 		</fields>

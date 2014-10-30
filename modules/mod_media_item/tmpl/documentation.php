@@ -10,14 +10,14 @@
 
 defined('_JEXEC') or die;
 ?>
-<div class="hwd-module">
+<div class="hwd-container">
   <div class="media-details-view">
     <?php if (empty($helper->item)): ?>
       <div class="alert alert-no-items">
         <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
       </div>
     <?php else: ?>
-      <?php echo JLayoutHelper::render('mediaitem_display', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+      <?php echo JLayoutHelper::render('mediaitem_layout_documentation', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
     <?php endif; ?>
   </div> 
 </div>
