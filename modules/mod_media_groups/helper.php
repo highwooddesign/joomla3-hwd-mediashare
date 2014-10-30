@@ -58,7 +58,31 @@ class modMediaGroupsHelper extends JViewLegacy
                 $this->return = base64_encode(JFactory::getURI()->toString());
 
                 // Add assets to the head tag.
-                JHtml::_('hwdhead.core', $config);
+                $this->addHead();
+	}
+
+	/**
+	 * Method to add page assets to the <head> tags.
+	 *
+	 * @access  public
+         * @return  void
+	 */        
+	public function addHead()
+	{
+                // Initialise variables.
+		$doc = JFactory::getDocument();
+                
+                // Add page assets.
+                JHtml::_('hwdhead.core', $this->params);
+                
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
+                {
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_groups/css/' . $layout . '.css');
+                }
 	}
 
 	/**
