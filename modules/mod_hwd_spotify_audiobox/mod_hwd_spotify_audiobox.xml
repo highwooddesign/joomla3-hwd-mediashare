@@ -27,40 +27,40 @@
 				<field 
                                         name="url" 
                                         type="text" 
+					label="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_URI_LABEL"
+					description="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_URI_DESC"
                                         default=""
-					label="MOD_HWD_FIELD_URI_LABEL"
-					description="MOD_HWD_FIELD_URI_DESC"
 				>
 				</field>	
                                 <field 
                                         name="theme" 
                                         type="list" 
+					label="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_THEME_LABEL"
+					description="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_THEME_DESC"
                                         default="black"
-					label="MOD_HWD_FIELD_THEME_LABEL"
-					description="MOD_HWD_FIELD_THEME_DESC"
 				>
-					<option value="dark">MOD_HWD_DARK</option>
-					<option value="light">MOD_HWD_LIGHT</option>
+					<option value="dark">MOD_HWD_SPOTIFY_AUDIOBOX_OPTION_DARK</option>
+					<option value="light">MOD_HWD_SPOTIFY_AUDIOBOX_OPTION_LIGHT</option>
 				</field>
                                 <field 
                                         name="view" 
                                         type="list" 
+					label="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_VIEW_LABEL"
+					description="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_VIEW_DESC"
                                         default="list"
-					label="MOD_HWD_FIELD_VIEW_LABEL"
-					description="MOD_HWD_FIELD_VIEW_DESC"
 				>
-					<option value="list">MOD_HWD_LIST</option>
-					<option value="coverart">MOD_HWD_ART</option>
+					<option value="list">MOD_HWD_SPOTIFY_AUDIOBOX_OPTION_LIST</option>
+					<option value="coverart">MOD_HWD_SPOTIFY_AUDIOBOX_OPTION_ART</option>
 				</field>   
                                 <field 
                                         name="player" 
                                         type="list" 
+					label="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_PLAYER_LABEL"
+					description="MOD_HWD_SPOTIFY_AUDIOBOX_FIELD_PLAYER_DESC"
                                         default="large"
-					label="MOD_HWD_FIELD_PLAYER_LABEL"
-					description="MOD_HWD_FIELD_PLAYER_DESC"
 				>    
-                                        <option value="large">MOD_HWD_LARGE</option>
-					<option value="compact">MOD_HWD_COMPACT</option> 
+                                        <option value="large">MOD_HWD_SPOTIFY_AUDIOBOX_OPTION_LARGE</option>
+					<option value="compact">MOD_HWD_SPOTIFY_AUDIOBOX_OPTION_COMPACT</option> 
                                 </field>
                         </fieldset>
 			<fieldset name="advanced">
