@@ -15,20 +15,18 @@ class modHwdYoutubeVideoBoxHelper extends JObject
         /**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $module     The module object.
-	 * @param       array       $params     The module parameters object.
-         * @return      void
+	 * @access  public
+	 * @param   array   $module  The module object.
+	 * @param   array   $params  The module parameters object.
+         * @return  void
 	 */       
 	public function __construct($module, $params)
 	{                
                 // Load caching.
-                $cache = JFactory::getCache();
+                $cache = JFactory::getCache('mod_hwd_youtube_videobox');
                 $cache->setCaching(1);
 
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-
-                // Get data.
+                // Get data.              
                 $this->module = $module;                
                 $this->params = $params;                
                 $this->items = $cache->call(array($this, 'getItems'), $params);
@@ -40,8 +38,8 @@ class modHwdYoutubeVideoBoxHelper extends JObject
         /**
 	 * Method to add assets to the head.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */         
 	public function addHead()
 	{           
@@ -52,13 +50,13 @@ class modHwdYoutubeVideoBoxHelper extends JObject
                 $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_youtube_videobox/css/magnific-popup.css');
                 $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_youtube_videobox/css/strapped.3.hwd.css');
                 
-                // Load layout CSS file.
-                if ($layout = explode(":", $this->params->get('layout')))
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
                 {
-                        if (isset($layout[1]) && file_exists(dirname(__FILE__) . '/css/' . $layout[1] . '.css'))
-                        {
-                                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_youtube_videobox/css/' . $layout[1] . '.css');                
-                        }
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_hwd_youtube_videobox/css/' . $layout . '.css');
                 }
 
                 $doc->addScriptDeclaration("
@@ -108,8 +106,8 @@ jQuery.noConflict();
         /**
 	 * Method to get a list of media items.
 	 *
-	 * @access	public
-         * @return      object      A list of media items.
+	 * @access  public
+         * @return  object  A list of media items.
 	 */          
 	public function getItems($dummy)
 	{
@@ -131,7 +129,7 @@ jQuery.noConflict();
                                 $obj->title             = ($video->getElementsByTagName('title')->item(0) ? $video->getElementsByTagName('title')->item(0)->nodeValue : '');
                                 $obj->id                = ($video->getElementsByTagNameNS($yt, 'videoid')->item(0) ? $video->getElementsByTagNameNS($yt, 'videoid')->item(0)->nodeValue : '');
                                 $obj->thumbnail         = ($video->getElementsByTagNameNS($media, 'thumbnail')->item(0) ? $video->getElementsByTagNameNS($media, 'thumbnail')->item(2)->getAttribute('url') : '');
-                                $obj->description	= ($video->getElementsByTagName('description')->item(0) ? JHtmlString::truncate($video->getElementsByTagName('description')->item(0)->nodeValue, 300, true, false) : '');
+                                $obj->description	= ($video->getElementsByTagName('description')->item(0) ? JHtml::_('string.truncate', $video->getElementsByTagName('description')->item(0)->nodeValue, 300, true, false) : '');
                                 $obj->duration          = ($video->getElementsByTagNameNS($yt, 'duration')->item(0) ? $video->getElementsByTagNameNS($yt, 'duration')->item(0)->getAttribute('seconds') : '');
                                 $obj->views             = ($video->getElementsByTagNameNS($yt, 'statistics')->item(0) ? $video->getElementsByTagNameNS($yt, 'statistics')->item(0)->getAttribute('viewCount') : '');
                                 $obj->category          = ($video->getElementsByTagNameNS($media, 'category')->item(0) ? $video->getElementsByTagNameNS($media, 'category')->item(0)->nodeValue : '');
@@ -146,8 +144,8 @@ jQuery.noConflict();
         /**
 	 * Method to get the feed URI.
 	 *
-	 * @access	public
-         * @return      string      The feed URI
+	 * @access  public
+         * @return  string  The feed URI
 	 */         
 	public function getFeed()
 	{  
@@ -209,9 +207,9 @@ jQuery.noConflict();
         /**
 	 * Method to convert an integer number of seconds into a timestamp.
 	 *
-	 * @access	public
-         * @param       integer     $seconds    The number of seconds.
-         * @return      void
+	 * @access  public
+         * @param   integer  $seconds  The number of seconds.
+         * @return  void
 	 */         
         public function secondsToTime($seconds)
         {
