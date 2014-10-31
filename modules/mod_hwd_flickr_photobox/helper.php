@@ -1,36 +1,63 @@
 <?php
 /**
- * @package    HWD.MediaApps
- * @copyright  Copyright (C) 2013 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
+ * @package     Joomla.site
+ * @subpackage  Module.mod_hwd_flickr_photobox
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
 class modHwdFlickrPhotoBoxHelper extends JObject
 {
-	public $module 		= null;
-	public $params 		= null;
-	public $url		= null;
-
+        /**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   array   $module  The module object.
+	 * @param   array   $params  The module parameters object.
+         * @return  void
+	 */       
 	public function __construct($module, $params)
 	{                
-                $this->set('module', $module);
-                $this->set('params', $params);
-		$this->set('url', JURI::root().'modules/mod_hwd_flickr_photobox/');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');                
+                // Load caching.
+                $cache = JFactory::getCache('mod_hwd_youtube_videobox');
+                $cache->setCaching(1);
+
+                // Get data.              
+                $this->module = $module;                
+                $this->params = $params;                
+                $this->items = $cache->call(array($this, 'getItems'), $params);
+
+                // Add assets to the head tag.
+                $this->addHead();  
 	}
 
+        /**
+	 * Method to add assets to the head.
+	 *
+	 * @access  public
+         * @return  void
+	 */         
 	public function addHead()
-	{
+	{           
                 JHtml::_('bootstrap.tooltip');
                 $doc = JFactory::getDocument();
-                $doc->addScript(JURI::root().'modules/mod_hwd_flickr_photobox/js/jquery.magnific-popup.js');
-                $doc->addScript(JURI::root().'modules/mod_hwd_flickr_photobox/js/aspect.js');
-                $doc->addStylesheet(JURI::root().'modules/mod_hwd_flickr_photobox/css/magnific-popup.css');
-                $doc->addStylesheet(JURI::root().'modules/mod_hwd_flickr_photobox/css/strapped.3.hwd.css'); 
+                $doc->addScript(JURI::root() . 'modules/mod_hwd_flickr_photobox/js/jquery.magnific-popup.js');
+                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_flickr_photobox/css/magnific-popup.css');
+                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_flickr_photobox/css/strapped.3.hwd.css');
+                
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
+                {
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_hwd_flickr_photobox/css/' . $layout . '.css');
+                }
+
                 $doc->addScriptDeclaration("
 jQuery.noConflict();
 (function( $ ) {
@@ -38,12 +65,14 @@ jQuery.noConflict();
     $(document).ready(function() {
       $('.popup-title-" . $this->module->id . "').magnificPopup({ 
         type: 'image',
+        mainClass: 'hwd-flickr-popup',
         gallery: {
           enabled: true
         }
       }); 
       $('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
         type: 'image',
+        mainClass: 'hwd-flickr-popup',
         gallery: {
           enabled: true
         }
@@ -53,6 +82,12 @@ jQuery.noConflict();
 })(jQuery);");                
 	}
 
+        /**
+	 * Method to get a list of media items.
+	 *
+	 * @access  public
+         * @return  object  A list of media items.
+	 */          
 	public function getItems()
 	{
                 $feed = $this->getFeed();
@@ -60,7 +95,7 @@ jQuery.noConflict();
                 $media = 'http://search.yahoo.com/mrss/';
                 $flickr = 'urn:flickr:user';
                 
-                // Only define the correct number of items
+                // Only define the correct number of items.
                 $counter = 0;
                 $items = array();
 
@@ -108,13 +143,14 @@ jQuery.noConflict();
 	}
 
         /**
-	 * Method to add a file to the database
+	 * Method to load the correct feed based on configurtion.
          * 
-	 * @since   0.1
+         * @access  public
+         * @return  string  The URL of the feed.
 	 **/
 	public function getFeed()
 	{  
-                // Set a default feed
+                // Set a default feed.
                 $feed = 'http://api.flickr.com/services/feeds/photos_public.gne';                                  
   
                 switch ($this->get('params')->get('source'))
@@ -138,25 +174,38 @@ jQuery.noConflict();
                         if ($this->get('params')->get('flickrset')) return 'http://api.flickr.com/services/feeds/photoset.gne?set='.$this->get('params')->get('flickrset').'&nsid='.$this->nameToId($this->get('params')->get('flickruser'));
                         break;    
                 }
+                
                 return $feed;
 	}
         
         /**
-         * Get the ID based on the name
-         */
-        function nameToId($name)
+	 * Method to convert a Flickr username to a Flickr user ID.
+         * 
+         * @access  public
+         * @param   string  $name  The Flickr username.
+         * @return  string  The Flickr user ID.
+	 **/
+	public function nameToId($name)
         {
-                switch ($this->get('params')->get('video_source'))
+                // If the username already contains an ampersand, then we don't need to process. 
+                $pos = strpos($name, '@');
+                if ($pos !== false)
+                {
+                        return $name;
+                }
+                
+                $url = 'http://idgettr.com';
+                switch ($this->get('params')->get('source'))
                 {
                         case 'user_photos':
                         case 'friend_photos':
-                            $url = 'http://idgettr.com/?photostream=http://www.flickr.com/photos/'.$name;
+                            $data = array('photostream' => 'http://www.flickr.com/photos/'.$name);
                             break;
                         case 'group_photos':
-                            $url = 'http://idgettr.com/?photostream=https://www.flickr.com/groups/'.$name;
+                            $data = array('photostream' => 'https://www.flickr.com/groups/'.$name);
                             break;
                         case 'set_photos':
-                            $url = 'http://idgettr.com/?photostream=https://www.flickr.com/photos/'.$name.'/sets/'.$this->get('params')->get('flickrset');
+                            $data = array('photostream' => 'https://www.flickr.com/photos/'.$name.'/sets/'.$this->get('params')->get('flickrset'));
                             break;
                 }
 
@@ -168,29 +217,30 @@ jQuery.noConflict();
 
                                 $curl_handle = curl_init();
                                 curl_setopt($curl_handle, CURLOPT_URL, $url);
+                                curl_setopt($curl_handle, CURLOPT_POST, 1);
+                                curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $data);
                                 curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 30);
                                 curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
                                 curl_setopt($curl_handle, CURLOPT_REFERER, 'idgettr.com');
                                 curl_setopt($curl_handle, CURLOPT_USERAGENT, $useragent);
-                                $id = curl_exec($curl_handle);
+                                $buffer = curl_exec($curl_handle);
                                 curl_close($curl_handle);
 
-                                if (!empty($id))
+                                if (!empty($buffer))
                                 {
-                                        $pos = strpos($id, '<p><strong>id:</strong> ');
-                                        $pos_start = $pos + 24;
-                                        $pos_end = strpos($id, '</p></div>');
-                                        $length = $pos_end - $pos_start;
-                                        $id = substr($id, $pos_start, $length);
-                                        return $id;
-                                }
-                                else
-                                {
-                                        return false;
+                                        $pos = strpos($buffer, '<p><strong>id:</strong> ');
+                                        if ($pos !== false)
+                                        {
+                                                $pos_start = $pos + 24;
+                                                $pos_end = strpos($buffer, '</p>', $pos_start);
+                                                $length = $pos_end - $pos_start;
+                                                $id = substr($buffer, $pos_start, $length);
+                                                return $id;
+                                        }  
                                 }
                         }
                 }
-                
+
 		return false;
         }
 }

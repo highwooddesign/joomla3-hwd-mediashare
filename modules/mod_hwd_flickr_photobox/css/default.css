@@ -3,8 +3,8 @@
    This sheet loads the HWD styles */
 /**********************************************************************************************/
 .row.mod_hwd_flickr_photobox_default {
-  margin-right:-15px!important;
-  margin-left:-15px!important;
+        margin-right:-15px!important;
+        margin-left:-15px!important;
 }
 .mod_hwd_flickr_photobox_default {
     	position:relative;
@@ -13,44 +13,18 @@
 .mod_hwd_flickr_photobox_default .clear {
 	clear:both;
 }
-.mod_hwd_flickr_photobox_default .media-duration {
-	position:absolute;
-	right:2px;
-	top:2px;
-	color:#fff;
-	font-size:10px;
-	padding:1px 2px;
-        background-color:rgba(0, 0, 0, 0.6);
-        border-radius:3px 3px 3px 3px;
-        box-shadow:0 0 1px #DDDDDD; 
-        z-index:100;
-        line-height:120%;        
-}
-/* START - Override to keep duration location correct */
 .mod_hwd_flickr_photobox_default .media-item a {
-        line-height:0px;
+        line-height:0px; /* Override to keep duration location correct */
 }
-/* END - Override to keep duration location correct */
 .mod_hwd_flickr_photobox_default .media-item {
         overflow:hidden;
 	position:relative;
 }
 .mod_hwd_flickr_photobox_default .media-item img.media-thumb {
-        position:absolute;
-        top:0;
-        bottom:0;
-        left:0;
-        right:0;
         width:100%;
         z-index:2;
 	margin:0;
-	padding:0;
-        margin-top:-height/2;
-}
-.mod_hwd_flickr_photobox_default .media-aspect {
-        padding-top:75%; /* You can modify the thumbnail aspect ratio here */
-        background:#000;
-        z-index:1;
+	padding:0;        
 }
 .mod_hwd_flickr_photobox_default .media-link-span {
         background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt 0pt!important;
@@ -69,8 +43,9 @@
         top:50%;
         left:50%;
         z-index:2;
+        margin-left: none; /* Prevent .row-fluid [class*="span"] */  
 }
-.mod_hwd_flickr_photobox_default .media-item span.media-link-span {
+.mod_hwd_flickr_photobox_default .media-link-span {
         margin-left:-25px;
         margin-top:-20px;
 }

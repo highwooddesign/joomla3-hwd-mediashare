@@ -3,8 +3,9 @@
    This sheet loads the HWD styles */
 /**********************************************************************************************/
 .row.mod_hwd_flickr_photobox_vertical {
-  margin-right:-15px!important;
-  margin-left:-15px!important;
+        margin-right:-15px!important;
+        margin-left:-15px!important;
+        max-width:500px;
 }
 .mod_hwd_flickr_photobox_vertical {
     	position:relative;
@@ -26,14 +27,18 @@
         z-index:100;
         line-height:120%;        
 }
-/* START - Override to keep duration location correct */
 .mod_hwd_flickr_photobox_vertical .media-item a {
-        line-height:0px;
+        line-height:0px; /* Override to keep duration location correct */
 }
-/* END - Override to keep duration location correct */
 .mod_hwd_flickr_photobox_vertical .media-item {
         overflow:hidden;
 	position:relative;
+}
+.mod_hwd_flickr_photobox_vertical .media-item img.media-thumb {
+        width:100%;
+        z-index:2;
+	margin:0;
+	padding:0;        
 }
 .mod_hwd_flickr_photobox_vertical .media-link-span {
         background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt 0pt!important;
@@ -52,8 +57,9 @@
         top:50%;
         left:50%;
         z-index:2;
+        margin-left: none; /* Prevent .row-fluid [class*="span"] */  
 }
-.mod_hwd_flickr_photobox_vertical .media-item span.media-link-span {
+.mod_hwd_flickr_photobox_vertical .media-link-span {
         margin-left:-25px;
         margin-top:-20px;
 }
@@ -64,29 +70,12 @@
         margin-bottom:6px;
         margin-left:0;
         margin-right:0;
-        margin-top:0;
+        margin-top:6px;
         padding:0;
         border:0;
         font-size:15px;
-        overflow:hidden;        
+        overflow:hidden;
 }
 .mod_hwd_flickr_photobox_vertical .cell {
         margin-bottom:10px;
-}
-/* Pulls */
-.mod_hwd_flickr_photobox_vertical .pull-half-left {
-    width:33%;
-    margin-right:2%;
-    float:left;
-}
-.mod_hwd_flickr_photobox_vertical .pull-half-left img {
-    width:100%;
-}
-.mod_hwd_flickr_photobox_vertical .pull-half-right {
-    width:64%;
-    float:right;
-}
-/* Tweak in mobile view */
-.mod_hwd_flickr_photobox_vertical .clearfix {
-    margin-bottom:10px;
 }

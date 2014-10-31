@@ -1,94 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.2" method="upgrade" client="site">
+<extension type="module" version="3.0" client="site" method="upgrade">
 	<name>mod_hwd_flickr_photobox</name>
-	<creationDate>@@CREATIONDATE@@</creationDate>
 	<author>HWD</author>
-	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
-	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<creationDate>@@CREATIONDATE@@</creationDate>
 	<copyright>(C) 2014 Highwood Design Limited</copyright>
 	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>@@VERSION@@</version>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version>  
 	<description>MOD_HWD_FLICKR_PHOTOBOX_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_hwd_flickr_photobox">mod_hwd_flickr_photobox.php</filename>
-		<filename module="mod_hwd_flickr_photobox">helper.php</filename>
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
-		<folder>language</folder>
 		<folder>tmpl</folder>
+		<filename>helper.php</filename>
 		<filename>index.html</filename>		
-		<filename>mod_hwd_flickr_photobox.xml</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_flickr_photobox.ini</language>
-		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_flickr_photobox.sys.ini</language>
+		<language tag="en-GB">language/en-GB.mod_hwd_flickr_photobox.ini</language>
+		<language tag="en-GB">language/en-GB.mod_hwd_flickr_photobox.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
-			<fieldset 
-                                name="filtering"
-				label="MOD_HWD_FIELD_GROUP_FILTERING_LABEL"
-			>
+			<fieldset name="basic">
 				<field 
                                         name="source" 
                                         type="list" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_PHOTOS_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_PHOTOS_DESC"
                                         default="recent"
-					label="MOD_HWD_FIELD_PHOTOS_LABEL"
-					description="MOD_HWD_FIELD_PHOTOS_DESC"
 				>
-					<option value="recent_photos">MOD_HWD_OPTION_RECENTPHOTOS_VALUE</option>
-					<option value="keyword_photos">MOD_HWD_OPTION_KEYWORDPHOTOS_VALUE</option>
-					<option value="user_photos">MOD_HWD_OPTION_USERPHOTOS_VALUE</option>
-                                        <option value="group_photos">MOD_HWD_OPTION_GROUPPHOTOS_VALUE</option>                                        
-                                        <option value="set_photos">MOD_HWD_OPTION_SETPHOTOS_VALUE</option>
+					<option value="recent_photos">MOD_HWD_FLICKR_PHOTOBOX_OPTION_RECENTPHOTOS</option>
+					<option value="keyword_photos">MOD_HWD_FLICKR_PHOTOBOX_OPTION_KEYWORDPHOTOS</option>
+					<option value="user_photos">MOD_HWD_FLICKR_PHOTOBOX_OPTION_USERPHOTOS</option>
+                                        <option value="group_photos">MOD_HWD_FLICKR_PHOTOBOX_OPTION_GROUPPHOTOS</option>                                        
+                                        <option value="set_photos">MOD_HWD_FLICKR_PHOTOBOX_OPTION_SETPHOTOS</option>
 				</field>                         
 				<field 
                                         name="keywords" 
                                         type="text" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_KEYWORDS_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_KEYWORDS_DESC"
                                         default=""
-					label="MOD_HWD_FIELD_KEYWORDS_LABEL"
-					description="MOD_HWD_FIELD_KEYWORDS_DESC"
 				/>
 				<field 
                                         name="flickruser" 
                                         type="text" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_USERURL_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_USERURL_DESC"
                                         default=""
-					label="MOD_HWD_FIELD_USERURL_LABEL"
-					description="MOD_HWD_FIELD_USERURL_DESC"
 				/>       
                                 <field 
                                         name="flickrgroup" 
                                         type="text" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_GROUPURL_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_GROUPURL_DESC"
                                         default=""
-					label="MOD_HWD_FIELD_GROUPURL_LABEL"
-					description="MOD_HWD_FIELD_GROUPURL_DESC"
 				/>
                                 <field 
                                         name="flickrset" 
                                         type="text" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_SETURL_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_SETURL_DESC"
                                         default=""
-					label="MOD_HWD_FIELD_SETURL_LABEL"
-					description="MOD_HWD_FIELD_SETURL_DESC"
-				/>                
-			</fieldset>
-			<fieldset 
-                                name="display"
-				label="MOD_HWD_FIELD_GROUP_LIST_DISPLAY_LABEL"
-			>
+                                />  
 				<field 
                                         name="layout" 
                                         type="modulelayout"
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_LAYOUT_LABEL" 
+                                        description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_LAYOUT_DESC" 
                                         default="_:default"
-					label="MOD_HWD_FIELD_LAYOUT_LABEL" 
-                                        description="MOD_HWD_FIELD_LAYOUT_DESC" 
-                                />  
+                                />                                                                
+			</fieldset>
+			<fieldset 
+                                name="display"
+				label="MOD_HWD_FLICKR_PHOTOBOX_FIELDSET_DISPLAY_LABEL"
+			>                 
 				<field 
                                         name="columns" 
                                         type="list" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_MAXCOLS_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_MAXCOLS_DESC"
                                         default="3"
-					label="MOD_HWD_FIELD_MAXCOLS_LABEL"
-					description="MOD_HWD_FIELD_MAXCOLS_DESC"
 				>
 					<option value="1">J1</option>
 					<option value="2">J2</option>
@@ -100,16 +95,16 @@
 				<field 
                                         name="count" 
                                         type="text" 
-                                        default="5"
-					label="MOD_HWD_FIELD_COUNT_LABEL"
-					description="MOD_HWD_FIELD_COUNT_DESC" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_COUNT_LABEL"
+					description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_COUNT_DESC" 
+                                        default="6"
                                 />                                 
                                 <field 
                                         name="icon" 
                                         type="list"
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_ICON_LABEL" 
+                                        description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_ICON_DESC" 
                                         default="1"
-					label="MOD_HWD_FIELD_ICON_LABEL" 
-                                        description="MOD_HWD_FIELD_ICON_DESC" 
                                 >
                                         <option value="0">JHIDE</option>
                                         <option value="1">JSHOW</option>
@@ -117,12 +112,12 @@
                                 <field 
                                         name="show_created" 
                                         type="list"
-                                        default="show"
-					label="MOD_HWD_FIELD_SHOW_CREATED_LABEL" 
-                                        description="MOD_HWD_FIELD_SHOW_CREATED_DESC" 
+					label="MOD_HWD_FLICKR_PHOTOBOX_FIELD_SHOW_CREATED_LABEL" 
+                                        description="MOD_HWD_FLICKR_PHOTOBOX_FIELD_SHOW_CREATED_DESC" 
+                                        default="1"
                                 >
-                                        <option value="hide">JHIDE</option>
-                                        <option value="show">JSHOW</option>
+                                        <option value="0">JHIDE</option>
+                                        <option value="1">JSHOW</option>
                                 </field>
                         </fieldset>                                
 			<fieldset name="advanced">
@@ -135,9 +130,9 @@
 				<field 
                                         name="owncache" 
                                         type="list" 
-                                        default="1"
 					label="COM_MODULES_FIELD_CACHING_LABEL" 
                                         description="COM_MODULES_FIELD_CACHING_DESC" 
+                                        default="1"
                                 >
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
@@ -145,9 +140,9 @@
 				<field 
                                         name="cache_time" 
                                         type="text" 
-                                        default="900"
 					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
                                         description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                        default="900"
                                 />
 			</fieldset>
 		</fields>
