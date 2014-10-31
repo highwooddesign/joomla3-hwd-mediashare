@@ -3,8 +3,9 @@
    This sheet loads the HWD styles */
 /**********************************************************************************************/
 .row.mod_hwd_vimeo_videobox_vertical {
-  margin-right:-15px!important;
-  margin-left:-15px!important;
+        margin-right:-15px!important;
+        margin-left:-15px!important;
+        max-width:500px;
 }
 .mod_hwd_vimeo_videobox_vertical {
     	position:relative;
@@ -66,6 +67,7 @@
         top:50%;
         left:50%;
         z-index:2;
+        margin-left: none; /* Prevent .row-fluid [class*="span"] */  
 }
 .mod_hwd_vimeo_videobox_vertical .media-link-span {
         margin-left:-25px;
@@ -78,27 +80,12 @@
         margin-bottom:6px;
         margin-left:0;
         margin-right:0;
-        margin-top:0;
+        margin-top:6px;
         padding:0;
         border:0;
         font-size:15px;
-        overflow:hidden;        
+        overflow:hidden;
 }
 .mod_hwd_vimeo_videobox_vertical .cell {
         margin-bottom:10px;
 }
-.mod_hwd_vimeo_videobox_vertical .clearfix {
-    margin-bottom:10px; /* Space thumbnails in mobile view */
-}
-/* Pulls */
-.mod_hwd_vimeo_videobox_vertical .pull-half-left {
-    width:33%;
-    margin-right:2%;
-    float:left;
-    
-}
-.mod_hwd_vimeo_videobox_vertical .pull-half-right {
-    width:64%;
-    float:right;
-}
-

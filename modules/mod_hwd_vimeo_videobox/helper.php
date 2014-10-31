@@ -15,36 +15,34 @@ class modHwdVimeoVideoBoxHelper extends JObject
         /**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $module     The module object.
-	 * @param       array       $params     The module parameters object.
-         * @return      void
+	 * @access  public
+	 * @param   array   $module  The module object.
+	 * @param   array   $params  The module parameters object.
+         * @return  void
 	 */       
 	public function __construct($module, $params)
-	{
+	{                
                 // Load caching.
-                $cache = JFactory::getCache();
+                $cache = JFactory::getCache('mod_hwd_vimeo_videobox');
                 $cache->setCaching(1);
 
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-
-                // Get data.
+                // Get data.              
                 $this->module = $module;                
                 $this->params = $params;                
                 $this->items = $cache->call(array($this, 'getItems'), $params);
 
                 // Add assets to the head tag.
-                $this->addHead();
+                $this->addHead();  
 	}
 
         /**
 	 * Method to add assets to the head.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */         
 	public function addHead()
-	{
+	{           
                 JHtml::_('bootstrap.tooltip');
                 $doc = JFactory::getDocument();
                 $doc->addScript(JURI::root() . 'modules/mod_hwd_vimeo_videobox/js/jquery.magnific-popup.js');
@@ -52,13 +50,13 @@ class modHwdVimeoVideoBoxHelper extends JObject
                 $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_vimeo_videobox/css/magnific-popup.css');
                 $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_vimeo_videobox/css/strapped.3.hwd.css');
                 
-                // Load layout CSS file.
-                if ($layout = explode(":", $this->params->get('layout')))
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
                 {
-                        if (isset($layout[1]) && file_exists(dirname(__FILE__) . '/css/' . $layout[1] . '.css'))
-                        {
-                                $doc->addStylesheet(JURI::root() . 'modules/mod_hwd_vimeo_videobox/css/' . $layout[1] . '.css');                
-                        }
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_hwd_vimeo_videobox/css/' . $layout . '.css');
                 }
 
                 $doc->addScriptDeclaration("
@@ -69,6 +67,16 @@ jQuery.noConflict();
       $('.popup-title-" . $this->module->id . "').magnificPopup({ 
         type: 'iframe',
         mainClass: 'hwd-vimeo-popup',
+        iframe: {     
+          patterns: {
+            youtube: {
+              id: function(url) {        
+                return url;
+              },
+              src: '%id%'
+            }
+          }
+        },
         gallery: {
           enabled: true
         }
@@ -76,14 +84,24 @@ jQuery.noConflict();
       $('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
         type: 'iframe',
         mainClass: 'hwd-vimeo-popup',
+        iframe: {
+          patterns: {
+            youtube: {
+              id: function(url) {        
+                return url;
+              },
+              src: '%id%'
+            }
+          }
+        },
         gallery: {
           enabled: true
         }
       });       
     });
   });
-})(jQuery);");                 
-        }
+})(jQuery);");                
+	}
 
         /**
 	 * Method to get a list of media items.
@@ -116,7 +134,7 @@ jQuery.noConflict();
                                 {
                                     $obj->thumbnail     = ($video->getElementsByTagName('thumbnail_large')->item(0) ? $video->getElementsByTagName('thumbnail_large')->item(0)->nodeValue : '');
                                 }                                                                
-                                $obj->description	= ($video->getElementsByTagName('description')->item(0) ? JHtmlString::truncate($video->getElementsByTagName('description')->item(0)->nodeValue, 300, true, false) : '');
+                                $obj->description	= ($video->getElementsByTagName('description')->item(0) ? JHtml::_('string.truncate', $video->getElementsByTagName('description')->item(0)->nodeValue, 300, true, false) : '');
                                 $obj->category          = ($video->getElementsByTagNameNS($media, 'category')->item(0) ? $video->getElementsByTagNameNS($media, 'category')->item(0)->nodeValue : '');
                                 $obj->uploadDate        = ($video->getElementsByTagName('upload_date')->item(0) ? $video->getElementsByTagName('upload_date')->item(0)->nodeValue : '');
                                 $obj->duration          = ($video->getElementsByTagName('duration')->item(0) ? $video->getElementsByTagName('duration')->item(0)->nodeValue : '');
