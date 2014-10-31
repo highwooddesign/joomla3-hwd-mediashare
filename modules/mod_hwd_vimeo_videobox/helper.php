@@ -106,8 +106,8 @@ jQuery.noConflict();
         /**
 	 * Method to get a list of media items.
 	 *
-	 * @access	public
-         * @return      object      A list of media items.
+	 * @access  public
+         * @return  object  A list of media items.
 	 */         
 	public function getItems()
 	{
@@ -159,8 +159,8 @@ jQuery.noConflict();
         /**
 	 * Method to get the feed URI.
 	 *
-	 * @access	public
-         * @return      string      The feed URI
+	 * @access  public
+         * @return  string  The feed URI.
 	 */          
 	public function getFeed()
 	{  
@@ -189,10 +189,10 @@ jQuery.noConflict();
         /**
 	 * Method to convert an integer number of seconds into a timestamp.
 	 *
-	 * @access	public
-         * @param       integer     $seconds    The number of seconds.
-         * @return      void
-	 */         
+	 * @access  public
+         * @param   integer  $seconds  The number of seconds.
+         * @return  void
+	 */        
         public function secondsToTime($seconds)
         {
                 // Extract hours.
