@@ -10,15 +10,16 @@
 
 defined('_JEXEC') or die;
 
-class modHwdSpotifyAudioBoxHelper extends JObject
+class modHwdSpotifyAudioBoxHelper
 {
-	/**
-	 * Class data
-	 * @var array
-	 */    
-	public $params;
-	public $module;
-
+        /**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   array   $module  The module object.
+	 * @param   array   $params  The module parameters object.
+         * @return  void
+	 */       
 	public function __construct($module, $params)
 	{
                 // Get data.
