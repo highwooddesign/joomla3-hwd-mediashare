@@ -27,17 +27,73 @@
 		<fields name="params">
 			<fieldset name="basic">
 				<field 
+                                        name="source" 
+                                        type="list" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SOURCE_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SOURCE_DESC"
+                                        default="standard_list"
+				>
+					<option value="standard_list">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_STANDARDLIST</option>
+					<option value="keyword_search">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_KEYWORDSEARCH</option>
+					<option value="playlist_videos">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_PLAYLISTVIDEOS</option>
+					<option value="user_videos">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_USERVIDEOS</option>
+				</field>                         
+				<field 
+                                        name="standard_list" 
+                                        type="list" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_STANDARDLIST_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_STANDARDLIST_DESC"
+                                        default="top_rated"
+				>
+					<option value="top_rated">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_TOPRATED</option>
+					<option value="top_favorites">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_TOPFAVORITES</option>
+					<option value="most_shared ">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_MOSTSHARED</option>
+					<option value="most_popular">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_MOSTPOPULAR</option>
+					<option value="most_recent">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_MOSTRECENT</option>
+					<option value="most_discussed">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_MOSTDISCUSSED</option>
+					<option value="most_responded">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_MOSTRESPONDED</option>
+					<option value="recently_featured">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_RECENTLYFEATURED</option>
+					<option value="on_the_web">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_TRENDINGVIDEOS</option>
+					<option value="most_viewed">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_MOSTVIEWED</option>
+				</field>
+				<field 
+                                        name="keywords" 
+                                        type="text" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_KEYWORDS_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_KEYWORDS_DESC"
+                                        default=""
+				/>
+				<field 
+                                        name="ytplaylist" 
+                                        type="text" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_PLAYLISTURL_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_PLAYLISTURL_DESC"
+                                        default=""
+				/>
+				<field 
+                                        name="ytuser" 
+                                        type="text" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_USERURL_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_USERURL_DESC"
+                                        default=""
+				/> 
+				<field 
                                         name="layout" 
                                         type="modulelayout"
-					label="MOD_HWD_FIELD_LAYOUT_LABEL" 
-                                        description="MOD_HWD_FIELD_LAYOUT_DESC" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_LAYOUT_LABEL" 
+                                        description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_LAYOUT_DESC" 
                                         default="_:default"
-                                />  
+                                />                                
+			</fieldset>
+			<fieldset 
+                                name="display"
+				label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELDSET_DISPLAY_LABEL"
+			>                 
 				<field 
                                         name="columns" 
                                         type="list" 
-					label="MOD_HWD_FIELD_MAXCOLS_LABEL"
-					description="MOD_HWD_FIELD_MAXCOLS_DESC"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_MAXCOLS_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_MAXCOLS_DESC"
                                         default="3"
 				>
 					<option value="1">J1</option>
@@ -50,100 +106,77 @@
 				<field 
                                         name="count" 
                                         type="text" 
-					label="MOD_HWD_FIELD_COUNT_LABEL"
-					description="MOD_HWD_FIELD_COUNT_DESC" 
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COUNT_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COUNT_DESC" 
                                         default="6"
                                 />
 				<field 
                                         name="icon" 
                                         type="radio"
-					label="MOD_HWD_FIELD_ICON_LABEL"
-					description="MOD_HWD_FIELD_ICON_DESC"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_ICON_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_ICON_DESC"
                                         default="1"
                                         class="btn-group btn-group-yesno"
 				>
 					<option value="1">JSHOW</option>
 					<option value="0">JHIDE</option>
-				</field>                               
-			</fieldset>
-			<fieldset 
-                                name="filtering"
-				label="MOD_HWD_FIELD_GROUP_FILTERING_LABEL"
-			>
-				<field 
-                                        name="source" 
-                                        type="list" 
-                                        default="standard_list"
-					label="MOD_HWD_FIELD_VIDEOS_LABEL"
-					description="MOD_HWD_FIELD_VIDEOS_DESC"
-				>
-					<option value="standard_list">MOD_HWD_OPTION_STANDARDLIST_VALUE</option>
-					<option value="keyword_search">MOD_HWD_OPTION_KEYWORDSEARCH_VALUE</option>
-					<option value="playlist_videos">MOD_HWD_OPTION_PLAYLISTVIDEOS_VALUE</option>
-					<option value="user_videos">MOD_HWD_OPTION_USERVIDEOS_VALUE</option>
-				</field>                         
-				<field 
-                                        name="standard_list" 
-                                        type="list" 
-                                        default="top_rated"
-					label="MOD_HWD_FIELD_STANDARDLIST_LABEL"
-					description="MOD_HWD_FIELD_STANDARDLIST_DESC"
-				>
-					<option value="top_rated">MOD_HWD_OPTION_TOPRATED_VALUE</option>
-					<option value="top_favorites">MOD_HWD_OPTION_TOPFAVORITES_VALUE</option>
-					<option value="most_shared ">MOD_HWD_OPTION_MOSTSHARED_VALUE</option>
-					<option value="most_popular">MOD_HWD_OPTION_MOSTPOPULAR_VALUE</option>
-					<option value="most_recent">MOD_HWD_OPTION_MOSTRECENT_VALUE</option>
-					<option value="most_discussed">MOD_HWD_OPTION_MOSTDISCUSSED_VALUE</option>
-					<option value="most_responded">MOD_HWD_OPTION_MOSTRESPONDED_VALUE</option>
-					<option value="recently_featured">MOD_HWD_OPTION_RECENTLYFEATURED_VALUE</option>
-					<option value="on_the_web">MOD_HWD_OPTION_TRENDINGVIDEOS_VALUE</option>
-					<option value="most_viewed">MOD_HWD_OPTION_MOSTVIEWED_VALUE</option>
 				</field>
 				<field 
-                                        name="keywords" 
-                                        type="text" 
-                                        default=""
-					label="MOD_HWD_FIELD_KEYWORDS_LABEL"
-					description="MOD_HWD_FIELD_KEYWORDS_DESC"
-				/>
+                                        name="show_duration" 
+                                        type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SHOWDURATION_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SHOWDURATION_DESC"
+                                        default="1"
+                                        class="btn-group btn-group-yesno"
+				>
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field> 
 				<field 
-                                        name="ytplaylist" 
-                                        type="text" 
-                                        default=""
-					label="MOD_HWD_FIELD_PLAYLISTURL_LABEL"
-					description="MOD_HWD_FIELD_PLAYLISTURL_DESC"
-				/>
+                                        name="show_category" 
+                                        type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SHOWCATEGORY_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SHOWCATEGORY_DESC"
+                                        default="1"
+                                        class="btn-group btn-group-yesno"
+				>
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field> 
 				<field 
-                                        name="ytuser" 
-                                        type="text" 
-                                        default=""
-					label="MOD_HWD_FIELD_USERURL_LABEL"
-					description="MOD_HWD_FIELD_USERURL_DESC"
-				/>                                
+                                        name="show_views" 
+                                        type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SHOWVIEWS_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_SHOWVIEWS_DESC"
+                                        default="1"
+                                        class="btn-group btn-group-yesno"
+				>
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>                                 
 			</fieldset>
 			<fieldset 
                                 name="player"
-				label="MOD_HWD_FIELD_GROUP_VIDEO_DISPLAY_LABEL"
+				label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELDSET_PLAYER_LABEL"
 			>
 				<field 
                                         name="autohide" 
                                         type="list"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_AUTOHIDE_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_AUTOHIDE_DESC"
 					default="2"
-					label="MOD_HWD_FIELD_AUTOHIDE_LABEL"
-					description="MOD_HWD_FIELD_AUTOHIDE_DESC"
 				>
 					<option value="0">JDISABLED</option>
-					<option value="1">MOD_HWD_OPTION_1SEC</option>
-					<option value="2">MOD_HWD_OPTION_2SEC</option>
+					<option value="1">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_1SEC</option>
+					<option value="2">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_2SEC</option>
 				</field>
 				<field 
                                         name="border" 
                                         type="radio"
-					default="0"
-					label="MOD_HWD_FIELD_BORDER_LABEL"
-					description="MOD_HWD_FIELD_BORDER_DESC"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_BORDER_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_BORDER_DESC"
                                         class="btn-group btn-group-yesno"
+					default="0"
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
@@ -151,10 +184,10 @@
 				<field 
                                         name="cc_load_policy" 
                                         type="radio"
-					default="0"
-					label="MOD_HWD_FIELD_CCLOADPOLICY_LABEL"
-					description="MOD_HWD_FIELD_CCLOADPOLICY_DESC"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_CCLOADPOLICY_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_CCLOADPOLICY_DESC"
                                         class="btn-group btn-group-yesno"
+					default="0"
 				>
 					<option value="0">JDISABLED</option>
 					<option value="1">JENABLED</option>
@@ -162,33 +195,33 @@
 				<field 
                                         name="color" 
                                         type="list"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COLOR_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COLOR_DESC"
 					default="red"
-					label="MOD_HWD_FIELD_COLOR_LABEL"
-					description="MOD_HWD_FIELD_COLOR_DESC"
 				>
-					<option value="red">MOD_HWD_OPTION_RED</option>
-					<option value="white">MOD_HWD_OPTION_WHITE</option>
+					<option value="red">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_RED</option>
+					<option value="white">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_WHITE</option>
 				</field>
 				<field 
                                         name="color1" 
                                         type="text"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COLOR1_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COLOR1_DESC"
 					default=""
-					label="MOD_HWD_FIELD_COLOR1_LABEL"
-					description="MOD_HWD_FIELD_COLOR1_DESC"
 				/>
 				<field 
                                         name="color2" 
                                         type="text"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COLOR2_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_COLOR2_DESC"
 					default=""
-					label="MOD_HWD_FIELD_COLOR2_LABEL"
-					description="MOD_HWD_FIELD_COLOR2_DESC"
 				/>
 				<field 
                                         name="controls" 
                                         type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_CONTROLS_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_CONTROLS_DESC"
 					default="1"
-					label="MOD_HWD_FIELD_CONTROLS_LABEL"
-					description="MOD_HWD_FIELD_CONTROLS_DESC"
                                         class="btn-group btn-group-yesno"
 				>
 					<option value="0">JHIDE</option>
@@ -197,9 +230,9 @@
 				<field 
                                         name="fs" 
                                         type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_FS_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_FS_DESC"
 					default="1"
-					label="MOD_HWD_FIELD_FS_LABEL"
-					description="MOD_HWD_FIELD_FS_DESC"
                                         class="btn-group btn-group-yesno"
 				>
 					<option value="0">JHIDE</option>
@@ -208,9 +241,9 @@
 				<field 
                                         name="hd" 
                                         type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_HD_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_HD_DESC"
 					default="0"
-					label="MOD_HWD_FIELD_HD_LABEL"
-					description="MOD_HWD_FIELD_HD_DESC"
                                         class="btn-group btn-group-yesno"
 				>
 					<option value="0">JNO</option>
@@ -219,9 +252,9 @@
 				<field 
                                         name="iv_load_policy" 
                                         type="list"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_IVLOADPOLICY_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_IVLOADPOLICY_DESC"
 					default="1"
-					label="MOD_HWD_FIELD_IVLOADPOLICY_LABEL"
-					description="MOD_HWD_FIELD_IVLOADPOLICY_DESC"
 				>
 					<option value="3">JHIDE</option>
 					<option value="1">JSHOW</option>
@@ -229,10 +262,10 @@
 				<field 
                                         name="modestbranding" 
                                         type="radio"
-					default="1"
-					label="MOD_HWD_FIELD_MODESTBRANDING_LABEL"
-					description="MOD_HWD_FIELD_MODESTBRANDING_DESC"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_MODESTBRANDING_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_MODESTBRANDING_DESC"
                                         class="btn-group btn-group-yesno"
+					default="1"
 				>
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
@@ -240,10 +273,10 @@
 				<field 
                                         name="rel" 
                                         type="radio"
-					default="0"
-					label="MOD_HWD_FIELD_RELATED_LABEL"
-					description="MOD_HWD_FIELD_RELATED_DESC"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_RELATED_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_RELATED_DESC"
                                         class="btn-group btn-group-yesno"
+					default="0"
 				>
 					<option value="0">JHIDE</option>
 					<option value="1">JSHOW</option>
@@ -251,19 +284,19 @@
 				<field 
                                         name="theme" 
                                         type="list"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_THEME_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_THEME_DESC"
 					default="dark"
-					label="MOD_HWD_FIELD_THEME_LABEL"
-					description="MOD_HWD_FIELD_THEME_DESC"
 				>
-					<option value="dark">MOD_HWD_OPTION_DARK</option>
-					<option value="light">MOD_HWD_OPTION_LIGHT</option>
+					<option value="dark">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_DARK</option>
+					<option value="light">MOD_HWD_YOUTUBE_VIDEOBOX_OPTION_LIGHT</option>
 				</field>                                
                                 <field 
                                         name="https" 
                                         type="radio"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_HTTPS_LABEL"
+					description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_HTTPS_DESC"
                                         default="0" 
-					label="MOD_HWD_FIELD_HTTPS_LABEL"
-					description="MOD_HWD_FIELD_HTTPS_DESC"
                                         class="btn-group btn-group-yesno"
 				>
                                         <option value="0">JNO</option>
@@ -280,9 +313,9 @@
 				<field 
                                         name="owncache" 
                                         type="list" 
-                                        default="1"
 					label="COM_MODULES_FIELD_CACHING_LABEL" 
                                         description="COM_MODULES_FIELD_CACHING_DESC" 
+                                        default="1"
                                 >
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
@@ -290,9 +323,9 @@
 				<field 
                                         name="cache_time" 
                                         type="text" 
-                                        default="900"
 					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
                                         description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                        default="900"
                                 />
 			</fieldset>
 		</fields>
