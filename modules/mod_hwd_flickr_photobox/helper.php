@@ -23,7 +23,7 @@ class modHwdFlickrPhotoBoxHelper extends JObject
 	public function __construct($module, $params)
 	{                
                 // Load caching.
-                $cache = JFactory::getCache('mod_hwd_youtube_videobox');
+                $cache = JFactory::getCache('mod_hwd_flickr_photobox');
                 $cache->setCaching(1);
 
                 // Get data.              
