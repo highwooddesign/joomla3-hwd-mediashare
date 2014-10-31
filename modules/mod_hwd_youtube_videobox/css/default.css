@@ -3,8 +3,8 @@
    This sheet loads the HWD styles */
 /**********************************************************************************************/
 .row.mod_hwd_youtube_videobox_default {
-  margin-right:-15px!important;
-  margin-left:-15px!important;
+        margin-right:-15px!important;
+        margin-left:-15px!important;
 }
 .mod_hwd_youtube_videobox_default {
     	position:relative;

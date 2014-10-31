@@ -23,8 +23,8 @@ $doc->addStyleDeclaration('
 <section id="photos">
 <?php foreach ($helper->items as $id => $item) : ?>
 <div class="block_grid"> 
-    <div class="media-item hasTooltip" title="<?php echo JHtml::tooltipText($item->title, JHtmlString::truncate($item->description, 300, true, false)); ?>">
-        <?php if ($item->duration > 0) :?>
+    <div class="media-item hasTooltip" title="<?php echo JHtml::tooltipText($item->title, JHtml::_('string.truncate', $item->description, 300, true, false)); ?>">
+        <?php if ($item->duration > 0 && $helper->params->get('show_duration', 1)) :?>
         <div class="media-duration">
            <?php echo $helper->secondsToTime($item->duration); ?>
         </div>
