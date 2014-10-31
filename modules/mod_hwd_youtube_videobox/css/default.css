@@ -66,6 +66,7 @@
         top:50%;
         left:50%;
         z-index:2;
+        margin-left: none; /* Prevent .row-fluid [class*="span"] */  
 }
 .mod_hwd_youtube_videobox_default .media-link-span {
         margin-left:-25px;
