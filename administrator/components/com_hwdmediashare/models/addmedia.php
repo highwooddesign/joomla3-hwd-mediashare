@@ -332,10 +332,10 @@ EOD;
 	}
         
 	/**
-	 * Method to load <head> assets and render the html for the uber upload script.
+	 * Method to load <head> assets and includes for the uber upload script.
 	 *
 	 * @access  public
-         * @return  string  The html to display the upload form.
+         * @return  void
 	 */
 	public function getUberUploadScript()
 	{
@@ -349,24 +349,6 @@ EOD;
 
                 // Load HWD libraries.
                 hwdMediaShareFactory::load('upload');
-
-                $largeExtensions = $this->getState('allowedExtensions');
-                $largeExtensionString = '';
-                if (is_array($largeExtensions))
-                {
-                        $last_item = end($largeExtensions);
-                        foreach($largeExtensions as $item)
-                        {
-                                if ($item == $last_item)
-                                {
-                                        $largeExtensionString.= $item;
-                                }
-                                else
-                                {
-                                        $largeExtensionString.= $item.'|';
-                                }
-                        }
-                }
 
                 //******************************************************************************************************
                 //   ATTENTION: THIS FILE HEADER MUST REMAIN INTACT. DO NOT DELETE OR MODIFY THIS FILE HEADER.
@@ -426,121 +408,10 @@ EOD;
                     var show_est_time_left = <?php print $_CONFIG['show_est_time_left']; ?>;
                     var show_est_speed = <?php print $_CONFIG['show_est_speed']; ?>;
                 <?php
-                $html = ob_get_contents();
+                $js = ob_get_contents();
                 ob_end_clean();
 
-                $doc->addScriptDeclaration($html);
-
-                ob_start();
-                ?>
-                    <div id="ubr_alert_container" class="alert" style="display:none">
-                            <h3 id="ubr_alert"></h3>
-                    </div>
-                    <!-- Start Progress Bar -->
-                    <div id="progress_bar" style="display:none">
-                        <div class="bar1" id="upload_status_wrap">
-                                <div class="bar2" id="upload_status"></div>
-                        </div>
-                        <?php if($_CONFIG['show_percent_complete'] || $_CONFIG['show_files_uploaded'] || $_CONFIG['show_current_position'] || $_CONFIG['show_elapsed_time'] || $_CONFIG['show_est_time_left'] || $_CONFIG['show_est_speed']): ?>
-                            <table class="category table table-striped table-bordered table-hover">
-                                <tbody>
-                                <?php if($_CONFIG['show_percent_complete']){ ?>
-                                <tr>
-                                    <th scope="row">
-                                        <?php echo JText::_('COM_HWDMS_PERCENT_COMPLETE'); ?>
-                                    </th>
-                                    <td class="center">
-                                        <span id="percent">0%</span>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                                <?php if($_CONFIG['show_files_uploaded']){ ?>
-                                <tr>
-                                    <th scope="row">
-                                        <?php echo JText::_('COM_HWDMS_FILES_UPLOADED'); ?>
-                                    </th>
-                                    <td class="center">
-                                        <span id="uploaded_files">0</span> of <span id="total_uploads"></span>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                                <?php if($_CONFIG['show_current_position']){
-                                // HWD Modification: changed name of ID to avoid conflicts ?>
-                                <tr>
-                                    <th scope="row">
-                                        <?php echo JText::_('COM_HWDMS_CURRENT_POSITION'); ?>
-                                    </th>
-                                    <td class="center">
-                                        <span id="currentupld">0</span> / <span id="total_kbytes"></span> KBs
-                                    </td>
-                                </tr>
-                                <?php } ?>
-
-                                <?php if($_CONFIG['show_current_position']){ ?>
-                                <tr>
-                                    <th scope="row">
-                                        <?php echo JText::_('COM_HWDMS_ELAPSED_TIME'); ?>
-                                    </th>
-                                    <td class="center">
-                                        <span id="time">0</span>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                                <?php if($_CONFIG['show_est_time_left']){ ?>
-                                <tr>
-                                    <th scope="row">
-                                        <?php echo JText::_('COM_HWDMS_EST_TIME_LEFT'); ?>
-                                    </th>
-                                    <td class="center">
-                                        <span id="remain">0</span>
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                                <?php if($_CONFIG['show_est_time_left']){ ?>
-                                <tr>
-                                    <th scope="row">
-                                        <?php echo JText::_('COM_HWDMS_EST_SPEED'); ?>
-                                    </th>
-                                    <td class="center">
-                                        <span id="speed">0</span> KB/s.
-                                    </td>
-                                </tr>
-                                <?php } ?>
-                                </tbody>
-                              </table>
-                        <?php endif; ?>
-                    </div>
-                    <!-- End Progress Bar -->
-
-                    <!-- Start Upload Form -->
-                    <p><?php echo JText::_('COM_HWDMS_SUPPORTED_FORMATS_LABEL'); ?> <?php echo hwdMediaShareUpload::getReadableAllowedExtensions($largeExtensions); ?></p>
-                    <p><?php echo JText::sprintf('COM_HWDMS_MAXIMUM_UPLOAD_SIZE_X', hwdMediaShareUpload::getMaximumUploadSize('large')); ?></p>
-                    <fieldset class="adminform" id="hwd-upload-fallback">
-                        <noscript><p><?php echo JText::_('COM_HWDMS_PLEASE_ENABLE_JAVASCRIPT'); ?></p></noscript>
-                        <div id="upload_slots">
-                            <div class="control-group">
-                                <div class="control-label">
-                                    <label><?php echo JText::_('COM_HWDMS_UPLOAD_A_FILE'); ?></label>
-                                </div>
-                                <div class="controls">
-                                    <input type="file" name="upfile_0" <?php if($_CONFIG['multi_upload_slots']){ ?>onChange="addUploadSlot(1)"<?php } ?>  onkeypress="return handleKey(event)" value="">
-                                </div>
-                            </div>
-                        </div>    
-                        <div class="btn-group">
-                            <button type="button" id="upload_button" class="btn btn-info" name="upload_button" value="Upload" onClick="linkUpload();">
-                                <span class="icon-plus"></span>&#160;<?php echo JText::_('COM_HWDMS_UPLOAD') ?>
-                            </button>
-                        </div>               
-                    </fieldset>
-                    <!-- End Upload Form -->
-
-                    <div class="clearfix"></div>
-                <?php
-                $html = ob_get_contents();
-                ob_end_clean();
-
-		return $html;
+                $doc->addScriptDeclaration($js);
 	}
         
 	/**
