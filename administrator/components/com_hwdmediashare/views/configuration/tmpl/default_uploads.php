@@ -34,6 +34,10 @@ defined('_JEXEC') or die;
                                 <div class="controls"><?php echo $this->form->getInput('enable_uploads_file'); ?></div>
                         </div>  
                         <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('enable_uploads_platform'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('enable_uploads_platform'); ?></div>
+                        </div>                          
+                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('enable_uploads_remote'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('enable_uploads_remote'); ?></div>
                         </div>  
@@ -47,47 +51,26 @@ defined('_JEXEC') or die;
                         </div>  
                 </fieldset>
                 <fieldset class="form-horizontal">
-                        <legend><?php echo JText::_('COM_HWDMS_FILE_UPLOAD_CONFIG'); ?></legend>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('upload_tool'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('upload_tool'); ?></div>
-                        </div>                       
-                </fieldset>
-                <fieldset class="form-horizontal">
                         <legend><?php echo JText::_('COM_HWDMS_LARGE_FILE_UPLOAD_CONFIG'); ?></legend>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('upload_tool_perl'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('upload_tool_perl'); ?></div>
-                        </div>   
-                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('upload_uber_tmp_path'); ?></div>
+                                <a href="http://hwdmediashare.co.uk/learn/docs/44-configuration/107-configuring-the-large-file-uploader" target="_blank"><span class="pull-left icon-info"></span></a>
                                 <div class="controls"><?php echo $this->form->getInput('upload_uber_tmp_path'); ?></div>
                         </div> 
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('upload_uber_perl_url'); ?></div>
+                                <a href="http://hwdmediashare.co.uk/learn/docs/44-configuration/107-configuring-the-large-file-uploader" target="_blank"><span class="pull-left icon-info"></span></a>
                                 <div class="controls"><?php echo $this->form->getInput('upload_uber_perl_url'); ?></div>
                         </div> 
                 </fieldset>
         </div>
         <div class="span6">
                 <fieldset class="form-horizontal">
-                        <legend><?php echo JText::_('COM_HWDMS_FILE_UPLOADERS'); ?></legend>
+                        <legend><?php echo JText::_('COM_HWDMS_FILE_UPLOAD_CONFIG'); ?></legend>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('audio_uploads'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('audio_uploads'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('document_uploads'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('document_uploads'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('image_uploads'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('image_uploads'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('video_uploads'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('video_uploads'); ?></div>
-                        </div>
+                                <div class="control-label"><?php echo $this->form->getLabel('upload_tool'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('upload_tool'); ?></div>
+                        </div>                       
                 </fieldset>
                 <fieldset class="form-horizontal">
                         <legend><?php echo JText::_('COM_HWDMS_UPLOAD_LIMITS'); ?></legend>
