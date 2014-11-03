@@ -49,8 +49,8 @@ class JFormFieldLimits extends JFormFieldRules
 		// Get the available user groups.
 		$groups = $this->getUserGroups();
 
-		// Encode the limit value.
-                $this->value = json_decode($this->value, true);
+		// Decode the limit value.
+                $this->value = is_array($this->value) ? $this->value : json_decode($this->value, true);
                 
 		// Build the form control.
 		$curLevel = 0;
