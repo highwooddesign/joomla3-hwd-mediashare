@@ -2595,6 +2595,19 @@
                         <option value="0">JNO</option>
                 </field> 
                 <field
+			name="enable_uploads_platform"
+			type="radio"
+			label="COM_HWDMS_ENABLE_UPLOADS_PLATFORM_LABEL"
+			description="COM_HWDMS_ENABLE_UPLOADS_PLATFORM_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>                 
+                <field
 			name="enable_uploads_remote"
 			type="radio"
 			label="COM_HWDMS_ENABLE_UPLOADS_REMOTE_LABEL"
@@ -2633,32 +2646,6 @@
                         <option value="1">JYES</option>
                         <option value="0">JNO</option>
                 </field> 
-                <field
-			name="upload_tool"
-			type="list"
-			label="COM_HWDMS_FILE_UPLOADER_LABEL"
-			description="COM_HWDMS_FILE_UPLOADER_DESC"
-			default="1"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="0">COM_HWDMS_OPTION_STANDARD_UPLOADER</option>
-                        <option value="1">COM_HWDMS_OPTION_FANCY_UPLOADER</option>
-                        <option value="2">COM_HWDMS_OPTION_LARGE_UPLOADER</option>
-                </field>  
-                <field
-			name="upload_tool_perl"
-			type="radio"
-			label="COM_HWDMS_LARGE_FILE_UPLOADER_LABEL"
-			description="COM_HWDMS_LARGE_FILE_UPLOADER_DESC"
-			class="btn-group btn-group-yesno"
-			default="0"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">COM_HWDMS_ENABLED</option>
-                        <option value="0">COM_HWDMS_DISABLED</option>
-                </field>  
 		<field
 			name="upload_uber_tmp_path"
 			type="text"
@@ -2675,53 +2662,18 @@
 			filter="string"
                 />  
                 <field
-			name="audio_uploads"
+			name="upload_tool"
 			type="list"
-			label="COM_HWDMS_AUDIO_UPLOADS_LABEL"
-			description="COM_HWDMS_AUDIO_UPLOADS_DESC"
-			default="0"
+			label="COM_HWDMS_FILE_UPLOADER_LABEL"
+			description="COM_HWDMS_FILE_UPLOADER_DESC"
+			default="1"
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
-                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
-                </field> 
-                <field
-			name="document_uploads"
-			type="list"
-			label="COM_HWDMS_DOCUMENT_UPLOADS_LABEL"
-			description="COM_HWDMS_DOCUMENT_UPLOADS_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
-                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
-                </field>    
-                <field
-			name="image_uploads"
-			type="list"
-			label="COM_HWDMS_IMAGE_UPLOADS_LABEL"
-			description="COM_HWDMS_IMAGE_UPLOADS_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
-                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
-                </field> 
-                <field
-			name="video_uploads"
-			type="list"
-			label="COM_HWDMS_VIDEO_UPLOADS_LABEL"
-			description="COM_HWDMS_VIDEO_UPLOADS_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="0">COM_HWDMS_USE_LOCAL_TOOL</option>
-                        <option value="3">COM_HWDMS_USE_PLATFORM_TOOL</option>
-                </field> 
+                        <option value="0">COM_HWDMS_OPTION_STANDARD_UPLOADER</option>
+                        <option value="1">COM_HWDMS_OPTION_FANCY_UPLOADER</option>
+                        <option value="2">COM_HWDMS_OPTION_LARGE_UPLOADER</option>
+                </field>  
 		<field
 			name="max_upload_filesize"
 			type="text"
