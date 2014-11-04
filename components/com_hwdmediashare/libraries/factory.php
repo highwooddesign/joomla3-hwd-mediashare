@@ -106,7 +106,10 @@ class hwdMediaShareFactory extends JObject
                 // Initialise variables.            
                 $app = JFactory::getApplication();
                 
-                // Check if the config is already loaded.
+                // Get the frontend application parameters.
+                $appParams = $app->isSite() && !defined('_JCLI') ? $app->getParams('com_hwdmediashare') : null;
+                
+                // Check if the config is already loaded, or if we're resetting.
                 if(!$this->_config || $reset)
 		{
                         jimport('joomla.filesystem.file');
@@ -119,7 +122,7 @@ class hwdMediaShareFactory extends JObject
                         JTable::addIncludePath(JPATH_ROOT . '/administrator/components/com_hwdmediashare/tables');
                         $table = JTable::getInstance('Configuration', 'hwdMediaShareTable');
 
-                        // Attempt to load the row.
+                        // Attempt to load the default configuration row.
                         $return = $table->load('1');
 
                         // Check for a table object error.
@@ -129,30 +132,46 @@ class hwdMediaShareFactory extends JObject
                                 return false;
                         }
 
-                        // Load and manipulate the saved configruation.
+                        // Load and manipulate the saved configuration.
                         $config = json_decode($table->params);                       
                         if (isset($config->upload_limits))
                         {
                                 $config->upload_limits = json_encode($config->upload_limits);
                         }
                         
-                        // Merge the user saved configuration.
+                        /**
+                         * Here we define the HWD configuration registry, with the fallback
+                         * and override as follows:
+                         * 
+                         * 1) Start with the global user saved configuration.
+                         * 2) Merge the application parameters (menu parameters)
+                         * 3) Merge the passed parameters (item parameters).
+                         */
+                        
+                        // Load the user saved configuration.
                         $this->_config->loadObject($config);
 
-                        // Merge the user saved configuration.
-                        $this->_config->loadObject($params);
+                        // Merge the application parameters.
+                        if (is_object($appParams))
+                        {
+                                $this->_config->merge($appParams, true);
+                        }
+                        
+                        // Merge the passed parameters.
+                        if (is_object($params))
+                        {
+                                $this->_config->merge($params, true);
+                        }
 
-                        // Load component parameters and create JRegistry object.
+                        // Load component parameters and create JRegistry object (this is really a 
+                        // dummy registry as no fields are defined in the component config.xml).
                         $this->_params = JComponentHelper::getParams('com_hwdmediashare');
-                        
+
                         // Load our configuration.
-                        $this->_params->merge($this->_config);    
-                        
-                        // Merge and override with menu and system parameters (if in frontend).
-                        if (!defined('_JCLI') && !$app->isAdmin()) $this->_params->merge($app->getParams('com_hwdmediashare'));
+                        $this->_params->merge($this->_config, true); 
                         
                         // Merge the 'debug' parameter from the Global Configuration.
-                        $this->_params->set('debug', $app->getCfg('debug'));                            
+                        $this->_params->set('debug', $app->getCfg('debug'));                           
                 }
 
                 //$config = JRegistryFormatJSON::stringToObject($this->_config);
