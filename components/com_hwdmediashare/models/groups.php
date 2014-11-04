@@ -179,6 +179,9 @@ class hwdMediaShareModelGroups extends JModelList
                         }                    
 		}    
 
+   		// Group over the key to prevent duplicates.
+                $query->group('a.id');
+                
 		// Filter by author
 		$authorId = $this->getState('filter.author_id');
 		$authorWhere = '';
