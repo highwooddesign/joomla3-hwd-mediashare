@@ -61,7 +61,7 @@ class plgHwdmediashareComments_disqus extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_comments_disqus', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_comments_disqus', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
