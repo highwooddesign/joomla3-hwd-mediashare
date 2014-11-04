@@ -188,7 +188,7 @@ class plgHwdmediashareRemote_veohcom extends hwdMediaShareRemote
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_remote_veohcom', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_remote_veohcom', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -271,7 +271,7 @@ class plgHwdmediashareRemote_veohcom extends hwdMediaShareRemote
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_remote_veohcom', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_remote_veohcom', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
