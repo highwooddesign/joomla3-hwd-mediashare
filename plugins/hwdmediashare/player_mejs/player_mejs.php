@@ -66,7 +66,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
                 // Load skin.
                 if (JFile::exists(JPATH_SITE . "/plugins/hwdmediashare/player_mejs/assets/skins/" . $params->get('skin', 'dark') . "/" . $params->get('skin', 'dark') . ".css"))
                 {
-                        $doc->addStyleSheet(JURI::root() . "plugins/hwdmediashare/player_mejs/assets/skins/" . $params->get('skin') . "/" . $params->get('skin') . ".css");
+                        $doc->addStyleSheet(JURI::root() . "plugins/hwdmediashare/player_mejs/assets/skins/" . $params->get('skin', 'dark') . "/" . $params->get('skin', 'dark') . ".css");
                 }
         }
 
@@ -92,7 +92,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_mejs', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_mejs', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -165,7 +165,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_mejs', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_mejs', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -248,7 +248,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_mejs', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_mejs', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -323,7 +323,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_mejs', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_mejs', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
