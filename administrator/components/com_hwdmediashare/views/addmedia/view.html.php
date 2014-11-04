@@ -61,7 +61,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		// Determine if we need to show the form.
 		if ($this->config->get('upload_workflow') == 0 && $this->show_form && !$this->replace && $this->method != 'remote') 
 		{
-			$this->setLayout('form');
+			$tpl = 'form';
 		}             
                 else
                 {
@@ -70,7 +70,7 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 
                         if ($this->method == 'remote' && $this->config->get('enable_uploads_remote') == 1 && !$this->replace) 
                         {
-                                $this->setLayout('remote');
+                                $tpl = 'remote';
                         }  
                         else
                         {
