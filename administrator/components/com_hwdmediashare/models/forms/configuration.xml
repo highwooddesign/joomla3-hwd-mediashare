@@ -2550,38 +2550,6 @@
 			default=""
                 />        
                 <field
-			name="upload_terms"
-			type="radio"
-			label="COM_HWDMS_UPLOAD_AGREE_TERMS_LABEL"
-			description="COM_HWDMS_UPLOAD_AGREE_TERMS_DESC"
-			class="btn-group btn-group-yesno"
-			default="0" 
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">JYES</option>
-                        <option value="0">JNO</option>
-                </field> 
-                <field
-			name="upload_terms_id"
-			type="modal_article"
-			label="COM_HWDMS_UPLOAD_TERMS_ID_LABEL"
-			description="COM_HWDMS_UPLOAD_TERMS_ID_DESC"
-			default=""
-                />
-                <field
-			name="upload_workflow"
-			type="list"
-			label="COM_HWDMS_UPLOAD_WORKFLOW_LABEL"
-			description="COM_HWDMS_UPLOAD_WORKFLOW_DESC"
-			default="1" 
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="1">COM_HWDMS_OPTION_BULK</option>
-                        <option value="0">COM_HWDMS_OPTION_SINGLE</option>
-                </field>   
-                <field
 			name="enable_uploads_file"
 			type="radio"
 			label="COM_HWDMS_ENABLE_UPLOADS_FILE_LABEL"
@@ -2646,6 +2614,31 @@
                         <option value="1">JYES</option>
                         <option value="0">JNO</option>
                 </field> 
+                <field
+			name="upload_workflow"
+			type="list"
+			label="COM_HWDMS_UPLOAD_WORKFLOW_LABEL"
+			description="COM_HWDMS_UPLOAD_WORKFLOW_DESC"
+			default="1" 
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">COM_HWDMS_OPTION_BULK</option>
+                        <option value="0">COM_HWDMS_OPTION_SINGLE</option>
+                </field>                   
+                <field
+			name="upload_tool_perl"
+			type="radio"
+			label="COM_HWDMS_LARGE_FILE_UPLOADER_LABEL"
+			description="COM_HWDMS_LARGE_FILE_UPLOADER_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+			validate="integer"
+                        filter="integer"  
+                >
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field>                 
 		<field
 			name="upload_uber_tmp_path"
 			type="text"
@@ -2660,20 +2653,27 @@
 			label="COM_HWDMS_UBR_UPLOAD_URL_LABEL"
 			description="COM_HWDMS_UBR_UPLOAD_URL_DESC"
 			filter="string"
-                />  
+                /> 
                 <field
-			name="upload_tool"
-			type="list"
-			label="COM_HWDMS_FILE_UPLOADER_LABEL"
-			description="COM_HWDMS_FILE_UPLOADER_DESC"
-			default="1"
+			name="upload_terms"
+			type="radio"
+			label="COM_HWDMS_UPLOAD_AGREE_TERMS_LABEL"
+			description="COM_HWDMS_UPLOAD_AGREE_TERMS_DESC"
+			class="btn-group btn-group-yesno"
+			default="0" 
 			validate="integer"
                         filter="integer"  
                 >
-                        <option value="0">COM_HWDMS_OPTION_STANDARD_UPLOADER</option>
-                        <option value="1">COM_HWDMS_OPTION_FANCY_UPLOADER</option>
-                        <option value="2">COM_HWDMS_OPTION_LARGE_UPLOADER</option>
-                </field>  
+                        <option value="1">JYES</option>
+                        <option value="0">JNO</option>
+                </field> 
+                <field
+			name="upload_terms_id"
+			type="modal_article"
+			label="COM_HWDMS_UPLOAD_TERMS_ID_LABEL"
+			description="COM_HWDMS_UPLOAD_TERMS_ID_DESC"
+			default=""
+                />                 
 		<field
 			name="max_upload_filesize"
 			type="text"
