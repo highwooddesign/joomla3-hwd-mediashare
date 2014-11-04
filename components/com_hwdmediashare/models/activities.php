@@ -102,6 +102,9 @@ class hwdMediaShareModelActivities extends JModelList
                         $query->order($db->escape($listOrder.' '.$listDirn));                
 		}    
 
+   		// Group over the key to prevent duplicates.
+                $query->group('a.id');
+                
                 // Filter by actor.
 		if ($actor = $this->getState('filter.actor'))
                 {
