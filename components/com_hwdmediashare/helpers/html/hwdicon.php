@@ -22,24 +22,8 @@ class JHtmlHwdIcon
 	 */
 	public static function overlay($type, $item = null)
 	{
-                // Check for specific file types.
-                if (isset($item->ext))
-                {
-                        switch ($item->ext)
-                        {
-                              case "zip":
-                                    return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/16/zip.png';
-                              break;
-                        }
-                }
-
-                if (!isset($type)) return;
-
                 switch ($type) 
                 {
-                        case "1":
-                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/24/media.png';
-                        break;
                         case "1-1":
                                 return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/24/audio.png';
                         break;
@@ -67,9 +51,9 @@ class JHtmlHwdIcon
                         case 6:
                                 return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/24/category.png';
                         break;
+                        default:
+                                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/24/image.png';
+                        break;
                 }
-                
-                // If no appropriate icon, assume a remote media.
-                return JURI::root(true).'/media/com_hwdmediashare/assets/images/icons/24/globe.png';
 	}
 }
