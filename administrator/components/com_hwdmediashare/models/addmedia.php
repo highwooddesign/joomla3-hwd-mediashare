@@ -208,8 +208,9 @@ window.addEvent('domready', function() {
 
 		// graceful degradation, onLoad is only called if all went well with Flash
 		onLoad: function() {
-			$('hwd-upload-status').removeClass('hide'); // we show the actual UI
-			$('hwd-upload-fallback').destroy(); // ... and hide the plain form
+                        if ($('hwd-upload-status'))   $('hwd-upload-status').removeClass('hide');  // Display FancyUpload2 UI
+                        if ($('hwd-upload-buttons'))  $('hwd-upload-buttons').removeClass('hide'); // Display FancyUpload2 UI
+                        if ($('hwd-upload-fallback')) $('hwd-upload-fallback').destroy();          // Hide Fallback Form
 
 			// We relay the interactions with the overlayed flash to the link
 			this.target.addEvents({
@@ -239,6 +240,8 @@ window.addEvent('domready', function() {
 				up.start(); // start upload
 				return false;
 			});
+                                                
+                        $('hwd-upload-upload').removeAttribute('onclick');
 		},
 
 		// Edit the following lines, it is your custom event handling
