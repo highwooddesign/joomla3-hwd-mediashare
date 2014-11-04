@@ -66,7 +66,7 @@ class plgHwdmediashareComments_facebook extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_comments_facebook', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_comments_facebook', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
