@@ -59,8 +59,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
 		// Display the template
 		parent::display($tpl);
                 
-		$document = JFactory::getDocument();
-		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");
+		$this->document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");  
 	}
 
 	/**
