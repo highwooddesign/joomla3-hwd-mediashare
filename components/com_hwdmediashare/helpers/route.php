@@ -86,7 +86,7 @@ class hwdMediaShareHelperRoute
          * @static
          * @param   integer  $id      The id of the content.
          * @param   array    $params  An array of additional url parameters.
-         * @return  string  The url to the content.
+         * @return  string   The url to the content.
 	 */
 	public static function getAlbumRoute($id, $params = array())
 	{
@@ -303,54 +303,6 @@ class hwdMediaShareHelperRoute
                 
                 return self::_buildUrl('index.php?option=com_hwdmediashare&view=playlists', $params, $needles);
 	}
-        
-	/**
-	 * Method to get the url to the slideshow.
-         * 
-         * @access  public
-         * @static
-         * @param   integer  $id         The id of the content.
-         * @param   array    $params     An array of additional url parameters.
-         * @param   boolean  $associate  Add associated data to the url.
-         * @return  string   The url to the content.
-	 */
-	public static function getSlideshowRoute($id, $params=array(), $associate=true)
-	{
-		// Initialise variables.
-		$app = JFactory::getApplication();
-            
-		$needles = array(
-			'media'  => null
-		);
-                
-                $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=slideshow', $params, $needles);
-
-                // Associate, in priority: category/playlist/album/group
-                if ($associate && $category_id = $app->input->get('category_id', 0, 'int'))
-                {
-                        $link.= '&category_id='.$category_id;
-                }
-                elseif ($associate && $playlist_id = $app->input->get('playlist_id', 0, 'int'))
-                {
-                        $link.= '&playlist_id='.$playlist_id;
-                }                 
-                elseif ($associate && $album_id = $app->input->get('album_id', 0, 'int'))
-                {
-                        $link.= '&album_id='.$album_id;
-                }                
-                elseif ($associate && $group_id = $app->input->get('group_id', 0, 'int'))
-                {
-                        $link.= '&group_id='.$group_id;
-                } 
-                
-                // Add component tmpl.
-                $link.= '&tmpl=component';
-                
-                // Add return link.
-                $link.= '&return=' .  base64_encode(JFactory::getURI()->toString());
-
-                return $link;
-	}
 
 	/**
 	 * Method to get the url to the a user, based on community options.
@@ -512,12 +464,9 @@ class hwdMediaShareHelperRoute
                 {
 			$link.= '&Itemid='.$item;
 		}
-		elseif ($item = self::_findItem()) 
-                {
-			$link.= '&Itemid='.$item;
-		}
                 
-                $link .= $app->input->get('tmpl', '', 'word') == 'component' ? '&tmpl=component' : '';
+                // @TODO: Commented this out as it provides bad links from EasySocial profiles (loaded through AJAX).
+                // $link .= $app->input->get('tmpl', '', 'word') == 'component' ? '&tmpl=component' : '';
                 
                 return $link;
         }
@@ -646,15 +595,7 @@ class hwdMediaShareHelperRoute
 				}
 			}
 		}
-		else
-		{
-			$active = $menus->getActive();
-			if ($active && $active->component == 'com_hwdmediashare') 
-                        {
-				return $active->id;
-			}
-		}
 
-		return null;
+		return false;
 	}
 }
