@@ -68,56 +68,56 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                         $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
                         $this->jformreg = new JRegistry($this->jformdata);
 
-                        $this->localExtensions = $this->get('localExtensions');
-                        $this->showPlatform = $this->get('platformStatus');
-
-                        if ($this->config->get('enable_uploads_file') == 1) 
-                        {
-                                if ($this->config->get('upload_tool') == 1 && !$this->replace && count($this->localExtensions)) 
-                                {
-                                        // Add assets to the document.
-                                        $this->get('FancyUploadScript');
-                                }
-                                elseif ($this->config->get('upload_tool') == 2 && $this->config->get('upload_tool_perl') == 1) 
-                                {
-                                        $this->uberUploadHtml = $this->get('UberUploadScript');
-                                }
-                        }
-
                         if ($this->method == 'remote' && $this->config->get('enable_uploads_remote') == 1 && !$this->replace) 
                         {
                                 $this->setLayout('remote');
-                        }   
-                
-                        // Bulk import from server (unless we are updating an existing media).
-                        if (!$this->replace) 
+                        }  
+                        else
                         {
-                                $style = $app->getUserStateFromRequest('media.list.layout', 'layout', 'thumbs', 'word');
+                                $this->localExtensions = $this->get('localExtensions');
 
-                                JHtml::_('behavior.framework', true);
+                                if ($this->config->get('enable_uploads_file') == 1) 
+                                {
+                                        if ($this->config->get('upload_tool_perl') == 1) 
+                                        {
+                                                $this->get('UberUploadScript');
+                                        }
+                                        elseif ($this->config->get('upload_workflow') == 1) 
+                                        {
+                                                $this->get('FancyUploadScript');
+                                        }
+                                }
 
-                                $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/MooTree.js");
+                                // Bulk import from server (unless we are updating an existing media).
+                                if (!$this->replace) 
+                                {
+                                        $style = $app->getUserStateFromRequest('media.list.layout', 'layout', 'thumbs', 'word');
 
-                                JHtml::_('script', 'system/mootree.js', true, true, false, false);
-                                JHtml::_('stylesheet', 'system/mootree.css', array(), true);
-                                if ($lang->isRTL()) :
-                                        JHtml::_('stylesheet', 'media/mootree_rtl.css', array(), true);
-                                endif;
+                                        JHtml::_('behavior.framework', true);
 
-                                $base = JPATH_SITE.'/media';
+                                        $document->addScript(JURI::root() . "/media/com_hwdmediashare/assets/javascript/MooTree.js");
 
-                                $js = "
-                                        var basepath = '';
-                                        var viewstyle = 'thumbs';
-                                " ;
-                                $document->addScriptDeclaration($js);
+                                        JHtml::_('script', 'system/mootree.js', true, true, false, false);
+                                        JHtml::_('stylesheet', 'system/mootree.css', array(), true);
+                                        if ($lang->isRTL()) :
+                                                JHtml::_('stylesheet', 'media/mootree_rtl.css', array(), true);
+                                        endif;
 
-                                $session = JFactory::getSession();
-                                $state = $this->get('state');
-                                $this->state = $state;
-                                $this->folders = $this->get('folderTree');
-                                $this->folders_id = ' id="media-tree"';
-                        } 
+                                        $base = JPATH_SITE.'/media';
+
+                                        $js = "
+                                                var basepath = '';
+                                                var viewstyle = 'thumbs';
+                                        " ;
+                                        $document->addScriptDeclaration($js);
+
+                                        $session = JFactory::getSession();
+                                        $state = $this->get('state');
+                                        $this->state = $state;
+                                        $this->folders = $this->get('folderTree');
+                                        $this->folders_id = ' id="media-tree"';
+                                } 
+                        }
                 }
                 
                 // Check for errors.
@@ -137,8 +137,16 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 		// Display the template.
 		parent::display($tpl);
                 
-		$document = JFactory::getDocument();
-		$document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");
+		$this->document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");
+                
+                // Load file input script.
+		$this->document->addScript(JURI::root() . "media/com_hwdmediashare/assets/javascript/bootstrap-file-input.js");
+		$this->document->addScriptDeclaration("
+                    var buttonWord = 'Select File...';
+                    jQuery(document).ready(function(){
+                            jQuery('.hwd-form-filedata').bootstrapFileInput();
+                    });
+                ");        
 	}
 
 	/**
@@ -162,7 +170,35 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
                 JToolbarHelper::cancel('addmedia.cancel');
 		JToolbarHelper::help('HWD', false, 'http://hwdmediashare.co.uk/learn/docs');
 	}
-                
+
+ 	/**
+	 * Method to render the platform upload title.
+	 *
+	 * @access  protected
+	 * @return  void
+	 */
+	protected function getPlatformUploadTitle()
+	{
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
+                $pluginClass = 'plgHwdmediashare' . $config->get('platform');
+                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $config->get('platform') . '/' . $config->get('platform') . '.php';
+                if (file_exists($pluginPath))
+                {
+                        // Load the language file.
+                        $lang = JFactory::getLanguage();
+                        $lang->load('plg_hwdmediashare_' .  $config->get('platform'), JPATH_ADMINISTRATOR, $lang->getTag());
+
+                        return JText::_('PLG_HWDMEDIASHARE_' . $config->get('platform') . '_UPLOAD_TO_PLATFORM');
+                }
+                else
+                {
+                        return JText::_('COM_HWDMS_UPLOAD_TO_PLATFORM');
+                }
+	}
+        
  	/**
 	 * Method to render the platform upload form.
 	 *
