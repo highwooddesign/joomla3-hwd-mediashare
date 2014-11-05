@@ -15,8 +15,8 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	/**
 	 * The type alias for this content type.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */  
 	public $typeAlias = 'com_hwdmediashare.media';
         
@@ -24,8 +24,8 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to get a single item.
 	 *
          * @access  public
-	 * @param   integer     $pk     The id of the primary key.
-	 * @return  mixed       Object on success, false on failure.
+	 * @param   integer  $pk  The id of the primary key.
+	 * @return  mixed    Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -109,9 +109,9 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Abstract method for getting the form from the model.
 	 *
 	 * @access  public
-	 * @param   array       $data      Data for the form.
-	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
-	 * @return  mixed       A JForm object on success, false on failure
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed    A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -130,7 +130,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @access  protected
-         * @return  mixed       The data for the form.
+         * @return  mixed      The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -153,7 +153,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to get the custom thumbnail for the media.
          * 
          * @access  public
-         * @param   object  $item   The album object.
+         * @param   object  $item  The album object.
 	 * @return  mixed   The thumnail location on success, false on failure.
 	 */
 	public function getThumbnail($item)
@@ -174,7 +174,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to count the number of albums associated with a media.
          * 
          * @access  public
-         * @param   object  $item   The media object.
+         * @param   object  $item  The media object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getAlbumCount($item)
@@ -201,7 +201,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to count the number of playlists associated with a media.
          * 
          * @access  public
-         * @param   object  $item   The media object.
+         * @param   object  $item  The media object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getPlaylistCount($item)
@@ -228,7 +228,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to count the number of groups associated with a media.
          * 
          * @access  public
-         * @param   object  $item   The media object.
+         * @param   object  $item  The media object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getGroupCount($item)
@@ -255,7 +255,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to count the number of other media associated with a media.
          * 
          * @access  public
-         * @param   object  $item   The media object.
+         * @param   object  $item  The media object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getLinkedMediaCount($item)
@@ -282,7 +282,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to count the number of pages associated with a media.
          * 
          * @access  public
-         * @param   object  $item   The media object.
+         * @param   object  $item  The media object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getLinkedPagesCount($item)
@@ -294,7 +294,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to count the number of responses associated with a media.
          * 
          * @access  public
-         * @param   object  $item   The media object.
+         * @param   object  $item  The media object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getResponseCount($item)
@@ -321,7 +321,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to toggle the approval status of one or more records.
 	 *
          * @access  public
-	 * @param   array    $pks   An array of record primary keys.
+	 * @param   array    $pks  An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
 	 * @return  boolean  True on success.
 	 */
@@ -404,7 +404,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to toggle the featured value of one or more records.
 	 *
          * @access  public
-	 * @param   array    $pks   An array of record primary keys.
+	 * @param   array    $pks  An array of record primary keys.
 	 * @param   integer  $value The value to toggle to.
 	 * @return  boolean  True on success.
 	 */
@@ -612,8 +612,8 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to add a process for an array of media items.
 	 *
          * @access  public
-	 * @param   array    $pks       A list of the primary keys to change.
-	 * @param   integer  $processId The value of the process key to associate with.
+	 * @param   array    $pks        A list of the primary keys to change.
+	 * @param   integer  $processId  The value of the process key to associate with.
 	 * @return  boolean  True on success.
 	 */
 	public function assignProcess($pks, $processId = null)
@@ -685,10 +685,10 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * Method to perform batch operations on an item or a set of items.
 	 *
 	 * @access  public
-	 * @param   array   $commands  An array of commands to perform.
-	 * @param   array   $pks       An array of item ids.
-	 * @param   array   $contexts  An array of item contexts.
-	 * @return  boolean Returns true on success, false on failure.
+	 * @param   array    $commands  An array of commands to perform.
+	 * @param   array    $pks       An array of item ids.
+	 * @param   array    $contexts  An array of item contexts.
+	 * @return  boolean  Returns true on success, false on failure.
 	 */
 	public function batch($commands, $pks, $contexts)
 	{           
@@ -847,8 +847,8 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
          * associated data.
 	 *
          * @access  public
-	 * @param   array   $pks    An array of record primary keys.
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @param   array    $pks  An array of record primary keys.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
 	public function delete(&$pks)

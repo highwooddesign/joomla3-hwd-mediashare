@@ -16,7 +16,7 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 	 * Method to clean the category map.
          * 
          * @access  public
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
 	public function cleanCategoryMap()
 	{
@@ -51,7 +51,7 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 	 * Method to empty old upload tokens
          * 
          * @access  public
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
 	public function emptyUploadTokens()
 	{
@@ -84,7 +84,7 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 	 * Method to purge old processes
          * 
          * @access  public
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
 	public function purgeOldProcesses()
 	{
@@ -117,7 +117,7 @@ class hwdMediaShareModelMaintenance extends JModelLegacy
 	 * Method to purge old processes
          * 
          * @access  public
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 */
 	public function uninstallOldExtensions()
 	{

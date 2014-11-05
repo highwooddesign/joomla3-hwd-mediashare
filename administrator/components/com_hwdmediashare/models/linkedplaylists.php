@@ -15,18 +15,18 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	/**
 	 * The model used to get the list of playlists.
          * 
-         * @access      protected
-	 * @var         object
+         * @access  protected
+	 * @var     object
 	 */    
         protected $model;
 
 	/**
 	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
-	 */    
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
+	 */   
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields'])) {
@@ -57,7 +57,7 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 * Method to get a list of items.
 	 *
 	 * @access  public
-	 * @return  mixed  An array of data items on success, false on failure.
+	 * @return  mixed   An array of data items on success, false on failure.
 	 */
 	public function getItems()
 	{
@@ -92,8 +92,8 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 * Note. Calling getState in this method will result in recursion.
 	 *
 	 * @access  protected
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string     $ordering   An optional ordering field.
+	 * @param   string     $direction  An optional direction (asc|desc).
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -281,8 +281,8 @@ class hwdMediaShareModelLinkedPlaylists extends JModelList
 	 * A protected method to get a set of ordering conditions.
 	 *
 	 * @access  protected
-	 * @param   object  A record object.
-	 * @return  array   An array of conditions to add to add to ordering queries.
+	 * @param   object     A record object.
+	 * @return  array      An array of conditions to add to add to ordering queries.
 	 */
 	protected function getReorderConditions($table)
 	{

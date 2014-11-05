@@ -15,10 +15,10 @@ class hwdMediaShareModelChannels extends JModelList
 	/**
 	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
-	 */    
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
+	 */  
 	public function __construct($config = array())
 	{
 		if (empty($config['filter_fields']))
@@ -57,7 +57,7 @@ class hwdMediaShareModelChannels extends JModelList
 	 * Method to get the database query.
 	 *
 	 * @access  protected
-	 * @return  JDatabaseQuery  database query
+	 * @return  JDatabaseQuery  The database query.
 	 */
         protected function getListQuery()
         {
@@ -176,8 +176,8 @@ class hwdMediaShareModelChannels extends JModelList
 	 * Note. Calling getState in this method will result in recursion.
 	 *
 	 * @access  protected
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string     $ordering   An optional ordering field.
+	 * @param   string     $direction  An optional direction (asc|desc).
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)

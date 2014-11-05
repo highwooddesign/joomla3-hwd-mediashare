@@ -30,9 +30,9 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 * Abstract method for getting the form from the model.
 	 *
 	 * @access  public
-	 * @param   array       $data      Data for the form.
-	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
-	 * @return  mixed       A JForm object on success, false on failure
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed    A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -42,8 +42,8 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 * Method to get a single item.
 	 *
          * @access  public
-	 * @param   integer     $pk     The id of the primary key.
-	 * @return  mixed       Object on success, false on failure.
+	 * @param   integer  $pk  The id of the primary key.
+	 * @return  mixed    Object on success, false on failure.
 	 */
         public function getItem($pk = null)
         {
@@ -77,7 +77,7 @@ class hwdMediaShareModelProcess extends JModelAdmin
 	 * Method to get a list of items.
 	 *
 	 * @access  public
-	 * @return  mixed  An array of data items on success, false on failure.
+	 * @return  mixed   An array of data items on success, false on failure.
 	 */
         public function getItems()
         {
@@ -159,8 +159,8 @@ class hwdMediaShareModelProcess extends JModelAdmin
          * associated process log entries.
 	 *
          * @access  public
-	 * @param   array   $pks    An array of record primary keys.
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @param   array    $pks  An array of record primary keys.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
 	public function delete(&$pks)

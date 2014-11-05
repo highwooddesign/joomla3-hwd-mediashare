@@ -15,17 +15,17 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	/**
 	 * The model used to get the list of users.
          * 
-         * @access      protected
-	 * @var         object
+         * @access  protected
+	 * @var     object
 	 */    
         protected $model;
 
 	/**
 	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
 	 */    
 	public function __construct($config = array())
 	{
@@ -58,7 +58,7 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 * Method to get a list of items.
 	 *
 	 * @access  public
-	 * @return  mixed  An array of data items on success, false on failure.
+	 * @return  mixed   An array of data items on success, false on failure.
 	 */
 	public function getItems()
 	{
@@ -93,8 +93,8 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 * Note. Calling getState in this method will result in recursion.
 	 *
 	 * @access  protected
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
+	 * @param   string     $ordering   An optional ordering field.
+	 * @param   string     $direction  An optional direction (asc|desc).
 	 * @return  void
 	 */
 	protected function populateState($ordering = null, $direction = null)
@@ -118,8 +118,8 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 * Method to unlink one or more users from a group.
 	 *
 	 * @access  public
-	 * @param   array    $pks       A list of the primary keys to change.
-	 * @param   integer  $groupId   The value of the group key to associate with.
+	 * @param   array    $pks      A list of the primary keys to change.
+	 * @param   integer  $groupId  The value of the group key to associate with.
 	 * @return  boolean  True on success.
 	 */
         public function unlink($pks, $groupId = null)
@@ -206,8 +206,8 @@ class hwdMediaShareModelGroupMembers extends JModelList
 	 * Method to link one or more users to a group.
 	 *
 	 * @access  public
-	 * @param   array    $pks       A list of the primary keys to change.
-	 * @param   integer  $groupId   The value of the group key to associate with.
+	 * @param   array    $pks      A list of the primary keys to change.
+	 * @param   integer  $groupId  The value of the group key to associate with.
 	 * @return  boolean  True on success.
 	 */
 	public function link($pks, $groupId = null)

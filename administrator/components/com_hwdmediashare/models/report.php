@@ -30,9 +30,9 @@ class hwdMediaShareModelReport extends JModelAdmin
 	 * Abstract method for getting the form from the model.
 	 *
 	 * @access  public
-	 * @param   array       $data      Data for the form.
-	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
-	 * @return  mixed       A JForm object on success, false on failure
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed    A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -43,7 +43,7 @@ class hwdMediaShareModelReport extends JModelAdmin
 	 * Method to remove content that has been reported.
 	 *
          * @access  public
-	 * @param   array    $pks   An array of record primary keys.
+	 * @param   array    $pks  An array of record primary keys.
 	 * @return  boolean  True on success.
 	 */
 	public function remove($pks)

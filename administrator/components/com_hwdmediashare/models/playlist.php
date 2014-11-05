@@ -16,8 +16,8 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Method to get a single item.
 	 *
          * @access  public
-	 * @param   integer     $pk     The id of the primary key.
-	 * @return  mixed       Object on success, false on failure.
+	 * @param   integer  $pk  The id of the primary key.
+	 * @return  mixed    Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -61,9 +61,9 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Abstract method for getting the form from the model.
 	 *
 	 * @access  public
-	 * @param   array       $data      Data for the form.
-	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
-	 * @return  mixed       A JForm object on success, false on failure
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed    A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -82,7 +82,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @access  protected
-         * @return  mixed       The data for the form.
+         * @return  mixed      The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -101,7 +101,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Method to get the custom thumbnail for the playlist.
          * 
          * @access  public
-         * @param   object  $item   The playlist object.
+         * @param   object  $item  The playlist object.
 	 * @return  mixed   The thumnail location on success, false on failure.
 	 */
 	public function getThumbnail($item)
@@ -122,7 +122,7 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Method to count the number of media in the playlist.
          * 
          * @access  public
-         * @param   object  $item   The playlist object.
+         * @param   object  $item  The playlist object.
 	 * @return  mixed   An integer on success, false on failure.
 	 */
 	public function getMediaCount($item)
@@ -149,8 +149,8 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Method to toggle the approval status of one or more records.
 	 *
          * @access  public
-	 * @param   array    $pks   An array of record primary keys.
-	 * @param   integer  $value The value to toggle to.
+	 * @param   array    $pks    An array of record primary keys.
+	 * @param   integer  $value  The value to toggle to.
 	 * @return  boolean  True on success.
 	 */
 	public function approve($pks, $value = 0)
@@ -205,8 +205,8 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
 	 * Method to toggle the featured value of one or more records.
 	 *
          * @access  public
-	 * @param   array    $pks   An array of record primary keys.
-	 * @param   integer  $value The value to toggle to.
+	 * @param   array    $pks    An array of record primary keys.
+	 * @param   integer  $value  The value to toggle to.
 	 * @return  boolean  True on success.
 	 */
 	public function feature($pks, $value = 0)
@@ -262,8 +262,8 @@ class hwdMediaShareModelPlaylist extends JModelAdmin
          * associated data.
 	 *
          * @access  public
-	 * @param   array   $pks    An array of record primary keys.
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @param   array    $pks  An array of record primary keys.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
 	public function delete(&$pks)

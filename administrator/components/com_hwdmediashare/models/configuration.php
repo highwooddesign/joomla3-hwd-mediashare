@@ -16,8 +16,8 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
 	 * Method to get the configuration item.
 	 *
 	 * @access  public
-         * @param   integer     The id of the primary key.
-	 * @return  mixed       Object on success, false on failure.
+         * @param   integer  $pk  The id of the primary key.
+	 * @return  mixed    Object on success, false on failure.
 	 */
 	public function getItem($pk = null)
 	{
@@ -44,9 +44,9 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
 	 * Abstract method for getting the form from the model.
 	 *
 	 * @access  public
-	 * @param   array       $data      Data for the form.
-	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
-	 * @return  mixed       A JForm object on success, false on failure
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed    A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -65,7 +65,7 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @access  protected
-         * @return  mixed       The data for the form.
+         * @return  mixed      The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -84,8 +84,8 @@ class hwdMediaShareModelConfiguration extends JModelAdmin
 	 * Method to save the configuration form data.
 	 *
 	 * @access  public
-         * @param   array       $data  The form data.
-	 * @return  boolean     True on success, False on error.
+         * @param   array    $data  The form data.
+	 * @return  boolean  True on success, False on error.
 	 */
 	public function save($data)
 	{

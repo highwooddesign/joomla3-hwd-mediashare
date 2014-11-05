@@ -30,9 +30,9 @@ class hwdMediaShareModelExtension extends JModelAdmin
 	 * Abstract method for getting the form from the model.
 	 *
 	 * @access  public
-	 * @param   array       $data      Data for the form.
-	 * @param   boolean     $loadData  True if the form is to load its own data (default case), false if not.
-	 * @return  mixed       A JForm object on success, false on failure
+	 * @param   array    $data      Data for the form.
+	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
+	 * @return  mixed    A JForm object on success, false on failure
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
@@ -51,7 +51,7 @@ class hwdMediaShareModelExtension extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @access  protected
-         * @return  mixed       The data for the form.
+         * @return  mixed      The data for the form.
 	 */
 	protected function loadFormData()
 	{
@@ -71,8 +71,8 @@ class hwdMediaShareModelExtension extends JModelAdmin
          * gallery still contains media with the extension being deleted.
 	 *
          * @access  public
-	 * @param   array   $pks    An array of record primary keys.
-	 * @return  boolean True if successful, false if an error occurs.
+	 * @param   array    $pks  An array of record primary keys.
+	 * @return  boolean  True if successful, false if an error occurs.
 	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
 	public function delete(&$pks)
