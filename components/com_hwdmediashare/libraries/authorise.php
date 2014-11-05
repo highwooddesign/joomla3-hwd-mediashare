@@ -16,8 +16,7 @@ class hwdMediaShareAuthorise extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -50,10 +49,10 @@ class hwdMediaShareAuthorise extends JObject
 	 * Method to authorise a user for an album action.
 	 *
          * @access  public
-	 * @param   string      $action     The name of the action to check for permission (link/unlink).
-	 * @param   integer     $album_id   The id of the album.
-	 * @param   integer     $media_id   The id of the media.
-	 * @return  boolean     True if authorised
+	 * @param   string   $action    The name of the action to check for permission (link/unlink).
+	 * @param   integer  $album_id  The id of the album.
+	 * @param   integer  $media_id  The id of the media.
+	 * @return  boolean  True if authorised
 	 */
 	public function authoriseAlbumAction($action, $album_id = null, $media_id = null)
 	{ 
@@ -99,10 +98,10 @@ class hwdMediaShareAuthorise extends JObject
 	 * Method to authorise a user for a group action.
 	 *
          * @access  public
-	 * @param   string      $action     The name of the action to check for permission (link/unlink).
-	 * @param   integer     $group_id   The id of the album.
-	 * @param   integer     $media_id   The id of the media.
-	 * @return  boolean     True if authorised
+	 * @param   string   $action    The name of the action to check for permission (link/unlink).
+	 * @param   integer  $group_id  The id of the album.
+	 * @param   integer  $media_id  The id of the media.
+	 * @return  boolean  True if authorised
 	 */
 	public function authoriseGroupAction($action, $group_id = null, $media_id = null)
 	{ 
@@ -141,10 +140,10 @@ class hwdMediaShareAuthorise extends JObject
 	 * Method to authorise a user for a playlist action.
 	 *
          * @access  public
-	 * @param   string      $action         The name of the action to check for permission (link/unlink).
-	 * @param   integer     $playlist_id    The id of the album.
-	 * @param   integer     $media_id       The id of the media.
-	 * @return  boolean     True if authorised
+	 * @param   string   $action       The name of the action to check for permission (link/unlink).
+	 * @param   integer  $playlist_id  The id of the album.
+	 * @param   integer  $media_id     The id of the media.
+	 * @return  boolean  True if authorised
 	 */
 	public function authorisePlaylistAction($action, $playlist_id = null, $media_id = null)
 	{ 
@@ -183,10 +182,10 @@ class hwdMediaShareAuthorise extends JObject
 	 * Method to authorise a user for a media action.
 	 *
          * @access  public
-	 * @param   string      $action     The name of the action to check for permission.
-	 * @param   integer     $assetid    The id of the category.
-	 * @param   integer     $targetid   The id of the target (action specific).
-	 * @return  boolean     True if authorised
+	 * @param   string   $action    The name of the action to check for permission.
+	 * @param   integer  $assetid   The id of the category.
+	 * @param   integer  $targetid  The id of the target (action specific).
+	 * @return  boolean  True if authorised
 	 */
 	public function authoriseMediaAction($action, $assetid = null, $targetid)
 	{ 
@@ -204,10 +203,10 @@ class hwdMediaShareAuthorise extends JObject
 	 * Method to authorise a user for a category action.
 	 *
          * @access  public
-	 * @param   string      $action     The name of the action to check for permission.
-	 * @param   integer     $assetid    The id of the category.
-	 * @param   integer     $targetid   The id of the target (action specific).
-	 * @return  boolean     True if authorised
+	 * @param   string   $action    The name of the action to check for permission.
+	 * @param   integer  $assetid   The id of the category.
+	 * @param   integer  $targetid  The id of the target (action specific).
+	 * @return  boolean  True if authorised
 	 */
 	public function authoriseCategoryAction($action, $assetid = null, $targetid)
 	{ 
