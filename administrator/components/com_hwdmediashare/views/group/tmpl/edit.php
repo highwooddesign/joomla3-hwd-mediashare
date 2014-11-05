@@ -97,19 +97,19 @@ $isNew = $this->item->id == 0 ? true : false ;
             
 		<?php echo JLayoutHelper::render('joomla.edit.params', $this); ?>
 
-		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'thumbnail', JText::_('COM_HWDMS_CUSTOM_THUMBNAIL', true)); ?>
-                        <div class="pull-right">
-                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" style="max-width:300px;" />
-                        </div>
+		<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'thumbnail', JText::_('COM_HWDMS_THUMBNAIL', true)); ?>
+                        <?php if (!$this->item->thumbnail) : ?>
+                                <div class="alert alert-info"><?php echo JText::_('COM_HWDMS_ALERT_GROUP_THUMBNAIL_SELECTED_AUTOMATICALLY'); ?></div>
+                        <?php endif; ?> 
                         <?php if ($this->item->thumbnail) : ?>
-                        <div class="control-group">
-                                <div class="control-label">
-                                        <?php echo $this->form->getLabel('remove_thumbnail'); ?>
+                                <div class="control-group">
+                                        <div class="control-label">
+                                                <?php echo $this->form->getLabel('remove_thumbnail'); ?>
+                                        </div>
+                                        <div class="controls">
+                                                <?php echo $this->form->getInput('remove_thumbnail'); ?>
+                                        </div>
                                 </div>
-                                <div class="controls">
-                                        <?php echo $this->form->getInput('remove_thumbnail'); ?>
-                                </div>
-                        </div>
                         <?php endif; ?>  
                         <div class="control-group">
                                 <div class="control-label">
@@ -119,6 +119,9 @@ $isNew = $this->item->id == 0 ? true : false ;
                                         <?php echo $this->form->getInput('thumbnail'); ?>
                                 </div>
                         </div>
+                        <?php if ($this->item->thumbnail) : ?>            
+                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" />
+                        <?php endif; ?>  
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
             
                 <?php if (!$isNew) : ?>
