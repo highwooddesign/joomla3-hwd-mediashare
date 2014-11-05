@@ -153,8 +153,8 @@
  		<field
                         name="thumbnail"
                         type="file"
-			label="COM_HWDMS_NEW_THUMBNAIL_LABEL"
-                        description="COM_HWDMS_NEW_THUMBNAIL_DESC"
+			label="COM_HWDMS_NEW_CUSTOM_THUMBNAIL_LABEL"
+                        description="COM_HWDMS_NEW_CUSTOM_THUMBNAIL_DESC"
                 />
  		<field
                         name="remove_thumbnail"
