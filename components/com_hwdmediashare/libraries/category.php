@@ -15,8 +15,8 @@ class hwdMediaShareCategory extends JObject
 	/**
 	 * The element type to use with this library.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
 	public $elementType = 1;
         
@@ -24,8 +24,7 @@ class hwdMediaShareCategory extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -201,7 +200,7 @@ class hwdMediaShareCategory extends JObject
 	 * Method to get categories of an item.
 	 *
 	 * @access  public
-	 * @param   object  $item   The item to check.
+	 * @param   object  $item  The item to check.
 	 * @return  array   An array of categories assigned to the item.
 	 */ 
         public function load($item)
@@ -257,7 +256,7 @@ class hwdMediaShareCategory extends JObject
 	 * Method to get categories of an item (in format for a form input).
 	 *
 	 * @access  public
-	 * @param   object  $item   The item to check.
+	 * @param   object  $item  The item to check.
 	 * @return  array   An array of categories assigned to the item.
 	 */ 
         public function getInputValue($item)
@@ -279,7 +278,7 @@ class hwdMediaShareCategory extends JObject
 	 *
 	 * @access  public
          * @static
-	 * @param   object  $item   The item.
+	 * @param   object  $item  The item.
 	 * @return  string  The HTML to display the categories.
 	 */ 
 	public static function renderCategories($item)
