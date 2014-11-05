@@ -15,25 +15,25 @@ class hwdMediaShareControllerMedia extends JControllerForm
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * The URL view list variable to use with this controller.
 	 *
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "media";
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array  $config  An optional associative array of configuration settings.
+         * @return  void
 	 */
 	public function __construct($config = array())
 	{
@@ -71,8 +71,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
 	/**
 	 * Method to toggle the published value of a list of media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function publish()
 	{
@@ -125,8 +125,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
 	/**
 	 * Method to like or dislike a single media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function like()
 	{
@@ -168,8 +168,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
 	/**
 	 * Method to add and remove a media from favourite list.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function favourite()
 	{
@@ -213,8 +213,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
 	/**
 	 * Method to report a single media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function report()
 	{
@@ -252,8 +252,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
         /**
 	 * Method to process a submitted password.
 	 *
-         * @access  public
-	 * @return  void
+	 * @access  public
+         * @return  void
 	 */
 	public function password()
 	{
@@ -286,8 +286,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
         /**
 	 * Method to process a submitted date of birth.
 	 *
-         * @access  public
-	 * @return  void.
+	 * @access  public
+         * @return  void
 	 */
 	public function dob()
 	{
@@ -320,8 +320,8 @@ class hwdMediaShareControllerMedia extends JControllerForm
         /**
 	 * Method to link a media with specific elements.
 	 *
-         * @access  public
-	 * @return  void.
+	 * @access  public
+         * @return  void
 	 */
 	public function link()
 	{
