@@ -15,25 +15,25 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * The URL view list variable to use with this controller.
 	 *
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "albums";
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array  $config  An optional associative array of configuration settings.
+         * @return  void
 	 */
 	public function __construct($config = array())
 	{
@@ -70,8 +70,8 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	/**
 	 * Method to toggle the published value of a list of albums.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function publish()
 	{
@@ -124,8 +124,8 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	/**
 	 * Method to like or dislike a single album.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function like()
 	{
@@ -167,8 +167,8 @@ class hwdMediaShareControllerAlbums extends JControllerForm
 	/**
 	 * Method to report a single album.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function report()
 	{
