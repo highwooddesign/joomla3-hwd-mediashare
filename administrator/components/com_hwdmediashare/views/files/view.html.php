@@ -43,6 +43,7 @@ class hwdMediaShareViewFiles extends JViewLegacy
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('thumbnails');
+                hwdMediaShareFactory::load('utilities');
 
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
