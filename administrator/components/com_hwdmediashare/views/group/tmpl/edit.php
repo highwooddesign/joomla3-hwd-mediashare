@@ -120,7 +120,7 @@ $isNew = $this->item->id == 0 ? true : false ;
                                 </div>
                         </div>
                         <?php if ($this->item->thumbnail) : ?>            
-                                <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($this->item)); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" />
+                                <img src="<?php echo JRoute::_($this->item->thumbnail); ?>" border="0" alt="<?php echo $this->escape($this->item->title); ?>" />
                         <?php endif; ?>  
 		<?php echo JHtml::_('bootstrap.endTab'); ?>
             
