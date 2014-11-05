@@ -121,7 +121,7 @@ class hwdMediaShareViewEditMedia extends JViewLegacy
 	 * Method to display the relative path to a media file.
 	 *
 	 * @access  public
-         * @param   object  $item   The media object
+         * @param   object  $item  The media object
 	 * @return  string  The path.
 	 */
 	public function getPath($item)
