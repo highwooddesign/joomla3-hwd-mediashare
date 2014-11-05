@@ -40,7 +40,10 @@ $canChange  = $user->authorise('core.edit.state', 'com_hwdmediashare') && $canCh
                                         <?php echo $this->escape(JHtml::_('string.truncate', $item->element->title, 20, false, false)); ?></a>
                         <?php else : ?>
                                 <span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->element->alias)); ?>"><?php echo $this->escape($item->element->title); ?></span>
-                        <?php endif; ?>                             
+                        <?php endif; ?> 
+                        <div class="small">
+                                <?php echo hwdMediaShareUtilities::getElementType($item); ?>
+                        </div>                                
                 </div>
         </td>  
         <td class="has-context">
