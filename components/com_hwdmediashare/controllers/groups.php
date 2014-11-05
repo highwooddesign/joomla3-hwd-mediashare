@@ -15,25 +15,25 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * The URL view list variable to use with this controller.
 	 *
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "groups";
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array  $config  An optional associative array of configuration settings.
+         * @return  void
 	 */ 
 	public function __construct($config = array())
 	{
@@ -70,8 +70,8 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	/**
 	 * Method to toggle the published value of a list of groups.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function publish()
 	{
@@ -124,8 +124,8 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	/**
 	 * Method to like or dislike a single group.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function like()
 	{
@@ -167,8 +167,8 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	/**
 	 * Method to report a single group.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function report()
 	{
@@ -206,8 +206,8 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	/**
 	 * Method to join a group.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function join()
 	{
@@ -248,8 +248,8 @@ class hwdMediaShareControllerGroups extends JControllerForm
 	/**
 	 * Method to leave a group.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function leave()
 	{
