@@ -408,6 +408,8 @@ class com_hwdMediaShareInstallerScript
                 $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/tagmap.php';  
                 $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables/userchannel.php';  
                 $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/activity';
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/addmedia/tmpl/form.php';  
+                $files[]   = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/addmedia/tmpl/remote.php';  
                 $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/tag';
                 $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/tags';
                 $folders[] = JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/views/user';
