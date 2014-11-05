@@ -15,16 +15,16 @@ class hwdMediaShareFiles extends JObject
 	/**
 	 * The element type to use with this library.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
 	public $elementType = 1;
         
 	/**
 	 * The set of files for a media.
          * 
-         * @access      protected
-	 * @var         object
+         * @access  protected
+	 * @var     object
 	 */
 	protected $_fileset = null;
 
@@ -32,8 +32,7 @@ class hwdMediaShareFiles extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -66,11 +65,11 @@ class hwdMediaShareFiles extends JObject
 	 * Method to add a new file entry for a media.
          * 
          * @access  public
-         * @param   object  $media          The associated media.
-         * @param   integer $filetype       The integer API value for the type of file.
-         * @return  boolean True on success.
+         * @param   object   $item      The associated item.
+         * @param   integer  $filetype  The integer API value for the type of file.
+         * @return  boolean  True on success.
 	 */
-	public function addFile($media, $fileType = null)
+	public function addFile($item, $fileType)
 	{
                 // Initialise variables.                        
                 $db = JFactory::getDBO();
@@ -82,7 +81,7 @@ class hwdMediaShareFiles extends JObject
 
                 $conditions = array(
                     $db->quoteName('element_type') . ' = ' . $db->quote($this->elementType), 
-                    $db->quoteName('element_id') . ' = ' . $db->quote($media->id), 
+                    $db->quoteName('element_id') . ' = ' . $db->quote($item->id), 
                     $db->quoteName('file_type') . ' = ' . $db->quote($fileType), 
                 );
 
@@ -103,16 +102,16 @@ class hwdMediaShareFiles extends JObject
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
                 $table = JTable::getInstance('File', 'hwdMediaShareTable');
 
-                $folders = hwdMediaShareFiles::getFolders($media->key);
-                $filename = hwdMediaShareFiles::getFilename($media->key, $fileType);
-                $ext = hwdMediaShareFiles::getExtension($media, $fileType);
+                $folders = hwdMediaShareFiles::getFolders($item->key);
+                $filename = hwdMediaShareFiles::getFilename($item->key, $fileType);
+                $ext = hwdMediaShareFiles::getExtension($item, $fileType);
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
 
                 if (file_exists($path))
                 {
                         $post                           = array();
                         $post['element_type']           = $this->elementType;
-                        $post['element_id']             = $media->id;
+                        $post['element_id']             = $item->id;
                         $post['file_type']              = $fileType;
                         $post['basename']               = $filename;
                         $post['ext']                    = $ext;
@@ -217,7 +216,7 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   string  $key    The unique key.
+         * @param   string  $key  The unique key.
          * @return  array   The recursive folder names.
 	 */
         public static function getFolders($key)
@@ -233,8 +232,8 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   array   $folders    The recursive folder names.
-         * @return  boolean True on success.
+         * @param   array    $folders  The recursive folder names.
+         * @return  boolean  True on success.
 	 */
         public static function setupFolders($folders)
         {
@@ -259,8 +258,8 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   string  $key        The unique key.
-         * @param   integer $filetype   The integer API value for the type of file.
+         * @param   string  $key       The unique key.
+         * @param   integer $filetype  The integer API value for the type of file.
          * @return  string  The filename.
 	 */
         public static function getFilename($key, $fileType)
@@ -327,11 +326,11 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $media          The associated media.
-         * @param   integer $filetype       The integer API value for the type of file.
-         * @return  boolean True on success.
+         * @param   object   $item      The associated item.
+         * @param   integer  $filetype  The integer API value for the type of file.
+         * @return  boolean  True on success.
 	 */
-        public static function getExtension($media, $fileType)
+        public static function getExtension($item, $fileType)
         {
                 // Initialise variables.                        
                 $db = JFactory::getDBO();
@@ -339,12 +338,12 @@ class hwdMediaShareFiles extends JObject
                 switch ($fileType) 
                 {
                         case 1:
-                                if (!$media->ext_id) return false;
+                                if (!$item->ext_id) return false;
                                 
                                 $query = $db->getQuery(true)
                                         ->select('ext')
                                         ->from('#__hwdms_ext')
-                                        ->where('id = ' . $db->quote($media->ext_id));
+                                        ->where('id = ' . $db->quote($item->ext_id));
                                 try
                                 {                
                                         $db->setQuery($query);
@@ -368,12 +367,12 @@ class hwdMediaShareFiles extends JObject
                         case 9:
                                 return 'ogg';
                         case 10:
-                                if (!$media->thumbnail_ext_id) return false;
+                                if (!$item->thumbnail_ext_id) return false;
                                 
                                 $query = $db->getQuery(true)
                                         ->select('ext')
                                         ->from('#__hwdms_ext')
-                                        ->where('id = ' . $db->quote($media->thumbnail_ext_id));
+                                        ->where('id = ' . $db->quote($item->thumbnail_ext_id));
                                 try
                                 {                
                                         $db->setQuery($query);
@@ -414,11 +413,11 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   array   $folders    The recursive folder names.
-         * @param   string  $filename   The name of the file.
-         * @param   string  $ext        The extension of the file.
-         * @param   boolean $abs        Flag for absolute/relative path.
-         * @return  string  The path.
+         * @param   array    $folders   The recursive folder names.
+         * @param   string   $filename  The name of the file.
+         * @param   string   $ext       The extension of the file.
+         * @param   boolean  $abs       Flag for absolute/relative path.
+         * @return  string   The path.
 	 */
         public static function getPath($folders, $filename, $ext, $abs = true)
         {
@@ -438,9 +437,9 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   array   $folders    The recursive folder names.
-         * @param   string  $filename   The name of the file.
-         * @param   string  $ext        The extension of the file.
+         * @param   array   $folders   The recursive folder names.
+         * @param   string  $filename  The name of the file.
+         * @param   string  $ext       The extension of the file.
          * @return  string  The URL.
 	 */
         public static function getUrl($folders, $filename, $ext)
@@ -452,17 +451,16 @@ class hwdMediaShareFiles extends JObject
 	 * Method to get all files associated with a media item
          * 
          * @access  public
-         * @param   object  $media          The associated media.
-         * @param   integer $filetype       The integer API value for the type of file.
-         * @return  boolean True on success.
+         * @param   object   $media  The media object.
+         * @return  boolean  True on success.
 	 */
-	public function getMediaFiles($item)
+	public function getMediaFiles($media)
         {
 		// Return false if nothing to do
-                if (empty($item->id) || $item->id == 0) return false;
+                if (empty($media->id) || $media->id == 0) return false;
                 
                 // Initialise variables.
-		$pk = $item->id;
+		$pk = $media->id;
 
 		if ($this->_fileset === null) 
                 {
@@ -472,7 +470,7 @@ class hwdMediaShareFiles extends JObject
 		if (!isset($this->_fileset[$pk])) 
                 {
 			// Check for remote links first
-                        if ($item->type == 7)
+                        if ($media->type == 7)
                         {
                                 $object = new stdClass;
                                 $object->row = new stdClass;
@@ -524,7 +522,7 @@ class hwdMediaShareFiles extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $item   The file item.
+         * @param   object  $item  The file item.
          * @return  string  The name of the file type.
 	 */
         public static function getFileType($item)
@@ -613,8 +611,8 @@ class hwdMediaShareFiles extends JObject
 	 * Method to delete all files associated with a single media item.
          * 
          * @access  public
-         * @param   object  $media          The media object.
-         * @return  boolean True on success.
+         * @param   object   $media  The media object.
+         * @return  boolean  True on success.
 	 */
 	public function deleteMediaFiles($media)
         {
@@ -638,11 +636,53 @@ class hwdMediaShareFiles extends JObject
         } 
         
 	/**
+	 * Method to delete a file.
+         * 
+         * @access  public
+         * @param   object   $item      The associated item.
+         * @param   integer  $filetype  The integer API value for the type of file.
+         * @return  boolean  True on success.
+	 */
+	public function removeFile($item, $fileType)
+        {
+                // Create a new query object.
+                $db = JFactory::getDBO();
+                $query = $db->getQuery(true);
+
+                // Select the required fields from the table.
+                $query->select('id');
+
+                // From the albums table
+                $query->from('#__hwdms_files');
+                $query->where($db->quoteName('element_type').' = '.$db->quote($this->elementType));
+                $query->where($db->quoteName('element_id').' = '.$db->quote($item->id));
+                $query->where($db->quoteName('file_type').' = '.$db->quote($fileType));
+
+                $db->setQuery($query);
+                $id = $db->loadResult();
+                
+                if ($id)
+                {
+                        $pks = array($id);
+                        
+                        JModelLegacy::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/models');
+                        $model = JModelLegacy::getInstance('File', 'hwdMediaShareModel', array('ignore_request' => true));
+                        if (!$model->delete($pks))
+                        {
+                                $this->setError($model->getError());
+                                return false;
+                        }  
+                }
+
+                return true;
+        }         
+        
+	/**
 	 * Method to check if a file has been generated and return file data.
          * 
          * @access  public
          * @static
-         * @param   object  $item      The media item.
+         * @param   object  $item      The associated item.
          * @param   object  $fileType  The type of file.
          * @return  mixed   The mp3 file object, false on fail.
 	 */
