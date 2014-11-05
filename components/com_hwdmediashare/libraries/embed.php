@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareEmbed extends JObject
 {        
 	/**
-	 * The variable to hold the item details.
+	 * Holds the new item details.
          * 
          * @access      public
 	 * @var         object
@@ -21,7 +21,7 @@ class hwdMediaShareEmbed extends JObject
 	public $_item;
         
 	/**
-	 * The variable holding the host (retrieved from the embed code).
+	 * Holds the host (retrieved from the embed code).
          * 
          * @access      public
 	 * @var         string
@@ -32,8 +32,7 @@ class hwdMediaShareEmbed extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
