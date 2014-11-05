@@ -15,16 +15,16 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	/**
 	 * The URL view item variable to use with this controller.
 	 *
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $view_item = 'albumform';
 
 	/**
 	 * The URL view list variable to use with this controller.
 	 *
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $view_list = 'albums';
 
@@ -40,7 +40,7 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 * Method to add a new record.
 	 *
 	 * @access  public
-	 * @return  mixed  True if the record can be added, a error object if not.
+	 * @return  mixed   True if the record can be added, a error object if not.
 	 */
 	public function add()
 	{
@@ -55,8 +55,8 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 * Method override to check if you can edit an existing record.
 	 *
 	 * @access  protected
-	 * @param   array       $data  An array of input data.
-	 * @param   string      $key   The name of the key for the primary key; default is id.
+	 * @param   array      $data  An array of input data.
+	 * @param   string     $key   The name of the key for the primary key; default is id.
 	 * @return  boolean
 	 */
 	protected function allowEdit($data = array(), $key = 'id')
@@ -153,9 +153,9 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 * Gets the URL arguments to append to an item redirect.
 	 *
          * @access  protected
-	 * @param   integer     $recordId  The primary key id for the item.
-	 * @param   string      $urlVar    The name of the URL variable for the id.
-	 * @return  string      The arguments to append to the redirect URL.
+	 * @param   integer    $recordId  The primary key id for the item.
+	 * @param   string     $urlVar    The name of the URL variable for the id.
+	 * @return  string     The arguments to append to the redirect URL.
 	 */
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{
@@ -192,7 +192,7 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 * Get the return URL, if a "return" variable has been passed in the request.
 	 *
          * @access  protected
-         * @return  string	The return URL.
+         * @return  string     The return URL.
 	 */
 	protected function getReturnPage()
 	{
@@ -212,8 +212,8 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 * Function that allows child controller access to model data after the data has been saved.
 	 *
          * @access  protected
-	 * @param   JModelLegacy  $model        The data model object.
-	 * @param   array         $validData    The validated data.
+	 * @param   JModelLegacy  $model      The data model object.
+	 * @param   array         $validData  The validated data.
 	 * @return  void
 	 */
 	protected function postSaveHook(JModelLegacy $model, $validData = array())
@@ -225,8 +225,8 @@ class hwdMediaShareControllerAlbumForm extends JControllerForm
 	 * Method to save a record.
 	 *
          * @access  public
-	 * @param   string  $key     The name of the primary key of the URL variable.
-	 * @param   string  $urlVar  The name of the URL variable if different from the primary key.
+	 * @param   string   $key     The name of the primary key of the URL variable.
+	 * @param   string   $urlVar  The name of the URL variable if different from the primary key.
 	 * @return  boolean  True if successful, false otherwise.
 	 */
 	public function save($key = null, $urlVar = 'id')
