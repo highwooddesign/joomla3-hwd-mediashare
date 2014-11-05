@@ -15,32 +15,32 @@ class JFormFieldAlbum extends JFormField
 	/**
 	 * The name of the form field type.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $type = 'Album';
 
 	/**
 	 * The name of the form field.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $name = 'album';
 
 	/**
 	 * The id of the form field.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $id = 'album';
 
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @access	public
-	 * @return      string      The field input markup.
+	 * @access  public
+	 * @return  string  The field input markup.
 	 */
         public function getInput()
         {

@@ -17,16 +17,16 @@ class JFormFieldPlayer extends JFormFieldList
 	/**
 	 * The name of the form field type.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $type = 'Player';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @access	protected
-	 * @return      array       The field option objects.
+	 * @access  protected
+	 * @return  array      The field option objects.
 	 */
 	protected function getOptions()
 	{

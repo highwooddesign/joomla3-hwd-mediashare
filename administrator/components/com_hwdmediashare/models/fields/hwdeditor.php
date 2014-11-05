@@ -17,16 +17,16 @@ class JFormFieldHwdEditor extends JFormFieldEditor
 	/**
 	 * The name of the form field type.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
 	public $type = 'HwdEditor';
         
 	/**
 	 * Method to get a JEditor object based on the form field.
 	 *
-	 * @access	protected
-	 * @return      object      The JEditor object.
+	 * @access  protected
+	 * @return  object     The JEditor object.
 	 */
 	protected function getEditor()
 	{

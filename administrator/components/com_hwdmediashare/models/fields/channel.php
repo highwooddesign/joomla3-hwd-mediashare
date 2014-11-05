@@ -15,32 +15,32 @@ class JFormFieldChannel extends JFormField
 	/**
 	 * The name of the form field type.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $type = 'Channel';
 
 	/**
 	 * The name of the form field.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $name = 'channel';
 
 	/**
 	 * The id of the form field.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $id = 'channel';
 
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @access	public
-	 * @return      string      The field input markup.
+	 * @access  public
+	 * @return  string  The field input markup.
 	 */
         public function getInput()
         {

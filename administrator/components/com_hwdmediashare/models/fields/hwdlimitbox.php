@@ -18,16 +18,16 @@ class JFormFieldHwdLimitBox extends JFormFieldLimitbox
 	/**
 	 * The name of the form field type.
          * 
-         * @access      public
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	public $type = 'HwdLimitBox';
 
 	/**
 	 * Method to get the field options.
 	 *
-	 * @access	protected
-	 * @return      array       The field option objects.
+	 * @access  protected
+	 * @return  array      The field option objects.
 	 */
 	protected function getOptions()
 	{

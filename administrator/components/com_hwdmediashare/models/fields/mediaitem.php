@@ -15,32 +15,32 @@ class JFormFieldMediaItem extends JFormField
 	/**
 	 * The name of the form field type.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $type = 'MediaItem';
 
 	/**
 	 * The name of the form field.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $name = 'mediaitem';
 
 	/**
 	 * The id of the form field.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
  	protected $id = 'mediaitem';
 
 	/**
 	 * Method to get the field input markup.
 	 *
-	 * @access	public
-	 * @return      string      The field input markup.
+	 * @access  public
+	 * @return  string  The field input markup.
 	 */
         public function getInput()
         {
