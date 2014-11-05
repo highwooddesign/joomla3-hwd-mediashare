@@ -16,8 +16,7 @@ class hwdMediaShareEvents extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -50,9 +49,9 @@ class hwdMediaShareEvents extends JObject
 	 * Method to trigger a Joomla event.
          * 
          * @access  public
-         * @param   string  $event  The name of the event to trigger.
-         * @param   object  $action The action object.
-         * @param   object  $target The target object.
+         * @param   string  $event   The name of the event to trigger.
+         * @param   object  $action  The action object.
+         * @param   object  $target  The target object.
 	 * @return  array   An array of results from each function call.
 	 */
 	public function triggerEvent($event, $action, $target = null)
@@ -188,7 +187,15 @@ class hwdMediaShareEvents extends JObject
                 JPluginHelper::importPlugin('hwdmediashare');
 
                 // Trigger the event.
-                $results = $dispatcher->trigger($event, array($action, $target));
+                try
+                {
+                        $results = $dispatcher->trigger($event, array($action, $target));
+                }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
 
 		return $results;
 	}
