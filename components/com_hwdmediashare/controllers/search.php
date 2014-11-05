@@ -16,7 +16,7 @@ class hwdMediaShareControllerSearch extends JControllerLegacy
 	 * Method to validate and sanitise data from the request and redirect.
 	 *
 	 * @access  public
-	 * @return  null
+	 * @return  void
 	 */
         public function processForm()
 	{          
@@ -63,7 +63,7 @@ class hwdMediaShareControllerSearch extends JControllerLegacy
 	 * Method to clear the search form.
 	 *
 	 * @access  public
-	 * @return  null
+	 * @return  void
 	 */
         public function clear()
 	{          
