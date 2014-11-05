@@ -122,8 +122,8 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	 * Method to get the icon class for the media type.
 	 *
 	 * @access  public
-	 * @para    object  $item  Media object
-	 * @return  string  Icon URL
+	 * @para    object  $item  Media object.
+	 * @return  string  Icon URL.
 	 **/
 	public function getMediaTypeIcon($item)
 	{
@@ -168,9 +168,9 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	/**
 	 * Method to get the human readable media type.
          * 
-         * @access      public
-	 * @param	object	$item   Media object
-	 * @return	string	Translated media type text
+         * @access  public
+	 * @param   object  $item  Media object.
+	 * @return  string  Translated media type text.
 	 **/
 	public function getMediaType($item)
 	{
@@ -180,9 +180,9 @@ class hwdMediaShareViewMedia extends JViewLegacy
 	/**
 	 * Method to get the linked category list.
 	 *
-         * @access      public
-	 * @param	object	$item   Media object
-	 * @return	string	The html for a category list
+         * @access  public
+	 * @param   object  $item  Media object.
+	 * @return  string  The html for a category list.
 	 **/
 	public function getCategories($item)
 	{
