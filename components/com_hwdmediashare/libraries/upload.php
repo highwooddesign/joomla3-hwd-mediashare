@@ -845,32 +845,35 @@ $_FILE_DATA = getFileData($_XML_DATA);                         // Get file data 
                         $object->thumbnail = $data['thumbnail_remote'];
                 }
 
-                try
-                {            
-                        // Update record in database.
-                        switch($this->elementType)
-                        {
-                                case 1:
-                                        $result = $db->updateObject('#__hwdms_media', $object, 'id');
-                                break;
-                                case 2:
-                                        $result = $db->updateObject('#__hwdms_albums', $object, 'id');
-                                break;
-                                case 3:
-                                        $result = $db->updateObject('#__hwdms_groups', $object, 'id');
-                                break;
-                                case 4:
-                                        $result = $db->updateObject('#__hwdms_playlists', $object, 'id');
-                                break;
-                                case 5:
-                                        $result = $db->updateObject('#__hwdms_users', $object, 'id');
-                                break;                            
-                        }
-                }
-                catch (Exception $e)
+                if (isset($object) && is_object($object))
                 {
-                        $this->setError($e->getMessage());
-                        return false;
+                        try
+                        {            
+                                // Update record in database.
+                                switch($this->elementType)
+                                {
+                                        case 1:
+                                                $result = $db->updateObject('#__hwdms_media', $object, 'id');
+                                        break;
+                                        case 2:
+                                                $result = $db->updateObject('#__hwdms_albums', $object, 'id');
+                                        break;
+                                        case 3:
+                                                $result = $db->updateObject('#__hwdms_groups', $object, 'id');
+                                        break;
+                                        case 4:
+                                                $result = $db->updateObject('#__hwdms_playlists', $object, 'id');
+                                        break;
+                                        case 5:
+                                                $result = $db->updateObject('#__hwdms_users', $object, 'id');
+                                        break;                            
+                                }
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
                 }
                 
                 return true;
@@ -1304,7 +1307,7 @@ $_FILE_DATA = getFileData($_XML_DATA);                         // Get file data 
                 if (empty($data['group_id']))                                   unset($data['group_id']);
                 if (empty($data['playlist_id']))                                unset($data['playlist_id']);
                                 
-                if (empty($data['remove_thumbnail']))                           unset($data['remove_thumbnail']);
+                // if (empty($data['remove_thumbnail']))                        unset($data['remove_thumbnail']);  // We always want this defined.
                 if (empty($data['thumbnail_remote']))                           unset($data['thumbnail_remote']);
                 
                 if (empty($data['remotes']))                                    unset($data['remotes']);
