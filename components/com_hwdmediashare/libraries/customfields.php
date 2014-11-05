@@ -24,8 +24,7 @@ class hwdMediaShareCustomFields extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -58,7 +57,7 @@ class hwdMediaShareCustomFields extends JObject
 	 * Method to save custom fields from a form submission.
 	 *
 	 * @access  public
-	 * @param   object  $item   The item to save.
+	 * @param   object  $item  The item to save.
 	 * @return  boolean True on success, false on fail.
 	 */    
 	public function save($item)
@@ -146,7 +145,7 @@ class hwdMediaShareCustomFields extends JObject
 	 * Method to get custom fields of an item.
 	 *
 	 * @access  public
-	 * @param   object  $item   The item to check.
+	 * @param   object  $item  The item to check.
 	 * @return  array   An array of categories assigned to the item.
 	 */       
 	public function load($item = null)
