@@ -15,17 +15,17 @@ class hwdMediaShareControllerProcess extends JControllerForm
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * Class constructor. Defines a white list of column filters.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
 	 */    
 	public function __construct($config = array())
 	{
@@ -38,8 +38,8 @@ class hwdMediaShareControllerProcess extends JControllerForm
         /**
 	 * Method to run processes sequentially using ajax.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function run()
         {

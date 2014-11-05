@@ -15,17 +15,17 @@ class hwdMediaShareControllerGroup extends JControllerForm
 	/**
 	 * The name of the listing view to use with this controller.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "groups";
 
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @access	public
-	 * @param       object      $model      The model.
-	 * @return      boolean     True if successful, false otherwise and internal error is set.
+	 * @access  public
+	 * @param   object   $model  The model.
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 */     
 	public function batch($model = null)
 	{

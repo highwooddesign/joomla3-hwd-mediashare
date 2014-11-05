@@ -15,16 +15,16 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
 
 	/**
 	 * The name of the listing view to use with this controller.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "albummedia";
                 
@@ -46,8 +46,8 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
         /**
 	 * Method to unlink media from an album.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function unlink()
 	{
@@ -91,8 +91,8 @@ class hwdMediaShareControllerAlbumMedia extends JControllerAdmin
         /**
 	 * Method to link media to an album.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function link()
 	{

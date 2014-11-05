@@ -15,16 +15,16 @@ class hwdMediaShareControllerConfiguration extends JControllerForm
 	/**
 	 * The name of the listing view to use with this controller.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "dashboard";
         
 	/**
 	 * Method to test background execution and display results.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	function background()
 	{

@@ -15,18 +15,18 @@ class hwdMediaShareControllerChannel extends JControllerForm
 	/**
 	 * The name of the listing view to use with this controller.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "channels";
 
         /**
 	 * Proxy for edit.
 	 *
-	 * @access	public
-	 * @param       string  $key     The name of the primary key of the URL variable.
-	 * @param       string  $urlVar  The name of the URL variable if different from the primary key.
-         * @return      void
+	 * @access  public
+	 * @param   string  $key     The name of the primary key of the URL variable.
+	 * @param   string  $urlVar  The name of the URL variable if different from the primary key.
+         * @return  void
 	 */
 	public function edit($key = null, $urlVar = null)
 	{
@@ -52,8 +52,8 @@ class hwdMediaShareControllerChannel extends JControllerForm
 	/**
 	 * Proxy for add, to redirect to the Joomla user manager.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function add()
 	{
@@ -65,9 +65,9 @@ class hwdMediaShareControllerChannel extends JControllerForm
 	/**
 	 * Method to run batch operations.
 	 *
-	 * @access	public
-	 * @param       object      $model      The model.
-	 * @return      boolean     True if successful, false otherwise and internal error is set.
+	 * @access  public
+	 * @param   object   $model  The model.
+	 * @return  boolean  True if successful, false otherwise and internal error is set.
 	 */    
 	public function batch($model = null)
 	{

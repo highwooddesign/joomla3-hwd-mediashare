@@ -15,8 +15,8 @@ class hwdMediaShareControllerGet extends JControllerForm
 	/**
 	 * Method to dynamically deliver a media file.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function file()
         {

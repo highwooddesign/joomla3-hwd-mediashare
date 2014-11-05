@@ -15,8 +15,8 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
             
@@ -38,8 +38,8 @@ class hwdMediaShareControllerReport extends JControllerAdmin
         /**
 	 * Method to dismiss a report.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function dismiss()
 	{
@@ -80,8 +80,8 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 	/**
 	 * Method to remove content that has been reported.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function remove()
 	{
@@ -124,8 +124,8 @@ class hwdMediaShareControllerReport extends JControllerAdmin
 	 * Get the return URL, if a "return" variable has been 
          * passed in the request.
          * 
-	 * @access	protected
-         * @return      string      The return URL.
+	 * @access  protected
+         * @return  string     The return URL.
 	 */
 	protected function getReturnPage()
 	{

@@ -15,17 +15,17 @@ class hwdMediaShareControllerChannels extends JControllerAdmin
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
 	 */    
 	public function __construct($config = array())
 	{
@@ -54,8 +54,8 @@ class hwdMediaShareControllerChannels extends JControllerAdmin
 	/**
 	 * Method to toggle the status setting of a list of channels.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function approve()
 	{
@@ -100,8 +100,8 @@ class hwdMediaShareControllerChannels extends JControllerAdmin
 	/**
 	 * Method to toggle the featured setting of a list of channels.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function feature()
 	{

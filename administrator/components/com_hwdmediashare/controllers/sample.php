@@ -15,8 +15,8 @@ class hwdMediaShareControllerSample extends JControllerLegacy
         /**
 	 * Method to install sample data.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function install()
 	{

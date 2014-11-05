@@ -30,8 +30,8 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy
         /**
 	 * Method to run the maintenance.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function run()
         {

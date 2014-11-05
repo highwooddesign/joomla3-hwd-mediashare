@@ -15,17 +15,17 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
 	 */    
 	public function __construct($config = array())
 	{
@@ -53,8 +53,8 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
         /**
 	 * Method to allow return to process manager from ajax run page.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function close()
 	{
@@ -64,8 +64,8 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 	/**
 	 * Method to reset the attempt counter on a list of processes.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function reset()
 	{
@@ -110,8 +110,8 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 	/**
 	 * Method to remove all processes marked as successful.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function deletesuccessful()
 	{
@@ -164,8 +164,8 @@ class hwdMediaShareControllerProcesses extends JControllerAdmin
 	/**
 	 * Method to remove all processes marked as unnecessary.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function deleteunnecessary()
 	{

@@ -16,8 +16,8 @@ class hwdMediaShareControllerCustomField extends JControllerForm
 	 * Method to get the field parameters of a custom field type
          * in JSON format, for AJAX requests
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function fieldparameters()
         {

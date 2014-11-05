@@ -15,16 +15,16 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * The name of the view to use with this controller.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view = "addmedia";
         
 	/**
 	 * The name of the listing view to use with this controller.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "media";
         
@@ -46,9 +46,9 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         /**
 	 * Proxy for cancel.
 	 *
-	 * @access	public
-	 * @param       string  $key  The name of the primary key of the URL variable.
-         * @return      void
+	 * @access  public
+	 * @param   string  $key  The name of the primary key of the URL variable.
+         * @return  void
 	 */
 	public function cancel($key = null)        
 	{
@@ -62,8 +62,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         /**
 	 * Method to process a php upload.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function upload()
         {
@@ -94,8 +94,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process an uber upload.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function uber()
         {
@@ -119,8 +119,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process remote media import.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function remote()
         {
@@ -156,8 +156,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process embed code import.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function embed()
         {
@@ -184,8 +184,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process remote file import.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function link()
         {
@@ -212,8 +212,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process rtmp import.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function rtmp()
         {
@@ -240,8 +240,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process bulk import from server directory.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function import()
         {
@@ -268,8 +268,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to display the directory scan tree view.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function scan()
         {
@@ -297,8 +297,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	/**
 	 * Method to process two part upload process.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function processForm()
         {
@@ -328,8 +328,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 * Get the return URL, if a "return" variable has been 
          * passed in the request.
          * 
-	 * @access	protected
-         * @return      string      The return URL.
+	 * @access  protected
+         * @return  string     The return URL.
 	 */
 	protected function getReturnPage()
 	{
