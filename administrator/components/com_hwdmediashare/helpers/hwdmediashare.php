@@ -15,10 +15,10 @@ abstract class hwdMediaShareHelper
 	/**
 	 * Configure the submenu by adding entries to the sidebar.
 	 *
-	 * @access	public
+	 * @access  public
 	 * @static
-	 * @param       string      $submenu        The name of the active view.
-         * @return      void
+	 * @param   string  $submenu  The name of the active view.
+         * @return  void
 	 */
 	public static function addSubmenu($submenu)
 	{
@@ -103,11 +103,11 @@ abstract class hwdMediaShareHelper
 	/**
 	 * Gets a list of the actions that can be performed.
 	 *
-	 * @access	public
+	 * @access  public
 	 * @static
-	 * @param       integer     $id         The item ID.
-	 * @param       string      $type       The access section name.
-         * @return      JObject
+	 * @param   integer  $id    The item ID.
+	 * @param   string   $type  The access section name.
+         * @return  JObject
 	 */
 	public static function getActions($id = 0, $type = 'media')
 	{

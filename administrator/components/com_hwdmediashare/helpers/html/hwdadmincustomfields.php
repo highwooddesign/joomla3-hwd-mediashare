@@ -15,12 +15,12 @@ abstract class JHtmlHwdAdminCustomFields
 	/**
 	 * Show the searchable/unsearchable links.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @param       int         $value      The state value
-	 * @param       int         $i          Row number
-	 * @param       boolean     $canChange  Is user allowed to change?
-	 * @return      string      HTML code
+	 * @param   integer  $value      The state value.
+	 * @param   int      $i          Row number.
+	 * @param   boolean  $canChange  Is user allowed to change?
+	 * @return  string   HTML code.
 	 */
 	public static function searchable($value = 0, $i, $canChange = true)
 	{
@@ -28,8 +28,8 @@ abstract class JHtmlHwdAdminCustomFields
 
 		// Array of image, task, title, action.
 		$states	= array(
-			0	=> array('search',    'customfields.searchable',    'COM_HWDMS_JHTML_UNSEARCHABLE',       'COM_HWDMS_TOGGLE_TO_SEARCHABLE'),
-			1	=> array('search',    'customfields.unsearchable',  'COM_HWDMS_JHTML_SEARCHABLE',         'COM_HWDMS_TOGGLE_TO_UNSEARCHABLE'),
+			0	=> array('search',  'customfields.searchable',    'COM_HWDMS_JHTML_UNSEARCHABLE',  'COM_HWDMS_TOGGLE_TO_SEARCHABLE'),
+			1	=> array('search',  'customfields.unsearchable',  'COM_HWDMS_JHTML_SEARCHABLE',    'COM_HWDMS_TOGGLE_TO_UNSEARCHABLE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -51,12 +51,12 @@ abstract class JHtmlHwdAdminCustomFields
 	/**
 	 * Show the visible/unvisible links.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @param       int         $value      The state value
-	 * @param       int         $i          Row number
-	 * @param       boolean     $canChange  Is user allowed to change?
-	 * @return      string      HTML code
+	 * @param   integer  $value      The state value.
+	 * @param   int      $i          Row number.
+	 * @param   boolean  $canChange  Is user allowed to change?
+	 * @return  string   HTML code.
 	 */
 	public static function visible($value = 0, $i, $canChange = true)
 	{
@@ -64,8 +64,8 @@ abstract class JHtmlHwdAdminCustomFields
 
 		// Array of image, task, title, action.
 		$states	= array(
-			0	=> array('eye',    'customfields.visible',    'COM_HWDMS_JHTML_UNVISIBLE',      'COM_HWDMS_TOGGLE_TO_VISIBLE'),
-			1	=> array('eye',    'customfields.unvisible',  'COM_HWDMS_JHTML_VISIBLE',        'COM_HWDMS_TOGGLE_TO_UNVISIBLE'),
+			0	=> array('eye',  'customfields.visible',    'COM_HWDMS_JHTML_UNVISIBLE',  'COM_HWDMS_TOGGLE_TO_VISIBLE'),
+			1	=> array('eye',  'customfields.unvisible',  'COM_HWDMS_JHTML_VISIBLE',    'COM_HWDMS_TOGGLE_TO_UNVISIBLE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -87,12 +87,12 @@ abstract class JHtmlHwdAdminCustomFields
 	/**
 	 * Show the required/unrequired links.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @param       int         $value      The state value
-	 * @param       int         $i          Row number
-	 * @param       boolean     $canChange  Is user allowed to change?
-	 * @return      string      HTML code
+	 * @param   integer  $value      The state value.
+	 * @param   int      $i          Row number.
+	 * @param   boolean  $canChange  Is user allowed to change?
+	 * @return  string   HTML code.
 	 */
 	public static function required($value = 0, $i, $canChange = true)
 	{
@@ -100,8 +100,8 @@ abstract class JHtmlHwdAdminCustomFields
 
 		// Array of image, task, title, action.
 		$states	= array(
-			0	=> array('star',    'customfields.required',    'COM_HWDMS_JHTML_UNREQUIRED',      'COM_HWDMS_TOGGLE_TO_REQUIRED'),
-			1	=> array('star',    'customfields.unrequired',  'COM_HWDMS_JHTML_REQUIRED',        'COM_HWDMS_TOGGLE_TO_UNREQUIRED'),
+			0	=> array('star',  'customfields.required',    'COM_HWDMS_JHTML_UNREQUIRED',  'COM_HWDMS_TOGGLE_TO_REQUIRED'),
+			1	=> array('star',  'customfields.unrequired',  'COM_HWDMS_JHTML_REQUIRED',    'COM_HWDMS_TOGGLE_TO_UNREQUIRED'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];

@@ -13,14 +13,14 @@ defined('_JEXEC') or die;
 abstract class JHtmlHwdAdminMedia
 {
 	/**
-	 * Show the feature/unfeature links
+	 * Show the feature/unfeature links.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @param       int         $value      The state value
-	 * @param       int         $i          Row number
-	 * @param       boolean     $canChange  Is user allowed to change?
-	 * @return      string      HTML code
+	 * @param   integer  $value      The state value.
+	 * @param   int      $i          Row number.
+	 * @param   boolean  $canChange  Is user allowed to change?
+	 * @return  string   HTML code.
 	 */
 	public static function featured($value = 0, $i, $canChange = true)
 	{
@@ -28,8 +28,8 @@ abstract class JHtmlHwdAdminMedia
 
 		// Array of image, task, title, action.
 		$states	= array(
-			0	=> array('unfeatured',	'media.feature',	'COM_HWDMS_UNFEATURED',         'COM_HWDMS_TOGGLE_TO_FEATURE'),
-			1	=> array('featured',	'media.unfeature',	'COM_HWDMS_FEATURED',		'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
+			0	=> array('unfeatured',  'media.feature',    'COM_HWDMS_UNFEATURED',  'COM_HWDMS_TOGGLE_TO_FEATURE'),
+			1	=> array('featured',    'media.unfeature',  'COM_HWDMS_FEATURED',    'COM_HWDMS_TOGGLE_TO_UNFEATURE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];
@@ -49,14 +49,14 @@ abstract class JHtmlHwdAdminMedia
 	}
         
 	/**
-	 * Show the approve/unapprove links
+	 * Show the approve/unapprove links.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @param       int         $value      The state value
-	 * @param       int         $i          Row number
-	 * @param       boolean     $canChange  Is user allowed to change?
-	 * @return      string      HTML code
+	 * @param   integer  $value      The state value.
+	 * @param   int      $i          Row number.
+	 * @param   boolean  $canChange  Is user allowed to change?
+	 * @return  string   HTML code.
 	 */
 	public static function status($value = 0, $i, $canChange = true)
 	{
@@ -64,10 +64,10 @@ abstract class JHtmlHwdAdminMedia
 
 		// Array of image, task, title, action.
 		$states	= array(
-			0	=> array('unpublish',	'media.approve',	'COM_HWDMS_UNAPPROVED',         'COM_HWDMS_TOGGLE_TO_APPROVE'),
-			1	=> array('publish',	'media.unapprove',	'COM_HWDMS_APPROVED',		'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
-			2	=> array('pending',	'media.approve',	'COM_HWDMS_PENDING',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
-			3	=> array('not-ok',	'media.approve',	'COM_HWDMS_REPORTED',		'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			0	=> array('unpublish',  'media.approve',    'COM_HWDMS_UNAPPROVED',  'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			1	=> array('publish',    'media.unapprove',  'COM_HWDMS_APPROVED',    'COM_HWDMS_TOGGLE_TO_UNAPPROVE'),
+			2	=> array('pending',    'media.approve',    'COM_HWDMS_PENDING',     'COM_HWDMS_TOGGLE_TO_APPROVE'),
+			3	=> array('not-ok',     'media.approve',    'COM_HWDMS_REPORTED',    'COM_HWDMS_TOGGLE_TO_APPROVE'),
 		);
 		$state	= JArrayHelper::getValue($states, (int) $value, $states[1]);
 		$icon	= $state[0];

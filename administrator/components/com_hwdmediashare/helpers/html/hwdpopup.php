@@ -15,9 +15,9 @@ abstract class JHtmlHwdPopup
 	/**
 	 * Method to load assets for the popup window to display an alert.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @return      void
+	 * @return  void
 	 */
 	public static function alert() 
 	{
@@ -54,9 +54,9 @@ abstract class JHtmlHwdPopup
 	/**
 	 * Method to load assets for the popup window to display an iframe.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @return      void
+	 * @return  void
 	 */
 	public static function iframe($type, $class = null)
 	{
@@ -105,9 +105,9 @@ abstract class JHtmlHwdPopup
 	/**
 	 * Method to load assets for the popup window to display an image.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @return      void
+	 * @return  void
 	 */
 	public static function image($type, $class = null)
 	{
@@ -147,9 +147,9 @@ abstract class JHtmlHwdPopup
 	/**
 	 * Method to load assets for the popup window to display an image.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @return      void
+	 * @return  void
 	 */
 	public static function ajax($type, $class = null)
 	{
@@ -191,15 +191,14 @@ abstract class JHtmlHwdPopup
 	}
         
 	/**
-	 * Write a <a></a> element
+	 * Write an <a></a> element.
 	 *
-	 * @param   string  $url      The relative URL to use for the href attribute
-	 * @param   string  $text     The target attribute to use
-	 * @param   array   $attribs  An associative array of attributes to add
-	 *
-	 * @return  string  <a></a> string
-	 *
-	 * @since   1.5
+         * @access   public
+         * @static
+	 * @param    string  $url      The relative URL to use for the href attribute.
+	 * @param    string  $text     The target attribute to use.
+	 * @param    array   $attribs  An associative array of attributes to add.
+	 * @return   string  The rendered <a> string.
 	 */
 	public static function link($item, $text, $attribs = array())
 	{

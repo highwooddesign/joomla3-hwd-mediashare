@@ -15,15 +15,15 @@ abstract class JHtmlHwdGrid
 	/**
 	 * Method to create a customised checkbox for a grid row.
 	 *
-	 * @access	public
+	 * @access  public
          * @static 
-	 * @param       integer     $rowNum      The row index.
-	 * @param       integer     $recId       The record id.
-	 * @param       string      $idName      The form element id identifer.
-	 * @param       boolean     $checkedOut  True if item is checked out.
-	 * @param       string      $name        The name of the form element.
-	 * @param       string      $class       The class of the form element.
-	 * @return      string      String of html with a checkbox if item is not checked out, null if checked out.
+	 * @param   integer  $rowNum      The row index.
+	 * @param   integer  $recId       The record id.
+	 * @param   string   $idName      The form element id identifer.
+	 * @param   boolean  $checkedOut  True if item is checked out.
+	 * @param   string   $name        The name of the form element.
+	 * @param   string   $class       The class of the form element.
+	 * @return  string   String of html with a checkbox if item is not checked out, null if checked out.
 	 */
 	public static function id($rowNum, $recId, $idName = 'cb', $checkedOut = false, $name = 'cid', $class = '')
 	{
