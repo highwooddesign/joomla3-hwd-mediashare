@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 class hwdMediaShareRemote extends JObject
 {        
 	/**
-	 * The variable to hold the item details.
+	 * Holds the new item details.
          * 
          * @access      public
 	 * @var         object
@@ -21,28 +21,34 @@ class hwdMediaShareRemote extends JObject
 	public $_item;
         
 	/**
-	 * The variable to hold the import count.
+	 * Holds the import count.
          * 
-         * @access      public
-	 * @var         integer
+         * @access  public
+	 * @var     integer
 	 */
         public $_count = 0;
         
 	/**
-	 * The variables to hold the url and host for the import.
+	 * Holds the url for the import.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */        
 	public $_url;
+        
+	/**
+	 * Hold the host for the import.
+         * 
+         * @access  public
+	 * @var     string
+	 */   
         public $_host;
 
 	/**
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -75,7 +81,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to process a remote media.
          * 
          * @access  public
-         * @return  boolean True on success.
+         * @return  boolean  True on success.
 	 */
 	public function addRemote()
 	{
@@ -392,9 +398,9 @@ class hwdMediaShareRemote extends JObject
 	 * Method to request the contents of the url.
          * 
          * @access  public
-         * @param   string  $url    The url to request.
-         * @param   boolean $ssl    Request secure connection.
-         * @return  string  The buffer.
+         * @param   string   $url  The url to request.
+         * @param   boolean  $ssl  Request secure connection.
+         * @return  string   The buffer.
 	 */
 	public function getBuffer($url, $ssl = true)
 	{  
@@ -449,7 +455,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to extract the title from the request buffer.
          * 
          * @access  public
-         * @param   string  $buffer The buffer of the remote source.
+         * @param   string  $buffer  The buffer of the remote source.
          * @return  string  The title of the remote media.
 	 */
 	public function getTitle($buffer = null)
@@ -493,7 +499,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to extract the description from the request buffer.
          * 
          * @access  public
-         * @param   string  $buffer The buffer of the remote source.
+         * @param   string  $buffer  The buffer of the remote source.
          * @return  string  The description of the remote media.
 	 */
 	public function getDescription($buffer = null)
@@ -527,7 +533,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to extract the thumbnail location from the request buffer.
          * 
          * @access  public
-         * @param   string  $buffer The buffer of the remote source.
+         * @param   string  $buffer  The buffer of the remote source.
          * @return  string  The thumbnail of the remote media.
 	 */
 	public function getThumbnail($buffer = null)
@@ -571,7 +577,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to extract the tags from the request buffer.
          * 
          * @access  public
-         * @param   string  $buffer The buffer of the remote source.
+         * @param   string  $buffer  The buffer of the remote source.
          * @return  array   An array of tags.
 	 */
 	public function getTags($buffer = null)
@@ -620,8 +626,8 @@ class hwdMediaShareRemote extends JObject
 	 * Method to extract the duration from the request buffer.
          * 
          * @access  public
-         * @param   string  $buffer The buffer of the remote source.
-         * @return  integer The duration of the remote media.
+         * @param   string   $buffer  The buffer of the remote source.
+         * @return  integer  The duration of the remote media.
 	 */
 	public function getDuration($buffer = null)
 	{             
@@ -672,7 +678,7 @@ class hwdMediaShareRemote extends JObject
          * 
          * @access  public
          * @static
-         * @param   string  $host   The host of the remote url.
+         * @param   string  $host  The host of the remote url.
          * @return  string  The plugin class name.
 	 */
 	public static function getRemotePluginClass($host)
@@ -685,7 +691,7 @@ class hwdMediaShareRemote extends JObject
          * 
          * @access  public
          * @static
-         * @param   string  $host   The host of the remote url.
+         * @param   string  $host  The host of the remote url.
          * @return  string  The plugin file location.
 	 */
 	public static function getRemotePluginPath($host)
@@ -697,7 +703,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to import media files from a server directory.
          * 
          * @access  public
-         * @return  boolean True on success.
+         * @return  boolean  True on success.
 	 */
 	public function addImport()
 	{
@@ -870,7 +876,7 @@ class hwdMediaShareRemote extends JObject
 	 * Method to process a remote link.
          * 
          * @access  public
-         * @return  boolean True on success.
+         * @return  boolean  True on success.
 	 */
 	public function addLink()
 	{
