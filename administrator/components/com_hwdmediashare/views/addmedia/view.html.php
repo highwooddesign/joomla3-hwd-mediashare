@@ -15,16 +15,16 @@ class hwdMediaShareViewAddMedia extends JViewLegacy
 	/**
 	 * The show form view variable.
          * 
-         * @access      public
-	 * @var         boolean
+         * @access  public
+	 * @var     boolean
 	 */
 	public $show_form = true;
 
 	/**
 	 * The upload method view variable.
          * 
-         * @access      public
-	 * @var         mixed
+         * @access  public
+	 * @var     mixed
 	 */
 	public $method = false;
         
