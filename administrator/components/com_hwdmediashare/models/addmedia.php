@@ -84,26 +84,6 @@ class hwdMediaShareModelAddMedia extends JModelAdmin
 	}
 
 	/**
-	 * Method to check if we should show the platform upload tool.
-	 *
-	 * @access  public
-         * @return  boolean  True if show, false if hide.
-	 */
-	public function getPlatformStatus()
-	{
-                // Load HWD config.
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                            
-                if ($config->get('audio_uploads') == 3 && $config->get('enable_audio')) return true;
-                if ($config->get('document_uploads') == 3 && $config->get('enable_documents')) return true;
-                if ($config->get('image_uploads') == 3 && $config->get('enable_images')) return true;
-                if ($config->get('video_uploads') == 3 && $config->get('enable_videos')) return true;
-                
-                return false;
-	}
-
-	/**
 	 * Method to load <head> assets for the fancy upload script.
 	 *
 	 * @access  public
