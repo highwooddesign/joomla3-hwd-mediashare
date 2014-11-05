@@ -15,8 +15,8 @@ class hwdMediaShareFavourites extends JObject
 	/**
 	 * The element type to use with this library.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
 	public $elementType = 1;
         
@@ -24,8 +24,7 @@ class hwdMediaShareFavourites extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -58,8 +57,8 @@ class hwdMediaShareFavourites extends JObject
 	 * Method to add an item to a user's favourites.
          * 
          * @access  public
-         * @param   array   $pks    An array of record primary keys.
-         * @return  boolean True on success.
+         * @param   array    $pks  An array of record primary keys.
+         * @return  boolean  True on success.
 	 */
 	public function addFavourite($pks)
 	{
@@ -131,8 +130,8 @@ class hwdMediaShareFavourites extends JObject
 	 * Method to remove an item to a user's favourites.
          * 
          * @access  public
-         * @param   array   $pks    An array of record primary keys.
-         * @return  boolean True on success.
+         * @param   array    $pks  An array of record primary keys.
+         * @return  boolean  True on success.
 	 */
 	public function removeFavourite($pks)
 	{
@@ -187,8 +186,8 @@ class hwdMediaShareFavourites extends JObject
 	 * Method to check if an item is in a user's favourites.
          * 
          * @access  public
-         * @param   integer $pk    The primary key to check.
-         * @return  boolean True if favourite.
+         * @param   integer  $pk  The primary key to check.
+         * @return  boolean  True if favourite.
 	 */
 	public function isFavourite($pk)
 	{
