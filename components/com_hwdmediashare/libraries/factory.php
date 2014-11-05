@@ -13,18 +13,18 @@ defined('_JEXEC') or die;
 class hwdMediaShareFactory extends JObject
 {
 	/**
-	 * The variable to hold the HWD config.
+	 * Holds the HWD config.
          * 
-         * @access      public
-	 * @var         object
+         * @access  public
+	 * @var     object
 	 */
         public $_config;
         
 	/**
-	 * The variable to hold the Joomla HWD component parameters.
+	 * Holds the HWD component parameters.
          * 
-         * @access      public
-	 * @var         object
+         * @access  public
+	 * @var     object
 	 */
         public $_params;
 
@@ -32,8 +32,7 @@ class hwdMediaShareFactory extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -67,7 +66,7 @@ class hwdMediaShareFactory extends JObject
          * 
          * @access  public
          * @static
-         * @param   string  $path   The class name to look for (dot notation).
+         * @param   string  $path  The class name to look for (dot notation).
          * @return  void
 	 */
 	public static function load($path)
@@ -186,8 +185,8 @@ class hwdMediaShareFactory extends JObject
          *
          * @access  public
          * @static
-         * @param   string  $tokenId    The token id.
-         * @param   integer $userId     The user id.
+         * @param   string   $tokenId  The token id.
+         * @param   integer  $userId   The user id.
          * @return  void
 	 */
 	public static function getUserFromTokenId($tokenId, $userId)
