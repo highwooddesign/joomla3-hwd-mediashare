@@ -15,24 +15,24 @@ class hwdMediaShareProcesses extends JObject
 	/**
 	 * The total number of queued processes.
          * 
-         * @access      public
-	 * @var         integer
+         * @access  public
+	 * @var     integer
 	 */    
 	public $_total;
         
 	/**
 	 * The flag for completion.
          * 
-         * @access      public
-	 * @var         boolean
+         * @access  public
+	 * @var     boolean
 	 */    
 	public $_complete;
         
 	/**
 	 * The output from the process.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */    
 	public $_output;
         
@@ -40,8 +40,7 @@ class hwdMediaShareProcesses extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -111,8 +110,8 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to select and run a queued process.
          * 
          * @access  public
-         * @param   array   $array      An array of processes.
-         * @return  boolean True on success.
+         * @param   array    $array  An array of processes.
+         * @return  boolean  True on success.
 	 */
 	public function run($cids = array())
 	{
@@ -176,7 +175,7 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to select the next queued process.
          * 
          * @access  public
-         * @param   array   $cids   An array of processes.
+         * @param   array   $cids  An array of processes.
          * @return  object  The process.
 	 */
 	public function nextProcess($cids = array())
@@ -222,7 +221,7 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to count all queued processes.
          * 
          * @access  public
-         * @return  integer The number of processes.
+         * @return  integer  The number of processes.
 	 */
 	public function countQueue()
 	{
@@ -250,8 +249,8 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to set the modified date for a process.
          * 
          * @access  public
-         * @param   object  $process    The process being updated.
-         * @return  boolean True on success.
+         * @param   object   $process  The process being updated.
+         * @return  boolean  True on success.
 	 */
 	public function setModified($process)
 	{
@@ -283,9 +282,9 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to update a process, after execution.
          * 
          * @access  public
-         * @param   object  $process    The process being updated.
-         * @param   object  $result     The result of the execution.
-         * @return  boolean True on success.
+         * @param   object   $process  The process being updated.
+         * @param   object   $result   The result of the execution.
+         * @return  boolean  True on success.
 	 */
 	public function update($process, $result)
 	{   
@@ -317,7 +316,7 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to add a process log.
          * 
          * @access  public
-         * @param   object  $item   The log data.
+         * @param   object  $item  The log data.
          * @return  boolean True on success.
 	 */
 	public function addLog($item)
@@ -363,7 +362,7 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to reset a log entry.
          * 
          * @access  public
-         * @param   object  $process    The process being updated.
+         * @param   object  $process  The process being updated.
          * @return  object  An empty log.
 	 */
 	public function resetLog($process)
@@ -382,8 +381,8 @@ class hwdMediaShareProcesses extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public static function getType($process)
 	{
@@ -478,8 +477,8 @@ class hwdMediaShareProcesses extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public static function getStatus($process)
 	{
@@ -506,8 +505,8 @@ class hwdMediaShareProcesses extends JObject
          * Create square image (75x75)
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process1($process)
 	{
@@ -530,8 +529,8 @@ class hwdMediaShareProcesses extends JObject
          * Create thumbnail image (100px maximum)
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process2($process)
 	{
@@ -554,8 +553,8 @@ class hwdMediaShareProcesses extends JObject
          * Create small image (240px maximum)
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process3($process)
 	{
@@ -578,8 +577,8 @@ class hwdMediaShareProcesses extends JObject
          * Create medium (500) image (500px maximum)
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process4($process)
 	{
@@ -602,8 +601,8 @@ class hwdMediaShareProcesses extends JObject
          * Create medium (640) image (640px maximum)
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process5($process)
 	{
@@ -626,8 +625,8 @@ class hwdMediaShareProcesses extends JObject
          * Create large image (1024px maximum)
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process6($process)
 	{
@@ -649,8 +648,10 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 7:
          * Create mp3 audio
          * 
-         * @since   0.1
-	 **/
+         * @access  public
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
+	 */
 	public function process7($process)
 	{
                 hwdMediaShareFactory::load('audio');
@@ -663,8 +664,8 @@ class hwdMediaShareProcesses extends JObject
          * Create ogg audio
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process8($process)
 	{
@@ -678,8 +679,8 @@ class hwdMediaShareProcesses extends JObject
          * Create flv video
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process9($process)
 	{
@@ -705,8 +706,8 @@ class hwdMediaShareProcesses extends JObject
          * Create mp4 video
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process12($process)
 	{
@@ -738,8 +739,8 @@ class hwdMediaShareProcesses extends JObject
          * Create webm video
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process16($process)
 	{
@@ -770,9 +771,10 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 20:
          * Inject metadata
          * 
+         * @deprecated
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process20($process)
 	{
@@ -785,9 +787,10 @@ class hwdMediaShareProcesses extends JObject
 	 * Method to run process type 21:
          * Move moov atom
          * 
+         * @deprecated
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process21($process)
 	{
@@ -801,8 +804,8 @@ class hwdMediaShareProcesses extends JObject
          * Get duration
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process22($process)
 	{
@@ -826,8 +829,8 @@ class hwdMediaShareProcesses extends JObject
          * Get title
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process23($process)
 	{
@@ -851,8 +854,8 @@ class hwdMediaShareProcesses extends JObject
          * Create ogg video
          * 
          * @access  public
-         * @param   object  $process   The process.
-         * @return  boolean True on success.
+         * @param   object   $process  The process.
+         * @return  boolean  True on success.
 	 */
 	public function process24($process)
 	{
