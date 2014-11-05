@@ -15,9 +15,9 @@ class hwdMediaShareTableConfiguration extends JTable
 	/**
 	 * Class constructor. Overridden to explicitly set the table and key fields.
 	 *
-	 * @access	public
-	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
-         * @return      void
+	 * @access  public
+	 * @param   JDatabaseDriver  $db  JDatabaseDriver object.
+         * @return  void
 	 */ 
 	public function __construct($db)
 	{
@@ -28,9 +28,9 @@ class hwdMediaShareTableConfiguration extends JTable
 	 * Method to bind an associative array or object to the JTable instance.
 	 *
          * @access  public
-	 * @param   mixed   $src     An associative array or object to bind to the JTable instance.
-	 * @param   mixed   $ignore  An optional array or space separated list of properties to ignore while binding.
-	 * @return  boolean True on success.
+	 * @param   mixed    $src     An associative array or object to bind to the JTable instance.
+	 * @param   mixed    $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @return  boolean  True on success.
 	 * @link    http://docs.joomla.org/JTable/bind
 	 * @throws  InvalidArgumentException
 	 */

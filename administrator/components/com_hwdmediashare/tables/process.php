@@ -15,9 +15,9 @@ class hwdMediaShareTableProcess extends JTable
 	/**
 	 * Class constructor. Overridden to explicitly set the table and key fields.
 	 *
-	 * @access	public
-	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
-         * @return      void
+	 * @access  public
+	 * @param   JDatabaseDriver  $db  JDatabaseDriver object.
+         * @return  void
 	 */ 
 	public function __construct($db)
 	{
