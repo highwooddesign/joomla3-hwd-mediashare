@@ -18,8 +18,8 @@ class JFormRuleInteger extends JFormRule
 	/**
 	 * The regular expression.
 	 *
-	 * @access	protected
-	 * @var		string
+	 * @access  protected
+	 * @var     string
 	 */
 	protected $regex = '^[0-9]+$';
 }

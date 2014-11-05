@@ -18,8 +18,8 @@ class JFormRuleWord extends JFormRule
 	/**
 	 * The regular expression.
 	 *
-	 * @access	protected
-	 * @var		string
+	 * @access  protected
+	 * @var     string
 	 */
 	protected $regex = '^[a-zA-Z]+$';
 }
