@@ -140,7 +140,7 @@ class hwdMediaShareModelFile extends JModelAdmin
                                 break;
                         }
                         
-                        if (!is_object($element))
+                        if (!isset($element) || !is_object($element))
                         {
 				// Prune items that we can't load.
 				unset($pks[$i]);
