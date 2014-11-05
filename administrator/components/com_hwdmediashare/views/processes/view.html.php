@@ -134,7 +134,7 @@ class hwdMediaShareViewProcesses extends JViewLegacy
 	 * Display the run view.
 	 *
          * @access  public
-	 * @param   array  $cid  The array of process that should be run.
+	 * @param   array   $cid  The array of process that should be run.
 	 * @return  void
 	 */
 	public function run($cid = array())
