@@ -1,50 +1,45 @@
 <?php
 /**
- * @version    SVN $Id: upload.php 1622 2013-08-14 14:01:56Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access'); 
-
-/**
- * hwdMediaShare framework upload class
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class hwdMediaShareUpload extends JObject
 {
-        /**
-	 * @since	0.1
+	/**
+	 * Holds the new item details.
+         * 
+         * @access  public
+	 * @var     object
 	 */
-        public $elementType = 1;
-        
-        var $_id;
-        var $_title;
+	public $_item;
 
-        /**
+	/**
 	 * Class constructor.
 	 *
-	 * @param   array  $config  A configuration array including optional elements.
-	 *
-	 * @since   0.1
+	 * @access  public
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
+         * @return  void
 	 */
-	public function __construct($config = array())
+	public function __construct($properties = null)
 	{
+		parent::__construct($properties);
 	}
 
 	/**
-	 * Returns the hwdMediaShareRemote object, only creating it if it
+	 * Returns the hwdMediaShareUpload object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareMedia A hwdMediaShareRemote object.
-	 * @since   0.1
-	 */
+	 * @access  public
+         * @static
+	 * @return  hwdMediaShareUpload Object.
+	 */ 
 	public static function getInstance()
 	{
 		static $instance;
@@ -58,157 +53,80 @@ class hwdMediaShareUpload extends JObject
 		return $instance;
 	}
 
-        /**
-	 * Method to generate a key.
-         *
-	 * @since   0.1
-	 */
-        function generateKey()
-        {
-                mt_srand(microtime(true)*100000 + memory_get_usage(true));
-                return md5(uniqid(mt_rand(), true));
-        }
-
 	/**
-	 * Method to check if a media key exists
-         *
-	 * @since   0.1
+	 * Method to process a file upload.
+         * 
+         * @access  public
+         * @param   object   $upload  Holds details about the upload field.
+         * @return  boolean  True on success.
 	 */
-        function keyExists($key)
-        {
-                $db =& JFactory::getDBO();
-                $app=& JFactory::getApplication();
-                $params = &JComponentHelper::getParams( 'com_hwdmediashare' );
-
-                $query = "
-                    SELECT count(*)
-                    FROM ".$db->quoteName('#__hwdms_media')."
-                    WHERE ".$db->quoteName('key')." = ".$db->quote($key).";
-                ";
-
-                $db->SetQuery( $query );
-                $count = $db->loadResult();
-
-                if (@$params->debug)
-                {
-                    $app->enqueueMessage(nl2br($db->getErrorMsg()),'error');
-                    return;
-                }
-
-                $exists = ($count > 0 ? true : false);
-                return $exists;
-        }
-
-	/**
-	 * Method to generate teh destination of an upload.
-         *
-	 * @since   0.1
-	 */
-        function dest($folders, $filename)
-        {
-                return HWDMS_PATH_MEDIA_FILES . '/' . $folders[1] . '/' . $folders[2] . '/' . $folders[3] . '/' . $filename;
-        }
-
-	/**
-	 * Method to remove an extenstion from a filename
-         *
-	 * @since   0.1
-	 */
-        function removeExtension($strName)
-        {
-             $ext = strrchr($strName, '.');
-
-             if($ext !== false)
-             {
-                 $strName = substr($strName, 0, -strlen($ext));
-             }
-             return $strName;
-        }
-
-	/**
-	 * Method to add a user upload session token to database
-         *
-	 * @since   0.1
-	 */
-	public function addUserUploadSession( $token )
+	public function process($upload)
 	{
-                $date =& JFactory::getDate();
-                $user = & JFactory::getUser();
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
 
-                $object = new stdClass;
-                $object->userid = $user->id;
-                $object->token = $token;
-                $object->datetime = $date->format('Y-m-d H:i:s');
-
-                $db =& JFactory::getDBO();
-		$db->insertObject( '#__hwdms_upload_tokens' , $object );
-	}
-
-	/**
-	 * Method to generate the upload uri for FancyUpload2
-         *
-	 * @since   0.1
-	 */
-	public function getFlashUploadURI()
-	{
-                $session	= JFactory::getSession();
-                $user = & JFactory::getUser();
-
-                // Generate a session handler for this user.
-                $token	= $session->getToken( true );
-
-                $url	= JURI::root(true) . '/index.php?option=com_hwdmediashare&task=addmedia.upload&format=raw';
-                $url   .= '&' . $session->getName() . '=' . $session->getId() . '&token=' . $token . '&uploaderid=' . $user->id;
-
-                hwdMediaShareUpload::addUserUploadSession($token);
-
-                return $url;
-	}
-
-	/**
-	 * Method to process a file upload
-         *
-	 * @since   0.1
-	 */
-	public function process( $upload )
-	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                
-                hwdMediaShareFactory::load('files');
+ 
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
 
-                $error = false;
-
-                $data = JRequest::getVar('jform', array(), 'post', 'array');
-                
-                jimport( 'joomla.filesystem.file' );
-                //Retrieve file details from uploaded file, sent from upload form
-                $file = JRequest::getVar($upload->input, null, 'files', 'array');
-                $ext = strtolower(JFile::getExt($file['name']));
-                
-                // Check if we need to replace an existing media item
-                if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.upload', 'com_hwdmediashare'))
                 {
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                        $table->load( $data['id'] );
-                        $properties = $table->getProperties(1);
-                        $replace = JArrayHelper::toObject($properties, 'JObject');
-                        $key = $replace->key;      
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                }      
+
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+
+                // Retrieve details of uploaded file, sent from upload form.
+                // Check the jform control first, then no control.
+                jimport( 'joomla.filesystem.file' );
+                $files = $app->input->files->get('jform');
+                if (isset($files[$upload->input]))
+                {
+                        $file = $files[$upload->input];
                 }
                 else
                 {
-                        $key = hwdMediaShareUpload::generateKey();
-                        if (hwdMediaShareUpload::keyExists($key))
+                        $file = $app->input->files->get($upload->input);    
+                }
+
+                $ext = strtolower(JFile::getExt($file['name']));
+
+                // Check if we are replacing an existing item.
+                if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
+                {
+                        $query = $db->getQuery(true)
+                                ->select($db->quoteName('key'))
+                                ->from('#__hwdms_media')
+                                ->where('id = ' . $db->quote($data['id']));
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $key = $db->loadResult();
+                        }
+                        catch (Exception $e)
                         {
-                                $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
+                                $this->setError($e->getMessage());
                                 return false;
-                        }                        
+                        }     
+                }
+                else
+                {
+                        if (!$key = $utilities->generateKey(1))
+                        {
+                                $this->setError($utilities->getError());
+                                return false;
+                        }                              
                 }
 
                 if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name']))
@@ -218,53 +136,80 @@ class hwdMediaShareUpload extends JObject
                 }
                 else
                 {
+                        hwdMediaShareFactory::load('files');
                         hwdMediaShareFiles::getLocalStoragePath();
-
-                        //Import filesystem libraries. Perhaps not necessary, but does not hurt
-                        jimport('joomla.filesystem.file');
 
                         $folders = hwdMediaShareFiles::getFolders($key);
                         hwdMediaShareFiles::setupFolders($folders);
 
-                        //Clean up filename to get rid of strange characters like spaces etc
+                        // Get the filename.
                         $filename = hwdMediaShareFiles::getFilename($key, '1');
 
-                        //Set up the source and destination of the file
-                        $src = $file['tmp_name'];
+                        // Get the destination location.
                         $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
-                        // Get allowed media types
+                        
+                        // Check the upload size.
+                        $maxUploadFileSize = $config->get('max_upload_filesize', 30) * 1024 * 1024;                       
+                        if (filesize($file['tmp_name']) > $maxUploadFileSize)
+                        {
+                                $this->setError(JText::sprintf('COM_HWDMS_FILE_N_EXCEEDS_THE_MAX_UPLOAD_LIMIT', $file['name']));
+                                return false;                            
+                        }
+ 
+                        // Get allowed media types.
                         $media_types = array();
                         if ($config->get('enable_audio')) $media_types[] = 1;
                         if ($config->get('enable_documents')) $media_types[] = 2;
                         if ($config->get('enable_images')) $media_types[] = 3;
                         if ($config->get('enable_videos')) $media_types[] = 4;
     
-                        //First check if the file has the right extension, we need jpg only
-                        $db = JFactory::getDBO();
-                        $query = $db->getQuery(true);
-                        $query->select('id');
-                        $query->from('#__hwdms_ext');
-                        $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-                        $query->where($db->quoteName('media_type').' IN ('.implode(', ', $media_types).')');
-
+                        // Check if the file has an allowed extension.
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_ext')
+                                ->where($db->quoteName('ext') . ' = ' . $db->quote($ext))
+                                ->where($db->quoteName('published') . ' = ' . $db->quote(1))
+                                ->where($db->quoteName('media_type') . ' IN ('.implode(', ', $media_types).')');
                         $db->setQuery($query);
-                        $ext_id = $db->loadResult();
-                        if ( $ext_id > 0 )
+                        try
                         {
-                                // Check if we need to replace an existing media item
+                                $db->execute(); 
+                                $ext_id = $db->loadResult();                   
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;                            
+                        }
+
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                        
+                        if ($ext_id > 0)
+                        {
+                                // Check if we are replacing an existing item, and need to remove existing media.
                                 if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                                 {
-                                        // Here, we need to remove all files already associated with this media item
+                                        // Attempt to load the existing table row.
+                                        $return = $table->load($data['id']);
+
+                                        // Check for a table object error.
+                                        if ($return === false && $table->getError())
+                                        {
+                                                $this->setError($table->getError());
+                                                return false;
+                                        }
+
+                                        $properties = $table->getProperties(1);
+                                        $replace = JArrayHelper::toObject($properties, 'JObject');
+
+                                        // Here, we need to remove all files already associated with this media item.
                                         hwdMediaShareFactory::load('files');
-                                        hwdMediaShareFiles::deleteMediaFiles($replace);
+                                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                                        $HWDfiles->deleteMediaFiles($replace);
                                 }
                                 
-                                if ( JFile::upload($src, $dest) )
-                                {
-                                        //Redirect to a page of your choice
-                                }
-                                else
+                                if (!JFile::upload($file['tmp_name'], $dest))
                                 {
                                         $this->setError(JText::_('COM_HWDMS_ERROR_FILE_COULD_NOT_BE_COPIED_TO_UPLOAD_DIRECTORY'));
                                         return false;
@@ -276,24 +221,16 @@ class hwdMediaShareUpload extends JObject
                                 return false;
                         }
 
-                        // Set approved/pending
+                        // Set approved/pending.
                         (!$app->isAdmin() && $config->get('approve_new_media')) == 1 ? $status = 2 : $status = 1; 
                         $config->get('approve_new_media') == 1 ? $status = 2 : $status = 1; 
-            
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $row =& JTable::getInstance('Media', 'hwdMediaShareTable');
 
-                        $post                          = array();
+                        $post = array();
 
-                        // Check if we need to replace an existing media item
+                        // Check if we need to replace an existing media item.
                         if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                         {
-                                // Here, we need to remove all files already associated with this media item
-                                hwdMediaShareFactory::load('files');
-                                hwdMediaShareFiles::deleteMediaFiles($replace);
-
-                                // Now we setup a new array to bind to this item
-                                $post['id']                     = $data['id'];
+                                //$post['id']                   = '';
                                 //$post['asset_id']             = '';
                                 $post['ext_id']                 = $ext_id;
                                 $post['media_type']             = '';
@@ -330,7 +267,7 @@ class hwdMediaShareUpload extends JObject
                                 //$post['publish_up']           = '';
                                 //$post['publish_down']         = '';
                                 $post['modified_user_id']       = $user->id;
-                                $post['modified']               = $date->format('Y-m-d H:i:s');
+                                $post['modified']               = $date->toSql();
                                 //$post['hits']                 = '';
                                 //$post['language']             = '';              
                         }
@@ -341,9 +278,9 @@ class hwdMediaShareUpload extends JObject
                                 $post['ext_id']                 = $ext_id;
                                 $post['media_type']             = '';
                                 $post['key']                    = $key;
-                                $post['title']                  = hwdMediaShareUpload::removeExtension($file['name']);
-                                $post['alias']                  = JFilterOutput::stringURLSafe($post['title']);
-                                //$post['description']          = '';
+                                $post['title']                  = (isset($data['title']) ? $data['title'] : hwdMediaShareUpload::removeExtension($file['name']));
+                                $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
+                                $post['description']            = (isset($data['description']) ? $data['description'] : '');
                                 $post['type']                   = 1; // Local
                                 $post['source']                 = '';
                                 $post['storage']                = '';
@@ -359,291 +296,73 @@ class hwdMediaShareUpload extends JObject
                                 //$post['likes']                = '';
                                 //$post['dislikes']             = '';
                                 $post['status']                 = $status;
-                                $post['published']              = 1;
-                                $post['featured']               = 0;
+                                $post['published']              = (isset($data['published']) ? $data['published'] : 1);
+                                $post['featured']               = (isset($data['featured']) ? $data['featured'] : 0);
                                 //$post['checked_out']          = '';
                                 //$post['checked_out_time']     = '';
-                                $post['access']                 = 1;
+                                $post['access']                 = (isset($data['access']) ? $data['access'] : 1);
                                 //$post['download']             = '';
                                 //$post['params']               = '';
                                 //$post['ordering']             = '';
                                 $post['created_user_id']        = $user->id;
                                 //$post['created_user_id_alias']= '';
-                                $post['created']                = $date->format('Y-m-d H:i:s');
-                                $post['publish_up']             = $date->format('Y-m-d H:i:s');
+                                $post['created']                = $date->toSql();
+                                $post['publish_up']             = $date->toSql();
                                 $post['publish_down']           = '0000-00-00 00:00:00';
                                 $post['modified_user_id']       = $user->id;
-                                $post['modified']               = $date->format('Y-m-d H:i:s');
+                                $post['modified']               = $date->toSql();
                                 $post['hits']                   = 0;
-                                $post['language']               = '*';
+                                $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                         }
 
-                        // Bind it to the table
-                        if (!$row->bind( $post ))
+                        // Save data to the database.
+                        if (!$table->save($post))
                         {
-                                $this->setError($row->getError());
+                                $this->setError($table->getError());
                                 return false;
-                        }
-
-                        // Store it in the db
-                        if (!$row->store())
-                        {
-                                $this->setError($row->getError());
-                                return false;
-                        }
-		}
-
-                $this->_id = $row->id;
-                $this->_title = $row->title;
-
-                hwdMediaShareUpload::assignAssociations($row);
-
-                hwdMediaShareFactory::load('files');
-                hwdMediaShareFiles::add($row,'1');
-
-                hwdMediaShareUpload::addProcesses($row);
-
-                // Trigger onAfterMediaAdd
-                if ($config->get('approve_new_media') == 0)
-                {
-                        hwdMediaShareFactory::load('events');
-                        $events = hwdMediaShareEvents::getInstance();
-                        $events->triggerEvent('onAfterMediaAdd', $row); 
-                }
-
-                // Send system notifications
-                if ($config->get('notify_new_media') == 1) 
-                {
-                        if($row->status == 2){
-                                ob_start();
-                                require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia_pending.php');
-                                $body = ob_get_contents();
-                                ob_end_clean();
-                        }
-                        else{
-                                ob_start();
-                                require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia.php');
-                                $body = ob_get_contents();
-                                ob_end_clean();
-                        }                        
-                        hwdMediaShareFactory::load('utilities');
-                        $utilities = hwdMediaShareUtilities::getInstance();
-                        $utilities->sendSystemEmail(JText::_('COM_HWDMS_EMAIL_SUBJECT_NEW_MEDIA'), $body);
-                } 
-
-                return true;
-        }
-
-	/**
-	 * Method to process a cusotm thumbnail upload
-         *
-	 * @since   0.1
-	 */
-	public function processThumbnail( $params )
-	{
-                // Initialise variables
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $input = 'thumbnail';
-                $error = false;
-
-                // Load libraries
-                hwdMediaShareFactory::load('files');
-
-                // Load the current element
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                switch ($params->elementType) {
-                    case 1:
-                        $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                        break;
-                    case 2:
-                        $table =& JTable::getInstance('Album', 'hwdMediaShareTable');
-                        break;
-                    case 3:
-                        $table =& JTable::getInstance('Group', 'hwdMediaShareTable');
-                        break;
-                    case 4:
-                        $table =& JTable::getInstance('Playlist', 'hwdMediaShareTable');
-                        break;
-                    case 5:
-                        $table =& JTable::getInstance('UserChannel', 'hwdMediaShareTable');
-                        break;
-                    default:
-                        $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                        break;
-                }
-                $table->load( $params->elementId );
-
-                $properties = $table->getProperties(1);
-                $row = JArrayHelper::toObject($properties, 'JObject');
-
-                //Retrieve file details from uploaded file, sent from upload form
-                jimport( 'joomla.filesystem.file' );
-                $file = JRequest::getVar('jform', null, 'files', 'array');
-                $ext = strtolower(JFile::getExt($file['name'][$input]));
-
-                // Remove current thumbnail if requested or new thumbnail is attached to form
-                if (is_uploaded_file($file['tmp_name'][$input]) || $params->remove)
-                {                    
-                        $_folders = hwdMediaShareFiles::getFolders($row->key);
-                        $_filename = hwdMediaShareFiles::getFilename($row->key, '10');
-                        $_ext = hwdMediaShareFiles::getExtension($row, 10);
-                        $_path = hwdMediaShareFiles::getPath($_folders, $_filename, $_ext);
-                        if (file_exists($_path))
-                        {
-                                jimport( 'joomla.filesystem.file' );
-                                JFile::delete($_path);
-                        }
-                }
-
-                // If no file attached then return
-                if (is_uploaded_file($file['tmp_name'][$input]) && !empty($ext))
-                {
-                        hwdMediaShareFiles::getLocalStoragePath();
-
-                        //Import filesystem libraries. Perhaps not necessary, but does not hurt
-                        jimport('joomla.filesystem.file');
-
-                        $folders = hwdMediaShareFiles::getFolders($row->key);
-                        hwdMediaShareFiles::setupFolders($folders);
-
-                        //Clean up filename to get rid of strange characters like spaces etc
-                        $filename = hwdMediaShareFiles::getFilename($row->key, '10');
-
-                        //Set up the source and destination of the file
-                        $src = $file['tmp_name'][$input];
-                        $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
-                        //First check if the file has the right extension, we need jpg only
-                        $db = JFactory::getDBO();
-                        $query = $db->getQuery(true);
-                        $query->select('id');
-                        $query->from('#__hwdms_ext');
-                        $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-
-                        $db->setQuery($query);
-                        $ext_id = $db->loadResult();
-                        if ( $ext_id > 0 )
-                        {
-                                if ( JFile::upload($src, $dest) )
-                                {
-                                        //Redirect to a page of your choice
-                                        $data = array();
-                                        $data['id'] = $row->id;
-                                        $data['thumbnail_ext_id'] = $ext_id;
-
-                                        if (!$table->bind( $data )) {
-                                                return JError::raiseWarning( 500, $row->getError() );
-                                        }
-                                        if (!$table->store()) {
-                                                JError::raiseError(500, $row->getError() );
-                                        }
-                                }
-                                else
-                                {
-                                        // Upload failed
-                                        return false;
-                                }
-                        }
-                        else
-                        {
-                                // Extension not allowed
-                                return false;
-                        }
+                        }  
+                        
+                        $properties = $table->getProperties(1);
+                        $this->_item = JArrayHelper::toObject($properties, 'JObject');
 
                         hwdMediaShareFactory::load('files');
-                        hwdMediaShareFiles::add($table, 10, $params->elementType);
-                }
-                elseif (isset($params->thumbnail_remote) && !empty($params->thumbnail_remote))
-                {
-                        //Redirect to a page of your choice
-                        $data = array();
-                        $data['id'] = $row->id;
-                        $data['thumbnail'] = $params->thumbnail_remote;
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $HWDfiles->addFile($this->_item, 1);
 
-                        if (!$table->bind( $data )) {
-                                return JError::raiseWarning( 500, $row->getError() );
-                        }
-                        if (!$table->store()) {
-                                JError::raiseError(500, $row->getError() );
-                        }
-                }
+                        hwdMediaShareUpload::addProcesses($this->_item);
+		}
 
                 return true;
         }
 
-        /**
-	 * Method to get all allowed extensions
-         *
-	 * @since   0.1
-	 */
-	public function getAllowedExtensions($method=null)
-	{
-                // Load hwdMediaShare config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                $media_types = array();
-       
-                switch ($method) 
-                {
-                    case 'standard':                        
-                        if ($config->get('audio_uploads') == 0 || $config->get('audio_uploads') == 2 && $config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('document_uploads') == 0 || $config->get('document_uploads') == 2 && $config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('image_uploads') == 0 || $config->get('image_uploads') == 2 && $config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('video_uploads') == 0 || $config->get('video_uploads') == 2 && $config->get('enable_videos')) $media_types[] = 4;
-                        break;
-                    case 'large':
-                        if ($config->get('audio_uploads') == 1 || $config->get('audio_uploads') == 2 && $config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('document_uploads') == 1 || $config->get('document_uploads') == 2 && $config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('image_uploads') == 1 || $config->get('image_uploads') == 2 && $config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('video_uploads') == 1 || $config->get('video_uploads') == 2 && $config->get('enable_videos')) $media_types[] = 4;
-                        break;
-                    case 'platform':
-                        if ($config->get('audio_uploads') == 3 && $config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('document_uploads') == 3 && $config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('image_uploads') == 3 && $config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('video_uploads') == 3 && $config->get('enable_videos')) $media_types[] = 4;
-                        break;
-                    default:
-                        $media_types = array(1,2,3,4);
-                        break;
-                }                
-                
-		if (count($media_types) > 0)
-                {
-                        $db =& JFactory::getDBO();
-                        $query = "
-                        SELECT ".$db->quoteName('ext')."
-                            FROM ".$db->quoteName('#__hwdms_ext')."
-                            WHERE ".$db->quoteName('media_type')." IN (" . implode(',', $media_types) . ")
-                            AND ".$db->quoteName('published')." = ".$db->quote('1')."
-                        ";  
-
-                        $db->setQuery($query);
-                        $row = $db->loadColumn();
-
-                        return $row;
-                }
-                return false;
-	}
-
 	/**
-	 * Method to process an uber upload
-         *
-	 * @since   0.1
+	 * Method to process an uber upload.
+         * 
+         * @access  public
+         * @return  boolean  True on success.
 	 */
-	public function uber( )
+	public function uber()
 	{
-                $db =& JFactory::getDBO();
-                $user = & JFactory::getUser();
-                $app = & JFactory::getApplication();
-                $date =& JFactory::getDate();
-                // Load hwdMediaShare config
+                // Initialise variables.
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
+
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                hwdMediaShareFactory::load('files');
-                hwdMediaShareFiles::getLocalStoragePath();
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.upload', 'com_hwdmediashare'))
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                } 
 
 //******************************************************************************************************
 //   ATTENTION: THIS FILE HEADER MUST REMAIN INTACT. DO NOT DELETE OR MODIFY THIS FILE HEADER.
@@ -682,13 +401,11 @@ require_once(JPATH_ROOT.'/components/com_hwdmediashare/libraries/uber/ubr_ini.ph
 require_once(JPATH_ROOT.'/components/com_hwdmediashare/libraries/uber/ubr_lib.php');
 require_once(JPATH_ROOT.'/components/com_hwdmediashare/libraries/uber/ubr_finished_lib.php');
 
-if($PHP_ERROR_REPORTING){ error_reporting(E_ALL); }
+if(preg_match("/^[a-zA-Z0-9]{32}$/", $_GET['upload_id'])){ $UPLOAD_ID = $_GET['upload_id'];}
+elseif(isset($_GET['about']) && $_GET['about'] == 1){ kak("<u><b>UBER UPLOADER FINISHED PAGE</b></u><br>UBER UPLOADER VERSION =  <b>" . $UBER_VERSION . "</b><br>UBR_FINISHED = <b>" . $THIS_VERSION . "<b><br>\n", 1 , __LINE__);}
+else{kak("ERROR: Invalid parameters passed<br>", 1, __LINE__);}
 
-if(preg_match("/^[a-zA-Z0-9]{32}$/", $_GET['upload_id'])){ $UPLOAD_ID = $_GET['upload_id']; }
-elseif(isset($_GET['about']) && $_GET['about'] == 1){ kak("<u><b>UBER UPLOADER FINISHED PAGE</b></u><br>UBER UPLOADER VERSION =  <b>" . $UBER_VERSION . "</b><br>UBR_FINISHED = <b>" . $THIS_VERSION . "<b><br>\n", 1 , __LINE__); }
-else{ kak("ERROR: Invalid parameters passed<br>", 1, __LINE__); }
-
-//Declare local values
+// Declare local values.
 $_XML_DATA = array();                                          // Array of xml data read from the upload_id.redirect file
 $_CONFIG_DATA = array();                                       // Array of config data read from the $_XML_DATA array
 $_POST_DATA = array();                                         // Array of posted data read from the $_XML_DATA array
@@ -709,21 +426,6 @@ $_CONFIG_DATA = getConfigData($_XML_DATA);                     // Get config dat
 $_POST_DATA  = getPostData($_XML_DATA);                        // Get post data from the xml data
 $_FILE_DATA = getFileData($_XML_DATA);                         // Get file data from the xml data
 
-// Output XML DATA, CONFIG DATA, POST DATA, FILE DATA to screen and exit if DEBUG_ENABLED.
-if($DEBUG_FINISHED){
-	debug("<br><u>XML DATA</u>", $_XML_DATA);
-	debug("<u>CONFIG DATA</u>", $_CONFIG_DATA);
-	debug("<u>POST DATA</u>", $_POST_DATA);
-	debug("<u>FILE DATA</u><br>", $_FILE_DATA);
-	exit;
-}
-
-//Create file upload table
-$_FILE_DATA_TABLE = getFileDataTable($_FILE_DATA, $_CONFIG_DATA);
-
-// Create and send email
-if($_CONFIG_DATA['send_email_on_upload']){ emailUploadResults($_FILE_DATA, $_CONFIG_DATA, $_POST_DATA); }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // NOTE: You can now access all XML values below this comment. eg.
 //   $_XML_DATA['upload_dir']; or $_XML_DATA['link_to_upload'] etc
@@ -738,129 +440,175 @@ if($_CONFIG_DATA['send_email_on_upload']){ emailUploadResults($_FILE_DATA, $_CON
 //   $_FILE_DATA[0]->name  or  $_FILE_DATA[0]->getFileInfo('name')
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
+                // We want to run this data through the Joomla filters, so we 
+                // need to set the $_POST associative array.
+                $_REQUEST['id'] = $_POST_DATA['jform_id_'];
+                $_REQUEST['title'] = $_POST_DATA['jform_title_'];
+                $_REQUEST['alias'] = $_POST_DATA['jform_alias_'];
+                $_REQUEST['description'] = $_POST_DATA['jform_description_'];
+                $_REQUEST['catid'] = array($_POST_DATA['jform_catid___']);
+                $_REQUEST['tags'] = array($_POST_DATA['jform_tags___']);
+                $_REQUEST['category_id'] = $_POST_DATA['jform_category_id_'];
+                $_REQUEST['album_id'] = $_POST_DATA['jform_album_id_'];
+                $_REQUEST['playlist_id'] = $_POST_DATA['jform_playlist_id_'];
+                $_REQUEST['group_id'] = $_POST_DATA['jform_group_id_'];
+
                 // Get associations from ubr_upload and assign them to the jform array
                 $data = array();
-                if (isset($_POST_DATA['jform_catid']))			$data['catid'] = intval($_POST_DATA['jform_catid']);
-                if (isset($_POST_DATA['jform_album_id']))		$data['album_id'] = intval($_POST_DATA['jform_album_id']);
-                if (isset($_POST_DATA['jform_playlist_id']))            $data['playlist_id'] = intval($_POST_DATA['jform_playlist_id']);
-                if (isset($_POST_DATA['jform_group_id']))		$data['group_id'] = intval($_POST_DATA['jform_group_id']);
-                if (isset($_POST_DATA['jform_id']))                     $data['id'] = intval($_POST_DATA['jform_id']);
-                if (isset($_POST_DATA['redirect']))                     JRequest::setVar('redirect', $_POST_DATA['redirect']);
-                JRequest::setVar('jform', $data);
+                $data['title'] = $app->input->get('title', '', 'string');
+                $data['alias'] = $app->input->get('alias', '', 'string');
+                $data['description'] = $app->input->get('description', '', 'safe_html');
+                $data['catid'] = $app->input->get('catid', array(), 'array');
+                $data['tags'] = $app->input->get('tags', array(), 'array');
+                $data['category_id'] = $app->input->get('category_id', '', 'int');
+                $data['album_id'] = $app->input->get('album_id', '', 'int');
+                $data['playlist_id'] = $app->input->get('playlist_id', '', 'int');
+                $data['group_id'] = $app->input->get('group_id', '', 'int');
+
+                $app->input->set('jform', $data);
 
                 foreach($_FILE_DATA as $arrayKey => $slot)
                 {
+                        // Retrieve file details from uploaded file, sent from upload form.
+                        jimport('joomla.filesystem.file');
+                        $ext = strtolower(JFile::getExt($slot->name));
+                        
+			// Check if we need to replace an existing media item.
+			if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
+			{
+                                $query = $db->getQuery(true)
+                                        ->select($db->quoteName('key'))
+                                        ->from('#__hwdms_media')
+                                        ->where('id = ' . $db->quote($data['id']));
+                                try
+                                {                
+                                        $db->setQuery($query);
+                                        $key = $db->loadResult();
+                                }
+                                catch (Exception $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;
+                                }    
+			}
+			else
+			{
+				if (!$key = $utilities->generateKey(1))
+				{
+					$this->setError($utilities->getError());
+					return false;
+				}                        
+			}
+                        
+                        // Define the local storage directory location.
                         hwdMediaShareFactory::load('files');
-
-                        $tmp_name = HWDMS_PATH_MEDIA_FILES.'/'.$slot->name;
-                        if (!isset($slot->name) || !file_exists(HWDMS_PATH_MEDIA_FILES.'/'.$slot->name))
+                        hwdMediaShareFiles::getLocalStoragePath();
+  
+                        // This is the temporary location of the uploaded file.
+                        $src = HWDMS_PATH_MEDIA_FILES.'/'.$slot->name;
+                        
+                        if (!isset($slot->name) || !file_exists($src))
                         {
                                 $this->setError(JText::_('COM_HWDMS_ERROR_UPLOAD_ERROR'));
                                 return false;
                         }
-
-                        $error = false;
-
-                        // Retrieve file details from uploaded file, sent from upload form
-                        jimport( 'joomla.filesystem.file' );
-                        $ext = strtolower(JFile::getExt($slot->name));
-                        
-                        // Check if we need to replace an existing media item
-                        if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
-                        {
-                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                                $table->load( $data['id'] );
-                                $properties = $table->getProperties(1);
-                                $replace = JArrayHelper::toObject($properties, 'JObject');
-                                $key = $replace->key;      
-                        }
                         else
                         {
-                                $key = hwdMediaShareUpload::generateKey();
-                                if (hwdMediaShareUpload::keyExists($key))
+                                hwdMediaShareFactory::load('files');
+                                hwdMediaShareFiles::getLocalStoragePath();
+                            
+                                $folders = hwdMediaShareFiles::getFolders($key);
+                                hwdMediaShareFiles::setupFolders($folders);
+
+                                // Get the filename.
+                                $filename = hwdMediaShareFiles::getFilename($key, '1');
+
+                                // Get the destination location.
+                                $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
+
+                                // Check the upload size.
+                                $maxUploadFileSize = $config->get('max_upload_filesize', 30) * 1024 * 1024;                       
+                                if (filesize($src) > $maxUploadFileSize)
                                 {
-                                        $this->setError(JText::_('COM_HWDMS_KEY_EXISTS'));
-                                        return false;
-                                }                        
-                        }
-
-                        // Import filesystem libraries. Perhaps not necessary, but does not hurt
-                        jimport('joomla.filesystem.file');
-
-                        $folders = hwdMediaShareFiles::getFolders($key);
-                        hwdMediaShareFiles::setupFolders($folders);
-
-                        // Get filename for original media
-                        $filename = hwdMediaShareFiles::getFilename($key, '1');
-
-                        // Set up the source and destination of the file
-                        $src = $tmp_name;
-                        $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-                        
-                        // Get allowed media types
-                        $media_types = array();
-                        if ($config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('enable_videos')) $media_types[] = 4;
-    
-                        //First check if the file has the right extension, we need jpg only
-                        $db = JFactory::getDBO();
-                        $query = $db->getQuery(true);
-                        $query->select('id');
-                        $query->from('#__hwdms_ext');
-                        $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-                        $query->where($db->quoteName('media_type').' IN ('.implode(', ', $media_types).')');
-
-                        $db->setQuery($query);
-                        $ext_id = $db->loadResult();
-                        if ( $ext_id > 0 )
-                        {
-                                // Check if we need to replace an existing media item
-                                if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
-                                {
-                                        // Here, we need to remove all files already associated with this media item
-                                        hwdMediaShareFactory::load('files');
-                                        hwdMediaShareFiles::deleteMediaFiles($replace);
+                                        $this->setError(JText::sprintf('COM_HWDMS_FILE_N_EXCEEDS_THE_MAX_UPLOAD_LIMIT', $file['name']));
+                                        return false;                            
                                 }
+                        
+				// Get allowed media types.
+				$media_types = array();
+				if ($config->get('enable_audio')) $media_types[] = 1;
+				if ($config->get('enable_documents')) $media_types[] = 2;
+				if ($config->get('enable_images')) $media_types[] = 3;
+				if ($config->get('enable_videos')) $media_types[] = 4;
+
+				// Check if the file has an allowed extension.
+				$query = $db->getQuery(true)
+					->select('id')
+					->from('#__hwdms_ext')
+					->where($db->quoteName('ext') . ' = ' . $db->quote($ext))
+					->where($db->quoteName('published') . ' = ' . $db->quote(1))
+					->where($db->quoteName('media_type') . ' IN ('.implode(', ', $media_types).')');
+				$db->setQuery($query);
+				try
+				{
+					$db->execute(); 
+					$ext_id = $db->loadResult();                   
+				}
+				catch (RuntimeException $e)
+				{
+					$this->setError($e->getMessage());
+					return false;                            
+				}
+
+                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
                                 
-                                if ( JFile::move($src, $dest) )
+                                if ($ext_id > 0)
                                 {
-                                        //Redirect to a page of your choice
+					// Check if we need to replace an existing media item.
+					if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
+					{
+                                                // Attempt to load the existing table row.
+                                                $return = $table->load($data['id']);
+
+                                                // Check for a table object error.
+                                                if ($return === false && $table->getError())
+                                                {
+                                                        $this->setError($table->getError());
+                                                        return false;
+                                                }
+
+                                                $properties = $table->getProperties(1);
+                                                $replace = JArrayHelper::toObject($properties, 'JObject');
+
+                                                // Here, we need to remove all files already associated with this media item
+                                                hwdMediaShareFactory::load('files');
+                                                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                                $HWDfiles->deleteMediaFiles($replace);
+					}
+
+                                        if (!JFile::move($src, $dest))
+                                        {
+                                                $this->setError(JText::_('COM_HWDMS_ERROR_FILE_COULD_NOT_BE_COPIED_TO_UPLOAD_DIRECTORY'));
+                                                return false;
+                                        }
                                 }
                                 else
                                 {
-                                        $this->setError(JText::_('COM_HWDMS_ERROR_FILE_COULD_NOT_BE_COPIED_TO_UPLOAD_DIRECTORY'));
+                                        $this->setError(JText::_('COM_HWDMS_ERROR_EXTENSION_NOT_ALLOWED'));
                                         return false;
                                 }
-                        }
-                        else
-                        {
-                                $this->setError(JText::_('COM_HWDMS_ERROR_EXTENSION_NOT_ALLOWED'));
-                                return false;
-                        }
 
-                        if (!$error)
-                        {
-                                // Set approved/pending
+                                // Set approved/pending.
                                 (!$app->isAdmin() && $config->get('approve_new_media')) == 1 ? $status = 2 : $status = 1; 
                                 $config->get('approve_new_media') == 1 ? $status = 2 : $status = 1; 
 
-                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                $row =& JTable::getInstance('media', 'hwdMediaShareTable');
+                                $post = array();
 
-                                $post                          = array();
-
-                                // Check if we need to replace an existing media item
+                                // Check if we need to replace an existing media item.
                                 if (isset($data['id']) && $data['id'] > 0 && $app->isAdmin() && $user->authorise('core.edit', 'com_hwdmediashare'))
                                 {
-                                        // Here, we need to remove all files already associated with this media item
-                                        hwdMediaShareFactory::load('files');
-                                        hwdMediaShareFiles::deleteMediaFiles($replace);
-
-                                        // Now we setup a new array to bind to this item
-                                        $post['id']                     = $data['id'];
+                                        //$post['id']                   = '';
                                         //$post['asset_id']             = '';
                                         $post['ext_id']                 = $ext_id;
                                         //$post['media_type']           = '';
@@ -897,7 +645,7 @@ if($_CONFIG_DATA['send_email_on_upload']){ emailUploadResults($_FILE_DATA, $_CON
                                         //$post['publish_up']           = '';
                                         //$post['publish_down']         = '';
                                         $post['modified_user_id']       = $user->id;
-                                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                                        $post['modified']               = $date->toSql();
                                         //$post['hits']                 = '';
                                         //$post['language']             = '';              
                                 }
@@ -908,9 +656,9 @@ if($_CONFIG_DATA['send_email_on_upload']){ emailUploadResults($_FILE_DATA, $_CON
                                         $post['ext_id']                 = $ext_id;
                                         $post['media_type']             = '';
                                         $post['key']                    = $key;
-                                        $post['title']                  = hwdMediaShareUpload::removeExtension($_POST_DATA[$slot->slot]);
-                                        $post['alias']                  = JFilterOutput::stringURLSafe($post['title']);
-                                        //$post['description']          = '';
+                                        $post['title']                  = (isset($data['title']) ? $data['title'] : hwdMediaShareUpload::removeExtension($_POST_DATA[$slot->slot]));
+                                        $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
+                                        $post['description']            = (isset($data['description']) ? $data['description'] : '');
                                         $post['type']                   = 1; // Local
                                         $post['source']                 = '';
                                         $post['storage']                = '';
@@ -926,231 +674,547 @@ if($_CONFIG_DATA['send_email_on_upload']){ emailUploadResults($_FILE_DATA, $_CON
                                         //$post['likes']                = '';
                                         //$post['dislikes']             = '';
                                         $post['status']                 = $status;
-                                        $post['published']              = 1;
-                                        $post['featured']               = 0;
+                                        $post['published']              = (isset($data['published']) ? $data['published'] : 1);
+                                        $post['featured']               = (isset($data['featured']) ? $data['featured'] : 0);
                                         //$post['checked_out']          = '';
                                         //$post['checked_out_time']     = '';
-                                        $post['access']                 = 1;
+                                        $post['access']                 = (isset($data['access']) ? $data['access'] : 1);
                                         $post['download']               = 1;
                                         //$post['params']               = '';
                                         //$post['ordering']             = '';
                                         $post['created_user_id']        = $user->id;
                                         //$post['created_user_id_alias']= '';
-                                        $post['created']                = $date->format('Y-m-d H:i:s');
-                                        $post['publish_up']             = $date->format('Y-m-d H:i:s');
+                                        $post['created']                = $date->toSql();
+                                        $post['publish_up']             = $date->toSql();
                                         $post['publish_down']           = '0000-00-00 00:00:00';
                                         $post['modified_user_id']       = $user->id;
-                                        $post['modified']               = $date->format('Y-m-d H:i:s');
+                                        $post['modified']               = $date->toSql();
                                         $post['hits']                   = 0;
-                                        $post['language']               = '*';
+                                        $post['language']               = (isset($data['language']) ? $data['language'] : '*');
                                 }
 
-                                // Bind it to the table
-                                if (!$row->bind( $post ))
+                                // Save data to the database.
+                                if (!$table->save($post))
                                 {
-                                        $this->setError($row->getError());
+                                        $this->setError($table->getError());
                                         return false;
-                                }
+                                }  
 
-                                // Store it in the db
-                                if (!$row->store())
-                                {
-                                        $this->setError($row->getError());
-                                        return false;
-                                }
+                                $properties = $table->getProperties(1);
+                                $this->_item = JArrayHelper::toObject($properties, 'JObject');
+
+                                hwdMediaShareFactory::load('files');
+                                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                $HWDfiles->addFile($this->_item, 1);
+
+                                hwdMediaShareUpload::addProcesses($this->_item);  
                         }
-
-                        $this->_id = $row->id;
-                        $this->_title = $row->title;
-
-                        hwdMediaShareUpload::assignAssociations($row);
-
-                        hwdMediaShareFactory::load('files');
-                        hwdMediaShareFiles::add($row,'1');
-
-                        hwdMediaShareUpload::addProcesses($row);
-
-                        // Trigger onAfterMediaAdd
-                        if ($config->get('approve_new_media') == 0)
-                        {
-                                hwdMediaShareFactory::load('events');
-                                $events = hwdMediaShareEvents::getInstance();
-                                $events->triggerEvent('onAfterMediaAdd', $row); 
-                        }
-
-                        // Send system notifications
-                        if ($config->get('notify_new_media') == 1) 
-                        {
-                                if($row->status == 2){
-                                        ob_start();
-                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia_pending.php');
-                                        $body = ob_get_contents();
-                                        ob_end_clean();
-                                }
-                                else{
-                                        ob_start();
-                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newmedia.php');
-                                        $body = ob_get_contents();
-                                        ob_end_clean();
-                                }
-                                hwdMediaShareFactory::load('utilities');
-                                $utilities = hwdMediaShareUtilities::getInstance();
-                                $utilities->sendSystemEmail(JText::_('COM_HWDMS_EMAIL_SUBJECT_NEW_MEDIA'), $body);
-                        }   
                 }
+                
                 return true;
         }
 
 	/**
-	 * Method to associate the upload with elements
-         *
-	 * @since   0.1
+	 * Method to process a custom thumbnail upload.
+         * 
+         * @access  public
+         * @param   object   $item  The item which the thumbnail belongs to.
+         * @return  boolean  True on success.
 	 */
-	public function assignAssociations($row)
+	public function processThumbnail($item)
 	{
-                //// @TODO: Validation and playlist section
-                $data = JRequest::getVar('jform', array(), 'request', 'array');
-                if (isset($data['catid']))
+                // Initialise variables.            
+                $db = JFactory::getDBO();
+                $user = JFactory::getUser();
+                $app = JFactory::getApplication();
+                $date = JFactory::getDate();
+
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
+                // Load libraries.
+                jimport('joomla.filesystem.file');
+                hwdMediaShareFactory::load('files');
+                hwdMediaShareFiles::getLocalStoragePath();
+
+                // Check authorised.
+                if (!$user->authorise('hwdmediashare.upload', 'com_hwdmediashare'))
                 {
-                        if (is_array($data['catid']))
+                        $this->setError(JText::_('COM_HWDMS_ERROR_NOAUTHORISED'));
+                        return false;
+                }      
+
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+
+                // Retrieve details of uploaded file, sent from upload form.
+                // Check the jform control first, then no control.
+                $files = $app->input->files->get('jform');
+                if (isset($files['thumbnail']))
+                {
+                        $file = $files['thumbnail'];
+                }
+                else
+                {
+                        $file = $app->input->files->get('thumbnail');    
+                }
+
+                // Remove current thumbnail if requested or new thumbnail is attached to form.
+                if (isset($file) && is_uploaded_file($file['tmp_name']) || $data['remove_thumbnail'])
+                {
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $HWDfiles->elementType = $this->elementType;
+                        $HWDfiles->removeFile($item, 10);                     
+                }
+
+                // Process thumbnail image.
+                if (isset($file) && is_uploaded_file($file['tmp_name']))
+                {
+                        // Get the extension of the thumbnail image.
+                        $ext = strtolower(JFile::getExt($file['name']));
+
+                        // First check if the thumbnail image is an allowed image format.
+                        // Check if the file has an allowed extension
+                        $query = $db->getQuery(true)
+                                ->select('id')
+                                ->from('#__hwdms_ext')
+                                ->where($db->quoteName('ext') . ' = ' . $db->quote($ext))
+                                ->where($db->quoteName('published') . ' = ' . $db->quote(1))
+                                ->where($db->quoteName('media_type') . ' = '.$db->quote(3));
+                        $db->setQuery($query);
+                        try
                         {
-                                $params = new StdClass;
-                                $params->elementId = $row->id;
-                                $params->categoryId = $data['catid'];
-                                hwdMediaShareFactory::load('category');
-                                hwdMediaShareCategory::save($params);
-                                unset($params);
+                                $db->execute(); 
+                                $ext_id = $db->loadResult();                   
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;                            
+                        }
+
+                        if ($ext_id > 0)
+                        {
+                                // Define and setup folders.     
+                                $folders = hwdMediaShareFiles::getFolders($item->key);
+                                hwdMediaShareFiles::setupFolders($folders);
+
+                                // Get hashed filename.
+                                $filename = hwdMediaShareFiles::getFilename($item->key, '10');
+
+                                // Define source and destination.
+                                $src = $file['tmp_name'];
+                                $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
+
+                                if (JFile::upload($src, $dest))
+                                {
+                                        // Attempt resize on the fly.
+                                        hwdMediaShareFactory::load('images');
+                                        $HWDimages = hwdMediaShareImages::getInstance();
+                                        $HWDimages->resizeImage($dest, 500); 
+                                    
+                                        // Create an object for updating the record.
+                                        $object = new stdClass();
+                                        $object->id = $item->id;
+                                        $object->thumbnail_ext_id = $ext_id;
+                                }
+                                else
+                                {
+                                        $this->setError(JText::_('COM_HWDMS_ERROR_FILE_COULD_NOT_BE_COPIED_TO_UPLOAD_DIRECTORY'));
+                                        return false;
+                                }
                         }
                         else
                         {
-                                $cid = (int) $data['catid'];                                
-                                $params = new StdClass;
-                                $params->elementId = $row->id;
-                                $params->categoryId = array($cid);
-                                hwdMediaShareFactory::load('category');
-                                hwdMediaShareCategory::save($params);
-                                unset($params);
+                                $this->setError(JText::_('COM_HWDMS_ERROR_EXTENSION_NOT_ALLOWED'));
+                                return false;
+                        }
+                        
+                        // Add file record.
+                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                        $HWDfiles->elementType = $this->elementType;
+                        $HWDfiles->addFile($item, 10);
+                }
+                elseif (isset($data['thumbnail_remote']) && !empty($data['thumbnail_remote']))
+                {
+                        // Create an object for updating the record.
+                        $object = new stdClass();
+                        $object->id = $item->id;
+                        $object->thumbnail = $data['thumbnail_remote'];
+                }
+
+                try
+                {            
+                        // Update record in database.
+                        switch($this->elementType)
+                        {
+                                case 1:
+                                        $result = $db->updateObject('#__hwdms_media', $object, 'id');
+                                break;
+                                case 2:
+                                        $result = $db->updateObject('#__hwdms_albums', $object, 'id');
+                                break;
+                                case 3:
+                                        $result = $db->updateObject('#__hwdms_groups', $object, 'id');
+                                break;
+                                case 4:
+                                        $result = $db->updateObject('#__hwdms_playlists', $object, 'id');
+                                break;
+                                case 5:
+                                        $result = $db->updateObject('#__hwdms_users', $object, 'id');
+                                break;                            
                         }
                 }
+                catch (Exception $e)
+                {
+                        $this->setError($e->getMessage());
+                        return false;
+                }
+                
+                return true;
+        }
+
+	/**
+	 * Method to generate the destination of an upload.
+         * 
+         * @access  public
+         * @param   array   $folders   The three element array holding the subdirectories.
+         * @param   string  $filename  The basename of the destination file.
+         * @return  string  The full server path to the destination.
+	 */
+        public function dest($folders, $filename)
+        {
+                return HWDMS_PATH_MEDIA_FILES . '/' . $folders[1] . '/' . $folders[2] . '/' . $folders[3] . '/' . $filename;
+        }
+
+	/**
+	 * Method to remove an extention from a filename.
+         * 
+         * @access  public
+         * @param   string  $filename  The filename.
+         * @return  string  The filename without extension.
+	 */
+        public function removeExtension($filename)
+        {
+                $ext = strrchr($filename, '.');
+                if($ext !== false)
+                {
+                       $filename = substr($filename, 0, -strlen($ext));
+                }
+                return $filename;
+        }
+
+	/**
+	 * Method to add a user upload session token to database.
+         * 
+         * @access  public
+         * @static
+         * @param   string  $token  The session token.
+         * @return  void
+	 */
+        public static function addUserUploadSession($token)
+	{
+                $date = JFactory::getDate();
+                $user = JFactory::getUser();
+
+                $object = new stdClass;
+                $object->userid = $user->id;
+                $object->token = $token;
+                $object->datetime = $date->toSql();
+
+                $db = JFactory::getDBO();
+		$db->insertObject('#__hwdms_upload_tokens', $object);
+	}
+
+	/**
+	 * Method to generate the upload uri for FancyUpload2.
+         * 
+         * @access  public
+         * @static
+         * @return  string  The upload uri.
+	 */
+        public static function getFlashUploadURI()
+	{
+                $session = JFactory::getSession();
+                $user = JFactory::getUser();
+
+                // Generate a session handler for this user.
+                $token	= $session->getToken(true);
+
+                $url	= JURI::root(true) . '/index.php?option=com_hwdmediashare&task=addmedia.upload&format=raw';
+                $url   .= '&' . $session->getName() . '=' . $session->getId() . '&token=' . $token . '&uploaderid=' . $user->id;
+
+                hwdMediaShareUpload::addUserUploadSession($token);
+
+                return $url;
+	}
+
+        /**
+	 * Method to get maximum upload size (in MB) for specified upload method.
+         * 
+         * @access  public
+         * @static
+         * @param   string   $method  The upload method (standard|large|platform).
+         * @return  integer  The maximum upload size (in MB)
+	 */
+        public static function getMaximumUploadSize($method = null)
+	{
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                $media_types = array();
+
+                switch ($method) 
+                {
+                        case 'standard':                        
+                                $maxUpload = (int)$config->get('max_upload_filesize', 30);        
+                                $maxPhpUpload = min((int)ini_get('post_max_size'), (int)ini_get('upload_max_filesize'));
+                                $max = min($maxUpload, $maxPhpUpload);
+                                return $max;
+                        break;
+                        case 'large':   
+                        default:
+                                $maxUpload = (int)$config->get('max_upload_filesize', 30);        
+                                $maxPerlUpload = 2000;
+                                $max = min($maxUpload, $maxPerlUpload);
+                                return $max;
+                        break;
+                }      
+        }
+        
+        /**
+	 * Method to get all allowed extensions.
+         * 
+         * @access  public
+         * @static
+         * @return  array  An array of allowed file extensions.
+	 */
+        public static function getAllowedExtensions()
+	{
+                // Initialise variables.
+                $db = JFactory::getDBO();
+
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Define array of allowed media types.
+                $media_types = array();
+                            
+                if ($config->get('enable_audio')) $media_types[] = 1;
+                if ($config->get('enable_documents')) $media_types[] = 2;
+                if ($config->get('enable_images')) $media_types[] = 3;
+                if ($config->get('enable_videos')) $media_types[] = 4;
+
+		if (count($media_types))
+                {
+                        $query = $db->getQuery(true)
+                                ->select('ext')
+                                ->from('#__hwdms_ext')
+                                ->where('media_type IN (' . implode(',', $media_types) . ')')
+                                ->where('published = ' . $db->quote(1));
+                        try
+                        {                
+                                $db->setQuery($query);
+                                $rows = $db->loadColumn();
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+
+                        return $rows;
+                }
+                
+                return false;
+	}
+
+	/**
+	 * Method to associate the upload with tags and other elements.
+         * 
+         * @access  public
+         * @static
+         * @param   object  $media  The media object.
+         * @return  void
+	 */
+	public static function assignAssociations($media)
+	{
+                // Retrieve filtered jform data.
+                hwdMediaShareFactory::load('upload');
+                $data = hwdMediaShareUpload::getProcessedUploadData();
+
+                // Assign tags.
+                if (isset($data['tags']))
+                {
+                        $tags = (array) $data['tags'];
+
+                        // Sanitise tag array.
+                        jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($tags);
+
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                        $table->reset();
+                        $table->load($media->id);
+
+                        $tagsObserver = $table->getObserverOfClass('JTableObserverTags');
+                        $result = $tagsObserver->setNewTags($tags, false);
+
+                        if (!$result)
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+                }
+                
+                // Assign album.
                 if (isset($data['album_id']))
                 {
                         if ($data['album_id'] > 0)
-                        {                      
-                                $params = new StdClass;
-                                $params->albumId = (int) $data['album_id'];
-                                $controller =& JControllerLegacy::getInstance('hwdMediaShareController');
-                                $model = $controller->getModel('albumMedia');
-                                $model->link( $row->id, $params );
-                        }
-                }
-                if (isset($data['playlist_id']))
-                {
-                        if ($data['playlist_id'] > 0)
                         {
-                                $params = new StdClass;
-                                $params->playlistId = (int) $data['playlist_id'];
-                                $controller =& JControllerLegacy::getInstance('hwdMediaShareController');
-                                $model = $controller->getModel('playlistMedia');
-                                $model->link( $row->id, $params );
+                                $pks = array((int) $media->id);
+                                $albumId = (int) $data['album_id'];
+                                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                                $model = JModelLegacy::getInstance('AlbumMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                                $model->link($pks, $albumId);
                         }
                 }
+                
+                // Assign category.               
+                if (isset($data['category_id']))
+                {
+                        if ($data['category_id'] > 0)
+                        {            
+                                $catid = array((int) $data['category_id']);
+
+                                hwdMediaShareFactory::load('category');
+                                $HWDcategory = hwdMediaShareCategory::getInstance();
+                                $HWDcategory->save($catid, $media->id);
+                        }
+                }
+                
+                // Assign group.
                 if (isset($data['group_id']))
                 {
                         if ($data['group_id'] > 0)
                         {
-                                $params = new StdClass;
-                                $params->groupId = (int) $data['group_id'];
-                                $controller =& JControllerLegacy::getInstance('hwdMediaShareController');
-                                $model = $controller->getModel('groupMedia');
-                                $model->link( $row->id, $params );
+                                $pks = array((int) $media->id);
+                                $groupId = (int) $data['group_id'];
+                                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                                $model = JModelLegacy::getInstance('GroupMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                                $model->link($pks, $groupId);
+                        }
+                }           
+                
+                // Assign playlist.
+                if (isset($data['playlist_id']))
+                {
+                        if ($data['playlist_id'] > 0)
+                        {
+                                $pks = array((int) $media->id);
+                                $playlistId = (int) $data['playlist_id'];
+                                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                                $model = JModelLegacy::getInstance('PlaylistMediaItem', 'hwdMediaShareModel', array('ignore_request' => true));
+                                $model->link($pks, $playlistId);
                         }
                 }
-                return;
 	}
 
 	/**
-	 * Method to add relavent processes for uploads
-         *
-	 * @since   0.1
+	 * Method to add relavent processes for uploads.
+         * 
+         * @access  public
+         * @static
+         * @param   object  $media  The media object.
+         * @return  void.
 	 */
-	public function addProcesses($item)
+	public static function addProcesses($media)
 	{
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                // Check we are meant to be processing
+                // Check processing is enabled.
                 if ($config->get('process') == 0) return true;
                         
                 $processes = array();
 
-                hwdMediaShareFactory::load('processes');
+                // Load media library.
                 hwdMediaShareFactory::load('media');
 
-                $type = hwdMediaShareMedia::loadMediaType($item);
+                // Load processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                                
+                // Get the media type.
+                $type = hwdMediaShareMedia::loadMediaType($media);
+                
                 if ($type == 1)
                 {
                         // Audio
-                        $config->get('process_jpeg_75') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'1') : null;
-                        $config->get('process_jpeg_100') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'2') : null;
-                        $config->get('process_jpeg_240') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'3') : null;
-                        $config->get('process_jpeg_500') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'4') : null;
-                        $config->get('process_jpeg_640') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'5') : null;
-                        $config->get('process_jpeg_1024') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'6') : null;
+                        $config->get('process_jpeg_75') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'1') : null;
+                        $config->get('process_jpeg_100') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'2') : null;
+                        $config->get('process_jpeg_240') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'3') : null;
+                        $config->get('process_jpeg_500') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'4') : null;
+                        $config->get('process_jpeg_640') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'5') : null;
+                        $config->get('process_jpeg_1024') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'6') : null;
 
-                        $config->get('process_audio_mp3') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'7') : null;
-                        $config->get('process_audio_ogg') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'8') : null;
+                        $config->get('process_audio_mp3') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'7') : null;
+                        $config->get('process_audio_ogg') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'8') : null;
 
-                        $processes[] = hwdMediaShareProcesses::add($item,'22');
-                        $processes[] = hwdMediaShareProcesses::add($item,'23');
+                        $processes[] = $HWDprocesses->addProcess($media,'22');
+                        $processes[] = $HWDprocesses->addProcess($media,'23');
                 }
-                else if ($type == 2)
+                elseif ($type == 2)
                 {
                         // Document
-                        $config->get('process_jpeg_75') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'1') : null;
-                        $config->get('process_jpeg_100') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'2') : null;
-                        $config->get('process_jpeg_240') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'3') : null;
-                        $config->get('process_jpeg_500') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'4') : null;
+                        $config->get('process_jpeg_75') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'1') : null;
+                        $config->get('process_jpeg_100') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'2') : null;
+                        $config->get('process_jpeg_240') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'3') : null;
+                        $config->get('process_jpeg_500') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'4') : null;
                 }
-                else if ($type == 3)
+                elseif ($type == 3)
                 {
                         // Image
-                        $config->get('process_jpeg_75') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'1') : null;
-                        $config->get('process_jpeg_100') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'2') : null;
-                        $config->get('process_jpeg_240') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'3') : null;
-                        $config->get('process_jpeg_500') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'4') : null;
-                        $config->get('process_jpeg_640') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'5') : null;
-                        $config->get('process_jpeg_1024') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'6') : null;
+                        $config->get('process_jpeg_75') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'1') : null;
+                        $config->get('process_jpeg_100') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'2') : null;
+                        $config->get('process_jpeg_240') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'3') : null;
+                        $config->get('process_jpeg_500') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'4') : null;
+                        $config->get('process_jpeg_640') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'5') : null;
+                        $config->get('process_jpeg_1024') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'6') : null;
                 }
-                else if ($type == 4)
+                elseif ($type == 4)
                 {
                         // Video
-                        $config->get('process_jpeg_75') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'1') : null;
-                        $config->get('process_jpeg_100') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'2') : null;
-                        $config->get('process_jpeg_240') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'3') : null;
-                        $config->get('process_jpeg_500') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'4') : null;
-                        $config->get('process_jpeg_640') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'5') : null;
-                        $config->get('process_jpeg_1024') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'6') : null;
+                        $config->get('process_jpeg_75') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'1') : null;
+                        $config->get('process_jpeg_100') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'2') : null;
+                        $config->get('process_jpeg_240') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'3') : null;
+                        $config->get('process_jpeg_500') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'4') : null;
+                        $config->get('process_jpeg_640') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'5') : null;
+                        $config->get('process_jpeg_1024') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'6') : null;
 
-                        $config->get('process_flv_240') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'9') : null;
-                        $config->get('process_flv_360') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'10') : null;
-                        $config->get('process_flv_480') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'11') : null;
-                        $config->get('process_mp4_360') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'12') : null;
-                        $config->get('process_mp4_480') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'13') : null;
-                        $config->get('process_mp4_720') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'14') : null;
-                        $config->get('process_mp4_1080') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'15') : null;
-                        $config->get('process_webm_360') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'16') : null;
-                        $config->get('process_webm_480') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'17') : null;
-                        $config->get('process_webm_720') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'18') : null;
-                        $config->get('process_webm_1080') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'19') : null;
-                        $config->get('process_ogg_360') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'24') : null;
-                        $config->get('process_ogg_480') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'25') : null;
-                        $config->get('process_ogg_720') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'26') : null;
-                        $config->get('process_ogg_1080') == 1 ? $processes[] = hwdMediaShareProcesses::add($item,'27') : null;
+                        $config->get('process_flv_240') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'9') : null;
+                        $config->get('process_flv_360') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'10') : null;
+                        $config->get('process_flv_480') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'11') : null;
+                        $config->get('process_mp4_360') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'12') : null;
+                        $config->get('process_mp4_480') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'13') : null;
+                        $config->get('process_mp4_720') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'14') : null;
+                        $config->get('process_mp4_1080') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'15') : null;
+                        $config->get('process_webm_360') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'16') : null;
+                        $config->get('process_webm_480') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'17') : null;
+                        $config->get('process_webm_720') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'18') : null;
+                        $config->get('process_webm_1080') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'19') : null;
+                        $config->get('process_ogg_360') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'24') : null;
+                        $config->get('process_ogg_480') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'25') : null;
+                        $config->get('process_ogg_720') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'26') : null;
+                        $config->get('process_ogg_1080') == 1 ? $processes[] = $HWDprocesses->addProcess($media,'27') : null;
 
-                        $processes[] = hwdMediaShareProcesses::add($item,'20');
-                        $processes[] = hwdMediaShareProcesses::add($item,'21');
-                        $processes[] = hwdMediaShareProcesses::add($item,'22');  
+                        // $processes[] = $HWDprocesses->addProcess($media,'20'); // Inject metadata is now integrated into parent process.
+                        // $processes[] = $HWDprocesses->addProcess($media,'21'); // Move moov atom is now integrated into parent process.
+                        $processes[] = $HWDprocesses->addProcess($media,'22');  
                 }
                 
                 $cli = JPATH_SITE.'/administrator/components/com_hwdmediashare/cli.php';
@@ -1171,148 +1235,183 @@ if($_CONFIG_DATA['send_email_on_upload']){ emailUploadResults($_FILE_DATA, $_CON
                         }
                 }
 	}
-        
- 	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
+
+	/**
+	 * Method to get data from the jform.
+         * 
+         * @access  public
+         * @static
+         * @return  array  An array of filtered jform data.
 	 */
-	public function getReadableAllowedMediaTypes($method=null)
+	public static function getProcessedUploadData()
 	{
-                // Load hwdMediaShare config
+                // Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Retrieve filtered jform data.
+                $jform = $app->input->getArray(array(
+                    'jform' => array(
+                        'id' => 'int',
+                        'title' => 'string',
+                        'alias' => 'string',
+                        'description' => 'safe_html',
+                        'catid' => 'array',
+                        'tags' => 'array',
+                        'published' => 'int',
+                        'featured' => 'int',
+                        'access' => 'int',
+                        'language' => 'string',
+                        // Other associations
+                        'album_id' => 'int',
+                        'category_id' => 'int',
+                        'group_id' => 'int',
+                        'playlist_id' => 'int',
+                        // Thumbnail data
+                        'remove_thumbnail' => 'int',
+                        'thumbnail_remote' => 'string',
+                        // Remote media
+                        'remotes' => 'string',
+                        'remote' => 'string',
+                        // Remote file
+                        'link_type' => 'int',
+                        'link_ext' => 'int',
+                        'link_url' => 'url',
+                        // Embed code
+                        'embed_code' => 'raw',
+                        // RTMP
+                        'media_type' => 'int',
+                        'streamer' => 'string',
+                        'file' => 'string',
+                    )
+                ));
+
+                $data = $jform['jform'];
+                
+                if (empty($data['id']))                                         unset($data['id']);
+                if (empty($data['title']))                                      unset($data['title']);
+                if (empty($data['alias']))                                      unset($data['alias']);
+                if (empty($data['description']))                                unset($data['description']);
+                if (count($data['catid']) < 1)                                  unset($data['catid']);
+                if (count($data['tags']) < 1)                                   unset($data['tags']);
+                if (empty($data['description']))                                unset($data['description']);
+                if (empty($data['published']))                                  unset($data['published']);
+                if (empty($data['featured']))                                   unset($data['featured']);
+                if (empty($data['access']))                                     unset($data['access']);
+                if (empty($data['language']))                                   unset($data['language']);
+
+                if (empty($data['album_id']))                                   unset($data['album_id']);
+                if (empty($data['category_id']))                                unset($data['category_id']);
+                if (empty($data['group_id']))                                   unset($data['group_id']);
+                if (empty($data['playlist_id']))                                unset($data['playlist_id']);
+                                
+                if (empty($data['remove_thumbnail']))                           unset($data['remove_thumbnail']);
+                if (empty($data['thumbnail_remote']))                           unset($data['thumbnail_remote']);
+                
+                if (empty($data['remotes']))                                    unset($data['remotes']);
+                if (empty($data['remote']))                                     unset($data['remote']);
+                if (empty($data['link_type']))                                  unset($data['link_type']);
+                if (empty($data['link_ext']))                                   unset($data['link_ext']);
+                if (empty($data['link_url']))                                   unset($data['link_url']);
+                if (empty($data['embed_code']))                                 unset($data['embed_code']);
+                if (empty($data['media_type']))                                 unset($data['media_type']);
+                if (empty($data['streamer']))                                   unset($data['streamer']);
+                if (empty($data['file']))                                       unset($data['file']);
+
+                return $data;    
+        }
+     
+	/**
+	 * Method to check upload limits for user.
+         * 
+         * @access  public
+         * @static
+         * @return  boolean  True if under limit, false if over limit.
+	 */
+	public static function checkLimits()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                $db = JFactory::getDbo();
+                $user = JFactory::getUser();
+                $user_limit = 0;
+                
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                $db =& JFactory::getDBO();
-
-                $media_types = array();
-                hwdMediaShareFactory::load('media');
-                        
-                switch ($method) 
+                if ($config->get('enable_limits'))
                 {
-                    case 'standard':                        
-                        if ($config->get('audio_uploads') == 0 || $config->get('audio_uploads') == 2 && $config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('document_uploads') == 0 || $config->get('document_uploads') == 2 && $config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('image_uploads') == 0 || $config->get('image_uploads') == 2 && $config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('video_uploads') == 0 || $config->get('video_uploads') == 2 && $config->get('enable_videos')) $media_types[] = 4;
-                        break;
-                    case 'large':
-                        if ($config->get('audio_uploads') == 1 || $config->get('audio_uploads') == 2 && $config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('document_uploads') == 1 || $config->get('document_uploads') == 2 && $config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('image_uploads') == 1 || $config->get('image_uploads') == 2 && $config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('video_uploads') == 1 || $config->get('video_uploads') == 2 && $config->get('enable_videos')) $media_types[] = 4;
-                        break;
-                    case 'platform':
-                        if ($config->get('audio_uploads') == 3 && $config->get('enable_audio')) $media_types[] = 1;
-                        if ($config->get('document_uploads') == 3 && $config->get('enable_documents')) $media_types[] = 2;
-                        if ($config->get('image_uploads') == 3 && $config->get('enable_images')) $media_types[] = 3;
-                        if ($config->get('video_uploads') == 3 && $config->get('enable_videos')) $media_types[] = 4;
-                        break;
-                    default:
-                        $media_types = array(1,2,3,4);
-                        break;
-                }  
+                        // Get limits array.
+                        $limits = json_decode($config->get('upload_limits'), true);
                 
-                $retval = "";
-                $first = reset($media_types);
-                $last = end($media_types);
-                foreach($media_types as $media_type)
-                {
-                        switch ($media_type) {
-                            case 1:
-                                $query = "
-                                SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdms_ext')."
-                                    WHERE ".$db->quoteName('media_type')." = ".$db->quote('1')."
-                                    AND ".$db->quoteName('published')." = ".$db->quote('1')."
-                                ";  
-                                $db->setQuery($query);
-                                if ($db->loadResult())
+                        // Define the value array.
+                        $values = array(1 => 'space', 2 => 'number');
+                        
+                        // Calculate the maximum limit for the user.
+                        foreach ($user->groups as $key => $group)
+                        {
+                                $group_limit = $limits[$values[$config->get('enable_limits')]][$key];
+                                if ($group_limit > 0)
                                 {
-                                        $retval.= JText::_('COM_HWDMS_AUDIO');
-                                        if ($media_type != $last) 
-                                        {
-                                            $retval.= ', ';
-                                        }
+                                        $user_limit = $group_limit > $user_limit ? $group_limit : $user_limit;
                                 }
-                                break;
-                            case 2:
-                                $query = "
-                                SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdms_ext')."
-                                    WHERE ".$db->quoteName('media_type')." = ".$db->quote('2')."
-                                    AND ".$db->quoteName('published')." = ".$db->quote('1')."
-                                ";  
-                                $db->setQuery($query);
-                                if ($db->loadResult())
-                                {
-                                        $retval.= JText::_('COM_HWDMS_DOCUMENTS');
-                                        if ($media_type != $last) 
-                                        {
-                                            $retval.= ', ';
-                                        }
-                                }
-                                break;
-                            case 3:
-                                $query = "
-                                SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdms_ext')."
-                                    WHERE ".$db->quoteName('media_type')." = ".$db->quote('3')."
-                                    AND ".$db->quoteName('published')." = ".$db->quote('1')."
-                                ";  
-                                $db->setQuery($query);
-                                if ($db->loadResult())
-                                {
-                                        $retval.= JText::_('COM_HWDMS_IMAGES');
-                                        if ($media_type != $last) 
-                                        {
-                                            $retval.= ', ';
-                                        }
-                                }
-                                break;
-                            case 4:
-                                $query = "
-                                SELECT count(*)
-                                    FROM ".$db->quoteName('#__hwdms_ext')."
-                                    WHERE ".$db->quoteName('media_type')." = ".$db->quote('4')."
-                                    AND ".$db->quoteName('published')." = ".$db->quote('1')."
-                                ";  
-                                $db->setQuery($query);                               
-                                if ($db->loadResult())
-                                {
-                                        $retval.= JText::_('COM_HWDMS_VIDEOS');
-                                        if ($media_type != $last) 
-                                        {
-                                            $retval.= ', ';
-                                        }
-                                }
-                                break;
                         }
-
+                        
+                        if ($user_limit > 0)
+                        {
+                                if ($config->get('enable_limits') == 1)
+                                {
+                                        // Limit by disk space.
+                                        $query = $db->getQuery(true)
+                                                ->select('SUM(size)')
+                                                ->from('#__hwdms_files')
+                                                ->where('created_user_id = ' . $user->id)
+                                                ->where('file_type = 1');
+                                        try
+                                        {
+                                                $db->setQuery($query);
+                                                $bytes = $db->loadResult();
+                                        }
+                                        catch (RuntimeException $e)
+                                        {
+                                                $this->setError($e->getMessage());
+                                                return false;                            
+                                        }
+                                        
+                                        $mbytes = round($bytes / 1048576);
+                                        if ($mbytes > $user_limit)
+                                        {
+                                                $app->enqueueMessage(JText::sprintf('COM_HWDMS_WARNING_OVER_LIMIT_DISK_SPACE', $user_limit, $mbytes));
+                                                return false;                                            
+                                        }
+                                }
+                                elseif ($config->get('enable_limits') == 2)
+                                {
+                                        // Limit by number of uploads.
+                                        $query = $db->getQuery(true)
+                                                ->select('COUNT(*)')
+                                                ->from('#__hwdms_media')
+                                                ->where('created_user_id = ' . $user->id);
+                                        try
+                                        {
+                                                $db->setQuery($query);
+                                                $count = $db->loadResult();
+                                        }
+                                        catch (RuntimeException $e)
+                                        {
+                                                $this->setError($e->getMessage());
+                                                return false;                            
+                                        }
+                                        
+                                        if ($count > $user_limit)
+                                        {
+                                                $app->enqueueMessage(JText::sprintf('COM_HWDMS_WARNING_OVER_LIMIT_NUMBER_OF_UPLOADS', $user_limit, $count));
+                                                return false;                                            
+                                        }
+                                }
+                        }
                 }
-                return $retval;
-	}
-
-	/**
-	 * Method to set up the document properties
-	 *
-	 * @return void
-	 */
-	public function getReadableAllowedExtensions($extensions)
-	{
-                $retval = "";
-                $last = end($extensions);
-                foreach($extensions as $extension)
-                {
-                    if ($extension == $last) 
-                    {
-                        $retval.= $extension;
-                    }
-                    else
-                    {
-                        $retval.= $extension.', ';
-                    }
-                }
-                return $retval;
-	}
+                    
+                return true;
+        }        
 }
