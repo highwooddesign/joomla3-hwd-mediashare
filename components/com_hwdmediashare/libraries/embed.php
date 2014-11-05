@@ -15,16 +15,16 @@ class hwdMediaShareEmbed extends JObject
 	/**
 	 * Holds the new item details.
          * 
-         * @access      public
-	 * @var         object
+         * @access  public
+	 * @var     object
 	 */
 	public $_item;
         
 	/**
 	 * Holds the host (retrieved from the embed code).
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
         public $_host;
     
