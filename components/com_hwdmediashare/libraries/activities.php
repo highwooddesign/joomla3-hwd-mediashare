@@ -6,7 +6,7 @@
  * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
- * @inspiration https://github.com/justquick/django-activity-stream
+ * @see         https://github.com/justquick/django-activity-stream
  */
 
 defined('_JEXEC') or die;
@@ -17,8 +17,7 @@ class hwdMediaShareActivities extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -51,8 +50,8 @@ class hwdMediaShareActivities extends JObject
 	 * Method to save an activity.
          * 
          * @access  public
-         * @param   object  $activity The activity object.
-         * @return  boolean True on success.
+         * @param   object   $activity The activity object.
+         * @return  boolean  True on success.
 	 */
 	public function save($activity)
 	{
@@ -93,7 +92,7 @@ class hwdMediaShareActivities extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $activity The activity object.
+         * @param   object  $activity  The activity object.
          * @return  string  The human readable string. 
 	 */
         public static function getActivityType($activity)
@@ -132,7 +131,7 @@ class hwdMediaShareActivities extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $activity The activity object.
+         * @param   object  $activity  The activity object.
          * @return  string  The html for the activity. 
 	 */
 	public static function renderActivityHtml($activity)
@@ -178,7 +177,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=editmedia.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.$item->title.'</a>');
                                             return $return;
                                 }
                         break;
@@ -203,7 +202,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=album.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.$item->title.'</a>');
                                             return $return;
                                 }
                         break;  
@@ -230,7 +229,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=album.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.$item->title.'</a>');
                                             return $return;
                                 }
                         break; 
@@ -255,7 +254,7 @@ class hwdMediaShareActivities extends JObject
                                             $routemedia = ($app->isAdmin() ? 'index.php?option=com_hwdmediashare&task=playlist.edit&id=' . $activity->action : JRoute::_(hwdMediaShareHelperRoute::getPlaylistRoute($activity->action)));
                                             $return =  JText::sprintf(hwdMediaShareActivities::getActivityType($activity), 
                                                                       '<a href="'.$routeuser.'">'.$activity->author.'</a>', 
-                                                                      '<a href="'.$routemedia.'">'.JHtml::_('string.truncate', $item->title, $config->get('list_title_truncate'), false, false).'</a>');
+                                                                      '<a href="'.$routemedia.'">'.$item->title.'</a>');
                                             return $return;
                                 }
                         break; 
