@@ -15,8 +15,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         /**
 	 * Method to process a file upload using FancyUpload2.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function upload()
         {
@@ -77,8 +77,8 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         /**
 	 * Method to process a file upload using FancyUpload2.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
         public function addCdnUpload()
         {
