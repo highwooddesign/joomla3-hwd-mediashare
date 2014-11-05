@@ -15,25 +15,25 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * The URL view list variable to use with this controller.
 	 *
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
     	protected $view_list = "channels";
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-	 * @param       array       $config     An optional associative array of configuration settings.
-         * @return      void
+	 * @access  public
+	 * @param   array  $config  An optional associative array of configuration settings.
+         * @return  void
 	 */
 	public function __construct($config = array())
 	{
@@ -71,8 +71,8 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 	/**
 	 * Method to toggle the published value of a list of channels.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function publish()
 	{
@@ -125,8 +125,8 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 	/**
 	 * Method to like or dislike a single channel.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function like()
 	{
@@ -168,8 +168,8 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 	/**
 	 * Method to report a single channel.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function report()
 	{
@@ -207,8 +207,8 @@ class hwdMediaShareControllerChannels extends JControllerLegacy
 	/**
 	 * Method to subscribe/unsubscribe to a single channel.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function subscribe()
 	{
