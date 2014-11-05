@@ -15,8 +15,8 @@ class hwdMediaShareSubscriptions extends JObject
 	/**
 	 * The element type to use with this library.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
 	public $elementType = 5;
 
@@ -24,8 +24,7 @@ class hwdMediaShareSubscriptions extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -58,8 +57,8 @@ class hwdMediaShareSubscriptions extends JObject
 	 * Method to subscribe a user to an item.
          * 
          * @access  public
-         * @param   array   $pks    An array of record primary keys.
-         * @return  boolean True on success.
+         * @param   array    $pks  An array of record primary keys.
+         * @return  boolean  True on success.
 	 */
 	public function subscribe($pks)
 	{
@@ -137,8 +136,8 @@ class hwdMediaShareSubscriptions extends JObject
 	 * Method to unsubscribe a user to an item.
          * 
          * @access  public
-         * @param   array   $pks    An array of record primary keys.
-         * @return  boolean True on success.
+         * @param   array    $pks  An array of record primary keys.
+         * @return  boolean  True on success.
 	 */
 	public function unsubscribe($pks)
 	{
@@ -199,8 +198,8 @@ class hwdMediaShareSubscriptions extends JObject
 	 * Method to check if a user is subscribed to an item.
          * 
          * @access  public
-         * @param   integer $pk    The primary key to check.
-         * @return  boolean True if favourite.
+         * @param   integer  $pk  The primary key to check.
+         * @return  boolean  True if favourite.
 	 */
 	public function isSubscribed($pk)
 	{
