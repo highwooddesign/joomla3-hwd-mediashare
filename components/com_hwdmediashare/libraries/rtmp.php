@@ -13,10 +13,10 @@ defined('_JEXEC') or die;
 class hwdMediaShareRtmp extends JObject
 {        
 	/**
-	 * The variable to hold the item details.
+	 * Holds the new item details.
          * 
-         * @access      public
-	 * @var         object
+         * @access  public
+	 * @var     object
 	 */
 	public $_item;
 
@@ -24,8 +24,7 @@ class hwdMediaShareRtmp extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -58,7 +57,7 @@ class hwdMediaShareRtmp extends JObject
 	 * Method to process an rtmp stream.
          * 
          * @access  public
-         * @return  boolean True on success.
+         * @return  boolean  True on success.
 	 */
 	public function addRtmp()
 	{
@@ -236,7 +235,7 @@ class hwdMediaShareRtmp extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $item   The object holding the media details.
+         * @param   object  $item  The object holding the media details.
          * @return  boolean True on success.
 	 */
 	public static function display($item)
