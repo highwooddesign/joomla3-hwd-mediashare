@@ -15,8 +15,8 @@ class hwdMediaShareCustomFields extends JObject
 	/**
 	 * The element type to use with this library.
          * 
-         * @access      public
-	 * @var         string
+         * @access  public
+	 * @var     string
 	 */
 	public $elementType = 1;
 
