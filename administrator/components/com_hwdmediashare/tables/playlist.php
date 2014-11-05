@@ -187,15 +187,11 @@ class hwdMediaShareTablePlaylist extends JTable
                         $HWDcustomfields->elementType = 4;
                         $HWDcustomfields->save($playlist);
                         
-                        // Add thumbnail.
+                        // Process thumbnail.
                         hwdMediaShareFactory::load('upload');
-                        $object = new StdClass;
-                        $object->elementType = 4;
-                        $object->elementId = $this->id;
-                        $object->remove = (isset($data['remove_thumbnail']) ? true : false);
-                        $object->thumbnail_remote = (isset($data['thumbnail_remote']) ? $data['thumbnail_remote'] : null);
                         $HWDupload = hwdMediaShareUpload::getInstance();
-                        $HWDupload->processThumbnail($object);
+                        $HWDupload->elementType = 4;
+                        $HWDupload->processThumbnail($playlist);
 
                         // If new and approved then trigger onAfterPlaylistAdd event.
                         if ($isNew && $this->status == 1)

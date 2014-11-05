@@ -15,9 +15,9 @@ class hwdMediaShareTableMedia extends JTable
 	/**
 	 * Class constructor. Overridden to explicitly set the table and key fields.
 	 *
-	 * @access	public
-	 * @param       JDatabaseDriver  $db     JDatabaseDriver object.
-         * @return      void
+	 * @access  public
+	 * @param   JDatabaseDriver  $db  JDatabaseDriver object.
+         * @return  void
 	 */ 
 	public function __construct($db)
 	{             
@@ -29,9 +29,9 @@ class hwdMediaShareTableMedia extends JTable
 	 * Method to bind an associative array or object to the JTable instance.
 	 *
          * @access  public
-	 * @param   mixed   $src     An associative array or object to bind to the JTable instance.
-	 * @param   mixed   $ignore  An optional array or space separated list of properties to ignore while binding.
-	 * @return  boolean True on success.
+	 * @param   mixed    $src     An associative array or object to bind to the JTable instance.
+	 * @param   mixed    $ignore  An optional array or space separated list of properties to ignore while binding.
+	 * @return  boolean  True on success.
 	 * @link    http://docs.joomla.org/JTable/bind
 	 * @throws  InvalidArgumentException
 	 */
@@ -257,15 +257,11 @@ class hwdMediaShareTableMedia extends JTable
                                 $HWDcustomfields->save($media); 
                         }
 
-                        // Add thumbnail.
+                        // Process thumbnail.
                         hwdMediaShareFactory::load('upload');
-                        $object = new StdClass;
-                        $object->elementType = 1;
-                        $object->elementId = $this->id;
-                        $object->remove = (isset($data['remove_thumbnail']) ? true : false);
-                        $object->thumbnail_remote = (isset($data['thumbnail_remote']) ? $data['thumbnail_remote'] : null);
                         $HWDupload = hwdMediaShareUpload::getInstance();
-                        $HWDupload->processThumbnail($object);
+                        $HWDupload->elementType = 1;
+                        $HWDupload->processThumbnail($media);
                         
                         // If new and approved then trigger onAfterMediaAdd event.
                         if ($isNew && $this->status == 1)
@@ -369,6 +365,7 @@ class hwdMediaShareTableMedia extends JTable
 	 * @access  protected
 	 * @param   JTable   $table  A JTable object for the asset parent.
 	 * @param   integer  $id     Id to look up
+	 * @return  integer  The id to use as the parent of the asset.
 	 */
 	protected function _getAssetParentId(JTable $table = null, $id = null)
 	{
@@ -438,7 +435,7 @@ class hwdMediaShareTableMedia extends JTable
 	 * Method to update the viewed date for a row if the necessary property/field exists.
 	 *
 	 * @access  public
-	 * @param   mixed    $pk     An optional primary key value to increment. If not set the instance property value is used.
+	 * @param   mixed    $pk  An optional primary key value to increment. If not set the instance property value is used.
 	 * @return  boolean  True on success.
 	 */
 	public function view($pk = null)

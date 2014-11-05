@@ -187,15 +187,11 @@ class hwdMediaShareTableGroup extends JTable
                         $HWDcustomfields->elementType = 3;
                         $HWDcustomfields->save($group);
                         
-                        // Add thumbnail.
+                        // Process thumbnail.
                         hwdMediaShareFactory::load('upload');
-                        $object = new StdClass;
-                        $object->elementType = 3;
-                        $object->elementId = $this->id;
-                        $object->remove = (isset($data['remove_thumbnail']) ? true : false);
-                        $object->thumbnail_remote = (isset($data['thumbnail_remote']) ? $data['thumbnail_remote'] : null);
                         $HWDupload = hwdMediaShareUpload::getInstance();
-                        $HWDupload->processThumbnail($object);
+                        $HWDupload->elementType = 3;
+                        $HWDupload->processThumbnail($group);
 
                         // If new and approved then trigger onAfterGroupAdd event.
                         if ($isNew && $this->status == 1)

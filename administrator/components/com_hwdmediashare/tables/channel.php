@@ -195,16 +195,12 @@ class hwdMediaShareTableChannel extends JTable
                         $HWDcustomfields->elementType = 5;
                         $HWDcustomfields->save($channel);
                         
-                        // Add thumbnail.
+                        // Process thumbnail.
                         hwdMediaShareFactory::load('upload');
-                        $object = new StdClass;
-                        $object->elementType = 5;
-                        $object->elementId = $this->id;
-                        $object->remove = (isset($data['remove_thumbnail']) ? true : false);
-                        $object->thumbnail_remote = (isset($data['thumbnail_remote']) ? $data['thumbnail_remote'] : null);
                         $HWDupload = hwdMediaShareUpload::getInstance();
-                        $HWDupload->processThumbnail($object);
-                        
+                        $HWDupload->elementType = 5;
+                        $HWDupload->processThumbnail($channel);
+
                         // If new and approved, trigger onAfterChannelAdd event.
                         if ($isNew && $this->status == 1)
                         {                                                           
