@@ -16,8 +16,7 @@ class hwdMediaShareDownloads extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -50,9 +49,10 @@ class hwdMediaShareDownloads extends JObject
 	 * Method to push deliver a file using php
 	 *
 	 * @access  public
-	 * @return  null
+         * @static
+	 * @return  void
 	 */ 
-	public function push()
+	public static function push()
 	{
                 // Initialise variables.
                 $db = JFactory::getDBO();
