@@ -21,7 +21,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 		<?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
         </th>            
         <th width="10%" class="nowrap">
-		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_MEDIA', 'm.title', $listDirn, $listOrder); ?>
+		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_TITLE', 'm.title', $listDirn, $listOrder); ?>
         </th> 
         <th>
 		<?php echo JHtml::_('searchtools.sort', 'COM_HWDMS_FILE_PATH', 'a.basename', $listDirn, $listOrder); ?>
