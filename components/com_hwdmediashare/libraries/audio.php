@@ -16,8 +16,7 @@ class hwdMediaShareAudio extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -51,7 +50,7 @@ class hwdMediaShareAudio extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $item   The media item.
+         * @param   object  $item  The media item.
          * @return  string  The html to display the document.
 	 */
 	public static function display($item)
@@ -103,7 +102,7 @@ class hwdMediaShareAudio extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $item   The media item.
+         * @param   object  $item  The media item.
          * @return  mixed   The file object, false on fail.
 	 */
 	public static function getMp3($item)
@@ -175,7 +174,7 @@ class hwdMediaShareAudio extends JObject
          * 
          * @access  public
          * @static
-         * @param   object  $item   The media item.
+         * @param   object  $item  The media item.
          * @return  mixed   The file object, false on fail.
 	 */
 	public static function getOgg($item)
@@ -222,10 +221,10 @@ class hwdMediaShareAudio extends JObject
 	 * Method to process a media to generate an mp3.
          * 
          * @access  public
-         * @param   object  $process    The process item.
-         * @param   integer $fileType   The API value for the type of file being generated, used
+         * @param   object   $process   The process item.
+         * @param   integer  $fileType  The API value for the type of file being generated, used
          *                              in generation of filename. 
-         * @return  object  The log data.
+         * @return  object   The log data.
 	 */
 	public function processMp3($process, $fileType)
 	{
@@ -361,10 +360,10 @@ class hwdMediaShareAudio extends JObject
 	 * Method to process a media to generate an ogg.
          * 
          * @access  public
-         * @param   object  $process    The process item.
-         * @param   integer $fileType   The API value for the type of file being generated, used
+         * @param   object   $process   The process item.
+         * @param   integer  $fileType  The API value for the type of file being generated, used
          *                              in generation of filename. 
-         * @return  object  The log data.
+         * @return  object   The log data.
 	 */
 	public function processOgg($process, $fileType)
 	{
@@ -502,7 +501,7 @@ class hwdMediaShareAudio extends JObject
 	 * Method to extract the metadata from an audio file.
          * 
          * @access  public
-         * @param   object  $item   The media item.
+         * @param   object  $item  The media item.
          * @return  mixed   An array of metadata, false on fail.
 	 */
 	public static function getMeta($item)
