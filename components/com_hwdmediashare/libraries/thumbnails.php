@@ -16,8 +16,7 @@ class hwdMediaShareThumbnails extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -60,7 +59,7 @@ class hwdMediaShareThumbnails extends JObject
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-                
+
                 // Load cache object.
                 $cache = JFactory::getCache('com_hwdmediashare');
                 $cache->setCaching(1);
@@ -401,7 +400,7 @@ class hwdMediaShareThumbnails extends JObject
 	 *
 	 * @access  public
          * @static
-	 * @param   object  $item   The channel to display.
+	 * @param   object  $item  The channel to display.
 	 * @return  string  The url of the channel art.
 	 */ 
         public static function getChannelArt($item)
@@ -437,7 +436,7 @@ class hwdMediaShareThumbnails extends JObject
 	 *
 	 * @access  public
          * @static
-	 * @param   object  $user   The user to display.
+	 * @param   object  $user  The user to display.
 	 * @return  string  The url of the avatar.
 	 */ 
         public static function getAvatar($user)
@@ -509,7 +508,7 @@ class hwdMediaShareThumbnails extends JObject
 	 *
 	 * @access  public
          * @static
-	 * @param   object  $item   The media to display.
+	 * @param   object  $item  The media to display.
 	 * @return  string  The url of the video preview image.
 	 */ 
         public static function getVideoPreview($item)
