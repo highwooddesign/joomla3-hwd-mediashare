@@ -11,6 +11,7 @@
                         type="file" 
 			label="COM_HWDMS_UPLOAD_A_FILE" 
                         description="COM_HWDMS_UPLOAD_A_FILE"
+			class="hwd-form-filedata"
                 />
         </fieldset>    
 	<fieldset
@@ -22,47 +23,29 @@
 			label="COM_HWDMS_REMOTE_MEDIA_LINK_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINK_DESC"
 			class="input-xxlarge input-large-text"
+                        hint="COM_HWDMS_HINT_ENTER_REMOTE_HERE"  
                 />
 		<field 
                         name="remotes" 
                         type="textarea" 
 			label="COM_HWDMS_REMOTE_MEDIA_LINKS_LABEL" 
                         description="COM_HWDMS_REMOTE_MEDIA_LINKS_DESC"
-			class="input-xxlarge"
+			rows="8" cols="30" 
+                        class="input-xxlarge"
+                        hint="COM_HWDMS_HINT_ENTER_REMOTES_HERE"                        
                 />
         </fieldset>
 	<fieldset
                 name="link"
         >
-                <field
-                        name="link_type"
-                        type="list"
-                        class="inputbox"
-                        default=""
-                        label="COM_HWDMS_REMOTE_FILE_TYPE_LABEL"
-                        description="COM_HWDMS_REMOTE_FILE_TYPE_DESC"
-                >
-                        <option value="1">COM_HWDMS_AUDIO</option>
-                        <option value="2">COM_HWDMS_DOCUMENT</option>
-                        <option value="3">COM_HWDMS_IMAGE</option>
-                        <option value="4">COM_HWDMS_VIDEO</option> 
-                </field>
-                <field
-                        name="link_ext"
-                        type="extension"
-                        class="inputbox"
-                        default=""
-                        label="COM_HWDMS_REMOTE_FILE_EXTENSION_LABEL"
-                        description="COM_HWDMS_REMOTE_FILE_EXTENSION_DESC"
-                />
 		<field 
                         name="link_url" 
                         type="text" 
-                        class="inputbox"
-                        size="60"
 			label="COM_HWDMS_REMOTE_FILE_LINK_LABEL" 
                         description="COM_HWDMS_REMOTE_FILE_LINK_DESC"
-                />
+			class="input-xxlarge input-large-text"
+                        hint="COM_HWDMS_HINT_ENTER_FILE_LINK_HERE"                          
+                />            
         </fieldset>
         <fieldset
                 name="embed"
@@ -70,9 +53,11 @@
 		<field 
                         name="embed_code" 
                         type="textarea" 
-                        class="inputbox"
 			label="COM_HWDMS_EMBED_CODE_LABEL" 
                         description="COM_HWDMS_EMBED_CODE_DESC"
+			rows="8" cols="30" 
+                        class="input-xxlarge"
+                        hint="COM_HWDMS_HINT_ENTER_EMBED_CODE_HERE"                          
                 />
         </fieldset>
         <fieldset
