@@ -1697,22 +1697,6 @@
                         <option value="6">JH6</option>
                 </field>
                 <field
-			name="list_thumbnail_size"
-			type="list"
-			label="COM_HWDMS_THUMBNAIL_SIZE_LABEL"
-			description="COM_HWDMS_THUMBNAIL_SIZE_DESC"
-			default="4"
-			validate="integer"
-                        filter="integer"  
-                >
-                        <option value="2">COM_HWDMS_FILE_SQUARE_IMAGE</option>
-                        <option value="3">COM_HWDMS_FILE_THUMBNAIL_IMAGE</option>
-                        <option value="4">COM_HWDMS_FILE_SMALL_IMAGE</option>
-                        <option value="5">COM_HWDMS_FILE_MEDIUM1_IMAGE</option>
-                        <option value="6">COM_HWDMS_FILE_MEDIUM2_IMAGE</option>
-                        <option value="7">COM_HWDMS_FILE_LARGE_IMAGE</option>
-                </field>
-                <field
 			name="list_thumbnail_aspect"
 			type="list"
 			label="COM_HWDMS_THUMBNAIL_ASPECT_LABEL"
