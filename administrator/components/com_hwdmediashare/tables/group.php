@@ -205,7 +205,7 @@ class hwdMediaShareTableGroup extends JTable
                         if ($isNew && $config->get('notify_new_groups') == 1) 
                         {
                                 // Get mail body.
-                                if ($media->status == 2)
+                                if ($group->status == 2)
                                 {
                                         ob_start();
                                         require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newgroup_pending.php');
