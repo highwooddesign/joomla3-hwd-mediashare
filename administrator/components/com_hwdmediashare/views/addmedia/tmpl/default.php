@@ -35,7 +35,7 @@ JHtml::_('formbehavior.chosen', 'select');
                                 <?php echo JHtml::_('bootstrap.endSlide'); ?>
                         <?php endif; ?>
                         <?php if ($this->config->get('enable_uploads_remote') == 1) : ?>
-                                <?php echo JHtml::_('bootstrap.addSlide', 'hwdmediashare-slider-upload', JText::_('COM_HWDMS_ADD_REMOTE_FILE'), 'link'); ?>
+                                <?php echo JHtml::_('bootstrap.addSlide', 'hwdmediashare-slider-upload', JText::_('COM_HWDMS_ADD_REMOTE_FILE'), 'link'); ?>                 
                                         <div class="btn-wrapper input-append">
                                                 <div class="control-group">
                                                         <div class="control-label hide">
@@ -49,26 +49,12 @@ JHtml::_('formbehavior.chosen', 'select');
                                                         </div>
                                                 </div>
                                         </div>
-                                        <div class="control-group">
-                                                <div class="control-label">
-                                                        <?php echo $this->form->getLabel('link_type'); ?>
-                                                </div>
-                                                <div class="controls">
-                                                        <?php echo $this->form->getInput('link_type'); ?>                                               
-                                                </div>
-                                        </div>   
-                                        <div class="control-group">
-                                                <div class="control-label">
-                                                        <?php echo $this->form->getLabel('link_ext'); ?>
-                                                </div>
-                                                <div class="controls">
-                                                        <?php echo $this->form->getInput('link_ext'); ?>                                               
-                                                </div>
-                                        </div> 
                                         <p></p>
                                         <div class="well well-small">
                                                 <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
-                                                <p><?php echo JText::sprintf('COM_HWDMS_SUPPORTED_FORMATS_LIST_X', implode(', ', $this->localExtensions)); ?> <?php echo JText::sprintf('COM_HWDMS_MAXIMUM_UPLOAD_SIZE_X', hwdMediaShareUpload::getMaximumUploadSize('standard')); ?></p>  
+                                                <p><?php echo JText::_('COM_HWDMS_HELP_ADDING_REMOTE_FILES'); ?></p>  
+                                                <a href="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=addmedia&method=remote'); ?>" class="btn"><?php echo JText::_('COM_HWDMS_ADD_REMOTE_MEDIA'); ?></a>   
+                                                <a href="http://hwdmediashare.co.uk/learn/docs/72-adding-media/adding-remote-files/321-adding-remote-files" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_BTN_DOCUMENTATION'); ?></a>   
                                         </div>                     
                                 <?php echo JHtml::_('bootstrap.endSlide'); ?>
                         <?php endif; ?>
@@ -85,6 +71,12 @@ JHtml::_('formbehavior.chosen', 'select');
                                                         </button>  
                                                 </div>
                                         </div>
+                                        <p></p>
+                                        <div class="well well-small">
+                                                <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
+                                                <p><?php echo JText::_('COM_HWDMS_HELP_ADDING_EMBED_CODES'); ?></p>  
+                                                <a href="http://hwdmediashare.co.uk/learn/docs/75-adding-media/adding-embed-codes/317-importing-embed-codes" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_BTN_DOCUMENTATION'); ?></a>   
+                                        </div>                                           
                                 <?php echo JHtml::_('bootstrap.endSlide'); ?>
                         <?php endif; ?>
                         <?php if ($this->config->get('enable_uploads_rtmp') == 1) : ?>
@@ -104,11 +96,16 @@ JHtml::_('formbehavior.chosen', 'select');
                                                         <?php echo JText::_('COM_HWDMS_ADD') ?>
                                                 </button>
                                         </div> 
+                                        <p></p>
+                                        <div class="well well-small">
+                                                <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
+                                                <p><?php echo JText::_('COM_HWDMS_HELP_ADDING_RTMP_STREAM'); ?></p>  
+                                                <a href="http://hwdmediashare.co.uk/learn/docs/73-adding-media/adding-rtmp-streams/320-adding-rtmp-streams" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_BTN_DOCUMENTATION'); ?></a>   
+                                        </div>                                           
                                 <?php echo JHtml::_('bootstrap.endSlide'); ?>
                         <?php endif; ?>
                         <?php if (!$this->replace) : ?>
                         <?php echo JHtml::_('bootstrap.addSlide', 'hwdmediashare-slider-upload', JText::_('COM_HWDMS_ADD_FROM_SERVER'), 'server'); ?>
-                                <p class="alert"><?php echo JText::_('COM_HWDMS_ADD_FROM_SERVER_ALERT_DESC'); ?></p>      
                                 <table width="100%">
                                         <tr valign="top">
                                                 <td>
@@ -130,6 +127,12 @@ JHtml::_('formbehavior.chosen', 'select');
                                                 </td>
                                         </tr>
                                 </table>
+                                        <p></p>
+                                        <div class="well well-small">
+                                                <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
+                                                <p><?php echo JText::_('COM_HWDMS_HELP_ADDING_FROM_SERVER'); ?></p>  
+                                                <a href="http://hwdmediashare.co.uk/learn/docs/74-adding-media/server-directory-scanning" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_BTN_DOCUMENTATION'); ?></a>   
+                                        </div>                                   
                         <?php echo JHtml::_('bootstrap.endSlide'); ?>
                         <?php endif; ?>
                         <?php echo JHtml::_('bootstrap.endAccordion'); ?>
