@@ -31,7 +31,7 @@ $author = JFactory::getUser($album->created_user_id);
 
 $link_site = $utilities->relToAbs(JRoute::_(hwdMediaShareHelperRoute::getAlbumRoute($album->id)));
 $link_admin = JURI::root() . "administrator/index.php?option=com_hwdmediashare&task=album.edit&id=" . $album->id;
-$link_pending = JURI::root() . "administrator/index.php?option=com_hwdmediashare&view=albums&filter_status=2";
+$link_pending = JURI::root() . "administrator/index.php?option=com_hwdmediashare&view=albums&filter[status]=2";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
