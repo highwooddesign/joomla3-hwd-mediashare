@@ -268,8 +268,9 @@ class hwdMediaShareTableMedia extends JTable
                         {                                                          
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
-                                $events->triggerEvent('onAfterMediaAdd', $media);
+                                $events->triggerEvent('onAfterMediaAdd', $media); 
                                 
+                                // Process associations.
                                 hwdMediaShareUpload::assignAssociations($media);
                         }    
 
