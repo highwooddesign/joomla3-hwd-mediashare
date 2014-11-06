@@ -46,9 +46,6 @@ $link_pending = JURI::root() . "administrator/index.php?option=com_hwdmediashare
             font-size:14px;
             color:#333333;
         }
-        .clear {
-            clear:both;
-        }  
         h1 {
             margin:20px 0 10px 0;
             padding:0;
@@ -73,12 +70,11 @@ $link_pending = JURI::root() . "administrator/index.php?option=com_hwdmediashare
         }
         .btn,
         .btn:hover {
-            margin:0 10px 0 0;
+            margin:0;
             padding:7px;
             background-color:#f7f0f0;
             border:1px solid #e6b8b8;
-            display:block;
-            float:left;
+            display:inline-block;
             text-decoration:none;
             color:#2e3033;
             -webkit-border-radius:3px;
@@ -93,8 +89,9 @@ $link_pending = JURI::root() . "administrator/index.php?option=com_hwdmediashare
     <p class="meta"><?php echo JText::sprintf('COM_HWDMS_CREATED_ON', JHtml::_('date', $album->created, $config->get('list_date_format'))); ?></p>
     <p class="meta"><?php echo JText::sprintf('COM_HWDMS_CREATED_BY', $author->name);?></p>
     <p><?php echo JHtml::_('string.truncate', $album->description, 200, false, false); ?></p>
-    <p><a href="<?php echo $link_admin; ?>" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_EMAIL_BUTTON_MANAGE'); ?></a></p>
-    <div class="clear"></div>
+    <div>
+      <a href="<?php echo $link_admin; ?>" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_EMAIL_BUTTON_MANAGE'); ?></a>
+    </div>
     <p class="footer"><?php echo JText::sprintf('COM_HWDMS_EMAIL_FOOTER', '<a href="' . JURI::root() . '" target="_blank">' . $app->getCfg('sitename') . '</a>'); ?></p>
   </body>
 </html>
