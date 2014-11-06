@@ -26,15 +26,16 @@
 //***************************************************************************************************************
 
 //***************************************************************************************************************
-// * HWD MODIFICATION * 
+// HWD MODIFICATIONS
 // 1) All instances of "form_upload" replaced with "adminForm" (this gives Joomla compatibility)
-// 2) Line 259: Replaced "?rnd_id" with "&rnd_id" (enables us to access ubr_link_upload.php through a Joomla controller)
-// 3) Lines 286, 307 : Replaced "?upload_id" with "&upload_id" (enables us to access ubr_link_upload.php through a Joomla controller)
-// 4) Lines 478: Insert new input with Joomla styles
-// 5) Lines 242: Change target of form on submit depending on browser type
-// 6) Lines 223, 382, 470: Changed name of ID to currentupld to avoid common conflicts
-// 7) Lines 497: Added addSiteUploadSlot function
-// 8) Lines 189: Changed showAlertMessage function
+// 2) Lines 189: Changed showAlertMessage function
+// 3) Lines 223, 382, 470: Changed name of ID to currentupld to avoid common conflicts
+// 4) Lines 242: Change target of form on submit depending on browser type
+// 5) Lines 259: Replaced "?rnd_id" with "&rnd_id" (enables us to access ubr_link_upload.php through a Joomla controller)
+// 6) Lines 284: Reset the form token before submission 
+// 7) Lines 286, 307 : Replaced "?upload_id" with "&upload_id" (enables us to access ubr_link_upload.php through a Joomla controller)
+// 8) Lines 478: Insert new input with Joomla styles
+// 9) Lines 487: Updated addUploadSlot function for new design
 //***************************************************************************************************************
 
 var upload_range = 1;
@@ -186,7 +187,7 @@ function resetForm(){ location.href = self.location; }
 function hideProgressBar(){ document.getElementById('progress_bar').style.display = "none"; }
 function showDebugMessage(message){ document.getElementById('ubr_debug').innerHTML += message + '<br>'; }
 function clearDebugMessage(){ document.getElementById('ubr_debug').innerHTML = ''; document.getElementById('ubr_alert_container').setStyle('display', 'none'); }
-function showAlertMessage(message){ document.getElementById('ubr_alert').innerHTML = message; document.getElementById('ubr_alert_container').setStyle('display', 'inline'); }
+function showAlertMessage(message){ document.getElementById('ubr_alert').innerHTML = message; document.getElementById('ubr_alert_container').setStyle('display', 'block'); }
 function clearAlertMessage(){ document.getElementById('ubr_alert').innerHTML = ''; }
 function stopDataLoop(){ get_data_loop = false; }
 
@@ -280,6 +281,8 @@ function linkUpload(){
 //Submit the upload form
 function startUpload(upload_id, debug_upload){
 	document.getElementById('upload_button').disabled = true;
+        document.getElementById('formtoken').name = '';
+	document.getElementById('formtoken').value = '';
 	document.adminForm.action = path_to_upload_script + '?upload_id=' +  upload_id;
 	document.adminForm.submit();
 
@@ -484,28 +487,24 @@ function smoothCedricBytes(){
 function addUploadSlot(num){
 	if(upload_range < max_upload_slots){
 		if(num == upload_range){
+                        // Get the upload_slots element.
 			var up = document.getElementById('upload_slots');
-			var li = document.createElement("li");
+                        
+                        // Create a new upload slot.
+			var slot = document.createElement("input");
+                        slot.type = 'file';
+                        slot.name = 'upfile_' + upload_range;
+                        slot.title = 'Select Another File...';
+                        slot.className = 'hwd-form-filedata' + upload_range;
+                        slot.setAttribute('onchange', 'addUploadSlot(' + (upload_range + 1) + ')');
+                        slot.setAttribute('onkeypress', 'return handleKey(event)');
 
-			li.innerHTML = '<label>Upload a file:</label><input type="file" name="upfile_' + upload_range + '" onChange="addUploadSlot('+(upload_range + 1)+')" onKeypress="return handleKey(event)">';
-			up.appendChild(li);
-			upload_range++;
-			up = null;
-			dv = null;
-		}
-	}
-}
-
-// Add one frontend upload slot
-function addSiteUploadSlot(num){
-	if(upload_range < max_upload_slots){
-		if(num == upload_range){
-			var up = document.getElementById('upload_slots');
-			var div = document.createElement("div");
-                        div.className = "formelm";
-
-			div.innerHTML = '<label>Upload a file:</label><input type="file" name="upfile_' + upload_range + '" onChange="addSiteUploadSlot('+(upload_range + 1)+')" onKeypress="return handleKey(event)">';
-			up.appendChild(div);
+                        // Insert new slot as first node.
+			up.insertBefore(slot, up.childNodes[0]);
+                        
+                        // Convert file input.
+                        jQuery('.hwd-form-filedata' + upload_range).bootstrapFileInput();
+          
 			upload_range++;
 			up = null;
 			dv = null;
