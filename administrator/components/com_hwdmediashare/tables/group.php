@@ -204,6 +204,12 @@ class hwdMediaShareTableGroup extends JTable
                         // Send system notifications.
                         if ($isNew && $config->get('notify_new_groups') == 1) 
                         {
+                                // Include the component HTML helpers.
+                                JHtml::addIncludePath(JPATH_ROOT . '/administrator/components/com_hwdmediashare/helpers/html');
+
+                                // Register helper route file.
+                                JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT . '/components/com_hwdmediashare/helpers/route.php');
+                            
                                 // Get mail body.
                                 if ($group->status == 2)
                                 {
