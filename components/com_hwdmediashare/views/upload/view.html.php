@@ -13,14 +13,6 @@ defined('_JEXEC') or die;
 class hwdMediaShareViewUpload extends JViewLegacy
 {
 	/**
-	 * The show form view variable.
-         * 
-         * @access  public
-	 * @var     boolean
-	 */ 
-	public $show_form = true;
-
-	/**
 	 * The upload method view variable.
          * 
          * @access  public
@@ -50,9 +42,10 @@ class hwdMediaShareViewUpload extends JViewLegacy
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
                 $this->method = ($app->input->get('method', '', 'word') ? $app->input->get('method', '', 'word') : false);
+                $this->platform = ($app->input->get('platform', '', 'integer') ? $app->input->get('platform', '', 'integer') : false);
 
                 // Check access.
-                if (!$user->authorise('hwdmediashare.upload','com_hwdmediashare') && !$user->authorise('hwdmediashare.import','com_hwdmediashare'))
+                if (!$user->authorise('hwdmediashare.upload', 'com_hwdmediashare') && !$user->authorise('hwdmediashare.import', 'com_hwdmediashare'))
                 {
                         $app->enqueueMessage( JText::_('COM_HWDMS_ERROR_NOAUTHORISED_ADDMEDIA') );
                         $app->redirect( $this->config->get('no_access_redirect') > 0 ? ContentHelperRoute::getArticleRoute($this->config->get('no_access_redirect')) : hwdMediaShareHelperRoute::getMediaRoute() );
@@ -62,6 +55,9 @@ class hwdMediaShareViewUpload extends JViewLegacy
                 JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
                 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
                 
+                // Include content helper.
+                JLoader::register('ContentHelperRoute', JPATH_ROOT.'/components/com_content/helpers/route.php');
+
                 // Import HWD libraries.                
                 hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
@@ -69,6 +65,7 @@ class hwdMediaShareViewUpload extends JViewLegacy
                 hwdMediaShareFactory::load('media');
 		hwdMediaShareFactory::load('remote');
                 hwdMediaShareFactory::load('thumbnails');
+		hwdMediaShareFactory::load('upload');
 		hwdMediaShareFactory::load('utilities');
 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
@@ -80,39 +77,42 @@ class hwdMediaShareViewUpload extends JViewLegacy
                 {
                         $app->redirect(hwdMediaShareHelperRoute::getMyMediaRoute());   
                 }
-                
-		// Determine if we need to show the form.
-		if ($this->config->get('upload_workflow') == 0 && $this->show_form && $this->method != 'remote') 
-		{
-			$this->setLayout('form');
-		}
-                else
-                {              
-                        $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
-                        $this->jformreg = new JRegistry($this->jformdata);
 
+                $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
+                $this->jformreg = new JRegistry($this->jformdata);
+                        
+		// Determine template and load assets.
+		if ($this->method == 'remote' && $this->config->get('enable_uploads_remote') == 1) 
+		{
+			$tpl = 'remote';
+		}
+		elseif ($this->platform && $this->config->get('enable_uploads_platform') == 1) 
+		{
+			$tpl = 'platform';
+		}           
+                else
+                {                           
                         $this->localExtensions = $this->get('localExtensions');
-                        $this->showPlatform = $this->get('platformStatus');
 
                         if ($this->config->get('enable_uploads_file') == 1) 
                         {
-                                if ($this->config->get('upload_tool') == 1 && count($this->localExtensions)) 
+                                if ($this->config->get('upload_tool_perl') == 1) 
                                 {
-                                        // Add assets to the document.
+                                        $tpl = 'large';
+                                        $this->get('UberUploadScript');
+                                }
+                                elseif ($this->config->get('upload_workflow') == 1) 
+                                {
+                                        $tpl = 'multi';
                                         $this->get('FancyUploadScript');
                                 }
-                                elseif ($this->config->get('upload_tool') == 2 && $this->config->get('upload_tool_perl') == 1) 
+                                else
                                 {
-                                        $this->uberUploadHtml = $this->get('UberUploadScript');
+                                        $tpl = 'single';
                                 }
-                        }
-                        
-                        if ($this->method == 'remote') 
-                        {
-                                $this->setLayout('remote');
-                        }                           
+                        }              
                 }
-                
+
                 // Check for errors.
                 if (count($errors = $this->get('Errors')))
                 {
@@ -123,7 +123,7 @@ class hwdMediaShareViewUpload extends JViewLegacy
                 // Check for terms prompt.
 		if ($this->get('terms') === true)
 		{
-                        $tpl = 'terms';                        
+                        $tpl = 'terms';
 		}
                 
 		$this->_prepareDocument();
@@ -148,9 +148,18 @@ class hwdMediaShareViewUpload extends JViewLegacy
                 // Add page assets.
                 JHtml::_('hwdhead.core', $this->params);
 
+                // Load file input script.
+		$this->document->addScript(JURI::root() . "media/com_hwdmediashare/assets/javascript/bootstrap-file-input.js");
+		$this->document->addScriptDeclaration("
+                    var buttonWord = 'Select File...';
+                    jQuery(document).ready(function(){
+                            jQuery('.hwd-form-filedata').bootstrapFileInput();
+                    });
+                ");  
+                
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'upload')
 		{
                         $title = $this->params->get('page_title');
                         $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_UPLOAD'));
