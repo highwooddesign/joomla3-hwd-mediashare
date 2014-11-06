@@ -21,18 +21,17 @@ JHtml::addIncludePath(JPATH_ROOT . '/administrator/components/com_hwdmediashare/
 // Load the HWD language file.
 $lang = JFactory::getLanguage();
 $lang->load('com_hwdmediashare', JPATH_SITE);
-             
+
+// Load HWD utilities.
+hwdMediaShareFactory::load('utilities');
+$utilities = hwdMediaShareUtilities::getInstance();
+                
 // Load the author.
 $author = JFactory::getUser($media->created_user_id);
 
-$linkFront = JURI::root() . "index.php?option=com_hwdmediashare&view=mediaitem&id=" . $media->id;
-$linkAdmin = JURI::root() . "administrator/index.php?option=com_hwdmediashare&task=editmedia.edit&id=" . $media->id;
-$linkPending = JURI::root() . "administrator/index.php?option=com_hwdmediashare&view=media&filter_status=2";
-$linkConfig = JURI::root() . "administrator/index.php?option=com_hwdmediashare&view=configuration";
-$linkPretty = str_replace("www.", "", JURI::root());
-$linkPretty = str_replace("http://", "", $linkPretty);
-$linkPretty = str_replace("https://", "", $linkPretty);
-$linkPretty = rtrim($linkPretty, "/");
+$link_site = $utilities->relToAbs(JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($media->id)));
+$link_admin = JURI::root() . "administrator/index.php?option=com_hwdmediashare&task=editmedia.edit&id=" . $media->id;
+$link_pending = JURI::root() . "administrator/index.php?option=com_hwdmediashare&view=media&filter[status]=2";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -47,28 +46,10 @@ $linkPretty = rtrim($linkPretty, "/");
             font-size:14px;
             color:#333333;
         }
-        .clear {
-            clear:both;
-        }
-        h1.site-name {
-            float:left;
-            width:50%;
-            text-align:left;
-            font-size:32px;
-            text-decoration:none;
-            color:#468aca
-        }  
-        p.site-link {
-            float:right;
-            width:50%;
-            text-align:right;
-            font-size:14px;
-            text-decoration:none;
-            color:#a0a6b3
-        }   
-        h2 {
-            margin-top:30px;
-            font-size:16px
+        h1 {
+            margin:20px 0 10px 0;
+            padding:0;
+            font-size:30px;
         }          
         a {
             color:#468aca;
@@ -89,12 +70,11 @@ $linkPretty = rtrim($linkPretty, "/");
         }
         .btn,
         .btn:hover {
-            margin:0 10px 0 0;
+            margin:0;
             padding:7px;
             background-color:#f7f0f0;
             border:1px solid #e6b8b8;
-            display:block;
-            float:left;
+            display:inline-block;
             text-decoration:none;
             color:#2e3033;
             -webkit-border-radius:3px;
@@ -104,17 +84,15 @@ $linkPretty = rtrim($linkPretty, "/");
     </style>
   </head>
   <body>
-    <h1 class="site-name"><a href="<?php echo JURI::root(); ?>" target="_blank"><?php echo $app->getCfg('sitename'); ?></a></h1>
-    <p class="site-link"><a href="<?php echo JURI::root(); ?>" target="_blank"><?php echo $linkPretty; ?></a></p>
-    <div class="clear"></div>
-    <p><?php echo JText::sprintf('COM_HWDMS_EMAIL_NEWMEDIA_PENDING_INTRO', $app->getCfg('sitename')); ?></p>
-    <h2><a href="<?php echo $linkFront; ?>" target="_blank"><?php echo $media->title; ?></a></h2>
+    <p><?php echo JText::sprintf('COM_HWDMS_EMAIL_NEWMEDIA_INTRO_PENDING', '<a href="' . JURI::root() . '" target="_blank">' . $app->getCfg('sitename') . '</a>'); ?></p>
+    <h1><a href="<?php echo $link_site; ?>" target="_blank"><?php echo $media->title; ?></a></h1>
     <p class="meta"><?php echo JText::sprintf('COM_HWDMS_CREATED_ON', JHtml::_('date', $media->created, $config->get('list_date_format'))); ?></p>
     <p class="meta"><?php echo JText::sprintf('COM_HWDMS_CREATED_BY', $author->name);?></p>
-    <p><?php echo JHtmlString::truncate($media->description, 200, false, false); ?></p>
-    <p><a href="<?php echo $linkAdmin; ?>" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_EMAIL_BUTTON_APPROVE'); ?></a></p>
-    <p><a href="<?php echo $linkPending; ?>" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_EMAIL_BUTTON_VIEW_PENDING'); ?></a></p>
-    <div class="clear"></div>
+    <p><?php echo JHtml::_('string.truncate', $media->description, 200, false, false); ?></p>
+    <div>
+      <a href="<?php echo $link_admin; ?>" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_EMAIL_BUTTON_MANAGE'); ?></a>
+      <a href="<?php echo $link_pending; ?>" class="btn" target="_blank"><?php echo JText::_('COM_HWDMS_EMAIL_BUTTON_VIEW_PENDING'); ?></a>
+    </div>
     <p class="footer"><?php echo JText::sprintf('COM_HWDMS_EMAIL_FOOTER', '<a href="' . JURI::root() . '" target="_blank">' . $app->getCfg('sitename') . '</a>'); ?></p>
   </body>
 </html>
