@@ -117,7 +117,7 @@ class hwdMediaShareDownloads extends JObject
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
 
                 // If the file doesn't exist, then fail.
-                if (!file_Exists($path) || filesize($path) == 0)
+                if (!file_exists($path) || filesize($path) == 0)
                 {
                         jexit('COM_HWDMS_ERROR_CAN_NOT_FIND_MEDIA_FILE');
 		}
@@ -222,7 +222,7 @@ class hwdMediaShareDownloads extends JObject
 
                 if (!isset($media->id) || !isset($media->key) || !isset($media->ext_id))
 		{
-                        return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size') . '.png';
+                        return '#';
 		}
 
                 if ($media->type == 5)
@@ -250,7 +250,7 @@ class hwdMediaShareDownloads extends JObject
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                 
                 // If the file doesn't exist, then fail.
-                if (!file_Exists($path) || filesize($path) == 0)
+                if (!file_exists($path) || filesize($path) == 0)
                 {
                         return '#';
 		}
@@ -301,7 +301,6 @@ class hwdMediaShareDownloads extends JObject
                         }
                 }
         }
-
 
         /**
          * Method to read and deliver the contents of a file in chunks.
