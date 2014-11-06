@@ -34,6 +34,12 @@ class plgContentMedia extends JPlugin
 	{
 		parent::__construct($subject, $config);
 
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Simple admin check to determine whether plugin should load assets.
+		if ($app->isAdmin()) return true;
+                
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
