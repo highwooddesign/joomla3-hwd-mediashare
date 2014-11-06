@@ -20,6 +20,16 @@
                         type="hidden" 
                         filter="unset" 
                 />
+                <!--  The "ext_id" field is only used in the remote file display -->
+                <field
+                        name="ext_id"
+                        type="extension"
+                        label="COM_HWDMS_REMOTE_FILE_EXTENSION_LABEL"
+                        description="COM_HWDMS_REMOTE_FILE_EXTENSION_DESC"
+                        default=""
+                >
+                        <option value="">COM_HWDMS_AUTODETECT_EXTENSION</option>
+                </field>             
 		<field
 			name="type"
 			type="hidden"
