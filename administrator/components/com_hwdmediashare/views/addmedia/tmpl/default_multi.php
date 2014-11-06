@@ -56,7 +56,6 @@ JHtml::_('formbehavior.chosen', 'select');
 </div>
 <p></p>
 <div class="well well-small">
-        <h3>Help and Suggestions</h3>
-        <p><?php echo JText::_('COM_HWDMS_SUPPORTED_FORMATS_LABEL'); ?> <?php echo hwdMediaShareUpload::getReadableAllowedExtensions($this->localExtensions); ?></p>
-        <p><?php echo JText::sprintf('COM_HWDMS_MAXIMUM_UPLOAD_SIZE_X', hwdMediaShareUpload::getMaximumUploadSize('standard')); ?></p>  
+        <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
+        <p><?php echo JText::sprintf('COM_HWDMS_SUPPORTED_FORMATS_LIST_X', implode(', ', $this->localExtensions)); ?> <?php echo JText::sprintf('COM_HWDMS_MAXIMUM_UPLOAD_SIZE_X', hwdMediaShareUpload::getMaximumUploadSize('standard')); ?></p>  
 </div> 
