@@ -77,10 +77,6 @@ defined('_JEXEC') or die;
                                 <div class="controls"><?php echo $this->form->getInput('list_item_heading'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('list_thumbnail_size'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('list_thumbnail_size'); ?></div>
-                        </div>
-                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('list_thumbnail_aspect'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('list_thumbnail_aspect'); ?></div>
                         </div>                    
