@@ -277,6 +277,7 @@ class hwdMediaShareTableMedia extends JTable
                         // Send system notifications.
                         if ($isNew && $config->get('notify_new_media') == 1) 
                         {
+                                // Get mail body.
                                 if ($media->status == 2)
                                 {
                                         ob_start();
@@ -291,7 +292,9 @@ class hwdMediaShareTableMedia extends JTable
                                         $body = ob_get_contents();
                                         ob_end_clean();
                                 }
-                                $utilities->sendSystemEmail(JText::_('COM_HWDMS_EMAIL_SUBJECT_NEW_MEDIA'), $body);
+                                
+                                // Send the mail.
+                                $utilities->sendSystemEmail(JText::sprintf('COM_HWDMS_EMAIL_NEWMEDIA_SUBJECT', $app->getCfg('sitename')), $body);
                         }  
                 }        
                 
