@@ -22,26 +22,25 @@
 //
 //***************************************************************************************************************
 
-// Load hwdMediaShare config
+// Initialise variables.
+$app = JFactory::getApplication();
+
+// Load HWD config.
 $hwdms = hwdMediaShareFactory::getInstance();
 $config = $hwdms->getConfig();
 
-$app =& JFactory::getApplication();
-$is_admin = ($app->isAdmin() ? '&admin=1' : '');
-
-$ubr_path_config = $config->get('upload_uber_perl_url');
-$ubr_path_server = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].'/cgi-bin/ubr_upload.pl';
-$ubr_path = (empty($ubr_path_config) ? $ubr_path_server : $ubr_path_config);
+$ubr_path_config             = $config->get('upload_uber_perl_url');
+$ubr_path_server             = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].'/cgi-bin/ubr_upload.pl';
+$ubr_path                    = (empty($ubr_path_config) ? $ubr_path_server : $ubr_path_config);
 
 $TEMP_DIR                    = $config->get('upload_uber_tmp_path', '/tmp/ubr_temp/'); // *ATTENTION : The $TEMP_DIR values MUST be duplicated in the "ubr_upload.pl" file
 
 $UBER_VERSION                = '6.3.1';                      // Version of Uber-Uploader
-//$PATH_TO_UPLOAD_SCRIPT       = $config->get('uber_upload_path');
 $PATH_TO_UPLOAD_SCRIPT       = $ubr_path;
-$PATH_TO_LINK_SCRIPT         = JURI::root( true ).'/index.php?option=com_hwdmediashare&task=uber.link_upload&format=raw'.$is_admin;        // Path info
-$PATH_TO_SET_PROGRESS_SCRIPT = JURI::root( true ).'/index.php?option=com_hwdmediashare&task=uber.set_progress&format=raw'.$is_admin;       // Path info
-$PATH_TO_GET_PROGRESS_SCRIPT = JURI::root( true ).'/index.php?option=com_hwdmediashare&task=uber.get_progress&format=raw'.$is_admin;       // Path info
-$PATH_TO_JS_SCRIPT           = JURI::root( true ).'/components/com_hwdmediashare/libraries/uber/ubr_file_upload.js';             // Path info
+$PATH_TO_LINK_SCRIPT         = JURI::root(true).'/index.php?option=com_hwdmediashare&task=uber.link_upload&format=raw'.($app->isAdmin() ? '&admin=1' : '');
+$PATH_TO_SET_PROGRESS_SCRIPT = JURI::root(true).'/index.php?option=com_hwdmediashare&task=uber.set_progress&format=raw'.($app->isAdmin() ? '&admin=1' : '');
+$PATH_TO_GET_PROGRESS_SCRIPT = JURI::root(true).'/index.php?option=com_hwdmediashare&task=uber.get_progress&format=raw'.($app->isAdmin() ? '&admin=1' : '');
+$PATH_TO_JS_SCRIPT           = JURI::root(true).'/components/com_hwdmediashare/libraries/uber/ubr_file_upload.js';
 $DEFAULT_CONFIG              = dirname(__FILE__).'/ubr_default_config.php';
 $MULTI_CONFIGS_ENABLED       = 0;                            // Enable/Disable multi config files
 $GET_PROGRESS_SPEED          = 1000;                         // 1000=1 second, 500=0.5 seconds, 250=0.25 seconds etc.
