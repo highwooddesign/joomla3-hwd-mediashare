@@ -45,7 +45,6 @@ JHtml::_('formbehavior.chosen', 'select');
                                 </div>
                         <?php endif; ?>                                
                         <div class="clearfix"></div>
-                        <!-- Media Upload Help -->
                         <div class="well well-small">
                                 <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
                                 <p><?php echo JText::sprintf('COM_HWDMS_SUPPORTED_REMOTE_SITES_LIST_X', hwdMediaShareRemote::getReadableAllowedRemotes()); ?> 
