@@ -47,7 +47,7 @@ JHtml::_('formbehavior.chosen', 'select');
                         <div class="clearfix"></div>
                         <div class="well well-small">
                                 <h3><?php echo JText::_('COM_HWDMS_HELP_AND_SUGGESTIONS'); ?></h3>
-                                <p><?php echo JText::sprintf('COM_HWDMS_SUPPORTED_REMOTE_SITES_LIST_X', hwdMediaShareRemote::getReadableAllowedRemotes()); ?> 
+                                <p><?php echo JText::sprintf('COM_HWDMS_SUPPORTED_REMOTE_SITES_LIST_X', hwdMediaShareRemote::getReadableAllowedRemotes()); ?>
                                 <?php if ($this->config->get('upload_workflow') == 1) : ?><?php echo JText::_('COM_HWDMS_ADD_MULTIPLE_REMOTE_MEDIA_DESC'); ?><?php endif; ?></p>  
                         </div> 
                 </div>
