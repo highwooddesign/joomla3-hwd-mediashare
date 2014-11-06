@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 class hwdMediaShareThumbnails extends JObject
-{        
+{
 	/**
 	 * Class constructor.
 	 *
@@ -154,7 +154,7 @@ class hwdMediaShareThumbnails extends JObject
                 }
                 
                 // Fallback to default thumbnail. 
-                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size') . '.png';
+                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size', 5) . '.png';
         }
         
 	/**
@@ -194,7 +194,7 @@ class hwdMediaShareThumbnails extends JObject
                 }
                 
                 // Fallback to default thumbnail. 
-                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size') . '.png';
+                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size', 5) . '.png';
         }
         
 	/**
@@ -232,7 +232,7 @@ class hwdMediaShareThumbnails extends JObject
                 }
                 
                 // Fallback to default thumbnail. 
-                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size') . '.png';
+                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size', 5) . '.png';
         }
         
 	/**
@@ -261,12 +261,12 @@ class hwdMediaShareThumbnails extends JObject
                         $item->thumbnail = str_replace("http://i1.ytimg.com", "https://i1.ytimg.com", $item->thumbnail);
                         return $item->thumbnail;
                 }    
-                
+                                
                 if (!isset($item->id) || !isset($item->key) || !isset($item->ext_id))
 		{
-                        return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size') . '.png';
+                        return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size', 5) . '.png';
 		}
-                
+                        
                 // If CDN, let the CDN framework return the data.
                 if ($item->type == 5 && $item->storage)
 		{
@@ -276,26 +276,23 @@ class hwdMediaShareThumbnails extends JObject
                         {
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
-                                return $HWDcdn->publicUrl($item, $config->get('list_thumbnail_size'));
+                                return $HWDcdn->publicUrl($item, $config->get('list_thumbnail_size', 5));
                         }
                 }
                 
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFiles::getLocalStoragePath();
-                $hwdmsFiles = hwdMediaShareFiles::getInstance();
-                $files = $hwdmsFiles->getMediaFiles($item);
-
-                $folders = hwdMediaShareFiles::getFolders($item->key);
 
                 // Check for preferred thumbnail.
-                $filename = hwdMediaShareFiles::getFilename($item->key, $config->get('list_thumbnail_size'));
-                $ext = hwdMediaShareFiles::getExtension($item, $config->get('list_thumbnail_size'));
+                $folders = hwdMediaShareFiles::getFolders($item->key);
+                $filename = hwdMediaShareFiles::getFilename($item->key, $config->get('list_thumbnail_size', 5));
+                $ext = hwdMediaShareFiles::getExtension($item, $config->get('list_thumbnail_size', 5));
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
                 if (file_exists($path))
                 {
                         if ($config->get('protect_media') == 1)
                         {
-                                return hwdMediaShareDownloads::protectedUrl($item->id, $config->get('list_thumbnail_size'));
+                                return hwdMediaShareDownloads::protectedUrl($item->id, $config->get('list_thumbnail_size', 5));
                         }
                         else
                         {
@@ -304,7 +301,7 @@ class hwdMediaShareThumbnails extends JObject
                 }
                 
                 // Check for any other processed images.
-                $fileTypes = array(5,6,4,3,7);
+                $fileTypes = array(5,6,7,4,3);
                 foreach ($fileTypes as $fileType)
                 {
                         $folders = hwdMediaShareFiles::getFolders($item->key);
@@ -329,10 +326,6 @@ class hwdMediaShareThumbnails extends JObject
                 hwdMediaShareFactory::load('images');
                 if (hwdMediaShareImages::isNativeImage($ext))
                 {
-                        hwdMediaShareFiles::getLocalStoragePath();
-                        $hwdmsFiles = hwdMediaShareFiles::getInstance();
-                        $files = $hwdmsFiles->getMediaFiles($item);
-
                         $folders = hwdMediaShareFiles::getFolders($item->key);
                         $filename = hwdMediaShareFiles::getFilename($item->key, 1);
                         $ext = hwdMediaShareFiles::getExtension($item, 1);
@@ -351,7 +344,7 @@ class hwdMediaShareThumbnails extends JObject
                         }
                 }
                 
-                return JURI::root(true).'/media/com_hwdmediashare/assets/images/default-image-'.$config->get('list_thumbnail_size').'.png';
+                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size', 5) . '.png';
                                 
                 //@TODO: Allow custom thumbnails for different file types.
                 if ($item->ext == 'pdf') return JURI::root(true).'/media/com_hwdmediashare/assets/images/default-image-pdf.png';
@@ -392,7 +385,7 @@ class hwdMediaShareThumbnails extends JObject
                 }
                 
                 // Fallback to default thumbnail. 
-                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size') . '.png';
+                return JURI::root(true) . '/media/com_hwdmediashare/assets/images/default-image-' . $config->get('list_thumbnail_size', 5) . '.png';
         }
         
 	/**
@@ -572,9 +565,7 @@ class hwdMediaShareThumbnails extends JObject
                 $folders = hwdMediaShareFiles::getFolders($item->key);
                 $filename = hwdMediaShareFiles::getFilename($item->key, 10);
                 $ext = hwdMediaShareFiles::getExtension($item, 10);
-
                 $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);
-
                 if (file_exists($path))
                 {
                         if ($config->get('protect_media') == 1)
