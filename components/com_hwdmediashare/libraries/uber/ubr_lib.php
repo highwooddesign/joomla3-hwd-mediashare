@@ -69,7 +69,7 @@ function getProgressStatus($get_status_speed){ echo "if(typeof getProgressStatus
 // Output array to screen (debug, debug_var, next_div, debug_colorize_string)
 // Contributor: http://www.php.net/manual/en/function.print-r.php
 ////////////////////////////////////////////////////////////////////////////////
-function hwdvsDebug($name, $data){
+function debug_hwdms($name, $data){
 	ob_start();
 	print_r($data);
 	$str = ob_get_contents();
