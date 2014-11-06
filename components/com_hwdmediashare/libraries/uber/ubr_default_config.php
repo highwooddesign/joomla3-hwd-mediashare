@@ -21,34 +21,34 @@
 //   rights and limitations under the License.
 //********************************************************************************************************
 
-// Load hwdMediaShare config
+// Load HWD config.
 $hwdms = hwdMediaShareFactory::getInstance();
 $config = $hwdms->getConfig();
 
-// Define allowed extensions
+// Define allowed extensions.
 hwdMediaShareFactory::load('upload');
 $extensions = hwdMediaShareUpload::getAllowedExtensions();
 $extensionString = "";
 $last_item = end($extensions);
-foreach($extensions as $item):
-    if ($item == $last_item) {
+foreach($extensions as $item)
+{
+    if ($item == $last_item) 
+    {
         $extensionString.= $item;
     }
     else
     {
         $extensionString.= $item."|";
     }
-endforeach;
-unset($item);
+}
 
 hwdMediaShareFactory::load('files');
 hwdMediaShareFiles::getLocalStoragePath();
 
-$maxupld = $config->get('max_upload_filesize', 30) * 1024 * 1024;
+$max_upload = $config->get('max_upload_filesize', 30) * 1024 * 1024;
 
-$app =& JFactory::getApplication();
-$admin = JRequest::getInt('admin');
-$is_admin = (($app->isAdmin() || $admin==1) ? true : false);
+$app = JFactory::getApplication();
+$is_admin = (($app->isAdmin() || $app->input->get('admin', '0', 'int') == 1) ? true : false);
 if ($is_admin)
 {
         // We encode this ampersand to ensure the redirect xml file is not broken
@@ -61,7 +61,7 @@ else
 
 $_CONFIG['config_file_name']                      = 'ubr_default_config';
 $_CONFIG['upload_dir']                            = HWDMS_PATH_MEDIA_FILES.'/';
-$_CONFIG['multi_upload_slots']                    = 1;
+$_CONFIG['multi_upload_slots']                    = $config->get('upload_workflow') == 0 ? 0 : 1;
 $_CONFIG['max_upload_slots']                      = 10;
 $_CONFIG['embedded_upload_results']               = 0;
 $_CONFIG['check_file_name_format']                = 1;
@@ -78,7 +78,7 @@ $_CONFIG['progress_bar_width']                    = 250;
 $_CONFIG['unique_upload_dir']                     = 0;
 $_CONFIG['unique_file_name']                      = 1;
 $_CONFIG['unique_file_name_length']               = 16;
-$_CONFIG['max_upload_size']                       = $maxupld;
+$_CONFIG['max_upload_size']                       = $max_upload;
 $_CONFIG['overwrite_existing_files']              = 0;
 $_CONFIG['redirect_url']                          = $redirect_url;
 $_CONFIG['redirect_using_location']               = 1;
@@ -105,5 +105,3 @@ $_CONFIG['log_uploads']                           = 0;
 $_CONFIG['log_dir']                               = '/tmp/ubr_logs/';
 $_CONFIG['opera_browser']                         = (strstr(getenv("HTTP_USER_AGENT"), "Opera"))  ? 1 : 0;
 $_CONFIG['safari_browser']                        = (strstr(getenv("HTTP_USER_AGENT"), "Safari")) ? 1 : 0;
-
-?>
