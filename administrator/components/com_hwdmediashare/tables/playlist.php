@@ -199,7 +199,30 @@ class hwdMediaShareTablePlaylist extends JTable
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
                                 $events->triggerEvent('onAfterPlaylistAdd', $playlist);
-                        }                        
+                        }            
+
+                        // Send system notifications.
+                        if ($isNew && $config->get('notify_new_playlists') == 1) 
+                        {
+                                // Get mail body.
+                                if ($playlist->status == 2)
+                                {
+                                        ob_start();
+                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newplaylist_pending.php');
+                                        $body = ob_get_contents();
+                                        ob_end_clean();
+                                }
+                                else
+                                {
+                                        ob_start();
+                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newplaylist.php');
+                                        $body = ob_get_contents();
+                                        ob_end_clean();
+                                }
+                                
+                                // Send the mail.
+                                $utilities->sendSystemEmail(JText::sprintf('COM_HWDMS_EMAIL_NEWPLAYLIST_SUBJECT', $app->getCfg('sitename')), $body);
+                        }                         
                 }        
                 
 		return $return;
