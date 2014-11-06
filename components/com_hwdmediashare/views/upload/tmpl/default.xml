@@ -11,16 +11,23 @@
                         <field
                                 name="method"
                                 type="list"
-                                label="COM_HWDMS_UPLOAD_DEFAULT_METHOD_LABEL"
-                                description="COM_HWDMS_UPLOAD_DEFAULT_METHOD_DESC"
-                                default=""
+                                label="COM_HWDMS_MENU_UPLOAD_METHOD_LABEL"
+                                description="COM_HWDMS_MENU_UPLOAD_METHOD_DESC"
+                                default="local"
                         >
-                                <option value="">COM_HWDMS_OPTION_UPLOAD_MEDIA_FILES</option>
-                                <option value="remote">COM_HWDMS_OPTION_ADD_REMOTE_MEDIA</option>
-                        </field>                    
+                                <option value="local">COM_HWDMS_MENU_OPTION_UPLOAD_MEDIA_FILES</option>
+                                <option value="remote">COM_HWDMS_MENU_OPTION_ADD_REMOTE_MEDIA</option>
+                        </field>     
+                        <field
+                                name="platform"
+                                type="list"
+                                label="COM_HWDMS_MENU_FILE_DESTINATION_LABEL"
+                                description="COM_HWDMS_MENU_FILE_DESTINATION_DESC"
+                                default="0"
+                        >
+                                <option value="0">COM_HWDMS_MENU_OPTION_LOCAL</option>
+                                <option value="1">COM_HWDMS_MENU_OPTION_PLATFORM</option>
+                        </field>                                       
 		</fieldset>
 	</fields>         
 </metadata>
-
-
-
