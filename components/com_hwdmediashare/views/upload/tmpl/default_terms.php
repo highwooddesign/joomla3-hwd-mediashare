@@ -13,8 +13,6 @@ defined('_JEXEC') or die;
 // Include the component HTML helpers.
 JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
 JHtml::_('HwdPopup.iframe', 'page');
-
-JLoader::register('ContentHelperRoute', JPATH_ROOT.'/components/com_content/helpers/route.php');
 ?>
 <div class="edit">
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm" class="form-validate" enctype="multipart/form-data">
