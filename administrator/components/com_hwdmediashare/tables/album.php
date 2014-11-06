@@ -205,7 +205,7 @@ class hwdMediaShareTableAlbum extends JTable
                         if ($isNew && $config->get('notify_new_albums') == 1) 
                         {
                                 // Get mail body.
-                                if ($media->status == 2)
+                                if ($album->status == 2)
                                 {
                                         ob_start();
                                         require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newalbum_pending.php');
