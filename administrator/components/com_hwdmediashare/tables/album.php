@@ -199,7 +199,30 @@ class hwdMediaShareTableAlbum extends JTable
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
                                 $events->triggerEvent('onAfterAlbumAdd', $album);
-                        }                        
+                        }   
+
+                        // Send system notifications.
+                        if ($isNew && $config->get('notify_new_albums') == 1) 
+                        {
+                                // Get mail body.
+                                if ($media->status == 2)
+                                {
+                                        ob_start();
+                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newalbum_pending.php');
+                                        $body = ob_get_contents();
+                                        ob_end_clean();
+                                }
+                                else
+                                {
+                                        ob_start();
+                                        require(JPATH_SITE . '/components/com_hwdmediashare/libraries/emails/newalbum.php');
+                                        $body = ob_get_contents();
+                                        ob_end_clean();
+                                }
+                                
+                                // Send the mail.
+                                $utilities->sendSystemEmail(JText::sprintf('COM_HWDMS_EMAIL_NEWALBUM_SUBJECT', $app->getCfg('sitename')), $body);
+                        }                          
                 }        
                 
 		return $return;
