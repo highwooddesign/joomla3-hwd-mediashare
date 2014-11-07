@@ -75,7 +75,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                  * 
                  * We avoid the error by overloading the parent constructs (which are not necessary for these
                  * plugin types).
-                 */  
+                 */         
 	}
         
 	/**
@@ -98,6 +98,29 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 		return $instance;
 	}
     
+        /**
+	 * Reset properties.
+	 *
+	 * @access  public
+         * @return  void.
+	 */
+	public function reset()
+	{
+                // Standard properties.
+                $this->_url = false;
+                $this->_host = false;
+                $this->_buffer = false;
+                $this->_title = false;
+                $this->_description = false;
+                $this->_tags = false;
+                $this->_source = false;
+                $this->_duration = false;
+                $this->_thumbnail = false;
+                // Custom properties.
+                $this->_v3snippet = false;
+                $this->_v3content = false;
+        }
+        
         /**
 	 * Get the title of the media.
 	 *
