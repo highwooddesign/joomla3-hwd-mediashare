@@ -23,14 +23,6 @@ class plgHwdmediashareRemote_veohcom extends hwdMediaShareRemote
 	 */
 	public $mediaType = 4;
         
-	/**
-	 * The API buffer.
-         * 
-         * @access  public
-	 * @var     string
-	 */
-        public $_api = false;
-
         public $_url;
         public $_host;
         public $_buffer;
@@ -90,6 +82,26 @@ class plgHwdmediashareRemote_veohcom extends hwdMediaShareRemote
 		return $instance;
 	}
     
+        /**
+	 * Reset properties.
+	 *
+	 * @access  public
+         * @return  void.
+	 */
+	public function reset()
+	{
+                // Standard properties.
+                $this->_url = false;
+                $this->_host = false;
+                $this->_buffer = false;
+                $this->_title = false;
+                $this->_description = false;
+                $this->_tags = false;
+                $this->_source = false;
+                $this->_duration = false;
+                $this->_thumbnail = false;
+        }
+        
         /**
 	 * Get the title of the media.
 	 *
