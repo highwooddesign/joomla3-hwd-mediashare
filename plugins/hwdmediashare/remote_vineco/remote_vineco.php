@@ -81,7 +81,27 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
 
 		return $instance;
 	}
-
+    
+        /**
+	 * Reset properties.
+	 *
+	 * @access  public
+         * @return  void.
+	 */
+	public function reset()
+	{
+                // Standard properties.
+                $this->_url = false;
+                $this->_host = false;
+                $this->_buffer = false;
+                $this->_title = false;
+                $this->_description = false;
+                $this->_tags = false;
+                $this->_source = false;
+                $this->_duration = false;
+                $this->_thumbnail = false;
+        }
+        
         /**
 	 * Get the title of the media.
 	 *
