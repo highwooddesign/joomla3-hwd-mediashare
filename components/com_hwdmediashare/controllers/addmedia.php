@@ -1,190 +1,148 @@
 <?php
 /**
- * @version    SVN $Id: addmedia.php 1597 2013-06-19 10:27:47Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      19-Jan-2012 13:32:50
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
+ *
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
 
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
+defined('_JEXEC') or die;
 
-// Import Joomla controllerform library
-jimport('joomla.application.component.controllerform');
-
-/**
- * hwdMediaShare Controller
- */
 class hwdMediaShareControllerAddMedia extends JControllerForm
-{
-	/**
-	 * Method to process file upload
-	 * @since	0.1
+{        
+        /**
+	 * Method to process a php upload.
+	 *
+	 * @access  public
+         * @return  void
 	 */
-        function upload()
+        public function upload()
         {
-                $app = & JFactory::getApplication();
-                $user = JFactory::getUser();
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
 
-                // Get hwdMediaShare config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-
+		// Define input field to process from the request.
                 $upload = new stdClass();
                 $upload->input  = 'Filedata';
-
+                
+                // Load HWD library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
-                // Add embed code
-                if (!$model->process($upload))
+                // Process the upload.
+                if ($model->process($upload))
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_item->title));
+                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_item->id));
                 }
                 else
                 {
-                        // Check if we are redirecting to the editor window
-                        if (JRequest::getWord('redirect') == 'editor') 
-                        {
-                                $this->setRedirect('index.php?option=com_hwdmediashare&amp;view=media&amp;layout=editor&amp;tmpl=component&amp;function=jSelectMediaForum');
-                                return;
-                        }
-                        
-                        if ($user->id)
-                        {
-                                if ($config->get('approve_new_media'))
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMyMediaRoute());
-                                }
-                                else
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title).' (<a href="index.php?option=com_hwdmediashare&task=mediaform.edit&id='.$model->_id.'&return='.base64_encode(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id)).'">'.JText::_('COM_HWDMS_EDIT_MEDIA').'</a>)');
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id));
-                                }
-                        }
-                        else
-                        {
-                                if ($config->get('approve_new_media'))
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaRoute());
-                                }
-                                else
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id));
-                                }
-                        }
-                }
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                } 
         }
 
 	/**
-	 * Method to process uber upload
-	 * @since	0.1
+	 * Method to process an uber upload.
+	 *
+	 * @access  public
+         * @return  void
 	 */
-        function uber()
+        public function uber()
         {
-                $app = & JFactory::getApplication();
-                $user = JFactory::getUser();
-
-                $upload = new stdClass();
-                $upload->input  = 'Filedata';
-
+                // Load HWD library.
                 hwdMediaShareFactory::load('upload');
                 $model = hwdMediaShareUpload::getInstance();
 
-                // Add embed code
-                if (!$model->uber($upload))
+                // Process the upload.
+                if ($model->uber())
                 {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                        if ($model->_count > 1)
+                        {
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X_MEDIA_FILES', $model->_count));
+                                $this->setRedirect(hwdMediaShareHelperRoute::getMyMediaRoute());
+                        }
+                        else
+                        {    
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_item->title));
+                                $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_item->id));
+                        }
                 }
                 else
                 {
-                        // Check if we are redirecting to the editor window
-                        if (JRequest::getWord('redirect') == 'editor') 
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                } 
+        }
+
+	/**
+	 * Method to process remote media import.
+	 *
+	 * @access  public
+         * @return  void
+	 */
+        public function remote()
+        {
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+                // Load HWD library.
+                hwdMediaShareFactory::load('remote');
+                $model = hwdMediaShareRemote::getInstance();
+
+                // Process the remote url.
+                if ($model->addRemote())
+                {              
+                        if ($model->_count > 1)
                         {
-                                $this->setRedirect('index.php?option=com_hwdmediashare&amp;view=media&amp;layout=editor&amp;tmpl=component&amp;function=jSelectMediaForum');
-                                return;
-                        }
-                        
-                        if ($user->id)
-                        {
-                                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title).' (<a href="index.php?option=com_hwdmediashare&task=mediaform.edit&id='.$model->_id.'">'.JText::_('COM_HWDMS_EDIT_MEDIA').'</a>)');
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X_REMOTES', $model->_count));
                                 $this->setRedirect(hwdMediaShareHelperRoute::getMyMediaRoute());
                         }
                         else
                         {
-                                JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_title));
-                                $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id));
-                        }
-                }
-        }
-
-	/**
-	 * Method to process embed code import
-	 * @since	0.1
-	 */
-        function remote()
-        {
-                $app = & JFactory::getApplication();
-                $user = JFactory::getUser();
-
-                // Get hwdMediaShare config
-                $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-
-                hwdMediaShareFactory::load('remote');
-                $model = hwdMediaShareRemote::getInstance();
-
-                // Add embed code
-                if (!$model->addRemote())
-                {
-                        JError::raiseWarning(500, $model->getError());
-                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_REMOTE_MEDIA_FROM_X', $model->_host));
+                                $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_item->id));
+                        }  
+                                             
                 }
                 else
                 {
-                        // Check if we are redirecting to the editor window
-                        if (JRequest::getWord('redirect') == 'editor') 
+                        $this->setMessage($model->getError());
+                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                }  
+        }
+
+	/**
+	 * Method to process file upload using FancyUpload2
+	 * @since	0.1
+	 */
+        function addCdnUpload()
+        {
+                // Load hwdMediaShare config
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
+                $pluginClass = 'plgHwdmediashare'.$config->get('platform');
+                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('platform').'/'.$config->get('platform').'.php';
+                if (file_exists($pluginPath))
+                {
+                        JLoader::register($pluginClass, $pluginPath);
+                        $platform = call_user_func(array($pluginClass, 'getInstance'));
+                        if (!$platform->addCdnUpload())
                         {
-                                $this->setRedirect('index.php?option=com_hwdmediashare&amp;view=media&amp;layout=editor&amp;tmpl=component&amp;function=jSelectMediaForum');
-                                return;
-                        }
-                        
-                        if ($user->id)
-                        {
-                                if ($model->_count > 1 || $config->get('approve_new_media'))
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X_REMOTES', $model->_count));
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMyMediaRoute());
-                                }
-                                else
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X', $model->_title).' (<a href="index.php?option=com_hwdmediashare&task=mediaform.edit&id='.$model->_id.'&return='.base64_encode(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id)).'">'.JText::_('COM_HWDMS_EDIT_MEDIA').'</a>)');
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id));
-                                }
+                                JError::raiseWarning(500, $model->getError());
+                                $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
                         }
                         else
                         {
-                                if ($model->_count > 1 || $config->get('approve_new_media'))
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X_REMOTES', $model->_count));
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaRoute());
-                                }
-                                else
-                                {
-                                        JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_ADDED_X', $model->_title));
-                                        $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_id));
-                                }
-                        }
+                                JFactory::getApplication()->enqueueMessage(JText::_('COM_HWDMS_SUCCESSFULLY_UPLOADED'));
+                                $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_item->id));
+                        }                        
                 }
         }
-
+        
         /**
 	 * Method to report a media item
 	 *
@@ -192,18 +150,13 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
 	 *
 	 * @return	boolean	True if successful; false otherwise and internal error set.
 	 */
-	public function terms()
+	public function accepttos()
 	{
 		// Check for request forgeries
 		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-
-                // Get the model.
-                $model = $this->getModel('Upload', 'hwdMediaShareModel');
-                if (!$model->terms())
-                {
-                        JFactory::getApplication()->enqueueMessage( $model->getError() );
-                }
-
-		JFactory::getApplication()->redirect( base64_decode(JRequest::getVar('return', '')) );
-	}
+                
+                $app = & JFactory::getApplication();
+                $app->setUserState( "media.terms", "1" );
+		$app->redirect(base64_decode(JRequest::getVar('return', '')));
+	}      
 }
