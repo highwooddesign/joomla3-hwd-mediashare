@@ -156,6 +156,7 @@ class hwdMediaShareRemote extends JObject
                         if (class_exists($remotePluginClass))
                         {
                                 $importer = call_user_func(array($remotePluginClass, 'getInstance'));
+                                $importer->reset();
                                 $importer->_url = $this->_url;
                                 $importer->_host = $importer->getHost();
                                 $importer->_buffer = $importer->getBuffer($importer->_url);         
@@ -170,6 +171,7 @@ class hwdMediaShareRemote extends JObject
                                 if (class_exists($remotePluginClass))
                                 {    
                                         $importer = call_user_func(array($remotePluginClass, 'getInstance'));
+                                        $importer->reset();
                                         $importer->_url = $this->_url;
                                         $importer->_host = $importer->getHost();
                                         $importer->_buffer = $importer->getBuffer($importer->_url); 
@@ -948,8 +950,8 @@ class hwdMediaShareRemote extends JObject
 
                         //$post['id']                   = '';
                         //$post['asset_id']             = '';
-                        $post['ext_id']                 = ((isset($data['link_ext']) && $data['link_ext'] > 0) ? $data['link_ext'] : '');
-                        $post['media_type']             = $data['link_type'];
+                        $post['ext_id']                 = '0'; // Reset the extension.
+                        $post['media_type']             = '0'; // Reset the media type.
                         //$post['key']                  = '';
                         //$post['title']                = '';
                         //$post['alias']                = '';
@@ -991,8 +993,8 @@ class hwdMediaShareRemote extends JObject
                 {
                         //$post['id']                   = '';
                         //$post['asset_id']             = '';
-                        $post['ext_id']                 = ((isset($data['link_ext']) && $data['link_ext'] > 0) ? $data['link_ext'] : '');
-                        $post['media_type']             = $data['link_type'];
+                        $post['ext_id']                 = '0';
+                        $post['media_type']             = '0';
                         //$post['key']                  = '';
                         $post['title']                  = (isset($data['title']) ? $data['title'] : basename($data['link_url']));
                         $post['alias']                  = (isset($data['alias']) ? JFilterOutput::stringURLSafe($data['alias']) : JFilterOutput::stringURLSafe($post['title']));
