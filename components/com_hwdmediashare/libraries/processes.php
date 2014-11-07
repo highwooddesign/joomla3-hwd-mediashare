@@ -119,7 +119,7 @@ class hwdMediaShareProcesses extends JObject
                 $db = JFactory::getDBO();
                 
                 // Attempt to increase MySQL timeout.
-                $db->setQuery('SET SESSION wait_timeout = 28800');
+                $db->setQuery('SET SESSION wait_timeout = 172800');
                 $db->execute();
                 
                 // Get total number of queued processes.
