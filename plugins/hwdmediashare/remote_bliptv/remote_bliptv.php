@@ -89,7 +89,29 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 
 		return $instance;
 	}
-    
+
+        /**
+	 * Reset properties.
+	 *
+	 * @access  public
+         * @return  void.
+	 */
+	public function reset()
+	{
+                // Standard properties.
+                $this->_url = false;
+                $this->_host = false;
+                $this->_buffer = false;
+                $this->_title = false;
+                $this->_description = false;
+                $this->_tags = false;
+                $this->_source = false;
+                $this->_duration = false;
+                $this->_thumbnail = false;   
+                // Custom properties.
+                $this->_api = false;                  
+        }
+        
         /**
 	 * Get the title of the media.
 	 *
@@ -280,7 +302,7 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_remote_bliptv', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_remote_bliptv', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -363,7 +385,7 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_remote_bliptv', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_remote_bliptv', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
