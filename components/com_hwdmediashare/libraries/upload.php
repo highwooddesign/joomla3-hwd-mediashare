@@ -1276,8 +1276,6 @@ $_FILE_DATA = getFileData($_XML_DATA);                         // Get file data 
                         'remotes' => 'string',
                         'remote' => 'string',
                         // Remote file
-                        'link_type' => 'int',
-                        'link_ext' => 'int',
                         'link_url' => 'url',
                         // Embed code
                         'embed_code' => 'raw',
@@ -1312,8 +1310,6 @@ $_FILE_DATA = getFileData($_XML_DATA);                         // Get file data 
                 
                 if (empty($data['remotes']))                                    unset($data['remotes']);
                 if (empty($data['remote']))                                     unset($data['remote']);
-                if (empty($data['link_type']))                                  unset($data['link_type']);
-                if (empty($data['link_ext']))                                   unset($data['link_ext']);
                 if (empty($data['link_url']))                                   unset($data['link_url']);
                 if (empty($data['embed_code']))                                 unset($data['embed_code']);
                 if (empty($data['media_type']))                                 unset($data['media_type']);
