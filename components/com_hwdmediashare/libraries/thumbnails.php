@@ -506,6 +506,10 @@ class hwdMediaShareThumbnails extends JObject
 	 */ 
         public static function getVideoPreview($item)
 	{
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
                 hwdMediaShareFactory::load('files');
                 hwdMediaShareFiles::getLocalStoragePath();
                 
