@@ -420,7 +420,7 @@ class hwdMediaShareRemote extends JObject
 
                                 $curl_handle = curl_init();
                                 curl_setopt($curl_handle, CURLOPT_URL, $url);
-                                curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 30);
+                                curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 60);
                                 curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
                                 //curl_setopt($curl_handle, CURLOPT_VERBOSE, 1);
                                 //curl_setopt($curl_handle, CURLOPT_FOLLOWLOCATION, 1);
