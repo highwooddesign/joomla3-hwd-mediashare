@@ -106,8 +106,16 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 // Process the upload.
                 if ($model->uber())
                 {
-                        $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_item->title));
-                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_item->id, false));                                              
+                        if ($model->_count > 1)
+                        {
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X_MEDIA_FILES', $model->_count));
+                                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+                        }
+                        else
+                        {    
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $model->_item->title));
+                                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_item->id, false));  
+                        }                    
                 }
                 else
                 {
