@@ -144,19 +144,23 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
         /**
-	 * Method to report a media item
-	 *
-	 * @param	int		Optional primary key of the article to increment.
-	 *
-	 * @return	boolean	True if successful; false otherwise and internal error set.
+	 * Method to process the acceptance of terms and conditions form.
+         * 
+         * @access  public
+         * @return  void
 	 */
 	public function accepttos()
 	{
-		// Check for request forgeries
-		JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+                // Initialise variables.
+                $app = JFactory::getApplication();
                 
-                $app = & JFactory::getApplication();
-                $app->setUserState( "media.terms", "1" );
-		$app->redirect(base64_decode(JRequest::getVar('return', '')));
+                // Set user state.
+                $app->setUserState('media.terms', '1');
+                
+                // Redirect back to return page.
+		$app->redirect(base64_decode($this->input->get('return', null, 'base64')));
 	}      
 }
