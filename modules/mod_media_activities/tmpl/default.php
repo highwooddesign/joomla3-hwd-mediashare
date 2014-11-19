@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 ?>
-<div class="hwd-module">
+<div class="hwd-container">
   <?php if (empty($helper->items)): ?>
     <div class="alert alert-no-items">
       <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>

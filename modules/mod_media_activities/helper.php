@@ -10,37 +10,44 @@
 
 defined('_JEXEC') or die;
 
-class modMediaActivitiesHelper extends JObject
+class modMediaActivitiesHelper extends JViewLegacy
 {
+	/**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   array  $module  The module object.
+	 * @param   array  $params  The module parameters.
+         * @return  void
+	 */       
 	public function __construct($module, $params)
 	{
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
-                JLoader::register('JHtmlHwdIcon', JPATH_ROOT.'/components/com_hwdmediashare/helpers/icon.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_ROOT.'/components/com_hwdmediashare/helpers/dropdown.php');
+
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/helpers/html');
+                JHtml::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/helpers/html');
                 
-                // Load and register libraries.
-                hwdMediaShareFactory::load('media');
+                // Import HWD libraries.                
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
                 hwdMediaShareFactory::load('files');
-                hwdMediaShareFactory::load('utilities');
-                hwdMediaShareFactory::load('activities');
+                hwdMediaShareFactory::load('media');
+                hwdMediaShareFactory::load('thumbnails');
+		hwdMediaShareFactory::load('utilities');
 
-                // Load HWD config.
+                // Load HWD config, merge with module parameters (and force reset).
                 $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
-                
-                // We need to reset this varaible to avoid issues where other modules set this value in earlier position.
-                $config->set('list_default_media_type', '');
+                $config = $hwdms->getConfig($params, true);
 
-                // Merge with module parameters.
-                $config->merge($params);
-
+                // Load lite CSS.
+                $config->set('load_lite_css', 1);
+                                
                 // Load the HWD language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag(), true, false);
+                $lang->load('com_hwdmediashare', JPATH_SITE, $lang->getTag());
                 
                 // Get data.
                 $this->module = $module;                
@@ -54,43 +61,58 @@ class modMediaActivitiesHelper extends JObject
                 $this->addHead();
 	}
 
+	/**
+	 * Method to add page assets to the <head> tags.
+	 *
+	 * @access  public
+         * @return  void
+	 */        
 	public function addHead()
 	{
-                JHtml::_('bootstrap.framework');
+                // Initialise variables.
 		$doc = JFactory::getDocument();
-		$doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/lite.css');
-                if ($this->params->get('load_joomla_css') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $doc->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
+                
+                // Add page assets.
+                JHtml::_('hwdhead.core', $this->params);
+                
+                // Extract the layout.
+                list($template, $layout) = explode(':', $this->params->get('layout', '_:default'));
+                
+                // Check for layout stylesheet.
+                if (file_exists(__DIR__ . '/css/' . $layout . '.css'))
+                {
+                        $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_activities/css/' . $layout . '.css');
+                }            
 	}
 
+	/**
+	 * Method to get a list of items.
+	 *
+	 * @access  public
+	 * @return  mixed  An array of data items on success, false on failure.
+	 */        
 	public function getItems()
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
-                $doc = JFactory::getDocument();
-                $cache = JFactory::getCache();
-                
-                // Force method caching.
-                $cache->setCaching(1);
                 
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
-                $this->_model = JModelLegacy::getInstance('Activities', 'hwdMediaShareModel', array('ignore_request' => true));               
+                $model = JModelLegacy::getInstance('Activities', 'hwdMediaShareModel', array('ignore_request' => true));                
 
                 // Populate state (and set the context).
-                $this->_model->context = 'mod_media_activities';
-		$this->_model->populateState();
+                $model->context = 'mod_media_activities';
+		$model->populateState();
 
 		// Set the start and limit states.
-		$this->_model->setState('list.start', 0);
-		$this->_model->setState('list.limit', (int) $this->params->get('count', 0));
+		$model->setState('list.start', 0);
+		$model->setState('list.limit', (int) $this->params->get('count', 0));
 
 		// Set the ordering states.
-		$this->_model->setState('list.ordering', 'a.created');
-		$this->_model->setState('list.direction', 'desc');
+		$model->setState('list.ordering', 'a.created');
+		$model->setState('list.direction', 'desc');
 
-                $this->items = $this->_model->getItems();
+                $this->items = $model->getItems();
 
-                return $this->items;                
+                return $this->items;               
 	}
 }
