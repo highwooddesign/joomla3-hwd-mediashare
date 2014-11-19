@@ -203,7 +203,7 @@ class plgHwdmediashareRemote_screenyahoocom extends hwdMediaShareRemote
 
                 if (!$plugin)
                 {
-                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_EXTREMECOM_ERROR_NOT_PUBLISHED'));
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_SCREENYAHOOCOM_ERROR_NOT_PUBLISHED'));
                         return false;
                 }
 
@@ -256,7 +256,7 @@ class plgHwdmediashareRemote_screenyahoocom extends hwdMediaShareRemote
 
                 if (!$plugin)
                 {
-                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_EXTREMECOM_ERROR_NOT_PUBLISHED'));
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_SCREENYAHOOCOM_ERROR_NOT_PUBLISHED'));
                         return false;
                 }
 
