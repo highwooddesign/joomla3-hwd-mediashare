@@ -325,8 +325,8 @@
 				<field 
                                         name="layout" 
                                         type="modulelayout"
-					label="JFIELD_ALT_LAYOUT_LABEL" 
-                                        description="JFIELD_ALT_MODULE_LAYOUT_DESC" 
+					label="MOD_MEDIA_PLAYLISTS_FIELD_LAYOUT_LABEL" 
+                                        description="MOD_MEDIA_PLAYLISTS_FIELD_LAYOUT_DESC" 
                                         default="_:default"
                                 />                            
 				<field 
