@@ -232,7 +232,7 @@ class plgHwdmediashareRemote_extremecom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <div id="fcplayer_container" style="width:<?php echo $this->width; ?>px;height:<?php echo $this->height; ?>px;margin:0 auto;"></div><script type="text/javascript" src="http://player.extreme.com/embed/<?php echo $embedLookup; ?>.js"></script>
+                            <div id="fcplayer_container" style="width:<?php echo $this->width; ?>;height:<?php echo $this->height; ?>;margin:0 auto;"></div><script type="text/javascript" src="http://player.extreme.com/embed/<?php echo $embedLookup; ?>.js"></script>
                           </div>
                         </div>
                         <?php
