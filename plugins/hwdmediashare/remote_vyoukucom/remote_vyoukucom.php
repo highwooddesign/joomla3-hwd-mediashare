@@ -1,67 +1,86 @@
 <?php
 /**
- * @version    $Id: remote_vyoukucom.php 1316 2013-03-20 10:22:56Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2011 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      15-Apr-2011 10:13:15
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-// Import hwdMediaShare remote library
-hwdMediaShareFactory::load('remote');
-
-
-/**
- * hwdMediaShare framework files class
+ * @package     Joomla.site
+ * @subpackage  Plugin.hwdmediashare.remote_vyoukucom
  *
- * @package hwdMediaShare
- * @since   0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
-class plgHwdmediashareRemote_vyoukucom extends JObject
+
+defined('_JEXEC') or die;
+
+// Load the HWD remote library.
+JLoader::register('hwdMediaShareRemote', JPATH_ROOT.'/components/com_hwdmediashare/libraries/remote.php');
+
+class plgHwdmediashareRemote_vyoukucom extends hwdMediaShareRemote
 {    
 	/**
-	 * Remote media type integer.
-	 *
-	 * @var		int
+	 * The remote media type integer: http://hwdmediashare.co.uk/learn/api/68-api-definitions
+         * 
+         * @access  public
+	 * @var     integer
 	 */
 	public $mediaType = 4;
         
-        var $_url;
-        var $_host;
-        var $_buffer;
-        var $_title;
-        var $_description;
-        var $_source;
-        var $_duration;
-        var $_thumbnail;
-        
-        /**
-	 * Constructor
-	 *
-	 * @access      protected
-	 * @param       object  $subject The object to observe
-	 * @param       array   $config  An array that holds the plugin configuration
-	 * @since       1.5
+	/**
+	 * The API buffer.
+         * 
+         * @access  public
+	 * @var     string
 	 */
-	public function __construct()
+        public $_api = false;
+        
+        public $_url;
+        public $_host;
+        public $_buffer;
+        public $_title;
+        public $_description;
+        public $_tags;
+        public $_source;
+        public $_duration;
+        public $_thumbnail;
+        
+	/**
+	 * Class constructor.
+	 *
+	 * @access  public
+	 * @param   mixed  $properties  Either and associative array or another
+	 *                              object to set the initial properties of the object.
+         * @return  void
+	 */
+	public function __construct($properties = null)
 	{
+                /**
+                 * We extend the Joomla Platform Object Class for this plugin instead of JPlugin. This class
+                 * allows for simple but smart objects with get and set methods and an internal error handler.
+                 * The 'hwdmediashare' plugin group is loaded on some media events, such as onAfterMediaAdd.
+                 * When loaded by Joomla, it is exepected the plugin classes will extend the JPlugin class, 
+                 * and the __construct() method is passed a $subject and $config variable:
+                 *                  
+                 *     parent::__construct($subject, $config);
+                 * 
+                 * However, the JObject __construct() method expects a single $properties variable, and when loaded
+                 * by JEventDispatcher, a fatal error is thrown.
+                 * 
+                 *     Fatal error: Cannot access property started with '\0' in C:\wamp\www\joomla3-hwdmediashare\libraries\joomla\object\object.php on line 194
+                 * 
+                 * We avoid the error by overloading the parent constructs (which are not necessary for these
+                 * plugin types).
+                 */  
 	}
         
 	/**
-	 * Returns the hwdMediaShareFiles object, only creating it if it
+	 * Returns the plgHwdmediashareRemote_vyoukucom object, only creating it if it
 	 * doesn't already exist.
 	 *
-	 * @return  hwdMediaShareFiles A hwdMediaShareFiles object.
-	 * @since   0.1
+	 * @access  public
+	 * @return  object  The plgHwdmediashareRemote_vyoukucom object.
 	 */
 	public static function getInstance()
 	{
 		static $instance;
-                unset($instance);
+
 		if (!isset ($instance))
                 {
 			$c = 'plgHwdmediashareRemote_vyoukucom';
@@ -70,261 +89,272 @@ class plgHwdmediashareRemote_vyoukucom extends JObject
 
 		return $instance;
 	}
-    
+
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getTitle()
+	 * Reset properties.
+	 *
+	 * @access  public
+         * @return  void.
+	 */
+	public function reset()
 	{
-                if( !$this->_title )
+                // Standard properties.
+                $this->_url = false;
+                $this->_host = false;
+                $this->_buffer = false;
+                $this->_title = false;
+                $this->_description = false;
+                $this->_tags = false;
+                $this->_source = false;
+                $this->_duration = false;
+                $this->_thumbnail = false;               
+        }
+        
+        /**
+	 * Get the title of the media.
+	 *
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The title.
+	 */
+	public function getTitle($buffer = null)
+	{                
+                if(!$this->_title)
 		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_title = hwdMediaShareRemote::getTitle($this->_buffer);
-                        $this->_title = str_replace("视频:", "", $this->_title);
+                        $this->_title = parent::getTitle($this->_buffer);                      
                 }
-                return $this->_title;            
+
+                return $this->_title;           
         }   
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getDescription()
-	{
-                if( !$this->_description )
+	 * Get the description of the media.
+	 *
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The description.
+	 */
+	public function getDescription($buffer = null)
+	{                
+                if(!$this->_description)
 		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_description = hwdMediaShareRemote::getDescription($this->_buffer); 
-                }             
-                return $this->_description;            
+                        $this->_description = parent::getDescription($this->_buffer);    
+                }
+                
+                return $this->_description;     
+        }  
+
+        /**
+	 * Get the duration of the media.
+	 *
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The duration.
+	 */
+	public function getDuration($buffer = null)
+	{                
+                if(!$this->_duration)
+		{
+                        $this->_duration = parent::getDuration($this->_buffer);    
+                }
+                
+                return $this->_duration;              
         }  
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getSource()
+	 * Get the thumbnail location of the media.
+	 *
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  string  The thumbnail.
+	 */
+	public function getThumbnail($buffer = null)
 	{
-                if( !$this->_source )
+                if(!$this->_thumbnail)
 		{
-                        hwdMediaShareFactory::load('remote');
-                        $this->getBuffer();
-                        $this->_source = hwdMediaShareRemote::getSource();
-                }             
-                return $this->_source;             
-        } 
+                        // Load HWD utilities.
+                        hwdMediaShareFactory::load('utilities');
+                        $utilities = hwdMediaShareUtilities::getInstance();
 
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getDuration()
-	{
-                if( !$this->_duration )
-		{
-                        jimport( 'joomla.filter.filterinput' );
-                        JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                        
-                        // We will apply the most strict filter to the variable
-                        $noHtmlFilter = JFilterInput::getInstance();
-                        
-                        $duration = false;   
-                        
-                        $code = plgHwdmediashareRemote_vyoukucom::parse($this->_url);
-                        $api_url = "http://api.youku.com/api_ptvideoinfo/pid/XMTI5Mg==/id/$code/rt/xml";
-                        $buffer = hwdMediaShareRemote::getBuffer($api_url);
-                        
-                        if (!empty($buffer))
-                        {       
-                                preg_match("/<duration>(.*)<\/duration>/siU", $buffer, $match);  
-                                if (!empty($match[1]))
+                        // Request the required API buffer.
+                        if (!$this->_api) $this->_api = parent::getBuffer('http://api.youku.com/api_ptvideoinfo/pid/XMTI5Mg==/id/' . $this->parse($this->_url) . '/rt/xml', true);
+
+                        // Check request was successful.                                                
+                        if ($this->_api)
+                        {
+                                $dom = new DOMDocument;
+                                $dom->loadXML($this->_api);
+
+                                // Look for large thumbnail.
+                                $item = $dom->getElementsByTagName('item')->item(0);
+                                $imagelink_large = $item->getElementsByTagName('imagelink_large')->item(0)->nodeValue;
+ 
+                                if ($this->_thumbnail = parent::clean($imagelink_large, 255))
                                 {
-                                        $ts = $match[1];                                        
-                                        if (count(explode(':', $ts)) == 1)
+                                        if ($utilities->validateUrl($this->_thumbnail))
                                         {
-                                                list($secs) = explode(':', $ts);
-                                                $duration = $secs;
-                                        } 
-                                        else if (count(explode(':', $ts)) == 2)
-                                        {
-                                                list($mins, $secs) = explode(':', $ts);
-                                                $duration = ($mins * 60) + $secs;
-                                        } 
-                                        else if (count(explode(':', $ts)) == 3)
-                                        {
-                                                list($hours, $mins, $secs) = explode(':', $ts);
-                                                $duration = ($hours * 3600) + ($mins * 60) + $secs;
-                                        }                                       
+                                                return $this->_thumbnail; 
+                                        }      
                                 }
-                        }
-                }   
-                
-                $duration = (int) $duration;
-                
-                // Reteurn a valid duration
-                if ($duration > 0)
-                {
-                        $this->_duration = $duration;
-                        return $this->_duration;
-                }                    
-        } 
+                        }      
+                }
 
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getThumbnail()
-	{
-                if( !$this->_thumbnail )
+                if(!$this->_thumbnail)
 		{
-                        jimport( 'joomla.filter.filterinput' );
-                        JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-                        // We will apply the most strict filter to the variable
-                        $noHtmlFilter = JFilterInput::getInstance();
-                        $code = plgHwdmediashareRemote_vyoukucom::parse($this->_url);
-                        $api_url = "http://api.youku.com/api_ptvideoinfo/pid/XMTI5Mg==/id/$code/rt/xml";
-                        $buffer = hwdMediaShareRemote::getBuffer($api_url);
-                        if (!empty($buffer))
-                        {       
-                                preg_match("/<imagelink_large>(.*)<\/imagelink_large>/siU", $buffer, $match);                   
-                                if (!empty($match[1]))
-                                {
-                                        $thumbnail = $match[1];                                        
-                                        $thumbnail = str_replace("<![CDATA[", "", $thumbnail);
-                                        $thumbnail = str_replace("]]>", "", $thumbnail);
-                                        $thumbnail = (string)str_replace(array("\r", "\r\n", "\n"), '', $thumbnail);
-                                        $thumbnail = $noHtmlFilter->clean($thumbnail);
-                                        $thumbnail = JHtmlString::truncate($thumbnail, 255);
-                                        $thumbnail = trim($thumbnail);       
-                                }                            
-                        }
-                }  
-                $thumbnail = trim(strip_tags($thumbnail));              
-                hwdMediaShareFactory::load('utilities');
-                $utilities = hwdMediaShareUtilities::getInstance();
-                $isValid = $utilities->validateUrl( $thumbnail );
-                if ($isValid)
-                {
-                        $this->_thumbnail = $thumbnail;
-                        return $this->_thumbnail;
+                        $this->_thumbnail = parent::getThumbnail($this->_buffer);    
                 }
+                
+                return $this->_thumbnail; 
         } 
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getBuffer()
+	 * Get the tags for the media.
+	 *
+	 * @access  public
+         * @param   string  $buffer  The buffer of the remote source.
+         * @return  array   The tags.
+	 */
+	public function getTags($buffer = null)
 	{
-                $this->getHost();
-                $this->getUrl();
-
-                if (!$this->_buffer)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_buffer = hwdMediaShareRemote::getBuffer($this->_url);
-                }
-
-		return $this->_buffer;
-	}
+                return parent::getTags($this->_buffer);
+        } 
 
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getHost()
-	{
-                if (!$this->_host)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_host = hwdMediaShareRemote::getHost();
-                }
-
-		return $this->_host;
-	}
-        
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
-	public function getUrl()
-	{
-                if (!$this->_url)
-                {
-                        hwdMediaShareFactory::load('remote');
-                        $this->_url = hwdMediaShareRemote::getUrl();
-                }
-
-		return $this->_url;
-	}
-        
-        /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/
+	 * Render the HTML to display the media.
+	 *
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The HTML to render the media player.
+	 */
 	public function display($item)
 	{
-		$plugin =& JPluginHelper::getPlugin('hwdmediashare', 'remote_vyoukucom');
-		$params = new JRegistry( @$plugin->params );
-                
-                // Load hwdMediaShare config
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_vyoukucom');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_vyoukucom', JPATH_ADMINISTRATOR, $lang->getTag());
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VYOUKUCOM_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
+                
+                // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-
-                $this->width = $utilities->getMediaWidth();
-                $this->height = (int) $config->get('mediaitem_height') ? $config->get('mediaitem_height') : $this->width*$config->get('video_aspect',0.75);
-
-                $id = plgHwdmediashareRemote_vyoukucom::parse($item->source);
-                ob_start();
-                ?>
-                <embed src="http://player.youku.com/player.php/sid/<?php echo $id; ?>/v.swf" quality="high" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" align="middle" allowScriptAccess="sameDomain" allowFullscreen="true" type="application/x-shockwave-flash"></embed>
-                <?php
-                $html = ob_get_contents();
-                ob_end_clean();
                 
-                return $html;
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source);
+                if ($embedLookup)
+                {
+                        $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+                        $this->width = '100%';
+                        $this->height = '100%';
+                        ob_start();
+                        ?>
+                        <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
+                          <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
+                          <div class="media-content">
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="http://player.youku.com/embed/<?php echo $embedLookup; ?>" frameborder=0 allowfullscreen></iframe>
+                          </div>
+                        </div>
+                        <?php
+                        $html = ob_get_contents();
+                        ob_end_clean();
+                        return $html;
+                }
+                else
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VYOUKUCOM_ERROR_PLAYBACK_PROBLEM_SEE_ORIGINAL'));
+                        return false;
+                }
 	}
         
         /**
-	 * Method to add a file to the database
-         * 
-	 * @since   0.1
-	 **/        
-        protected function parse($url)
+	 * Method to construct the direct display location for the media.
+	 *
+	 * @access  public
+	 * @param   object  $item  The media item being displayed.
+         * @return  string  The direct display location.
+	 */
+	public function getDirectDisplayLocation($item)
+	{
+		// Initialise variables.
+                $app = JFactory::getApplication();
+
+                // Load plugin.
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_vyoukucom');
+		
+                // Load the language file.
+                $lang = JFactory::getLanguage();
+                $lang->load('plg_hwdmediashare_remote_vyoukucom', JPATH_ADMINISTRATOR, $lang->getTag());
+
+                if (!$plugin)
+                {
+                        $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VYOUKUCOM_ERROR_NOT_PUBLISHED'));
+                        return false;
+                }
+
+                // Load parameters.
+                $params = new JRegistry($plugin->params);
+
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
+                // Load HWD utilities.
+                hwdMediaShareFactory::load('utilities');
+                $utilities = hwdMediaShareUtilities::getInstance();
+                
+                // Lookup the embed code.
+                $embedLookup = $this->parse($item->source);
+                if ($embedLookup)
+                {             
+                        $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
+                    
+                        return JURI::getInstance()->getScheme() .'://player.youku.com/embed/' . $embedLookup;
+                }
+        }  
+
+        /**
+	 * Method to determine the type of media that will be displayed.
+	 *
+	 * @access  public
+	 * @param   object   $item  The media item being displayed.
+         * @return  integer  The API value of the media type being displayed.
+	 */
+	public function getDirectDisplayType($item)
+	{
+                return $this->mediaType;
+        } 
+        
+        /**
+	 * Parse the source URL to extract the media ID.
+	 *
+	 * @access  public
+	 * @param   string  $url  The media url.
+         * @return  string  The ID.
+	 */         
+        public function parse($url)
         {
-		$pos_u = strpos($url, "id_");
-		$code = array();
-
-		if ($pos_u === false)
-		{
-			return null;
-		}
-		else if ($pos_u)
-		{
-			$pos_u_start = $pos_u + 3;
-			$pos_u_end = $pos_u_start + 13;
-
-			$length = $pos_u_end - $pos_u_start;
-			$code = substr($url, $pos_u_start, $length);                       
-			$code = strip_tags($code);
-                        $code = preg_replace("/[^a-zA-Z0-9s]/", "", $code);
-		}
-
-		return $code; 
-        }
+                preg_match('/id_([^.]+)/', $url, $match);  
+                if (!empty($match[1]))
+                {
+                        return $match[1];
+                }
+                
+                return false; 
+        }       
 }
