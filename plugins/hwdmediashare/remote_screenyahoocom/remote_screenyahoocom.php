@@ -195,11 +195,11 @@ class plgHwdmediashareRemote_screenyahoocom extends hwdMediaShareRemote
                 $app = JFactory::getApplication();
 
                 // Load plugin.
-		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_extremecom');
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_screenyahoocom');
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_remote_extremecom', JPATH_ADMINISTRATOR, $lang->getTag());
+                $lang->load('plg_hwdmediashare_remote_screenyahoocom', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -248,11 +248,11 @@ class plgHwdmediashareRemote_screenyahoocom extends hwdMediaShareRemote
                 $app = JFactory::getApplication();
 
                 // Load plugin.
-		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_extremecom');
+		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'remote_screenyahoocom');
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_remote_extremecom', JPATH_ADMINISTRATOR, $lang->getTag());
+                $lang->load('plg_hwdmediashare_remote_screenyahoocom', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
