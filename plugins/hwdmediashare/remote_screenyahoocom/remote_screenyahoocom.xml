@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="hwdmediashare" method="upgrade">
+<extension type="plugin" group="hwdmediashare" version="3.0" method="upgrade">
 	<name>plg_hwdmediashare_remote_screenyahoocom</name>
-	<creationDate>2013-10-24</creationDate>
-	<author>Highwood Design</author>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
 	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
-	<copyright>(C) 2011 - 2012 Highwood Design Limited</copyright>
-	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
-	<version>1.1.12</version>
+	<version>@@VERSION@@</version> 
 	<description>PLG_HWDMEDIASHARE_REMOTE_SCREENYAHOOCOM_XML_DESCRIPTION</description>
 	<url>http://screen.yahoo.com</url>
 	<files>
@@ -18,6 +18,4 @@
 		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_screenyahoocom.ini</language>
 		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_screenyahoocom.sys.ini</language>
 	</languages>
-	<config>
-	</config>
 </extension>
