@@ -31,8 +31,8 @@
 				<field 
                                         name="count" 
                                         type="text" 
-					label="MOD_MEDIA_FIELD_COUNT_LABEL"
-					description="MOD_MEDIA_FIELD_COUNT_DESC" 
+					label="MOD_MEDIA_ACTIVITIES_FIELD_COUNT_LABEL"
+					description="MOD_ACTIVITIES_MEDIA_FIELD_COUNT_DESC" 
                                         default="6"
                                         validate="integer"
                                         filter="integer"
@@ -55,9 +55,9 @@
 				<field 
                                         name="owncache" 
                                         type="list" 
-                                        default="1"
 					label="COM_MODULES_FIELD_CACHING_LABEL" 
                                         description="COM_MODULES_FIELD_CACHING_DESC" 
+                                        default="1"
                                 >
 					<option value="1">JGLOBAL_USE_GLOBAL</option>
 					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
@@ -65,9 +65,9 @@
 				<field 
                                         name="cache_time" 
                                         type="text" 
-                                        default="900"
 					label="COM_MODULES_FIELD_CACHE_TIME_LABEL" 
                                         description="COM_MODULES_FIELD_CACHE_TIME_DESC"
+                                        default="900"
                                 />
 			</fieldset>
 		</fields>
