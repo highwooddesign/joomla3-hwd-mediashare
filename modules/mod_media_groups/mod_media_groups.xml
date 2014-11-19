@@ -31,8 +31,8 @@
 				<field 
                                         name="count" 
                                         type="text" 
-					label="MOD_MEDIA_FIELD_COUNT_LABEL"
-					description="MOD_MEDIA_FIELD_COUNT_DESC" 
+					label="MOD_MEDIA_GROUPS_FIELD_COUNT_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_COUNT_DESC" 
                                         default="6"
                                         validate="integer"
                                         filter="integer"
@@ -40,81 +40,81 @@
 				<field 
                                         name="show_featured" 
                                         type="list" 
-					label="MOD_MEDIA_FIELD_SHOWFEATURED_LABEL"
-					description="MOD_MEDIA_FIELD_SHOWFEATURED_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_SHOWFEATURED_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_SHOWFEATURED_DESC"
                                         default="show"
 				>
 					<option value="show">JSHOW</option>
 					<option value="hide">JHIDE</option>
-					<option value="only">MOD_MEDIA_OPTION_ONLYFEATURED_VALUE</option>
+					<option value="only">MOD_MEDIA_GROUPS_OPTION_ONLYFEATURED_VALUE</option>
 				</field>
 				<field 
                                         name="list_order_group" 
                                         type="groupfullordering"
-					label="MOD_MEDIA_FIELD_ORDERING_LABEL"
-					description="MOD_MEDIA_FIELD_ORDERING_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_ORDERING_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_ORDERING_DESC"
 					default="a.created DESC"
 				>                      
 				</field>                                
 			</fieldset>
                         <fieldset 
                                 name="filtering"
-				label="MOD_MEDIA_FIELDSET_FILTERING_LABEL"
+				label="MOD_MEDIA_GROUPS_FIELDSET_FILTERING_LABEL"
 			>                            
-				<field name="spacer_authorfiltering" label="MOD_MEDIA_SPACER_AUTHORFILTERING" type="spacer" />
+				<field name="spacer_authorfiltering" label="MOD_MEDIA_GROUPS_SPACER_AUTHORFILTERING" type="spacer" />
 				<field 
                                         name="author_filtering_type" 
                                         type="radio"
-					label="MOD_MEDIA_FIELD_AUTHORFILTERING_LABEL"
-					description="MOD_MEDIA_FIELD_AUTHORFILTERING_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_AUTHORFILTERING_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_AUTHORFILTERING_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
 				>
-					<option value="1">MOD_MEDIA_OPTION_INCLUSIVE_VALUE</option>
-					<option value="0">MOD_MEDIA_OPTION_EXCLUSIVE_VALUE</option>
+					<option value="1">MOD_MEDIA_GROUPS_OPTION_INCLUSIVE_VALUE</option>
+					<option value="0">MOD_MEDIA_GROUPS_OPTION_EXCLUSIVE_VALUE</option>
 				</field>
 				<field 
                                         name="created_by" 
                                         type="sql"
 					multiple="true" 
                                         size="5"
-					label="MOD_MEDIA_FIELD_AUTHOR_LABEL"
-					description="MOD_MEDIA_FIELD_AUTHOR_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_AUTHOR_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_AUTHOR_DESC"
 					query="select id, name, username from #__users where id IN (select distinct(created_user_id) from #__hwdms_groups) order by name ASC"
 					key_field="id" 
                                         value_field="name"
 				>
 					<option value="">JOPTION_SELECT_AUTHORS</option>
 				</field>
-				<field name="spacer_datefiltering" label="MOD_MEDIA_SPACER_DATEFILTERING" type="spacer" />                             
+				<field name="spacer_datefiltering" label="MOD_MEDIA_GROUPS_SPACER_DATEFILTERING" type="spacer" />                             
 				<field 
                                         name="date_filtering" 
                                         type="list" 
-					label="MOD_MEDIA_FIELD_DATEFILTERING_LABEL"
-					description="MOD_MEDIA_FIELD_DATEFILTERING_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_DATEFILTERING_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_DATEFILTERING_DESC"
                                         default="off"
 				>
-					<option value="off">MOD_MEDIA_OPTION_OFF_VALUE</option>
-					<option value="range">MOD_MEDIA_OPTION_DATERANGE_VALUE</option>
-					<option value="relative">MOD_MEDIA_OPTION_RELATIVEDAY_VALUE</option>
+					<option value="off">MOD_MEDIA_GROUPS_OPTION_OFF_VALUE</option>
+					<option value="range">MOD_MEDIA_GROUPS_OPTION_DATERANGE_VALUE</option>
+					<option value="relative">MOD_MEDIA_GROUPS_OPTION_RELATIVEDAY_VALUE</option>
 				</field>
 				<field 
                                         name="date_field" 
                                         type="list" 
-					label="MOD_MEDIA_FIELD_DATERANGEFIELD_LABEL"
-					description="MOD_MEDIA_FIELD_DATERANGEFIELD_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_DATERANGEFIELD_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_DATERANGEFIELD_DESC"
                                         default="a.created"
 				>
-					<option value="a.created">MOD_MEDIA_OPTION_CREATED_VALUE</option>
-					<option value="a.modified">MOD_MEDIA_OPTION_MODIFIED_VALUE</option>
-					<option value="a.publish_up">MOD_MEDIA_OPTION_STARTPUBLISHING_VALUE</option>
+					<option value="a.created">MOD_MEDIA_GROUPS_OPTION_CREATED_VALUE</option>
+					<option value="a.modified">MOD_MEDIA_GROUPS_OPTION_MODIFIED_VALUE</option>
+					<option value="a.publish_up">MOD_MEDIA_GROUPS_OPTION_STARTPUBLISHING_VALUE</option>
 				</field>
 				<field 
                                         name="start_date_range" 
                                         type="calendar"
 					format="%Y-%m-%d %H:%M:%S"
-					label="MOD_MEDIA_FIELD_STARTDATE_LABEL"
-					description="MOD_MEDIA_FIELD_STARTDATE_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_STARTDATE_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_STARTDATE_DESC"
 					size="22"
 					filter="user_utc" 
                                 />
@@ -122,28 +122,28 @@
                                         name="end_date_range" 
                                         type="calendar"
 					format="%Y-%m-%d %H:%M:%S"
-					label="MOD_MEDIA_FIELD_ENDDATE_LABEL"
-					description="MOD_MEDIA_FIELD_ENDDATE_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_ENDDATE_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_ENDDATE_DESC"
 					size="22"
 					filter="user_utc" 
                                 />
 				<field 
                                         name="relative_date" 
                                         type="text" 
-					label="MOD_MEDIA_FIELD_RELATIVEDATE_LABEL"
-					description="MOD_MEDIA_FIELD_RELATIVEDATE_DESC" 
+					label="MOD_MEDIA_GROUPS_FIELD_RELATIVEDATE_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_RELATIVEDATE_DESC" 
                                         default="30"
                                 />
 			</fieldset>
 			<fieldset 
                                 name="display"
-				label="MOD_MEDIA_FIELDSET_DISPLAY_LABEL"
+				label="MOD_MEDIA_GROUPS_FIELDSET_DISPLAY_LABEL"
 			>
                                 <field
                                         name="list_columns"
                                         type="list"
-                                        label="MOD_MEDIA_FIELD_COLUMNS_LABEL"
-                                        description="MOD_MEDIA_FIELD_COLUMNS_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_COLUMNS_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_COLUMNS_DESC"
                                         default=""
                                 >
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -157,8 +157,8 @@
                                 <field
                                         name="list_meta_title"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_TITLE_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_TITLE_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_TITLE_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_TITLE_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -169,8 +169,8 @@
                                 <field
                                         name="list_meta_thumbnail"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_THUMBNAIL_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_THUMBNAIL_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_THUMBNAIL_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_THUMBNAIL_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -181,8 +181,8 @@
                                 <field
                                         name="list_meta_type_icon"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_MEDIA_TYPE_ICON_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_MEDIA_TYPE_ICON_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_MEDIA_TYPE_ICON_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_MEDIA_TYPE_ICON_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -193,8 +193,8 @@
                                 <field
                                         name="list_meta_description"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_DESCRIPTION_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_DESCRIPTION_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_DESCRIPTION_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -205,8 +205,8 @@
                                 <field
                                         name="list_meta_author"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_AUTHOR_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_AUTHOR_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_AUTHOR_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_AUTHOR_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -217,8 +217,8 @@
                                 <field
                                         name="list_meta_likes"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_LIKES_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_LIKES_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_LIKES_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_LIKES_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -229,8 +229,8 @@
                                 <field
                                         name="list_meta_hits"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_VIEWS_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_VIEWS_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_VIEWS_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_VIEWS_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -241,8 +241,8 @@
                                 <field
                                         name="list_meta_created"
                                         type="radio"
-                                        label="MOD_MEDIA_FIELD_SHOW_DATE_CREATED_LABEL"
-                                        description="MOD_MEDIA_FIELD_SHOW_DATE_CREATED_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_SHOW_DATE_CREATED_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_SHOW_DATE_CREATED_DESC"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -253,8 +253,8 @@
                                 <field 
                                         name="list_item_heading" 
                                         type="list" 
-                                        label="MOD_MEDIA_FIELD_HEADING_LEVEL_LABEL"
-                                        description="MOD_MEDIA_FIELD_HEADING_LEVEL_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_HEADING_LEVEL_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_HEADING_LEVEL_DESC"
                                         default=""
                                 >
                                         <option value="">JGLOBAL_USE_GLOBAL</option>
@@ -268,8 +268,8 @@
                                 <field 
                                         name="list_link_titles" 
                                         type="radio" 
-                                        label="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
-                                        description="MOD_MEDIA_FIELD_LINKED_TITLES_LABEL"
+                                        label="MOD_MEDIA_GROUPS_FIELD_LINKED_TITLES_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_LINKED_TITLES_LABEL"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -280,8 +280,8 @@
                                 <field 
                                         name="list_link_thumbnails" 
                                         type="radio" 
-                                        label="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
-                                        description="MOD_MEDIA_FIELD_LINKED_THUMBNAILS_LABEL"
+                                        label="MOD_MEDIA_GROUPS_FIELD_LINKED_THUMBNAILS_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_LINKED_THUMBNAILS_LABEL"
                                         class="btn-group btn-group-yesno"
                                         default=""
                                 >
@@ -292,22 +292,22 @@
                                 <field
                                         name="list_title_truncate"
                                         type="text"
-                                        label="MOD_MEDIA_FIELD_TRUNCATE_TITLE_LABEL"
-                                        description="MOD_MEDIA_FIELD_TRUNCATE_TITLE_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_TRUNCATE_TITLE_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_TRUNCATE_TITLE_DESC"
                                         default=""
                                 />
                                 <field
                                         name="list_desc_truncate"
                                         type="text"
-                                        label="MOD_MEDIA_FIELD_TRUNCATE_DESC_LABEL"
-                                        description="MOD_MEDIA_FIELD_TRUNCATE_DESC_DESC"
+                                        label="MOD_MEDIA_GROUPS_FIELD_TRUNCATE_DESC_LABEL"
+                                        description="MOD_MEDIA_GROUPS_FIELD_TRUNCATE_DESC_DESC"
                                         default=""
                                 />
 				<field
 					name="show_more_link"
 					type="menuitem"
-					label="MOD_MEDIA_FIELD_SHOWMORELINK_LABEL"
-					description="MOD_MEDIA_FIELD_SHOWMORELINK_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_SHOWMORELINK_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_SHOWMORELINK_DESC"
 					default="hide"
 				>
                                         <option value="show">JSHOW</option>
@@ -316,8 +316,8 @@
                                 <field 
                                         name="more_link_text" 
                                         type="text" 
-					label="MOD_MEDIA_FIELD_SHOWMORETEXT_LABEL"
-					description="MOD_MEDIA_FIELD_SHOWMORETEXT_DESC"
+					label="MOD_MEDIA_GROUPS_FIELD_SHOWMORETEXT_LABEL"
+					description="MOD_MEDIA_GROUPS_FIELD_SHOWMORETEXT_DESC"
                                         default=""
                                 />
 			</fieldset>
