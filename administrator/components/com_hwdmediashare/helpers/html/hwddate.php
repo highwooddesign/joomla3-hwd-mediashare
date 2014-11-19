@@ -40,7 +40,7 @@ abstract class JHtmlHwdDate
 		// Less than a minute.
 		if ($diff < 60)
 		{
-			return JText::_('JLIB_HTML_DATE_RELATIVE_LESSTHANAMINUTE');
+			return strtolower(JText::_('JLIB_HTML_DATE_RELATIVE_LESSTHANAMINUTE'));
 		}
 
 		// Round to minutes.
