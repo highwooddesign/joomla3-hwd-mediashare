@@ -272,7 +272,7 @@ class plgHwdmediashareRemote_myspacecom extends hwdMediaShareRemote
                 // Load HWD utilities.
                 hwdMediaShareFactory::load('utilities');
                 $utilities = hwdMediaShareUtilities::getInstance();
-                
+
                 // We force method caching to lookup the embed code.
                 $cache = JFactory::getCache('com_hwdmediashare');
                 $cache->setCaching(1);
