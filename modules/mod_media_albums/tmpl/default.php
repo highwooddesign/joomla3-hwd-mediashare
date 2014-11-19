@@ -23,5 +23,5 @@ $menu = $app->getMenu();
       <?php echo JLayoutHelper::render('albums_details', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
     <?php endif; ?>
   </div> 
-  <?php if ($params->get('show_more_link') != 'hide') :?><a href="<?php echo ((intval($params->get('show_more_link')) > 0) ? JRoute::_($menu->getItem($params->get('show_more_link'))->link.'&Itemid='.$params->get('show_more_link')) : JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute())); ?>" class="btn"><?php echo JText::_($params->get('more_link_text', 'MOD_MEDIA_VIEW_MORE_ALBUMS')); ?></a><?php endif; ?>  
+  <?php if ($params->get('show_more_link') != 'hide') :?><a href="<?php echo ((intval($params->get('show_more_link')) > 0) ? JRoute::_($menu->getItem($params->get('show_more_link'))->link.'&Itemid='.$params->get('show_more_link')) : JRoute::_(hwdMediaShareHelperRoute::getAlbumsRoute())); ?>" class="btn"><?php echo JText::_($params->get('more_link_text', 'MOD_MEDIA_ALBUMS_VIEW_MORE')); ?></a><?php endif; ?>  
 </div>
