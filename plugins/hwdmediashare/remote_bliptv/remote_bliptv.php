@@ -432,8 +432,8 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
 	 * Method to lookup the code required to embed the media.
 	 *
 	 * @access  public
-	 * @param   object   $item  The media item being displayed.
-         * @return  mixed    The embed code on success, false on fail.
+	 * @param   object  $item  The media item being displayed.
+         * @return  mixed   The embed code on success, false on fail.
 	 */
 	public function lookupEmbedCode($item)
 	{
