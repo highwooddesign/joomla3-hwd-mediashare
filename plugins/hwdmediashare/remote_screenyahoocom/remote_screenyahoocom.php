@@ -226,7 +226,7 @@ class plgHwdmediashareRemote_screenyahoocom extends hwdMediaShareRemote
                 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                   <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                   <div class="media-content">
-                    <iframe width='<?php echo $this->width; ?>' height='<?php echo $this->height; ?>' scrolling='no' frameborder='0' src='<?php echo JURI::getInstance()->getScheme() .'://screen.yahoo.com' . parse_url($item->source, PHP_URL_PATH) . '?format=embed' ?>' allowfullscreen='true' mozallowfullscreen='true' webkitallowfullscreen='true' allowtransparency='true'></iframe>
+                    <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="https://screen.yahoo.com<?php echo parse_url($item->source, PHP_URL_PATH) . '?format=embed' ?>" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>
                   </div>
                 </div>
                 <?php
