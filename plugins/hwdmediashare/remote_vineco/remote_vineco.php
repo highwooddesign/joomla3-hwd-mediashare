@@ -230,7 +230,7 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe class="vine-embed" src="https://vine.co/v/<?php echo $embedLookup ?>/embed/simple" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="https://vine.co/v/<?php echo $embedLookup ?>/embed/simple" class="vine-embed" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
                           </div>
                         </div>
                         <?php
@@ -244,24 +244,6 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
                         return false;
                 }
 	}
-
-        /**
-	 * Parse the source to extract the media.
-	 *
-	 * @access  protected
-	 * @param   string     $url  The media url.
-         * @return  string     The ID.
-	 */ 
-        protected function parse($url)
-        {
-                preg_match('/^http(?:s?):\/\/(?:www\.)?vine\.co\/v\/([a-zA-Z0-9]{1,13})$/', $url, $match);
-                if (isset($match[1]) && !empty($match[1]))
-                {
-                        return $match[1];
-                }
-                
-                return null;
-        }
         
         /**
 	 * Method to construct the direct display location for the media.
@@ -317,5 +299,23 @@ class plgHwdmediashareRemote_vineco extends hwdMediaShareRemote
 	public function getDirectDisplayType($item)
 	{
                 return $this->mediaType;
-        }         
+        }    
+
+        /**
+	 * Parse the source URL to extract the media ID.
+	 *
+	 * @access  public
+	 * @param   string  $url  The media url.
+         * @return  string  The ID.
+	 */         
+        public function parse($url)
+        {
+                preg_match('/^http(?:s?):\/\/(?:www\.)?vine\.co\/v\/([a-zA-Z0-9]{1,13})$/', $url, $match);
+                if (isset($match[1]) && !empty($match[1]))
+                {
+                        return $match[1];
+                }
+                
+                return null;
+        }
 }
