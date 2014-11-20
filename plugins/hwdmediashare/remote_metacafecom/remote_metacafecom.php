@@ -255,24 +255,7 @@ class plgHwdmediashareRemote_metacafecom extends hwdMediaShareRemote
                         return false;
                 }
 	}
-        
-        /**
-	 * Parse the source to extract the media.
-	 *
-	 * @access  protected
-	 * @param   string     $url  The media url.
-         * @return  string     The ID.
-	 */         
-        protected function parse($url)
-        {
-                preg_match('/((http:\/\/)?(www\.)?metacafe\.com)(\/watch\/)(\d+)(.*)/i', $url, $matches);
-                if(isset($matches[5])) 
-                {
-                        return $matches[5];                       
-                }
-		return false;  
-        }
-        
+
         /**
 	 * Method to construct the direct display location for the media.
 	 *
@@ -328,4 +311,21 @@ class plgHwdmediashareRemote_metacafecom extends hwdMediaShareRemote
 	{
                 return $this->mediaType;
         } 
+        
+        /**
+	 * Parse the source URL to extract the media ID.
+	 *
+	 * @access  public
+	 * @param   string  $url  The media url.
+         * @return  string  The ID.
+	 */         
+        public function parse($url)
+        {
+                preg_match('/((http:\/\/)?(www\.)?metacafe\.com)(\/watch\/)(\d+)(.*)/i', $url, $matches);
+                if(isset($matches[5])) 
+                {
+                        return $matches[5];                       
+                }
+		return false;  
+        }        
 }
