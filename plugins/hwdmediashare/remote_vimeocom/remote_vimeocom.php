@@ -339,7 +339,7 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe src="<?php echo JURI::getInstance()->getScheme(); ?>://player.vimeo.com/video/<?php echo $embedLookup; ?>?title=0&amp;autoplay=<?php echo $this->autoplay; ?>&amp;byline=0&amp;portrait=0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>	
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://player.vimeo.com/video/<?php echo $embedLookup; ?>?title=0&amp;autoplay=<?php echo $this->autoplay; ?>&amp;byline=0&amp;portrait=0" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>	
                           </div>
                         </div>
                         <?php
@@ -352,29 +352,7 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
                         $this->setError(JText::_('PLG_HWDMEDIASHARE_REMOTE_VIMEOCOM_ERROR_PLAYBACK_PROBLEM_SEE_ORIGINAL'));
                         return false;
                 }
-                
-
 	}
-        
-        /**
-	 * Parse the source to extract the media.
-	 *
-	 * @access  protected
-	 * @param   string     $url  The media url.
-         * @return  string     The ID.
-	 */         
-        protected function parse($url)
-        {
-                // Switch back to http.
-                $url = str_replace("https", "http", $url);
-                
-                if (preg_match('~^http://(?:www\.)?vimeo\.com/(?:clip:)?(\d+)~', $url, $match)) 
-                {
-                        if (!empty($match[1])) return $match[1];
-                }
-                
-                return null;
-        }
         
         /**
 	 * Method to construct the direct display location for the media.
@@ -431,4 +409,24 @@ class plgHwdmediashareRemote_vimeocom extends hwdMediaShareRemote
 	{
                 return $this->mediaType;
         } 
+
+        /**
+	 * Parse the source URL to extract the media ID.
+	 *
+	 * @access  public
+	 * @param   string  $url  The media url.
+         * @return  string  The ID.
+	 */         
+        public function parse($url)
+        {
+                // Switch back to http.
+                $url = str_replace("https", "http", $url);
+                
+                if (preg_match('~^http://(?:www\.)?vimeo\.com/(?:clip:)?(\d+)~', $url, $match)) 
+                {
+                        if (!empty($match[1])) return $match[1];
+                }
+                
+                return null;
+        }        
 }
