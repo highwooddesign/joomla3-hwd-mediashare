@@ -409,64 +409,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                         return false;
                 }
 	}
-        
-        /**
-	 * Parse the source to extract the media.
-	 *
-	 * @access  protected
-	 * @param   string     $url     The media url.
-	 * @param   string     $return  The format to return.
-	 * @param   integer    $width   The width.
-	 * @param   integer    $height  The height.
-	 * @param   integer    $rel     The option to display relative videos after the video finishes playing.
-         * @return  string     The ID.
-	 */      
-        protected function parse($url, $return = 'embed', $width = '', $height = '', $rel = 0)
-        {
-                $urls = parse_url($url);
 
-                // Url is http://youtu.be/xxxx
-                if($urls['host'] == 'youtu.be'){
-                    $id = ltrim($urls['path'],'/');
-                }
-                // Url is http://www.youtube.com/embed/xxxx
-                else if(strpos($urls['path'],'embed') == 1){
-                    $id = end(explode('/',$urls['path']));
-                }
-                // Url is xxxx only
-                else if(strpos($url,'/')===false){
-                    $id = $url;
-                }
-                // http://www.youtube.com/watch?feature=player_embedded&v=m-t4pcO99gI
-                // Url is http://www.youtube.com/watch?v=xxxx
-                else
-                {
-                    parse_str($urls['query'], $arrayVars);
-                    $id = $arrayVars['v'];    
-                }
-                
-                // Return embed iframe.
-                if($return == 'embed')
-                {
-                    return '<iframe width="'.($width?$width:560).'" height="'.($height?$height:349).'" src="http://www.youtube.com/embed/'.$id.'?rel='.$rel.'" frameborder="0" allowfullscreen></iframe>';
-                }
-                // Return normal thumb.
-                else if($return == 'thumb')
-                {
-                    return 'http://i1.ytimg.com/vi/'.$id.'/default.jpg';
-                }
-                // Return hqthumb.
-                else if($return == 'hqthumb')
-                {
-                    return 'http://i1.ytimg.com/vi/'.$id.'/hqdefault.jpg';
-                }
-                // Return id.
-                else
-                {
-                    return $id;
-                }
-        }
-        
         /**
 	 * Method to construct the direct display location for the media.
 	 *
@@ -529,4 +472,61 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 	{
                 return $this->mediaType;
         }         
+        
+        /**
+	 * Parse the source to extract the media.
+	 *
+	 * @access  protected
+	 * @param   string     $url     The media url.
+	 * @param   string     $return  The format to return.
+	 * @param   integer    $width   The width.
+	 * @param   integer    $height  The height.
+	 * @param   integer    $rel     The option to display relative videos after the video finishes playing.
+         * @return  string     The ID.
+	 */      
+        protected function parse($url, $return = 'embed', $width = '', $height = '', $rel = 0)
+        {
+                $urls = parse_url($url);
+
+                // Url is http://youtu.be/xxxx
+                if($urls['host'] == 'youtu.be'){
+                    $id = ltrim($urls['path'],'/');
+                }
+                // Url is http://www.youtube.com/embed/xxxx
+                else if(strpos($urls['path'],'embed') == 1){
+                    $id = end(explode('/',$urls['path']));
+                }
+                // Url is xxxx only
+                else if(strpos($url,'/')===false){
+                    $id = $url;
+                }
+                // http://www.youtube.com/watch?feature=player_embedded&v=m-t4pcO99gI
+                // Url is http://www.youtube.com/watch?v=xxxx
+                else
+                {
+                    parse_str($urls['query'], $arrayVars);
+                    $id = $arrayVars['v'];    
+                }
+                
+                // Return embed iframe.
+                if($return == 'embed')
+                {
+                    return '<iframe width="'.($width?$width:560).'" height="'.($height?$height:349).'" src="http://www.youtube.com/embed/'.$id.'?rel='.$rel.'" frameborder="0" allowfullscreen></iframe>';
+                }
+                // Return normal thumb.
+                else if($return == 'thumb')
+                {
+                    return 'http://i1.ytimg.com/vi/'.$id.'/default.jpg';
+                }
+                // Return hqthumb.
+                else if($return == 'hqthumb')
+                {
+                    return 'http://i1.ytimg.com/vi/'.$id.'/hqdefault.jpg';
+                }
+                // Return id.
+                else
+                {
+                    return $id;
+                }
+        }        
 }
