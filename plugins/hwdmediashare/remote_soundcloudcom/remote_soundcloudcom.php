@@ -232,7 +232,7 @@ class plgHwdmediashareRemote_soundcloudcom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" scrolling="no" frameborder="no" src="<?php echo JURI::getInstance()->getScheme(); ?>://w.soundcloud.com/player/?url=<?php echo urlencode($embedLookup); ?>&amp;auto_play=<?php echo $this->autoplay; ?>&amp;hide_related=true&amp;show_comments=true&amp;show_user=false&amp;show_reposts=false&amp;visual=true"></iframe>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://w.soundcloud.com/player/?url=<?php echo urlencode($embedLookup); ?>&amp;auto_play=<?php echo $this->autoplay; ?>&amp;hide_related=true&amp;show_comments=true&amp;show_user=false&amp;show_reposts=false&amp;visual=true" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>
                           </div>
                         </div>
                         <?php
@@ -311,8 +311,8 @@ class plgHwdmediashareRemote_soundcloudcom extends hwdMediaShareRemote
 	 * Method to lookup the code required to embed the media.
 	 *
 	 * @access  public
-	 * @param   object   $item  The media item being displayed.
-         * @return  mixed    The embed code on success, false on fail.
+	 * @param   object  $item  The media item being displayed.
+         * @return  mixed   The embed code on success, false on fail.
 	 */
 	public function lookupEmbedCode($item)
 	{
