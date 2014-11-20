@@ -22,6 +22,16 @@ class plgHwdmediashareRemote_myspacecom extends hwdMediaShareRemote
 	 * @var     integer
 	 */
 	public $mediaType = 4;
+
+        public $_url;
+        public $_host;
+        public $_buffer;
+        public $_title;
+        public $_description;
+        public $_tags;
+        public $_source;
+        public $_duration;
+        public $_thumbnail;
         
 	/**
 	 * Class constructor.
