@@ -246,26 +246,7 @@ class plgHwdmediashareRemote_veohcom extends hwdMediaShareRemote
                 }
 
 	}
-        
-        /**
-	 * Parse the source to extract the media.
-	 *
-	 * @access  protected
-	 * @param   string     $url  The media url.
-         * @return  string     The ID.
-	 */         
-        protected function parse($url)
-        {
-                preg_match('#^http:\/\/www\.veoh\.com\/watch\/v([A-Za-z0-9]+)#', $url, $match);
 
-                if(isset($match[1])) 
-                {
-                        return 'v' . $match[1];                       
-                }
-                
-		return false;  
-        }
-        
         /**
 	 * Method to construct the direct display location for the media.
 	 *
@@ -321,4 +302,23 @@ class plgHwdmediashareRemote_veohcom extends hwdMediaShareRemote
 	{
                 return $this->mediaType;
         } 
+        
+        /**
+	 * Parse the source URL to extract the media ID.
+	 *
+	 * @access  public
+	 * @param   string  $url  The media url.
+         * @return  string  The ID.
+	 */         
+        public function parse($url)
+        {
+                preg_match('#^http:\/\/www\.veoh\.com\/watch\/v([A-Za-z0-9]+)#', $url, $match);
+
+                if(isset($match[1])) 
+                {
+                        return 'v' . $match[1];                       
+                }
+                
+		return false;  
+        }        
 }
