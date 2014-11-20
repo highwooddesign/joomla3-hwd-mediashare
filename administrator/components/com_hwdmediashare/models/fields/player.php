@@ -57,7 +57,7 @@ class JFormFieldPlayer extends JFormFieldList
 			{
                                 // Load the language file.
                                 $lang = JFactory::getLanguage();
-                                $lang->load('plg_hwdmediashare_' . $row->element, JPATH_SITE . '/administrator');
+                                $lang->load('plg_hwdmediashare_' . $row->element, JPATH_ADMINISTRATOR, $lang->getTag());
 
                                 // Add option.
                                 if (file_exists(JPATH_ROOT.'/plugins/hwdmediashare/' . $row->element . '/' . $row->element . '.php'))
