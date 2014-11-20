@@ -241,7 +241,7 @@ class plgHwdmediashareRemote_metacafecom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe src="http://www.metacafe.com/embed/<?php echo $embedLookup; ?>/" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" allowFullScreen frameborder=0></iframe>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="http://www.metacafe.com/embed/<?php echo $embedLookup; ?>/" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>
                           </div>
                         </div>
                         <?php
