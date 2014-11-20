@@ -58,14 +58,14 @@ class JFormFieldCdn extends JFormFieldList
 
                         if(substr($row->element, 0, 4) == 'cdn_')
 			{
-                                // Load the plugin language file.
+                                // Load the language file.
                                 $lang = JFactory::getLanguage();
-                                $lang->load($row->name, JPATH_SITE . '/administrator', $lang->getTag());
+                                $lang->load('plg_hwdmediashare_' . $row->element, JPATH_ADMINISTRATOR, $lang->getTag());
 
                                 // Add option.
                                 if (file_exists(JPATH_ROOT.'/plugins/hwdmediashare/' . $row->element . '/' . $row->element . '.php'))
                                 {
-                                        $options[] = JHtml::_('select.option', $row->element, JText::_($row->name));  
+                                        $options[] = JHtml::_('select.option', $row->element, JText::_('PLG_HWDMEDIASHARE_' . strtoupper($row->element) . '_OPTION_NAME'));  
                                 }
 			}
 		}
