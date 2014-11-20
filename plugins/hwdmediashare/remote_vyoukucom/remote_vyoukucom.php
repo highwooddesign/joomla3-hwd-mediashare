@@ -107,7 +107,9 @@ class plgHwdmediashareRemote_vyoukucom extends hwdMediaShareRemote
                 $this->_tags = false;
                 $this->_source = false;
                 $this->_duration = false;
-                $this->_thumbnail = false;               
+                $this->_thumbnail = false;      
+                // Custom properties.
+                $this->_api = false;                   
         }
         
         /**
@@ -152,7 +154,37 @@ class plgHwdmediashareRemote_vyoukucom extends hwdMediaShareRemote
          * @return  string  The duration.
 	 */
 	public function getDuration($buffer = null)
-	{                
+	{  
+                if(!$this->_duration)
+		{
+                        // Load HWD media.
+                        hwdMediaShareFactory::load('media');
+                        
+                        // Load HWD utilities.
+                        hwdMediaShareFactory::load('utilities');
+                        $utilities = hwdMediaShareUtilities::getInstance();
+
+                        // Request the required API buffer.
+                        if (!$this->_api) $this->_api = parent::getBuffer('http://api.youku.com/api_ptvideoinfo/pid/XMTI5Mg==/id/' . $this->parse($this->_url) . '/rt/xml', true);
+
+                        // Check request was successful.                                                
+                        if ($this->_api)
+                        {
+                                $dom = new DOMDocument;
+                                $dom->loadXML($this->_api);
+
+                                // Look for large thumbnail.
+                                $item = $dom->getElementsByTagName('item')->item(0);
+                                $duration = $item->getElementsByTagName('duration')->item(0)->nodeValue;
+                                $this->_duration = (int) hwdMediaShareMedia::timeToSeconds($duration);
+
+                                if ($this->_duration)
+                                {
+                                        return $this->_duration;     
+                                }
+                        }      
+                }
+                
                 if(!$this->_duration)
 		{
                         $this->_duration = parent::getDuration($this->_buffer);    
@@ -267,7 +299,7 @@ class plgHwdmediashareRemote_vyoukucom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="http://player.youku.com/embed/<?php echo $embedLookup; ?>" frameborder=0 allowfullscreen></iframe>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="http://player.youku.com/embed/<?php echo $embedLookup; ?>" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>
                           </div>
                         </div>
                         <?php
@@ -356,5 +388,5 @@ class plgHwdmediashareRemote_vyoukucom extends hwdMediaShareRemote
                 }
                 
                 return false; 
-        }       
+        } 
 }
