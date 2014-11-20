@@ -327,7 +327,7 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe frameborder="0" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="//www.dailymotion.com/embed/video/<?php echo $embedLookup; ?>?autoPlay=<?php echo $this->autoplay; ?>" allowfullscreen></iframe>	
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="//www.dailymotion.com/embed/video/<?php echo $embedLookup; ?>?autoPlay=<?php echo $this->autoplay; ?>" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>	
                           </div>
                         </div>
                         <?php
