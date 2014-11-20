@@ -343,25 +343,7 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
                 
 
 	}
-        
-        /**
-	 * Parse the source to extract the media.
-	 *
-	 * @access  protected
-	 * @param   string     $url  The media url.
-         * @return  string     The ID.
-	 */         
-        protected function parse($url)
-        {
-                // Dailymotion url
-                preg_match('#http://www.dailymotion.com/video/([A-Za-z0-9]+)#s', $url, $matches);
-                if(isset($matches[1])) 
-                {
-                        return $matches[1];                       
-                }
-		return false;  
-        }
-        
+
         /**
 	 * Method to construct the direct display location for the media.
 	 *
@@ -416,5 +398,23 @@ class plgHwdmediashareRemote_dailymotioncom extends hwdMediaShareRemote
 	public function getDirectDisplayType($item)
 	{
                 return $this->mediaType;
+        } 
+        
+        /**
+	 * Parse the source URL to extract the media ID.
+	 *
+	 * @access  public
+	 * @param   string  $url  The media url.
+         * @return  string  The ID.
+	 */         
+        public function parse($url)
+        {
+                // Dailymotion url
+                preg_match('#http://www.dailymotion.com/video/([A-Za-z0-9]+)#s', $url, $matches);
+                if(isset($matches[1])) 
+                {
+                        return $matches[1];                       
+                }
+		return false;  
         } 
 }
