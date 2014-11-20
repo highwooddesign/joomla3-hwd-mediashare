@@ -232,7 +232,7 @@ class plgHwdmediashareRemote_videofoxnewscom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme() .'://' . parse_url($embedLookup, PHP_URL_HOST) . parse_url($embedLookup, PHP_URL_PATH) . '?' . parse_url($embedLookup, PHP_URL_QUERY); ?>" frameborder="0" allowfullscreen></iframe>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme() .'://' . parse_url($embedLookup, PHP_URL_HOST) . parse_url($embedLookup, PHP_URL_PATH) . '?' . parse_url($embedLookup, PHP_URL_QUERY); ?>" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>
                           </div>
                         </div>
                         <?php
