@@ -232,7 +232,7 @@ class plgHwdmediashareRemote_myspacecom extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo $embedLookup; ?>" frameborder="0" allowtransparency="true" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe><p><a href="https://myspace.com/kenna/video/kenna-relations-lyric-video-official-/109416687">KENNA "RELATIONS" Lyric Video (OFFICIAL)</a> from <a href="https://myspace.com/Kenna">KENNA</a> on <a href="https://myspace.com">Myspace</a>.</p>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo $embedLookup; ?>" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe><p><a href="https://myspace.com/kenna/video/kenna-relations-lyric-video-official-/109416687">KENNA "RELATIONS" Lyric Video (OFFICIAL)</a> from <a href="https://myspace.com/Kenna">KENNA</a> on <a href="https://myspace.com">Myspace</a>.</p>
                           </div>
                         </div>
                         <?php
