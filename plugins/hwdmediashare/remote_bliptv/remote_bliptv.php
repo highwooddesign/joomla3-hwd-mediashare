@@ -335,7 +335,7 @@ class plgHwdmediashareRemote_bliptv extends hwdMediaShareRemote
                         <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
                           <div class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
                           <div class="media-content">
-                            <iframe src="<?php echo JURI::getInstance()->getScheme(); ?>://blip.tv/play/<?php echo $embedLookup; ?>.x?p=1" width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" frameborder="0" allowfullscreen></iframe>
+                            <iframe width="<?php echo $this->width; ?>" height="<?php echo $this->height; ?>" src="<?php echo JURI::getInstance()->getScheme(); ?>://blip.tv/play/<?php echo $embedLookup; ?>.x?p=1" scrolling="no" frameborder="0" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" allowtransparency="true"></iframe>
                           </div>
                         </div>
                         <?php
