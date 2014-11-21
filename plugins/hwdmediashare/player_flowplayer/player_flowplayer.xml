@@ -47,7 +47,6 @@
                                         <option value="minimalist">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_MINIMALISTSKIN</option>
                                         <option value="functional">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_FUNCTIONALSKIN</option>
                                         <option value="playful">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_PLAYFULSKIN</option>
-                                        <option value="custom">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_CUSTOMSKIN</option>
                                 </field>
 			</fieldset>
 			<fieldset 
