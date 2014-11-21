@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="hwdmediashare" version="3.0" method="upgrade">
+	<name>plg_hwdmediashare_player_flowplayer</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version> 
+	<description>PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="player_flowplayer">player_flowplayer.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_flowplayer.ini</language>
+		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_flowplayer.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">   
+                                <field
+					name="hosting"
+					type="list"
+					label="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_HOSTING_LABEL"
+					description="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_HOSTING_DESC"
+					default="self"
+                                >
+					<option value="cloud">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_CLOUD_HOSTING</option>
+					<option value="self">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_SELF_HOSTING</option>
+				</field>                               
+				<field
+					name="licensekey"
+					type="text"
+					label="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_LICENSEKEY_LABEL"
+					description="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_LICENSEKEY_DESC"
+					default=""
+                                />   
+                                <field
+                                        name="skin"
+                                        type="list"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_SKIN_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_SKIN_DESC"
+                                        default="minimalist"
+                                >
+                                        <option value="minimalist">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_MINIMALISTSKIN</option>
+                                        <option value="functional">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_FUNCTIONALSKIN</option>
+                                        <option value="playful">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_PLAYFULSKIN</option>
+                                        <option value="custom">PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_OPTION_CUSTOMSKIN</option>
+                                </field>
+			</fieldset>
+			<fieldset 
+                                name="branding"
+				label="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELDSET_BRANDING_LABEL"
+                                description="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELDSET_BRANDING_DESC"
+			>
+                                <field
+                                        name="logofile"
+                                        type="media"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_LOGO_FILE_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_FLOWPLAYER_FIELD_LOGO_FILE_DESC"
+                                        default=""
+                                />                            
+			</fieldset>
+		</fields>
+	</config>
+</extension>
+
+
+
