@@ -113,7 +113,7 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -139,10 +139,11 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
     jwplayer("media-jwplayer-<?php echo $item->id; ?>").setup({
         // Sources.
         sources: [
-            <?php echo ($sources->get('mp4') ?  "{ 'file': '".$sources->get('mp4')->url."', type: 'mp4', label: 'HD MP4' },    // H.264 version\n" : ''); ?>
-            <?php echo ($sources->get('webm') ? "{ 'file': '".$sources->get('webm')->url."', type: 'webm', label: 'HD WEBM' }, // WebM version\n" : ''); ?>
-            <?php echo ($sources->get('ogg') ?  "{ 'file': '".$sources->get('ogg')->url."', type: 'vorbis', label: 'HD OGG' }, // Ogg Theora version\n" : ''); ?>
-            <?php echo ($sources->get('flv') ?  "{ 'file': '".$sources->get('flv')->url."', type: 'flv', label: 'HD FLV' }     // Flash version\n" : ''); ?>
+            { 'file': 'dummy', type: 'none' } // Dummy source to prevent trailing commas.
+            <?php echo ($sources->get('mp4') ?  ",{ 'file': '".$sources->get('mp4')->url."', type: 'mp4', label: 'HD MP4' }    // H.264 version\n" : ''); ?>
+            <?php echo ($sources->get('webm') ? ",{ 'file': '".$sources->get('webm')->url."', type: 'webm', label: 'HD WEBM' } // WebM version\n" : ''); ?>
+            <?php echo ($sources->get('ogg') ?  ",{ 'file': '".$sources->get('ogg')->url."', type: 'vorbis', label: 'HD OGG' } // Ogg Theora version\n" : ''); ?>
+            <?php echo ($sources->get('flv') ?  ",{ 'file': '".$sources->get('flv')->url."', type: 'flv', label: 'HD FLV' }    // Flash version\n" : ''); ?>
         ],
         // Basic options.
         /** aspectratio: "16:9", // We don't set this because code from HWD manages the responsiveness of the player. */
@@ -164,6 +165,12 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
             margin: '<?php echo $params->get('logomargin'); ?>',
             position: '<?php echo $params->get('logoposition'); ?>'
         },
+        <?php if ($params->get('videoadsclient') != '') : ?>
+        advertising: {
+          client: '<?php echo $params->get('videoadsclient', 'vast'); ?>',
+          tag: '<?php echo $params->get('videoadstag', ''); ?>'
+        },
+        <?php endif; ?>                
     });
 </script>
                 <?php
@@ -195,7 +202,7 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -239,8 +246,9 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
     jwplayer("media-jwplayer-<?php echo $item->id; ?>").setup({
         // Sources.
         sources: [
-            <?php echo ($sources->get('mp3') ? "{ 'file': '".$sources->get('mp3')->url."', type: 'mp3', label: 'MP3' }, // MP3 version\n" : ''); ?>
-            <?php echo ($sources->get('ogg') ? "{ 'file': '".$sources->get('ogg')->url."', type: 'ogg', label: 'OGG' }, // OGG version\n" : ''); ?>
+            { 'file': 'dummy', type: 'none' } // Dummy source to prevent trailing commas.
+            <?php echo ($sources->get('mp3') ? ",{ 'file': '".$sources->get('mp3')->url."', type: 'mp3', label: 'MP3' } // MP3 version\n" : ''); ?>
+            <?php echo ($sources->get('ogg') ? ",{ 'file': '".$sources->get('ogg')->url."', type: 'ogg', label: 'OGG' } // OGG version\n" : ''); ?>
         ],
         // Basic options.
         /** aspectratio: "16:9", // We don't set this because code from HWD manages the responsiveness of the player. */
@@ -293,7 +301,7 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -353,6 +361,12 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
             margin: '<?php echo $params->get('logomargin'); ?>',
             position: '<?php echo $params->get('logoposition'); ?>'
         },
+        <?php if ($params->get('videoadsclient') != '') : ?>
+        advertising: {
+          client: '<?php echo $params->get('videoadsclient', 'vast'); ?>',
+          tag: '<?php echo $params->get('videoadstag', ''); ?>'
+        },
+        <?php endif; ?>   
     });
 </script>
                 <?php
@@ -384,7 +398,7 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
 		
                 // Load the language file.
                 $lang = JFactory::getLanguage();
-                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_SITE . '/administrator');
+                $lang->load('plg_hwdmediashare_player_jwplayer', JPATH_ADMINISTRATOR, $lang->getTag());
 
                 if (!$plugin)
                 {
@@ -429,6 +443,12 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
             margin: '<?php echo $params->get('logomargin'); ?>',
             position: '<?php echo $params->get('logoposition'); ?>'
         },
+        <?php if ($params->get('videoadsclient') != '') : ?>
+        advertising: {
+          client: '<?php echo $params->get('videoadsclient', 'vast'); ?>',
+          tag: '<?php echo $params->get('videoadstag', ''); ?>'
+        },
+        <?php endif; ?>   
     });
 </script>
                 <?php

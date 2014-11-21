@@ -63,9 +63,9 @@
 				</field> 
 			</fieldset>                            
 			<fieldset 
-                                name="logo"
-				label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_LOGO_LABEL"
-                                description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_LOGO_DESC"
+                                name="branding"
+				label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_BRANDING_LABEL"
+                                description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_BRANDING_DESC"
 			>
                                 <field
                                         name="logofile"
@@ -125,7 +125,31 @@
                                         description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_ABOUTLINK_DESC"
                                         default=""
                                 />
-			</fieldset>                        
+			</fieldset>                            
+			<fieldset 
+                                name="advertising"
+				label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_ADVERTISING_LABEL"
+                                description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_ADVERTISINGS_DESC"
+			>      
+                                <field
+                                        name="videoadsclient"
+                                        type="list"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_VIDEOADS_CLIENT_LABEL"
+                                        description="PLG_CONTENT_HWDMEDIASHARE_PLAYER_JWPLAYER_VIDEOADS_CLIENT_DESC"
+                                        default=""
+                                >
+                                        <option value="">JNO</option>
+                                        <option value="vast">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_VASTVPAID</option>
+                                        <option value="googima">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_GOOGLEIMA</option>
+                                </field> 
+                                <field
+                                        name="videoadstag"
+                                        type="text"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_VIDEOADS_TAG_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_VIDEOADS_TAG_DESC"
+                                        default=""
+                                />
+			</fieldset>                                                                                        
 		</fields>
 	</config>
 </extension>
