@@ -233,7 +233,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 $model = hwdMediaShareRtmp::getInstance();
 
                 // Process the remote stream.
-                if ($model->addRtmp($upload))
+                if ($model->addRtmp())
                 {
                         $this->setMessage(JText::_('COM_HWDMS_SUCCESSFULLY_ADDED_RTMP_STREAM'));
                         $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_item->id, false));                                              
