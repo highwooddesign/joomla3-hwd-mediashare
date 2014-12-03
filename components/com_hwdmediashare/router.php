@@ -25,11 +25,17 @@ class hwdMediaShareRouter extends JComponentRouterBase
                 $db = JFactory::getDbo();            
                 $segments = array();
 
+                // This router is executed independently, so we need to register our library factory file.
+                JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+                
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
                 // Get a menu item based on Itemid or currently active.
                 $app = JFactory::getApplication();
                 $menu = $app->getMenu();
-                $params = JComponentHelper::getParams('com_hwdmediashare');
-                $advanced = $params->get('sef_advanced_link', 1);
+                $advanced = $config->get('sef_advanced', 0);
 
                 // We need a menu item.  Either the one specified in the query, or the current active one if none specified.
                 if (empty($query['Itemid']))
@@ -74,9 +80,9 @@ class hwdMediaShareRouter extends JComponentRouterBase
                         }
                 }
 
-                $listViews = array('albums', 'categories', 'groups', 'media', 'playlists', 'users');
-                $itemViews = array('album', 'category', 'group', 'mediaitem', 'playlist', 'user');
-                $editViews = array('albumform', 'categoryform', 'groupform', 'mediaform', 'playlistform', 'userform');
+                $listViews = array('albums', 'categories', 'channels', 'groups', 'media', 'playlists');
+                $itemViews = array('album', 'category', 'channel', 'group', 'mediaitem', 'playlist');
+                $editViews = array('albumform', 'categoryform', 'channelform', 'groupform', 'mediaform', 'playlistform');
 
                 if(in_array($view, $listViews))
                 {
@@ -93,7 +99,7 @@ class hwdMediaShareRouter extends JComponentRouterBase
                          || ($menuItem->query['view'] == 'groups' && $view == 'group')
                          || ($menuItem->query['view'] == 'media' && $view == 'mediaitem')
                          || ($menuItem->query['view'] == 'playlists' && $view == 'playlist')
-                         || ($menuItem->query['view'] == 'users' && $view == 'user')))
+                         || ($menuItem->query['view'] == 'channels' && $view == 'channel')))
                         {
                                 unset($query['view']);
                         }
@@ -103,7 +109,7 @@ class hwdMediaShareRouter extends JComponentRouterBase
                          || ($menuItem->query['view'] == 'groups' && $view == 'groupform')
                          || ($menuItem->query['view'] == 'media' && $view == 'mediaform')
                          || ($menuItem->query['view'] == 'playlists' && $view == 'playlistform')
-                         || ($menuItem->query['view'] == 'users' && $view == 'userform')))
+                         || ($menuItem->query['view'] == 'channels' && $view == 'channelform')))
                         {                            
                                 if (isset($query['id']) && $query['id'] > 0)
                                 {
@@ -137,8 +143,8 @@ class hwdMediaShareRouter extends JComponentRouterBase
                             'mediaform' => array('table' => 'hwdms_media', 'view' => 'mediaitem'),
                             'playlist' => array('table' => 'hwdms_playlists', 'view' => 'playlist'),
                             'playlistform' => array('table' => 'hwdms_playlists', 'view' => 'playlist'),
-                            'user' => array('table' => 'hwdms_users', 'view' => 'user'),
-                            'userform' => array('table' => 'hwdms_users', 'view' => 'user')
+                            'channel' => array('table' => 'hwdms_users', 'view' => 'channel'),
+                            'channelform' => array('table' => 'hwdms_users', 'view' => 'channel')
                         );
 
                         if (isset($query['id']))
@@ -241,12 +247,18 @@ class hwdMediaShareRouter extends JComponentRouterBase
                 $db = JFactory::getDbo();            
                 $vars = array();
 
+                // This router is executed independently, so we need to register our library factory file.
+                JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+                
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+                
                 // Get the active menu item.
                 $app = JFactory::getApplication();
                 $menu = $app->getMenu();
                 $item = $menu->getActive();
-                $params = JComponentHelper::getParams('com_hwdmediashare');
-                $advanced = $params->get('sef_advanced_link', 1);
+                $advanced = $config->get('sef_advanced', 0);
 
                 // Count route segments.
                 $count = count($segments);
@@ -287,9 +299,9 @@ class hwdMediaShareRouter extends JComponentRouterBase
                             'search'        => array(),
                             'slideshow'     => array(),
                             'upload'        => array(),
-                            'user'          => array('table' => 'hwdms_users', 'listview' => 'users', 'itemview' => 'user', 'formview' => 'userform'),
-                            'userform'      => array('table' => 'hwdms_users', 'listview' => 'users', 'itemview' => 'user', 'formview' => 'userform'),
-                            'users'          => array('table' => 'hwdms_users', 'listview' => 'users', 'itemview' => 'user', 'formview' => 'userform'),                      
+                            'channel'          => array('table' => 'hwdms_users', 'listview' => 'channels', 'itemview' => 'channel', 'formview' => 'channelform'),
+                            'channelform'      => array('table' => 'hwdms_users', 'listview' => 'channels', 'itemview' => 'channel', 'formview' => 'channelform'),
+                            'channels'          => array('table' => 'hwdms_users', 'listview' => 'channels', 'itemview' => 'channel', 'formview' => 'channelform'),                      
                         );
 
                         if (isset($segments[0]) && isset($segments[1]) && $segments[0] == $this->translate('edit'))
@@ -332,14 +344,17 @@ class hwdMediaShareRouter extends JComponentRouterBase
                                 $vars['view'] = $routing[$item->query['view']]['formview'];
                         }
                         else
-                        {         
+                        {  
                                 if (isset($segments[0]) && isset($segments[1]) && isset($routing[$this->translate($segments[0], true)]))
                                 {
+                                        $view = $this->translate($segments[0], true);   
+                                        $id = $segments[1];
                                         $alias = JApplication::stringURLSafe($segments[1]); 
-                                        $item->query['view'] = $this->translate($segments[0], true);   
                                 }
                                 else
-                                {
+                                {								
+                                        $view = $item->query['view'];
+                                        $id = $segments[0];
                                         $alias = JApplication::stringURLSafe($segments[0]); 
                                 }
                                 
@@ -347,12 +362,12 @@ class hwdMediaShareRouter extends JComponentRouterBase
                                 {
                                         $aquery = $db->getQuery(true)
                                                  ->select('id')
-                                                 ->from('#__' . $routing[$item->query['view']]['table'])
+                                                 ->from('#__' . $routing[$view]['table'])
                                                  ->where('alias = ' . $db->quote($alias));
                                         try
                                         {     
                                                 $db->setQuery($aquery);
-                                                $vars['view'] = $routing[$item->query['view']]['itemview'];
+                                                $vars['view'] = $routing[$view]['itemview'];
                                                 $vars['id'] = (int) $db->loadResult();
                                         }
                                         catch (Exception $e)
@@ -378,18 +393,26 @@ class hwdMediaShareRouter extends JComponentRouterBase
                                         }
                                 }
                                 else
-                                {
-                                        if (strpos($segments[0], ':') === false)
-                                        {                            
-                                                $vars['view'] = $this->translate($segments[0], true);
+                                {	
+                                        if (strpos($id, ':') === false)
+                                        {             
+                                                if ($view == 'channels' && (int) $id > 0)
+                                                {
+                                                        $vars['view'] = $routing[$view]['itemview'];
+                                                        $vars['id'] = (int) $id;                                                       
+                                                }
+                                                else
+                                                {
+                                                        $vars['view'] = $this->translate($view, true);
+                                                }
                                         }
                                         else
                                         {
-                                                list($id, $alias) = explode(':', $segments[0], 2);
-                                                $vars['view'] = $routing[$item->query['view']]['itemview'];
+                                                list($id, $alias) = explode(':', $id, 2);
+                                                $vars['view'] = $routing[$view]['itemview'];
                                                 $vars['id'] = (int) $id;                                                  
                                         }
-                                } 
+                                }
                         }
                 }
 
@@ -452,9 +475,9 @@ class hwdMediaShareRouter extends JComponentRouterBase
                     'search'        => 'search',
                     'slideshow'     => 'slideshow',
                     'upload'        => 'upload',
-                    'user'          => 'user',
-                    'userform'      => 'userform',
-                    'user'          => 'user',                   
+                    'channel'       => 'channel',
+                    'channelform'   => 'channelform',
+                    'channels'      => 'channels',                   
                 );
 
                 if (!$inverse && isset($segments[$string]))
@@ -471,4 +494,26 @@ class hwdMediaShareRouter extends JComponentRouterBase
                 
                 return $string;
         }        
+}
+
+/**
+ * hwdMediaShare router functions
+ *
+ * These functions are proxys for the new router interface
+ * for old SEF extensions.
+ *
+ * @deprecated  4.0  Use Class based routers instead
+ */
+function hwdMediaShareBuildRoute(&$query)
+{
+	$router = new hwdMediaShareRouter;
+
+	return $router->build($query);
+}
+
+function hwdMediaShareParseRoute($segments)
+{
+	$router = new hwdMediaShareRouter;
+
+	return $router->parse($segments);
 }
