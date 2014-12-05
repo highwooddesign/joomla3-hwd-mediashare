@@ -246,6 +246,34 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
 	/**
+	 * Method to process stream import.
+	 *
+	 * @access  public
+         * @return  void
+	 */
+        public function stream()
+        {
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+                // Load HWD library.
+                hwdMediaShareFactory::load('streaming');
+                $model = hwdMediaShareStreaming::getInstance();
+
+                // Process the remote stream.
+                if ($model->addStream())
+                {
+                        $this->setMessage(JText::_('COM_HWDMS_SUCCESSFULLY_ADDED_STREAM'));
+                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $model->_item->id, false));                                              
+                }
+                else
+                {
+                        $this->setMessage($model->getError());
+                        $this->setRedirect($this->getReturnPage());
+                }
+        }
+        
+	/**
 	 * Method to process bulk import from server directory.
 	 *
 	 * @access  public
