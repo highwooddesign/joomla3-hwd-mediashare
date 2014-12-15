@@ -233,7 +233,8 @@ $.fn.flowplayer = function(opts, callback) {
 
             if (video.src) {
                var e = $.Event("load");
-               root.trigger(e, [api, video, engine]);
+               // HWD 20121212 DMH
+               //root.trigger(e, [api, video, engine]);
 
                if (!e.isDefaultPrevented()) {
                   engine.load(video);
@@ -1562,12 +1563,14 @@ flowplayer(function(api, root) {
       origRatio = ratio.css("paddingTop"),
 
       // sliders
-      timeline = find("timeline").slider2(api.rtl),
+      // HWD 20130704 DMH http://www.adylevy.com/index.php/2011/12/28/jquery-ui-slider-hides-when-slides-event-name-collision-with-mootools/
+      timeline = find("timeline").slider2().prop("slide",null),
       timelineApi = timeline.data("api"),
 
       volume = find("volume"),
       fullscreen = find("fullscreen"),
-      volumeSlider = find("volumeslider").slider2(api.rtl),
+      // HWD 20130704 DMH http://www.adylevy.com/index.php/2011/12/28/jquery-ui-slider-hides-when-slides-event-name-collision-with-mootools/
+      volumeSlider = find("volumeslider").slider2().prop("slide",null),
       volumeApi = volumeSlider.data("api"),
       noToggle = root.is(".fixed-controls, .no-toggle");
 
