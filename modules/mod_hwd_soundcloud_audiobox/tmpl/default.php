@@ -10,4 +10,4 @@
 
 defined('_JEXEC') or die;
 ?>
-<iframe width="100%" height="<?php echo $helper->height; ?>" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=<?php echo urlencode($helper->item); ?>&amp;color=<?php echo $helper->params->get('colour'); ?>&amp;auto_play=<?php echo $helper->params->get('autoplay'); ?>&amp;show_artwork=<?php echo $helper->params->get('artwork'); ?>"></iframe>
+<iframe width="100%" height="<?php echo $helper->height; ?>" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=<?php echo urlencode($helper->item); ?>&amp;color=<?php echo $params->get('colour'); ?>&amp;auto_play=<?php echo $params->get('autoplay'); ?>&amp;show_artwork=<?php echo $params->get('artwork'); ?>"></iframe>
