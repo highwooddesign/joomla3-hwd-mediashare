@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 ?>
-<div class="row mod_hwd_youtube_videobox_default">
+<div class="row hwd-strapped3 hwd-youtube-videobox-default">
 <?php foreach ($helper->items as $id => $item) : ?>
   <!-- Clear the columns if their content doesn't match in height -->
   <?php if ($id % 1 == 0) :?><div class="clearfix visible-xs"></div><?php endif; ?>
