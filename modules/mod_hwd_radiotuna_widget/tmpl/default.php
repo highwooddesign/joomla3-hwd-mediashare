@@ -12,4 +12,4 @@ defined('_JEXEC') or die;
 
 ?>
 <a id="onlineRadioLink" href="http://radiotuna.com/">online radio</a>
-<script type="text/javascript" src="http://radiotuna.com/OnlineRadioPlayer/EmbedRadio?playerParams=<?php echo urlencode($helper->getCode()); ?>&width=<?php echo $helper->params->get('playerSize', 240); ?>&height=<?php echo $helper->params->get('playerHeight', 292) ?>"></script>
+<script type="text/javascript" src="http://radiotuna.com/OnlineRadioPlayer/EmbedRadio?playerParams=<?php echo urlencode($helper->getCode()); ?>&width=<?php echo $params->get('playerSize', 240); ?>&height=<?php echo $params->get('playerHeight', 292) ?>"></script>
