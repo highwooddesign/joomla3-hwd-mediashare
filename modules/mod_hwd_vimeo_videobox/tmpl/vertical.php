@@ -10,7 +10,7 @@
 
 defined('_JEXEC') or die;
 ?>
-<div class="row mod_hwd_vimeo_videobox_vertical">
+<div class="row hwd-strapped3 hwd-vimeo-videobox-vertical">
 <?php foreach ($helper->items as $id => $item) : ?>
   <!-- Clear the columns if their content doesn't match in height -->
   <div class="clearfix visible-xs"></div>
@@ -39,7 +39,7 @@ defined('_JEXEC') or die;
     <?php endif; ?>
     <div class="clear"></div>
     <?php if ($params->get('show_date', 1)):?><div class="small pull-right"><?php echo JHtml::_('date.relative', $item->uploadDate); ?></div><?php endif; ?>
-    <?php if ($params->get('show_views', 1)):?><div class="small"><?php echo JText::sprintf('MOD_HWD_VIMEO_VIDEOBOX_X_VIEWS', number_format($item->views)); ?></div><?php endif; ?>
+    <?php if ($params->get('show_views', 1) && $item->views):?><div class="small"><?php echo JText::sprintf('MOD_HWD_VIMEO_VIDEOBOX_X_VIEWS', number_format($item->views)); ?></div><?php endif; ?>
  </div>
  <?php endforeach; ?>
 </div>

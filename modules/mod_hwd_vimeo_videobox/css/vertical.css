@@ -2,19 +2,19 @@
 /* CSS Document © Copyright 2011, All rights reserved
    This sheet loads the HWD styles */
 /**********************************************************************************************/
-.row.mod_hwd_vimeo_videobox_vertical {
+.row.hwd-vimeo-videobox-vertical {
         margin-right:-15px!important;
         margin-left:-15px!important;
         max-width:500px;
 }
-.mod_hwd_vimeo_videobox_vertical {
+.hwd-vimeo-videobox-vertical {
     	position:relative;
 	margin-bottom:20px;
 }
-.mod_hwd_vimeo_videobox_vertical .clear {
+.hwd-vimeo-videobox-vertical .clear {
 	clear:both;
 }
-.mod_hwd_vimeo_videobox_vertical .media-duration {
+.hwd-vimeo-videobox-vertical .media-duration {
 	position:absolute;
 	right:2px;
 	top:2px;
@@ -27,14 +27,14 @@
         z-index:100;
         line-height:120%;        
 }
-.mod_hwd_vimeo_videobox_vertical .media-item a {
+.hwd-vimeo-videobox-vertical .media-item a {
         line-height:0px; /* Override to keep duration location correct */
 }
-.mod_hwd_vimeo_videobox_vertical .media-item {
+.hwd-vimeo-videobox-vertical .media-item {
         overflow:hidden;
 	position:relative;
 }
-.mod_hwd_vimeo_videobox_vertical .media-item img.media-thumb {
+.hwd-vimeo-videobox-vertical .media-item img.media-thumb {
         position:absolute;
         top:0;
         bottom:0;
@@ -45,12 +45,12 @@
 	margin:0;
 	padding:0;        
 }
-.mod_hwd_vimeo_videobox_vertical .media-aspect {
+.hwd-vimeo-videobox-vertical .media-aspect {
         padding-top:56%; /* You can modify the thumbnail aspect ratio here */
         background:#000;
         z-index:1;
 }
-.mod_hwd_vimeo_videobox_vertical .media-link-span {
+.hwd-vimeo-videobox-vertical span.media-link-span {
         background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt 0pt!important;
         cursor:pointer;
         color:#000000;
@@ -69,14 +69,14 @@
         z-index:2;
         margin-left: none; /* Prevent .row-fluid [class*="span"] */  
 }
-.mod_hwd_vimeo_videobox_vertical .media-link-span {
+.hwd-vimeo-videobox-vertical span.media-link-span {
         margin-left:-25px;
         margin-top:-20px;
 }
-.mod_hwd_vimeo_videobox_vertical .media-link-span:hover {
+.hwd-vimeo-videobox-vertical span.media-link-span:hover {
         background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt -70px!important;
 }
-.mod_hwd_vimeo_videobox_vertical div.title {
+.hwd-vimeo-videobox-vertical div.title {
         margin-bottom:6px;
         margin-left:0;
         margin-right:0;
@@ -86,6 +86,6 @@
         font-size:15px;
         overflow:hidden;
 }
-.mod_hwd_vimeo_videobox_vertical .cell {
+.hwd-vimeo-videobox-vertical .cell {
         margin-bottom:10px;
 }
