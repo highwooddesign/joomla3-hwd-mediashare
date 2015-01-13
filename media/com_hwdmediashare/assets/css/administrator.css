@@ -33,29 +33,24 @@
         height:50px;    
 }
 /* Media type icons */
-#mediaList [data-icon]:before {
-	font-family: 'HwdIcoMoon', 'IcoMoon';
-	content: attr(data-icon);
-	speak: none;
+@font-face {
+	font-family: 'IcoMoon';
+	src: url('../../../../media/jui/fonts/IcoMoon.eot');
+	src: url('../../../../media/jui/fonts/IcoMoon.eot?#iefix') format('embedded-opentype'), url('../../../../media/jui/fonts/IcoMoon.woff') format('woff'), url('../../../../media/jui/fonts/IcoMoon.ttf') format('truetype'), url('../../../../media/jui/fonts/IcoMoon.svg#IcoMoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
-#mediaList [class^="icon-"], 
-#mediaList [class*=" icon-"] {
-	display: inline-block;
-	width: 14px;
-	height: 14px;
-	*margin-right: .3em;
-	line-height: 14px;
-        background:none!important; /* Prevent use of glyphicons background image */
+@font-face {
+	font-family: 'HwdIcoMoon';
+	src: url('../fonts/icomoon.eot');
+	src: url('../fonts/icomoon.eot?#iefix') format('embedded-opentype'), url('../fonts/icomoon.woff') format('woff'), url('../fonts/icomoon.ttf') format('truetype'), url('../fonts/icomoon.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
 }
-#mediaList [class^="icon-"]:before,
-#mediaList [class*=" icon-"]:before {
+#mediaList [class^="icon-"]:before, #mediaList [class*=" icon-"]:before {
 	font-family: 'HwdIcoMoon', 'IcoMoon';
 	font-style: normal;
 	speak: none;
-}
-#mediaList [class^="icon-"].disabled,
-#mediaList [class*=" icon-"].disabled {
-	font-weight: normal;
 }
 #mediaList .icon-audio:before {
 	content: "\e60f";
@@ -89,4 +84,41 @@
 	height:24px;
 	line-height:24px;
         margin-right:5px;
+}
+/* Bulk import textarea */
+div.controls.media-textarea {
+        display:inline-block;
+        position:relative;
+}
+div.controls.media-textarea textarea {
+        margin-bottom:39px;
+        padding-bottom:5px;
+        resize:none;
+        -webkit-border-bottom-right-radius: 0;
+            -moz-border-radius-bottomright: 0;
+                border-bottom-right-radius: 0;
+        -webkit-border-bottom-left-radius: 0;
+            -moz-border-radius-bottomleft: 0;
+                border-bottom-left-radius: 0;
+
+}
+div.controls.media-textarea button{
+        position:absolute;
+        bottom:0;
+        right:0;
+        width:100%;
+        height:40px;
+        -webkit-border-top-right-radius: 0;
+            -moz-border-radius-topright: 0;
+                border-top-right-radius: 0;
+        -webkit-border-top-left-radius: 0;
+            -moz-border-radius-topleft: 0;
+                border-top-left-radius: 0;
+}
+div.stream_fields .control-group {
+        display:inline-block;
+        padding-right:10px;
+}
+div.stream_fields .control-group input {
+        margin-bottom:0;
 }
