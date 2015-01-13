@@ -6,8 +6,8 @@
 	display:none !important;
 }
 /* Class .hover simulates the flash interactions */
-a:hover, a.hover {
-	color:#ffffff;
+#hwd-upload-status a:hover, #hwd-upload-status a.hover {
+	/* color:#ffffff; */
 }
 #hwd-upload-status {
 	/* padding:10px 15px; */
@@ -20,16 +20,22 @@ a:hover, a.hover {
 	padding:0;
 	margin:10px 0 10px 0;
 }
-#hwd-upload-status .progress {
-	background:url(../images/ajaxupload/progress-bar/progress.gif) no-repeat;
-	background-position:+50% 0;
-	margin-right:0.5em;
-	vertical-align:middle;
-        margin-bottom:0;
+/* Progress bar */
+#hwd-upload-status .btn-group {
+        margin-bottom:20px;
+}
+#hwd-upload-status .hwd-upload-progress {
+        background:#ccc; 
+        border:0; 
+        height:20px; 
+        width:100%;
+}
+#hwd-upload-status .hwd-upload-progress div { 
+        background:#559900; 
+        height:20px;
 }
 #hwd-upload-status .overall-title,
 #hwd-upload-status .current-title {
-	font-weight:bold;
 	display:block;
 	margin-bottom:5px;
 	margin-top:5px;
