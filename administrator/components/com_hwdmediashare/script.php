@@ -459,6 +459,26 @@ class com_hwdMediaShareInstallerScript
                 $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/tags.php';
                 $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/user.php';
                 $files[]   = JPATH_SITE.'/components/com_hwdmediashare/models/userform.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/albums.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/albums_list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/default_overview.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/albums.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/favourites.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/favourites_list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/groups.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/groups_list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/media.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/media_list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/playlists.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/playlists_list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/subscriptions.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/account/tmpl/subscriptions_list.php';
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/album/tmpl/default_details.php';     
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/album/tmpl/default_gallery.php';    
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/album/tmpl/default_list.php';    
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/albummedia/tmpl/default_list.php';    
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/albums/tmpl/default_details.php';    
+                $files[]   = JPATH_SITE.'/components/com_hwdmediashare/views/albums/tmpl/default_list.php';    
                 $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/activities';
                 $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/activity';
                 $folders[] = JPATH_SITE.'/components/com_hwdmediashare/views/activityform';
@@ -516,16 +536,22 @@ class com_hwdMediaShareInstallerScript
 	}   
         
         /**
-	 * Method to add new content types to Joomla only when they have not alreayd been added.
+	 * Method to add new content types to Joomla only when they have not already been added.
 	 *
 	 * @access	public
          * @return      void
 	 */
 	public function addContentTypes()
 	{
+                // Initialise variables.
+                $app = JFactory::getApplication();            
                 $db = JFactory::getDbo();
-                        
-                // com_hwdmediashare.media
+                
+                /****
+                /**** Content Type: 'com_hwdmediashare.media'
+                /****
+                /**********************************************/
+
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
@@ -533,33 +559,56 @@ class com_hwdMediaShareInstallerScript
                 try
                 {
                         $db->setQuery($query);
-                        $typeMedia = $db->loadResult();                        
+                        $contentTypeMedia = $db->loadResult();                        
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
-			return false;                          
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                             
                 }
                 
-                if (!$typeMedia)
+                if (!$contentTypeMedia)
                 {
-$query = <<<SQL
-INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media', 'com_hwdmediashare.media', '{"special":{"dbtable":"#__hwdms_media","key":"id","type":"Media","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
-SQL;
+                        $object                          = new stdClass();
+                        $object->type_title              = 'Media';
+                        $object->type_alias              = 'com_hwdmediashare.media';
+                        $object->table                   = '{"special":{"dbtable":"#__hwdms_media","key":"id","type":"Media","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
+                        $object->rules                   = '';
+                        $object->field_mappings          = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description","core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access","core_params":"params","core_featured":"null","core_metadata":"metadata","core_language":"language","core_images":"images","core_urls":"link","core_version":"version","core_ordering":"ordering","core_metakey":"metakey","core_metadesc":"metadesc","core_catid":"catid","core_xreference":"null","asset_id":"null"}}';
+                        $object->router                  = 'hwdMediaShareHelperRoute::getMediaItemRoute';
+                        $object->content_history_options = '';
+
                         try
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                $result = $db->insertObject('#__content_types', $object);
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;  
+                                $app->enqueueMessage($e->getMessage());
+                                return false;   
                         }
                 }
 
-                // com_hwdmediashare.album
+                // Check router value.
+                $fields = array($db->quoteName('router') . ' = ' . $db->quote('hwdMediaShareHelperRoute::getMediaItemRoute'));
+                $conditions = array($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.media'));
+                $query = $db->getQuery(true)->update($db->quoteName('#__content_types'))->set($fields)->where($conditions);
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                               
+                }
+                
+                /****
+                /**** Content Type: 'com_hwdmediashare.album'
+                /****
+                /**********************************************/
+                
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
@@ -567,33 +616,56 @@ SQL;
                 try
                 {
                         $db->setQuery($query);
-                        $typeMedia = $db->loadResult();                        
+                        $contentTypeMedia = $db->loadResult();                        
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
-			return false;                          
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                            
                 }
                 
-                if (!$typeMedia)
+                if (!$contentTypeMedia)
                 {
-$query = <<<SQL
-INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media Album', 'com_hwdmediashare.album', '{"special":{"dbtable":"#__hwdms_albums","key":"id","type":"Album","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
-SQL;
+                        $object                          = new stdClass();
+                        $object->type_title              = 'Media Album';
+                        $object->type_alias              = 'com_hwdmediashare.album';
+                        $object->table                   = '{"special":{"dbtable":"#__hwdms_albums","key":"id","type":"Album","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
+                        $object->rules                   = '';
+                        $object->field_mappings          = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description","core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access","core_params":"params","core_featured":"null","core_metadata":"metadata","core_language":"language","core_images":"images","core_urls":"link","core_version":"version","core_ordering":"ordering","core_metakey":"metakey","core_metadesc":"metadesc","core_catid":"catid","core_xreference":"null","asset_id":"null"}}';
+                        $object->router                  = 'hwdMediaShareHelperRoute::getAlbumRoute';
+                        $object->content_history_options = '';
+
                         try
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                $result = $db->insertObject('#__content_types', $object);
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;  
+                                $app->enqueueMessage($e->getMessage());
+                                return false;    
                         }
                 }
                 
-                // com_hwdmediashare.category
+                // Check router value.
+                $fields = array($db->quoteName('router') . ' = ' . $db->quote('hwdMediaShareHelperRoute::getAlbumRoute'));
+                $conditions = array($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.album'));
+                $query = $db->getQuery(true)->update($db->quoteName('#__content_types'))->set($fields)->where($conditions);
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                             
+                }
+                
+                /****
+                /**** Content Type: 'com_hwdmediashare.category'
+                /****
+                /**********************************************/
+                
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
@@ -601,33 +673,56 @@ SQL;
                 try
                 {
                         $db->setQuery($query);
-                        $typeMedia = $db->loadResult();                        
+                        $contentTypeCategory = $db->loadResult();                        
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
-			return false;                          
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                     
                 }
                 
-                if (!$typeMedia)
+                if (!$contentTypeCategory)
                 {
-$query = <<<SQL
-INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media Category', 'com_hwdmediashare.category', '{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__core_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"null", "core_urls":"null", "core_version":"version", "core_ordering":"null", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"parent_id", "core_xreference":"null", "asset_id":"asset_id"}, "special": {"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}', 'ContentHelperRoute::getCategoryRoute', '');
-SQL;
+                        $object                          = new stdClass();
+                        $object->type_title              = 'Media Category';
+                        $object->type_alias              = 'com_hwdmediashare.category';
+                        $object->table                   = '{"special":{"dbtable":"#__categories","key":"id","type":"Category","prefix":"JTable","config":"array()"},"common":{"dbtable":"#__core_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
+                        $object->rules                   = '';
+                        $object->field_mappings          = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created_time","core_modified_time":"modified_time","core_body":"description", "core_hits":"hits","core_publish_up":"null","core_publish_down":"null","core_access":"access","core_params":"params","core_featured":"null","core_metadata":"metadata","core_language":"language","core_images":"null","core_urls":"null","core_version":"version","core_ordering":"null","core_metakey":"metakey","core_metadesc":"metadesc","core_catid":"parent_id","core_xreference":"null","asset_id":"asset_id"},"special":{"parent_id":"parent_id","lft":"lft","rgt":"rgt","level":"level","path":"path","extension":"extension","note":"note"}}';
+                        $object->router                  = 'hwdMediaShareHelperRoute::getCategoryRoute';
+                        $object->content_history_options = '';
+
                         try
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                $result = $db->insertObject('#__content_types', $object);
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;  
+                                $app->enqueueMessage($e->getMessage());
+                                return false;    
                         }
                 }
                 
-                // com_hwdmediashare.group
+                // Check router value.
+                $fields = array($db->quoteName('router') . ' = ' . $db->quote('hwdMediaShareHelperRoute::getCategoryRoute'));
+                $conditions = array($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.category'));
+                $query = $db->getQuery(true)->update($db->quoteName('#__content_types'))->set($fields)->where($conditions);
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                             
+                }
+
+                /****
+                /**** Content Type: 'com_hwdmediashare.group'
+                /****
+                /**********************************************/
+
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
@@ -635,33 +730,56 @@ SQL;
                 try
                 {
                         $db->setQuery($query);
-                        $typeMedia = $db->loadResult();                        
+                        $contentTypeGroup = $db->loadResult();                        
                 }
                 catch (RuntimeException $e)
                 {
-			JError::raiseError(500, $e->getMessage());
-			return false;                         
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                         
                 }
                 
-                if (!$typeMedia)
+                if (!$contentTypeGroup)
                 {
-$query = <<<SQL
-INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media Group', 'com_hwdmediashare.group', '{"special":{"dbtable":"#__hwdms_groups","key":"id","type":"Group","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
-SQL;
+                        $object                          = new stdClass();
+                        $object->type_title              = 'Media Group';
+                        $object->type_alias              = 'com_hwdmediashare.group';
+                        $object->table                   = '{"special":{"dbtable":"#__hwdms_groups","key":"id","type":"Group","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
+                        $object->rules                   = '';
+                        $object->field_mappings          = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description","core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access","core_params":"params","core_featured":"null","core_metadata":"metadata","core_language":"language","core_images":"images","core_urls":"link","core_version":"version","core_ordering":"ordering","core_metakey":"metakey","core_metadesc":"metadesc","core_catid":"catid","core_xreference":"null","asset_id":"null"}}';
+                        $object->router                  = 'hwdMediaShareHelperRoute::getGroupRoute';
+                        $object->content_history_options = '';
+
                         try
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                $result = $db->insertObject('#__content_types', $object);
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;  
+                                $app->enqueueMessage($e->getMessage());
+                                return false;    
                         }
                 }
                 
-                // com_hwdmediashare.playlist
+                // Check router value.
+                $fields = array($db->quoteName('router') . ' = ' . $db->quote('hwdMediaShareHelperRoute::getGroupRoute'));
+                $conditions = array($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.group'));
+                $query = $db->getQuery(true)->update($db->quoteName('#__content_types'))->set($fields)->where($conditions);
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                             
+                }
+                
+                /****
+                /**** Content Type: 'com_hwdmediashare.playlist'
+                /****
+                /**********************************************/
+                
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
@@ -669,7 +787,7 @@ SQL;
                 try
                 {
                         $db->setQuery($query);
-                        $typeMedia = $db->loadResult();                        
+                        $contentTypePlaylist = $db->loadResult();                        
                 }
                 catch (RuntimeException $e)
                 {
@@ -677,25 +795,48 @@ SQL;
 			return false;                          
                 }
                 
-                if (!$typeMedia)
+                if (!$contentTypePlaylist)
                 {
-$query = <<<SQL
-INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media Playlist', 'com_hwdmediashare.playlist', '{"special":{"dbtable":"#__hwdms_playlists","key":"id","type":"Playlist","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
-SQL;
+                        $object                          = new stdClass();
+                        $object->type_title              = 'Media Playlist';
+                        $object->type_alias              = 'com_hwdmediashare.playlist';
+                        $object->table                   = '{"special":{"dbtable":"#__hwdms_playlists","key":"id","type":"Playlist","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
+                        $object->rules                   = '';
+                        $object->field_mappings          = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description","core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access","core_params":"params","core_featured":"null","core_metadata":"metadata","core_language":"language","core_images":"images","core_urls":"link","core_version":"version","core_ordering":"ordering","core_metakey":"metakey","core_metadesc":"metadesc","core_catid":"catid","core_xreference":"null","asset_id":"null"}}';
+                        $object->router                  = 'hwdMediaShareHelperRoute::getPlaylistRoute';
+                        $object->content_history_options = '';
+
                         try
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                $result = $db->insertObject('#__content_types', $object);
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;  
+                                $app->enqueueMessage($e->getMessage());
+                                return false;    
                         }
                 }
+
+                // Check router value.
+                $fields = array($db->quoteName('router') . ' = ' . $db->quote('hwdMediaShareHelperRoute::getPlaylistRoute'));
+                $conditions = array($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.playlist'));
+                $query = $db->getQuery(true)->update($db->quoteName('#__content_types'))->set($fields)->where($conditions);
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                             
+                }
                 
-                // com_hwdmediashare.channel
+                /****
+                /**** Content Type: 'com_hwdmediashare.channel'
+                /****
+                /**********************************************/
+
                 $query = $db->getQuery(true)
                         ->select('type_id')
                         ->from('#__content_types')
@@ -703,7 +844,7 @@ SQL;
                 try
                 {
                         $db->setQuery($query);
-                        $typeMedia = $db->loadResult();                        
+                        $contentTypeChannel = $db->loadResult();                        
                 }
                 catch (RuntimeException $e)
                 {
@@ -711,34 +852,56 @@ SQL;
 			return false;                       
                 }
                 
-                if (!$typeMedia)
+                if (!$contentTypeChannel)
                 {
-$query = <<<SQL
-INSERT INTO `#__content_types` (`type_title`, `type_alias`, `table`, `rules`, `field_mappings`, `router`, `content_history_options`) VALUES
-('Media User', 'com_hwdmediashare.channel', '{"special":{"dbtable":"#__hwdms_users","key":"id","type":"Channel","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}', '', '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description", "core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access", "core_params":"params", "core_featured":"null", "core_metadata":"metadata", "core_language":"language", "core_images":"images", "core_urls":"link", "core_version":"version", "core_ordering":"ordering", "core_metakey":"metakey", "core_metadesc":"metadesc", "core_catid":"catid", "core_xreference":"null", "asset_id":"null"}}', '', '');
-SQL;
+                        $object                          = new stdClass();
+                        $object->type_title              = 'Media Channel';
+                        $object->type_alias              = 'com_hwdmediashare.channel';
+                        $object->table                   = '{"special":{"dbtable":"#__hwdms_users","key":"id","type":"Channel","prefix":"hwdMediaShareTable","config":"array()"},"common":{"dbtable":"#__ucm_content","key":"ucm_id","type":"Corecontent","prefix":"JTable","config":"array()"}}';
+                        $object->rules                   = '';
+                        $object->field_mappings          = '{"common":{"core_content_item_id":"id","core_title":"title","core_state":"published","core_alias":"alias","core_created_time":"created","core_modified_time":"modified","core_body":"description","core_hits":"null","core_publish_up":"publish_up","core_publish_down":"publish_down","core_access":"access","core_params":"params","core_featured":"null","core_metadata":"metadata","core_language":"language","core_images":"images","core_urls":"link","core_version":"version","core_ordering":"ordering","core_metakey":"metakey","core_metadesc":"metadesc","core_catid":"catid","core_xreference":"null","asset_id":"null"}}';
+                        $object->router                  = 'hwdMediaShareHelperRoute::getChannelRoute';
+                        $object->content_history_options = '';
+
                         try
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                $result = $db->insertObject('#__content_types', $object);
                         }
                         catch (RuntimeException $e)
                         {
-                                JError::raiseError(500, $e->getMessage());
-                                return false;  
+                                $app->enqueueMessage($e->getMessage());
+                                return false;    
                         }
+                }
+
+                // Check router value.
+                $fields = array($db->quoteName('router') . ' = ' . $db->quote('hwdMediaShareHelperRoute::getChannelRoute'));
+                $conditions = array($db->quoteName('type_alias') . ' = ' . $db->quote('com_hwdmediashare.channel'));
+                $query = $db->getQuery(true)->update($db->quoteName('#__content_types'))->set($fields)->where($conditions);
+                try
+                {
+                        $db->setQuery($query);
+                        $db->execute();
+                }
+                catch (RuntimeException $e)
+                {
+                        $app->enqueueMessage($e->getMessage());
+                        return false;                             
                 }
 	}
         
         /**
 	 * Method to check for and fix potential core HWD database problems.
-	 *
+         *
 	 * @access	public
          * @return      void
 	 */
-	function databaseFixes()
+	public function databaseFixes()
 	{
+                // Initialise variables.
+                $app = JFactory::getApplication();            
                 $db = JFactory::getDbo();
+                $tables = $db->getTableList();
 
                 //
                 // Check activity table has been created.
@@ -776,32 +939,64 @@ SQL;
                 //
                 // Check config table.
                 //
-                $columns = $db->getTableColumns('#__hwdms_config'); 
-
-                // Array holding all queries
-                $queries = array();
-
-                // Alter params column.
-                $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' CHANGE ' . $db->quoteName('params') . ' ' . $db->quoteName('params') . ' text;';
-
-                // Add id column.
-                if (!isset($columns['id']))       $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' ADD COLUMN ' . $db->quoteName('id') . ' int(11) NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id);';
-
-                // Add asset_id column.
-                if (!isset($columns['asset_id'])) $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' ADD COLUMN ' . $db->quoteName('asset_id') . ' int(11) unsigned NOT NULL DEFAULT ' . $db->quote('0') . ' AFTER ' . $db->quoteName('id') . ';';
-
-                // Execute the generated queries.
-                foreach ($queries as $query)
+                if (in_array($app->getCfg('dbprefix') . 'hwdms_config', $tables))
                 {
-                        try
+                        $columns = $db->getTableColumns('#__hwdms_config'); 
+
+                        // Array holding all queries
+                        $queries = array();
+
+                        // Alter params column.
+                        $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' CHANGE ' . $db->quoteName('params') . ' ' . $db->quoteName('params') . ' text;';
+
+                        // Add id column.
+                        if (!isset($columns['id']))       $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' ADD COLUMN ' . $db->quoteName('id') . ' int(11) NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id);';
+
+                        // Add asset_id column.
+                        if (!isset($columns['asset_id'])) $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' ADD COLUMN ' . $db->quoteName('asset_id') . ' int(11) unsigned NOT NULL DEFAULT ' . $db->quote('0') . ' AFTER ' . $db->quoteName('id') . ';';
+
+                        // Execute the generated queries.
+                        foreach ($queries as $query)
                         {
-                                $db->setQuery($query);
-                                $db->execute();
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $db->execute();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $app->enqueueMessage($e->getMessage());
+                                        return false;                             
+                                }
                         }
-                        catch (RuntimeException $e)
+                }
+                
+                //
+                // Check users table.
+                //
+                if (in_array($app->getCfg('dbprefix') . 'hwdms_users', $tables))
+                {
+                        $columns = $db->getTableColumns('#__hwdms_users'); 
+
+                        // Array holding all queries
+                        $queries = array();
+
+                        // Add title column.
+                        if (!isset($columns['title']))    $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_users') . ' ADD COLUMN ' . $db->quoteName('title') . ' varchar(255) NOT NULL DEFAULT ' . $db->quote('') . ' AFTER ' . $db->quoteName('key') . ';';
+
+                        // Execute the generated queries.
+                        foreach ($queries as $query)
                         {
-                                $app->enqueueMessage($e->getMessage());
-                                return false;                             
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $db->execute();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $app->enqueueMessage($e->getMessage());
+                                        return false;                             
+                                }
                         }
                 }
         }                                
