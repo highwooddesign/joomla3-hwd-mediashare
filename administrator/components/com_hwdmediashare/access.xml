@@ -21,6 +21,8 @@
 		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
 		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
 		<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+		<action name="hwdmediashare.upload" title="COM_HWDMS_ACTION_UPLOAD_FILES" description="COM_HWDMS_ACTION_UPLOAD_FILES_DESC" />
+		<action name="hwdmediashare.import" title="COM_HWDMS_ACTION_IMPORT_REMOTE" description="COM_HWDMS_ACTION_IMPORT_REMOTE_DESC" />
 	</section>
         <section name="media">
 		<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
@@ -31,8 +33,6 @@
 		<action name="hwdmediashare.like" title="COM_HWDMS_ACTION_LIKE" description="COM_HWDMS_ACTION_LIKE_DESC" />
 		<action name="hwdmediashare.report" title="COM_HWDMS_ACTION_REPORT" description="COM_HWDMS_ACTION_REPORT_DESC" />
 		<action name="hwdmediashare.comment" title="COM_HWDMS_ACTION_COMMENT" description="COM_HWDMS_ACTION_COMMENT_DESC" />
-		<action name="hwdmediashare.upload" title="COM_HWDMS_ACTION_UPLOAD_FILES" description="COM_HWDMS_ACTION_UPLOAD_FILES_DESC" />
-		<action name="hwdmediashare.import" title="COM_HWDMS_ACTION_IMPORT_REMOTE" description="COM_HWDMS_ACTION_IMPORT_REMOTE_DESC" />
 	</section>
         <section name="album">
 		<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
