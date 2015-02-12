@@ -10,6 +10,9 @@
 
 defined('_JEXEC') or die;
 
+// This helper class is called from the tags component so we register our library. 
+JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
+
 class hwdMediaShareHelperRoute
 {
 	/**
@@ -195,7 +198,7 @@ class hwdMediaShareHelperRoute
          * @param   array   $params  An array of additional url parameters.
          * @return  string  The url to the content.
 	 */
-	public static function getMediaRoute($params=array())
+	public static function getMediaRoute($params = array())
 	{
 		$needles = array(
 			'media'  => null
@@ -214,57 +217,142 @@ class hwdMediaShareHelperRoute
          * @param   boolean  $associate  Add associated data to the url.
          * @return  string   The url to the content.
 	 */
-	public static function getMediaItemRoute($id, $params=array(), $associate=true)
-	{
+	public static function getMediaItemRoute($id, $params = array(), $associate = true)
+	{            
 		// Initialise variables.
 		$app = JFactory::getApplication();
-                
-		$needles = array(
-			'mediaitem'  => array((int) $id),
-			'media'  => null
-		);
-                
-                $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=mediaitem&id=' . $id, $params, $needles);
+                $append = false;
+                $category_id = false;
+                $playlist_id = false;
+                $album_id = false;
+                $group_id = false;
 
                 // Get data from the request.
-                $option = $app->input->get('option');
-                $view = $app->input->get('view');
-                $id = $app->input->get('id');
+                $roption = $app->input->get('option');
+                $rview = $app->input->get('view');
+                $rid = $app->input->get('id', 0, 'int');
+                $rcategory_id = $app->input->get('category_id', 0, 'int');
+                $rplaylist_id = $app->input->get('playlist_id', 0, 'int');
+                $ralbum_id = $app->input->get('album_id', 0, 'int');
+                $rgroup_id = $app->input->get('group_id', 0, 'int');
                 
                 // Associate, in priority: category/playlist/album/group
-                if ($associate && $option == 'com_hwdmediashare' && $view == 'category' && $id)
+                if ($associate && $roption == 'com_hwdmediashare' && $rview == 'category' && $rid)
                 {
-                        $link.= '&category_id='.$id;
+                        $append = '&category_id='.$rid;
+                        $category_id = $rid;                        
                 } 
-                elseif ($associate && $category_id = $app->input->get('category_id', 0, 'int'))
+                elseif ($associate && $rcategory_id)
                 {
-                        $link.= '&category_id='.$category_id;
+                        $append = '&category_id='.$rcategory_id;
+                        $category_id = $rcategory_id;
                 }
-                elseif ($associate && $option == 'com_hwdmediashare' && $view == 'playlist' && $id)
+                elseif ($associate && $roption == 'com_hwdmediashare' && $rview == 'playlist' && $rid)
                 {
-                        $link.= '&playlist_id='.$id;
+                        $append = '&playlist_id='.$rid;
+                        $playlist_id = $rid;                        
                 }
-                elseif ($associate && $playlist_id = $app->input->get('playlist_id', 0, 'int'))
+                elseif ($associate && $rplaylist_id)
                 {
-                        $link.= '&playlist_id='.$playlist_id;
+                        $append = '&playlist_id='.$rplaylist_id;
+                        $playlist_id = $rplaylist_id;                        
                 }                 
-                elseif ($associate && $option == 'com_hwdmediashare' && $view == 'album' && $id)
+                elseif ($associate && $roption == 'com_hwdmediashare' && $rview == 'album' && $rid)
                 {
-                        $link.= '&album_id='.$id;
+                        $append = '&album_id='.$rid;
+                        $album_id = $rid;                        
                 }
-                elseif ($associate && $album_id = $app->input->get('album_id', 0, 'int'))
+                elseif ($associate && $ralbum_id)
                 {
-                        $link.= '&album_id='.$album_id;
+                        $append = '&album_id='.$ralbum_id;
+                        $album_id = $ralbum_id;                        
                 }                
-                elseif ($associate && $option == 'com_hwdmediashare' && $view == 'group' && $id)
+                elseif ($associate && $roption == 'com_hwdmediashare' && $rview == 'group' && $rid)
                 {
-                        $link.= '&group_id='.$id;
+                        $append = '&group_id='.$rid;
+                        $group_id = $rid;                        
                 }  
-                elseif ($associate && $group_id = $app->input->get('group_id', 0, 'int'))
+                elseif ($associate && $rgroup_id)
                 {
-                        $link.= '&group_id='.$group_id;
-                }  
-                
+                        $append = '&group_id='.$rgroup_id;
+                        $group_id = $rgroup_id;                        
+                } 
+
+                // Check if an association has been made, fallback to category.
+                if (!$append)
+                {
+                        // Load HWD category library.
+                        hwdMediaShareFactory::load('category');
+                        $HWDcategory = hwdMediaShareCategory::getInstance();  
+
+                        // Search for a category associated with this media
+                        $item = new stdClass;
+                        $item->id = $id;
+                        if ($categories = $HWDcategory->load($item))
+                        {
+                                $category_id = reset($categories)->id;
+                        }                    
+                }
+                    
+                if ($category_id)
+                {
+                        $needles = array(
+                                'mediaitem'  => array((int) $id),
+                                'category'  => array((int) $category_id),
+                                'categories'  => null,
+                                'media'  => null
+                        );
+                        
+                        $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=mediaitem&id=' . $id, $params, $needles);
+                        $link.= '&category_id=' . $category_id;   
+                }
+                elseif ($playlist_id)
+                {             
+                        $needles = array(
+                                'mediaitem'  => array((int) $id),
+                                'playlist'  => array((int) $playlist_id),
+                                'playlists'  => null,
+                                'media'  => null
+                        );
+                        
+                        $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=mediaitem&id=' . $id, $params, $needles);                
+                        $link.= $append;   
+                }                  
+                elseif ($album_id)
+                {             
+                        $needles = array(
+                                'mediaitem'  => array((int) $id),
+                                'album'  => array((int) $album_id),
+                                'albums'  => null,
+                                'media'  => null
+                        );
+                        
+                        $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=mediaitem&id=' . $id, $params, $needles);                
+                        $link.= $append;   
+                }      
+                elseif ($group_id)
+                {             
+                        $needles = array(
+                                'mediaitem'  => array((int) $id),
+                                'group'  => array((int) $group_id),
+                                'groups'  => null,
+                                'media'  => null
+                        );
+                        
+                        $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=mediaitem&id=' . $id, $params, $needles);                
+                        $link.= $append;   
+                }                 
+                else
+                {                
+                        $needles = array(
+                                'mediaitem'  => array((int) $id),
+                                'media'  => null
+                        );
+                        
+                        $link = self::_buildUrl('index.php?option=com_hwdmediashare&view=mediaitem&id=' . $id, $params, $needles);                
+                        $link.= $append;   
+                }
+
                 return $link;
 	}
 
@@ -431,7 +519,7 @@ class hwdMediaShareHelperRoute
          * @static
          * @return  string  The url to the content.
 	 */
-	public static function getSearchRoute($params=array())
+	public static function getSearchRoute($params = array())
 	{
 		$needles = array(
 			'search'  => null
@@ -455,9 +543,12 @@ class hwdMediaShareHelperRoute
 		// Initialise variables.
 		$app = JFactory::getApplication();
                 
-                foreach($params as $key => $param)
+                if (is_array($params) && count($params))
                 {
-                        $link.= '&'.$key.'='.$param;
+                        foreach($params as $key => $param)
+                        {
+                                $link.= '&'.$key.'='.$param;
+                        }
                 }
                 
                 if ($item = self::_findItem($needles)) 
@@ -490,12 +581,16 @@ class hwdMediaShareHelperRoute
                 $hwdms  = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                // Check for menu binding configuration values for media types.
+                // Check for menu binding overrides.
 		if ($needles)
 		{
                         foreach ($needles as $view => $ids)
                         {
-                                if ($view == 'mediaitem' && is_array($ids))
+                                if ($view == 'mediaitem' && is_array($ids) && (
+                                      $config->get('menu_bind_mediaitem1') > 0 || 
+                                      $config->get('menu_bind_mediaitem2') > 0 || 
+                                      $config->get('menu_bind_mediaitem3') > 0 || 
+                                      $config->get('menu_bind_mediaitem4') > 0))
                                 {                                    
                                         // Get a table instance.
                                         JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
@@ -512,30 +607,59 @@ class hwdMediaShareHelperRoute
 
                                         $properties = $table->getProperties(1);
                                         $item = JArrayHelper::toObject($properties, 'JObject');
-                                        
-                                        // Get the categories.
-                                        hwdMediaShareFactory::load('category');
-                                        $cat = hwdMediaShareCategory::getInstance();
-                                        $categories = $cat->load($item);
 
-                                        // If media is assigned only to one category, then search for associated menu link.
-                                        if (count($categories) == 1)
-                                        {
-                                                $needles = array(
-                                                        'category'  => array(reset($categories)->id)
-                                                );
-                
-                                                if ($category = self::_findItem($needles)) 
-                                                {
-                                                        return $category;
-                                                }                                            
-                                        }
-                                        
                                         // Get the media type.
                                         hwdMediaShareFactory::load('media');
                                         $type = hwdMediaShareMedia::loadMediaType($item);
 
                                         if ($config->get('menu_bind_'.$view.$type) > 1) return $config->get('menu_bind_'.$view.$type);
+                                }
+                                
+                                switch ($view)
+                                {
+                                        case 'media':
+                                        case 'mediaform':
+                                        case 'mediaitem':
+                                                if ($config->get('menu_bind_media') > 0) return $config->get('menu_bind_media');
+                                        break;                                     
+                                        case 'account':
+                                                if ($config->get('menu_bind_account') > 0) return $config->get('menu_bind_account');
+                                        break; 
+                                        case 'album':
+                                        case 'albumform':
+                                        case 'albummedia':
+                                        case 'albums':
+                                                if ($config->get('menu_bind_album') > 0) return $config->get('menu_bind_album');
+                                        break;  
+                                        case 'categories':
+                                        case 'category':
+                                        case 'categoryform':
+                                                if ($config->get('menu_bind_category') > 0) return $config->get('menu_bind_category');
+                                        break; 
+                                        case 'channel':
+                                        case 'channelform':
+                                        case 'channels':
+                                                if ($config->get('menu_bind_channel') > 0) return $config->get('menu_bind_channel');
+                                        break; 
+                                        case 'group':
+                                        case 'groupform':
+                                        case 'groupmedia':
+                                        case 'groupmembers':
+                                        case 'groups':
+                                                if ($config->get('menu_bind_group') > 0) return $config->get('menu_bind_group');
+                                        break;
+                                        case 'playlist':
+                                        case 'playlistform':
+                                        case 'playlistmedia':
+                                        case 'playlists':
+                                                if ($config->get('menu_bind_playlist') > 0) return $config->get('menu_bind_playlist');
+                                        break;
+                                        case 'search':
+                                                if ($config->get('menu_bind_search') > 0) return $config->get('menu_bind_search');
+                                        break;
+                                        case 'upload':
+                                                if ($config->get('menu_bind_upload') > 0) return $config->get('menu_bind_upload');
+                                        break;
                                 }
                         }  
                 }
@@ -596,6 +720,13 @@ class hwdMediaShareHelperRoute
 			}
 		}
 
+                // If we can't find a menu item, then we look for a 'media' menu to use.
+                $HWDitems = $menus->getItems('link', 'index.php?option=com_hwdmediashare&view=media');
+                foreach ($HWDitems as $item)
+                {
+                        return $item->id;
+                }
+                        
 		return false;
 	}
 }
