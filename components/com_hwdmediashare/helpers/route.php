@@ -146,8 +146,19 @@ class hwdMediaShareHelperRoute
 	 */
 	public static function getCategoryRoute($id, $params = array())
 	{
+                // Reverse category lookup.
+                $categoryLookup = JCategories::getInstance('hwdMediaShare')->get($id);
+                while ($categoryLookup)
+                {
+                        $categoryArray[] = $categoryLookup->id;
+                        $categoryLookup = $categoryLookup->getParent();
+                }
+
+                // Remove the last element, which will be the ROOT category.
+                array_pop($categoryArray);                                         
+ 
 		$needles = array(
-			'category'  => array((int) $id),
+			'category'  => $categoryArray,
 			'categories'  => null
 		);
 
@@ -296,9 +307,20 @@ class hwdMediaShareHelperRoute
                     
                 if ($category_id)
                 {
+                        // Reverse category lookup.
+                        $categoryLookup = JCategories::getInstance('hwdMediaShare')->get($category_id);
+                        while ($categoryLookup)
+                        {
+                                $categoryArray[] = $categoryLookup->id;
+                                $categoryLookup = $categoryLookup->getParent();
+                        }
+
+                        // Remove the last element, which will be the ROOT category.
+                        array_pop($categoryArray);                                         
+
                         $needles = array(
                                 'mediaitem'  => array((int) $id),
-                                'category'  => array((int) $category_id),
+                                'category'  => $categoryArray,
                                 'categories'  => null,
                                 'media'  => null
                         );
@@ -660,7 +682,7 @@ class hwdMediaShareHelperRoute
                                         case 'upload':
                                                 if ($config->get('menu_bind_upload') > 0) return $config->get('menu_bind_upload');
                                         break;
-                                }
+                                }                                
                         }  
                 }
 
