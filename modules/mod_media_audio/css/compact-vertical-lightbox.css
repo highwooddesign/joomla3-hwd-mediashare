@@ -1,0 +1,24 @@
+@charset "utf-8";
+/* CSS Document © Copyright 2015, All rights reserved
+/**********************************************************************************************/
+.hwd-container .media-details-view.compact-vertical .media-item {
+        max-width:200px;
+        width:40%;
+        margin:0 10px 20px 0;
+        float:left;
+}
+.hwd-container .media-details-view.compact-vertical .contentheading {
+        overflow:hidden;
+        font-size:1em;
+        font-weight:bold;
+        line-height:100%;
+        margin:0 0 5px 0;
+}
+.hwd-container .media-details-view.compact-vertical .media-info-meta {
+        overflow:hidden;
+        font-size:0.90em;
+        font-weight:bold;
+        line-height:100%;
+        margin:0!important;
+        font-weight:normal;
+}
