@@ -12,10 +12,11 @@
 	<url>http://myspace.com</url>
 	<files>
 		<filename plugin="remote_myspacecom">remote_myspacecom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_myspacecom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_myspacecom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_myspacecom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_myspacecom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_myspacecom.sys.ini</language>
 	</languages>
 </extension>
