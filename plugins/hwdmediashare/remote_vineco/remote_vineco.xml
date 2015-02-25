@@ -12,10 +12,11 @@
 	<url>http://vine.co</url>
 	<files>
 		<filename plugin="remote_vineco">remote_vineco.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_vineco.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vineco.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vineco.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vineco.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vineco.sys.ini</language>
 	</languages>
 </extension>
