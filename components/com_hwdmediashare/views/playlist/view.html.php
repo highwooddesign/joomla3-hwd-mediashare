@@ -92,28 +92,28 @@ class hwdMediaShareViewPlaylist extends JViewLegacy
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'playlist' && (int) @$menu->query['id'] == $this->playlist->id)
 		{
                         $title = $this->params->get('page_title');
-                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_PLAYLIST'));
+                        $heading = $this->params->get('page_heading') ? $this->params->get('page_heading') : ($this->playlist->title ? $this->playlist->title : JText::_('COM_HWDMS_PLAYLIST'));
 		}
 		else
 		{
-                        $title = JText::_('COM_HWDMS_PLAYLIST');
-                        $heading = JText::_('COM_HWDMS_PLAYLIST');
+			if ($this->playlist->title) 
+                        {
+				$title = $this->playlist->title;
+                                $heading = $this->playlist->title;   
+			} 
+                        else
+                        {
+                                $title = JText::_('COM_HWDMS_PLAYLIST');
+                                $heading = JText::_('COM_HWDMS_PLAYLIST');
+                        }
 		}
                 
 		// If the menu item does not concern this view then add a breadcrumb.
 		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'playlist' || (int) @$menu->query['id'] != $this->playlist->id))
 		{
-			// Reset title and heading if menu item doesn't point 
-                        // directly to this item.
-			if ($this->playlist->title) 
-                        {
-				$title = $this->playlist->title;
-                                $heading = $this->playlist->title;                           
-			}      
-                        
                         // Breadcrumb support.
 			$path = array(array('title' => $this->playlist->title, 'link' => ''));
                                                 
