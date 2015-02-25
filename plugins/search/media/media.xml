@@ -11,11 +11,12 @@
 	<description>PLG_SEARCH_MEDIA_XML_DESCRIPTION</description>
         <files>
 		<filename plugin="media">media.php</filename>
+		<filename>language/en-GB/en-GB.plg_search_media.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_search_media.ini</language>
-		<language tag="en-GB">language/en-GB.plg_search_media.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_search_media.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_search_media.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
@@ -29,8 +30,6 @@
 					description="PLG_SEARCH_MEDIA_FIELD_USE_CACHING_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -53,9 +52,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_MEDIA_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_MEDIA_DESC"
                                         class="btn-group btn-group-yesno"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="1"                                        
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -66,9 +63,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALBUMS_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALBUMS_DESC"
                                         class="btn-group btn-group-yesno"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="1"                                      
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -79,9 +74,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_CHANNELS_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_CHANNELS_DESC"
                                         class="btn-group btn-group-yesno"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="1"                                        
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -93,8 +86,6 @@
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_GROUPS_DESC"
                                         class="btn-group btn-group-yesno"
 					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -105,9 +96,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_PLAYLISTS_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_PLAYLISTS_DESC"
                                         class="btn-group btn-group-yesno"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="1"                                         
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -123,9 +112,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_TITLE_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_TITLE_DESC"
                                         class="btn-group btn-group-yesno"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="1"                                        
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -136,9 +123,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_DESCRIPTION_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_DESCRIPTION_DESC"
                                         class="btn-group btn-group-yesno"
-					default="1"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="1"                                        
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -149,9 +134,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALIAS_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_ALIAS_DESC"
                                         class="btn-group btn-group-yesno"
-					default="0"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="0"                                       
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
@@ -162,9 +145,7 @@
 					label="PLG_SEARCH_MEDIA_FIELD_SEARCH_METADATA_LABEL"
 					description="PLG_SEARCH_MEDIA_FIELD_SEARCH_METADATA_DESC"
                                         class="btn-group btn-group-yesno"
-					default="0"
-                                        validate="integer"
-                                        filter="integer"                                          
+					default="0"                                         
 				>
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
