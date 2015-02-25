@@ -176,7 +176,7 @@ class hwdMediaShareModelFile extends JModelAdmin
                                         JError::raiseNotice(403, JText::_('COM_HWDMS_UNABLE_TO_REMOVE_FILE_FROM_DISK'));
                                 }
                         }
-                        
+
 		}
                 
                 if (!parent::delete($pks))
