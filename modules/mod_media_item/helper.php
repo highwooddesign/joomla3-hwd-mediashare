@@ -25,6 +25,7 @@ class modMediaItemHelper extends JViewLegacy
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
+                JLoader::register('hwdMediaShareHelperNavigation', JPATH_ROOT.'/components/com_hwdmediashare/helpers/navigation.php');
 
                 // Include JHtml helpers.
                 JHtml::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/helpers/html');
@@ -268,13 +269,21 @@ class modMediaItemHelper extends JViewLegacy
                                 
                         // Filter by linked media of viewed media.
                         case 17:
-                                if (!$media_id = $cache->call(array($this, 'getMedia'))) return;
-                                break; 
+                                $option	= $app->input->get('option', '', 'word');
+                                $view = $app->input->get('view', '', 'word');
+                                $id = $app->input->get('id', '', 'int');
+                                if ($option != 'com_hwdmediashare' || $view != 'mediaitem' || $id == 0) return;
+                                $model->setState('filter.media_id', (int) $id);
+                                break;
                                 
                         // Filter by responses of viewed media.
                         case 18:
-                                if (!$media_id = $cache->call(array($this, 'getMedia'))) return;
-                                break; 
+                                $option	= $app->input->get('option', '', 'word');
+                                $view = $app->input->get('view', '', 'word');
+                                $id = $app->input->get('id', '', 'int');
+                                if ($option != 'com_hwdmediashare' || $view != 'mediaitem' || $id == 0) return;
+                                $model->setState('filter.response_id', (int) $id);
+                                break;
                 }
 
 		// Additional filters.
