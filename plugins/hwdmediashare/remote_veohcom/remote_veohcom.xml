@@ -12,10 +12,11 @@
 	<url>http://veoh.com</url>
 	<files>
 		<filename plugin="remote_veohcom">remote_veohcom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_veohcom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_veohcom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_veohcom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_veohcom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_veohcom.sys.ini</language>
 	</languages>
 </extension>
