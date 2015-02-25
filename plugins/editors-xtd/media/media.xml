@@ -11,10 +11,11 @@
 	<description>PLG_EDITORS-XTD_MEDIA_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="media">media.php</filename>
+		<filename>language/en-GB/en-GB.plg_editors-xtd_media.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_editors-xtd_media.ini</language>
-		<language tag="en-GB">language/en-GB.plg_editors-xtd_media.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_editors-xtd_media.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_editors-xtd_media.sys.ini</language>
 	</languages>
 </extension>
