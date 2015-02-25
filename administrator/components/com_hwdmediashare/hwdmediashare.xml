@@ -29,20 +29,20 @@
 	</update>
         <!-- Site files -->
 	<files folder="site">
+		<folder>controllers</folder>
+                <folder>helpers</folder>
+                <folder>libraries</folder>
+                <folder>models</folder>
+                <folder>views</folder>            
                 <filename>controller.php</filename>
                 <filename>hwdmediashare.php</filename>
                 <filename>index.html</filename>
                 <filename>jomsocial_rule.xml</filename>
                 <filename>router.php</filename>
-		<folder>controllers</folder>
-                <folder>helpers</folder>
-                <folder>libraries</folder>
-                <folder>models</folder>
-                <folder>views</folder>
 	</files>
         <!-- Site language files -->
 	<languages folder="site">
-		<language tag="en-GB">language/en-GB.com_hwdmediashare.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.com_hwdmediashare.ini</language>
 	</languages>
         <!-- Administrator -->
 	<administration>
@@ -56,7 +56,14 @@
 		</submenu>                
                 <!-- Administrator files -->
 		<files folder="admin">
-			<filename>access.xml</filename>
+                        <folder>controllers</folder>
+                        <folder>helpers</folder>
+                        <filename>language/en-GB/en-GB.com_hwdmediashare.sys.ini</filename>
+                        <folder>models</folder>
+                        <folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+                        <filename>access.xml</filename>
 			<filename>cli.php</filename>
                         <filename>config.ini</filename>
                         <filename>config.xml</filename>
@@ -64,17 +71,11 @@
                         <filename>hwdmediashare.php</filename>
                         <filename>index.html</filename>
                         <filename>toolbar.xml</filename>
-                        <folder>controllers</folder>
-                        <folder>helpers</folder>
-                        <folder>models</folder>
-                        <folder>sql</folder>
-			<folder>tables</folder>
-			<folder>views</folder>	
 		</files>
                 <!-- Administrator language files -->
 		<languages folder="admin">
-			<language tag="en-GB">language/en-GB.com_hwdmediashare.ini</language>
-			<language tag="en-GB">language/en-GB.com_hwdmediashare.sys.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_hwdmediashare.ini</language>
+			<language tag="en-GB">language/en-GB/en-GB.com_hwdmediashare.sys.ini</language>
 		</languages>
         </administration>
         <!-- Media files -->
