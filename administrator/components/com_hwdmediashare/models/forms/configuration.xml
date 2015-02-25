@@ -59,19 +59,6 @@
 			<option	value="0">JNO</option>
 		</field> 
 		<field
-			name="sef_advanced"
-			type="radio"
-			label="COM_HWDMS_SEFADVANCED_LABEL"
-			description="COM_HWDMS_SEFADVANCED_DESC"
-			class="btn-group btn-group-yesno"
-			default="0"
-			validate="integer"
-                        filter="integer"
-                >
-			<option	value="1">JON</option>
-			<option	value="0">JOFF</option>
-		</field> 
-		<field
 			name="author"
 			type="list"
 			label="COM_HWDMS_AUTHOR_LABEL"
@@ -574,8 +561,32 @@
 			<option value="0">JNO</option>
 		</field>
 		<field
+			name="sef_router"
+			type="list"
+			label="COM_HWDMS_SEFROUTER_LABEL"
+			description="COM_HWDMS_SEFROUTER_DESC"
+			default="standard"
+                >
+			<option	value="legacy">COM_HWDMS_OPTION_SEF_ROUTER_LEGACY</option>
+			<option	value="standard">COM_HWDMS_OPTION_SEF_ROUTER_STANDARD</option>
+		</field>                 
+		<field
+			name="sef_advanced"
+			type="radio"
+			label="COM_HWDMS_SEFADVANCED_LABEL"
+			description="COM_HWDMS_SEFADVANCED_DESC"
+			class="btn-group btn-group-yesno"
+			default="0"
+			validate="integer"
+                        filter="integer"
+                >
+			<option	value="1">JON</option>
+			<option	value="0">JOFF</option>
+		</field>          
+		<field
 			name="menu_bind_media"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="media"
 			label="COM_HWDMS_MEDIA_PAGE_LABEL"
 			description="COM_HWDMS_MEDIA_PAGE_DESC"
 			default="0"
@@ -586,7 +597,8 @@
 		</field> 
 		<field
 			name="menu_bind_mediaitem1"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="media"
 			label="COM_HWDMS_AUDIO_PAGE_LABEL"
 			description="COM_HWDMS_AUDIO_PAGE_DESC"
 			default="0"
@@ -597,7 +609,8 @@
 		</field> 
 		<field
 			name="menu_bind_mediaitem2"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="media"
 			label="COM_HWDMS_DOCUMENT_PAGE_LABEL"
 			description="COM_HWDMS_DOCUMENT_PAGE_DESC"
 			default="0"
@@ -608,7 +621,8 @@
 		</field>                 
 		<field
 			name="menu_bind_mediaitem3"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="media"
 			label="COM_HWDMS_IMAGE_PAGE_LABEL"
 			description="COM_HWDMS_IMAGE_PAGE_DESC"
 			default="0"
@@ -619,7 +633,8 @@
 		</field>    
 		<field
 			name="menu_bind_mediaitem4"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="media"
 			label="COM_HWDMS_VIDEO_PAGE_LABEL"
 			description="COM_HWDMS_VIDEO_PAGE_DESC"
 			default="0"
@@ -629,129 +644,9 @@
 			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
 		</field>
 		<field
-			name="menu_bind_categories"
-			type="menuitem"
-			label="COM_HWDMS_CATEGORIES_PAGE_LABEL"
-			description="COM_HWDMS_CATEGORIES_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_category"
-			type="menuitem"
-			label="COM_HWDMS_CATEGORY_PAGE_LABEL"
-			description="COM_HWDMS_CATEGORY_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >			
-                        <option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_albums"
-			type="menuitem"
-			label="COM_HWDMS_ALBUMS_PAGE_LABEL"
-			description="COM_HWDMS_ALBUMS_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_album"
-			type="menuitem"
-			label="COM_HWDMS_ALBUM_PAGE_LABEL"
-			description="COM_HWDMS_ALBUM_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_groups"
-			type="menuitem"
-			label="COM_HWDMS_GROUPS_PAGE_LABEL"
-			description="COM_HWDMS_GROUPS_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_group"
-			type="menuitem"
-			label="COM_HWDMS_GROUP_PAGE_LABEL"
-			description="COM_HWDMS_GROUP_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field>                 
-		<field
-			name="menu_bind_playlists"
-			type="menuitem"
-			label="COM_HWDMS_PLAYLISTS_PAGE_LABEL"
-			description="COM_HWDMS_PLAYLISTS_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_playlist"
-			type="menuitem"
-			label="COM_HWDMS_PLAYLIST_PAGE_LABEL"
-			description="COM_HWDMS_PLAYLIST_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_channels"
-			type="menuitem"
-			label="COM_HWDMS_CHANNELS_PAGE_LABEL"
-			description="COM_HWDMS_CHANNELS_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_channel"
-			type="menuitem"
-			label="COM_HWDMS_CHANNEL_PAGE_LABEL"
-			description="COM_HWDMS_CHANNEL_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field> 
-		<field
-			name="menu_bind_upload"
-			type="menuitem"
-			label="COM_HWDMS_UPLOAD_PAGE_LABEL"
-			description="COM_HWDMS_UPLOAD_PAGE_DESC"
-			default="0"
-			validate="integer"
-                        filter="integer"    
-                >
-			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field>                 
-		<field
 			name="menu_bind_account"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="account"
 			label="COM_HWDMS_ACCOUNT_PAGE_LABEL"
 			description="COM_HWDMS_ACCOUNT_PAGE_DESC"
 			default="0"
@@ -761,8 +656,69 @@
 			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
 		</field>               
 		<field
+			name="menu_bind_album"
+			type="hwdmenuitem"
+			menu_view="albums"
+			label="COM_HWDMS_ALBUM_PAGE_LABEL"
+			description="COM_HWDMS_ALBUM_PAGE_DESC"
+			default="0"
+			validate="integer"
+                        filter="integer"    
+                >
+			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
+		</field> 
+		<field
+			name="menu_bind_category"
+			type="hwdmenuitem"
+			menu_view="categories"
+			label="COM_HWDMS_CATEGORY_PAGE_LABEL"
+			description="COM_HWDMS_CATEGORY_PAGE_DESC"
+			default="0"
+			validate="integer"
+                        filter="integer"    
+                >			
+                        <option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
+		</field> 
+		<field
+			name="menu_bind_channel"
+			type="hwdmenuitem"
+			menu_view="channels"
+			label="COM_HWDMS_CHANNEL_PAGE_LABEL"
+			description="COM_HWDMS_CHANNEL_PAGE_DESC"
+			default="0"
+			validate="integer"
+                        filter="integer"    
+                >
+			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
+		</field> 
+		<field
+			name="menu_bind_group"
+			type="hwdmenuitem"
+			menu_view="groups"
+			label="COM_HWDMS_GROUP_PAGE_LABEL"
+			description="COM_HWDMS_GROUP_PAGE_DESC"
+			default="0"
+			validate="integer"
+                        filter="integer"    
+                >
+			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
+		</field> 
+		<field
+			name="menu_bind_playlist"
+			type="hwdmenuitem"
+			menu_view="playlists"
+			label="COM_HWDMS_PLAYLIST_PAGE_LABEL"
+			description="COM_HWDMS_PLAYLIST_PAGE_DESC"
+			default="0"
+			validate="integer"
+                        filter="integer"    
+                >
+			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
+		</field> 
+		<field
 			name="menu_bind_search"
-			type="menuitem"
+			type="hwdmenuitem"
+			menu_view="search"
 			label="COM_HWDMS_SEARCH_PAGE_LABEL"
 			description="COM_HWDMS_SEARCH_PAGE_DESC"
 			default="0"
@@ -770,7 +726,19 @@
                         filter="integer"    
                 >
 			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
-		</field>         
+		</field>  
+		<field
+			name="menu_bind_upload"
+			type="hwdmenuitem"
+			menu_view="upload"
+			label="COM_HWDMS_UPLOAD_PAGE_LABEL"
+			description="COM_HWDMS_UPLOAD_PAGE_DESC"
+			default="0"
+			validate="integer"
+                        filter="integer"    
+                >
+			<option	value="0">COM_HWDMS_OPTION_AUTOMATIC_MENU_ASSIGN</option>
+		</field>                 
 		<field
 			name="media_autoplay"
 			type="radio"
@@ -1937,6 +1905,19 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
+			name="category_list_meta_media_count"
+			type="radio"
+			label="COM_HWDMS_SHOW_CATEGORYMEDIA_COUNT_LABEL"
+			description="COM_HWDMS_SHOW_CATEGORYMEDIA_COUNT_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                
+                <field
 			name="category_list_meta_subcategory_count"
 			type="radio"
 			label="COM_HWDMS_SHOW_SUBCATEGORY_COUNT_LABEL"
@@ -2062,6 +2043,19 @@
                         <option value="1">JSHOW</option>
                         <option value="0">JHIDE</option>
                 </field>
+                <field
+			name="item_meta_activities"
+			type="radio"
+			label="COM_HWDMS_SHOW_ACTIVITIES_LABEL"
+			description="COM_HWDMS_SHOW_ACTIVITIES_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                
                 <field
 			name="item_meta_media_count"
 			type="radio"
@@ -2193,6 +2187,19 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
+			name="mediaitem_location_button"
+			type="radio"
+			label="COM_HWDMS_SHOW_MEDIAITEM_LOCATION_BUTTON_LABEL"
+			description="COM_HWDMS_SHOW_MEDIAITEM_LOCATION_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>
+                <field
 			name="mediaitem_report_button"
 			type="radio"
 			label="COM_HWDMS_SHOW_MEDIAITEM_REPORT_BUTTON_LABEL"
@@ -2284,10 +2291,10 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
-			name="mediaitem_description_tab"
+			name="mediaitem_description"
 			type="radio"
-			label="COM_HWDMS_SHOW_MEDIAITEM_DESCRIPTION_TAB_LABEL"
-			description="COM_HWDMS_SHOW_MEDIAITEM_DESCRIPTION_TAB_DESC"
+			label="COM_HWDMS_SHOW_MEDIAITEM_DESCRIPTION_LABEL"
+			description="COM_HWDMS_SHOW_MEDIAITEM_DESCRIPTION_DESC"
 			class="btn-group btn-group-yesno"
 			default="1"
 			validate="integer"
@@ -2297,10 +2304,10 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
-			name="mediaitem_location_tab"
+			name="mediaitem_tags"
 			type="radio"
-			label="COM_HWDMS_SHOW_MEDIAITEM_LOCATION_TAB_LABEL"
-			description="COM_HWDMS_SHOW_MEDIAITEM_LOCATION_TAB_DESC"
+			label="COM_HWDMS_SHOW_MEDIAITEM_TAGS_LABEL"
+			description="COM_HWDMS_SHOW_MEDIAITEM_TAGS_DESC"
 			class="btn-group btn-group-yesno"
 			default="1"
 			validate="integer"
@@ -2310,23 +2317,10 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
-			name="mediaitem_tags_tab"
+			name="mediaitem_associations"
 			type="radio"
-			label="COM_HWDMS_SHOW_MEDIAITEM_TAGS_TAB_LABEL"
-			description="COM_HWDMS_SHOW_MEDIAITEM_TAGS_TAB_DESC"
-			class="btn-group btn-group-yesno"
-			default="1"
-			validate="integer"
-                        filter="integer"
-                >
-                        <option value="1">JSHOW</option>
-                        <option value="0">JHIDE</option>
-                </field>
-                <field
-			name="mediaitem_associations_tab"
-			type="radio"
-			label="COM_HWDMS_SHOW_MEDIAITEM_ASSOCIATIONS_TAB_LABEL"
-			description="COM_HWDMS_SHOW_MEDIAITEM_ASSOCIATIONS_TAB_DESC"
+			label="COM_HWDMS_SHOW_MEDIAITEM_ASSOCIATIONS_LABEL"
+			description="COM_HWDMS_SHOW_MEDIAITEM_ASSOCIATIONS_DESC"
 			class="btn-group btn-group-yesno"
 			default="1"
 			validate="integer"
@@ -2449,6 +2443,7 @@
                         filter="word"  
                 >
                         <option value="">COM_HWDMS_LIST_SELECT_COMMUNITY_AVATAR</option>
+                        <option value="none">COM_HWDMS_NO_AVATAR</option>
                         <option value="cb">COM_HWDMS_CB_AVATAR</option>
                         <option value="easysocial">COM_HWDMS_EASYSOCIAL_AVATAR</option>
                         <option value="gravatar">COM_HWDMS_GRAVATAR</option>
