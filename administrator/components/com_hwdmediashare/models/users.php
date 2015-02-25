@@ -41,11 +41,26 @@ class hwdMediaShareModelUsers extends JModelList
                 // Group over the key to prevent duplicates.
                 $query->group('a.id');
                 
+		// Filter by search in name or username.
+		$search = $this->getState('filter.search');
+		if (!empty($search))
+                {
+			if (stripos($search, 'id:') === 0)
+                        {
+				$query->where('a.id = '.(int) substr($search, 3));
+			}
+                        else
+                        {
+				$search = $db->quote('%'.$db->escape($search, true).'%');
+				$query->where('(a.name LIKE '.$search.' OR a.username LIKE '.$search.')');
+			}
+		}
+                
                 // Filter by group members (allowing the display of users who have joined specific groups).
                 $groupId = $this->getState('filter.group_id');
                 if ($groupId > 0)
                 {
-                        // Join over the language
+                        // Join over the group map
                         $query->select('map.id AS mapid, map.group_id, IF(map.group_id = '.$groupId.', true, false) AS connection');
                         $query->join('LEFT', '`#__hwdms_group_members` AS map ON map.member_id = a.id AND map.group_id = '.$groupId);
 
@@ -56,6 +71,15 @@ class hwdMediaShareModelUsers extends JModelList
                         }
                 }             
 
+                // Filter by channel existance.
+                $channelFlag = $this->getState('filter.channel');
+                if ($channelFlag === false)
+                {
+                        // Join over the channels
+                        $query->join('LEFT', '`#__hwdms_users` AS uc ON uc.id = a.id');
+                        $query->where('uc.id IS NULL');
+                } 
+                
                 //echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
         }
