@@ -12,10 +12,11 @@
 	<url>http://v.youku.com</url>
 	<files>
 		<filename plugin="remote_vyoukucom">remote_vyoukucom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_vyoukucom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vyoukucom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vyoukucom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vyoukucom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vyoukucom.sys.ini</language>
 	</languages>
 </extension>
