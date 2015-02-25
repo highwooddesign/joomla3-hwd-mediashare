@@ -85,7 +85,7 @@ class hwdMediaShareViewGroups extends JViewLegacy
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'groups')
 		{
                         $title = $this->params->get('page_title');
                         $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_GROUPS'));
