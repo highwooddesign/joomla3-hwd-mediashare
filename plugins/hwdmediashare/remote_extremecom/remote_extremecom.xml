@@ -12,10 +12,11 @@
 	<url>http://extreme.com</url>
 	<files>
 		<filename plugin="remote_extremecom">remote_extremecom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_extremecom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_extremecom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_extremecom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_extremecom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_extremecom.sys.ini</language>
 	</languages>
 </extension>
