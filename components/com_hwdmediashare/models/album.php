@@ -277,12 +277,12 @@ class hwdMediaShareModelAlbum extends JModelList
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @access  protected
+	 * @access  public
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
 	 * @return  void
 	 */
-	protected function populateState($ordering = null, $direction = null)
+	public function populateState($ordering = null, $direction = null)
 	{
 		// Initialise variables.
 		$app = JFactory::getApplication();
