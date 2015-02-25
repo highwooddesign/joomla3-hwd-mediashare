@@ -11,9 +11,10 @@
 	<description>PLG_HWDMEDIASHARE_REMOTE_YOUTUBE_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="remote_youtube">remote_youtube.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_youtube.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_youtube.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_youtube.sys.ini</language>
 	</languages>
 </extension>
