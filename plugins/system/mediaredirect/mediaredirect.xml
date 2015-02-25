@@ -11,10 +11,11 @@
 	<description>PLG_SYSTEM_MEDIAREDIRECT_XML_DESCRIPTION</description>
         <files>
 		<filename plugin="mediaredirect">mediaredirect.php</filename>
+		<filename>language/en-GB/en-GB.plg_system_mediaredirect.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_system_mediaredirect.ini</language>
-		<language tag="en-GB">language/en-GB.plg_system_mediaredirect.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_system_mediaredirect.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_system_mediaredirect.sys.ini</language>
 	</languages>
 </extension>
