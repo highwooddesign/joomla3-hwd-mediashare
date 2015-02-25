@@ -40,7 +40,7 @@ class JFormFieldField extends JFormFieldList
                 
                 foreach($fields->children() as $field)
                 {
-                        $options[] = JHtml::_('select.option', $field->type, JText::_($field->name));
+                        $options[] = JHtml::_('select.option', $field->type, '&minus; ' . JText::_($field->name));
                 }
 
                 // Merge any additional options in the XML definition.
