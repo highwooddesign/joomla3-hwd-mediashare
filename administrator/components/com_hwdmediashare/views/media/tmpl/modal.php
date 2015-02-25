@@ -24,6 +24,11 @@ JHtml::_('behavior.framework', true);
 $function  = $app->input->getCmd('function', 'jSelectMedia');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
+
+// Get the default layout template value
+$cplugin = JPluginHelper::getPlugin('content', 'media');
+$cparams = isset($cplugin->params) ? new JRegistry($cplugin->params) : new JRegistry();
+$clayout = $cparams->get('layout', 'blog');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare&view=media&layout=modal&tmpl=component&function='.$function.'&'.JSession::getFormToken().'=1');?>" method="post" name="adminForm" id="adminForm" class="form-inline">
 	<fieldset class="filter clearfix">
@@ -41,6 +46,15 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
 					<span class="icon-search"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
 				<button type="button" class="btn hasTooltip" title="<?php echo JHtml::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" data-placement="bottom" onclick="document.id('filter_search').value='';this.form.submit();">
 					<span class="icon-remove"></span><?php echo '&#160;' . JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+			</div>
+			<div class="btn-group pull-left">
+                                <select id="filter_layout" name="filter[layout]">
+					<option value="blog"<?php echo $clayout == 'blog' ? ' selected="selected"' : ''; ?>><?php echo JText::_('COM_HWDMS_MEDIAITEM_LAYOUT_BLOG'); ?></option>
+					<option value="details"<?php echo $clayout == 'details' ? ' selected="selected"' : ''; ?>><?php echo JText::_('COM_HWDMS_MEDIAITEM_LAYOUT_DETAILS'); ?></option>
+					<option value="details-lightbox"<?php echo $clayout == 'details-lightbox' ? ' selected="selected"' : ''; ?>><?php echo JText::_('COM_HWDMS_MEDIAITEM_LAYOUT_DETAILS-LIGHTBOX'); ?></option>
+                                        <option value="documentation"<?php echo $clayout == 'documentation' ? ' selected="selected"' : ''; ?>><?php echo JText::_('COM_HWDMS_MEDIAITEM_LAYOUT_DOCUMENTATION'); ?></option>
+					<option value="solo"<?php echo $clayout == 'solo' ? ' selected="selected"' : ''; ?>><?php echo JText::_('COM_HWDMS_MEDIAITEM_LAYOUT_SOLO'); ?></option>                                        
+                                </select>
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -119,7 +133,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                         <div class="pull-left thumb-wrapper">
                                                 <span class="editlinktip hasTooltip" title="<?php echo JHtml::tooltipText($item->title, $item->description); ?>" ><img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item)); ?>" width="50" /></span>
                                         </div>                                    
-					<a href="javascript:void(0)" onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->title)); ?>');">
+					<a href="javascript:void(0)" onclick="if (window.parent) window.parent.<?php echo $this->escape($function);?>('<?php echo $item->id; ?>', '<?php echo $this->escape(addslashes($item->title)); ?>', document.getElementById('filter_layout').options[document.getElementById('filter_layout').selectedIndex].value);">
 						<?php echo $this->escape($item->title); ?></a>
 				</td>
 				<td class="center">
