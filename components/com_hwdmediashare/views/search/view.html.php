@@ -98,7 +98,7 @@ class hwdMediaShareViewSearch extends JViewLegacy
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'search')
 		{
                         $title = $this->params->get('page_title');
                         $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_SEARCH'));
