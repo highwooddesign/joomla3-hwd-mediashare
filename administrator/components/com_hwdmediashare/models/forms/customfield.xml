@@ -34,6 +34,7 @@
                         label="COM_HWDMS_FIELD_TYPE_LABEL"
                         description="COM_HWDMS_FIELD_TYPE_DESC"
                 >
+                        <option value="group">COM_HWDMS_FIELD_TYPE_GROUP</option>
                 </field>
                 <field
 			name="fieldcode"
