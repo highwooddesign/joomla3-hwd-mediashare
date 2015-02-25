@@ -12,10 +12,11 @@
 	<url>http://vevo.com</url>
 	<files>
 		<filename plugin="remote_vevocom">remote_vevocom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_vevocom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vevocom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vevocom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vevocom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vevocom.sys.ini</language>
 	</languages>
 </extension>
