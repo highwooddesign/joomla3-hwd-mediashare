@@ -70,7 +70,7 @@ class hwdMediaShareViewDiscover extends JViewLegacy
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'discover')
 		{
                         $title = $this->params->get('page_title');
                         $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_DISCOVER'));
@@ -85,7 +85,7 @@ class hwdMediaShareViewDiscover extends JViewLegacy
                 $this->params->set('page_heading', $heading);
                 
 		// If the menu item does not concern this view then add a breadcrumb.
-		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'albums'))
+		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'discover'))
 		{       
                         // Breadcrumb support.
 			$path = array(array('title' => JText::_('COM_HWDMS_DISCOVER'), 'link' => ''));
