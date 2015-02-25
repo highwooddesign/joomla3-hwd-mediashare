@@ -85,10 +85,9 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
                 }
                 else
                 {
-                        $doc->addScript(JURI::base( true ) . '/plugins/hwdmediashare/player_jwplayer/assets/jwplayer/jwplayer.js');
+                        $doc->addScript(JURI::root( true ) . '/plugins/hwdmediashare/player_jwplayer/assets/jwplayer/jwplayer.js');
                         $doc->addScriptDeclaration('jwplayer.key="' . $params->get('self_host_key', 'bAwF3Hdn7fiSh7YpWL1YopRWDNTTd1bMHyE9Sg==') . '";'); 
                 }
-        
         }
 
         /**
@@ -154,9 +153,10 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
         mute: false,
         primary: "<?php echo $config->get('fallback') == 3 ? 'flash' : 'html5'; ?>",
         repeat: false,
-        skin: "<?php echo $params->get('hosting') == 'cloud' ? '' : JURI::base( true ) . '/plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/' . $params->get('skin', 'six') . '.xml'; ?>",
+        skin: "<?php echo $params->get('hosting') == 'cloud' ? '' : JURI::root( true ) . '/plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/' . $params->get('skin', 'six') . '.xml'; ?>",
         width: "100%",
         androidhls: false,
+        stretching: "<?php echo $params->get('stretching', 'uniform'); ?>",
         // Logo block.
         logo: {
             file: '<?php echo $params->get('logofile'); ?>',
@@ -259,9 +259,10 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
         mute: false,
         primary: "<?php echo $config->get('fallback') == 3 ? 'flash' : 'html5'; ?>",
         repeat: false,
-        skin: "<?php echo JURI::base( true ); ?>/plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/<?php echo $params->get('skin', 'six'); ?>.xml",
+        skin: "<?php echo JURI::root( true ); ?>/plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/<?php echo $params->get('skin', 'six'); ?>.xml",
         width: "100%",
         androidhls: false,
+        stretching: "<?php echo $params->get('stretching', 'uniform'); ?>",
         // Logo block.
         logo: {
             file: '<?php echo $params->get('logofile'); ?>',
@@ -280,14 +281,14 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
         }  
         
         /**
-	 * Method to render the player for a video.
+	 * Method to render the player for streams.
          * 
 	 * @access  public
 	 * @param   object     $item     The item being displayed.
 	 * @param   JRegistry  $sources  Media sources for the item.
 	 * @return  void
 	 **/
-	public function getRtmpPlayer($item, $sources)
+	public function getStreamPlayer($item, $sources)
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
@@ -315,18 +316,6 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
                 // Preload assets.
                 $this->preloadAssets($params);
                                
-                // Roll the application (streamer) and stream (file) into a single URL.
-                $streamer = $sources->get('streamer');
-                $length = strlen($streamer)-1;
-                if($streamer{$length} == '/')
-                {
-                        $file = $sources->get('streamer').$sources->get('file');
-                }
-                else
-                {
-                        $file = $sources->get('streamer').'/'.$sources->get('file');
-                }
-
                 ob_start();
                 ?>
 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
@@ -338,8 +327,19 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
 <script type="text/javascript">
     jwplayer("media-jwplayer-<?php echo $item->id; ?>").setup({
         // Sources.
-        sources: [{
-            file: "<?php echo $file; ?>"
+        playlist: [{
+        sources: [
+            { 'file': 'dummy', type: 'none' } // Dummy source to prevent trailing commas.
+            <?php foreach($sources as $i => $source): ?>
+                <?php if ($source->type == 1): ?>
+                    ,{ 'file': '<?php echo $source->url; ?>' }
+                <?php elseif ($source->type == 2): ?>
+                    ,{ 'file': '<?php echo $source->url; ?>' }
+                <?php elseif ($source->type == 3): ?>
+                    ,{ 'file': '<?php echo $source->url; ?>', type: 'mp4', label: '<?php echo $source->quality; ?>p' }
+                <?php endif; ?>
+            <?php endforeach; ?>
+        ]
         }],
         // Basic options.
         /** aspectratio: "16:9", // We don't set this because code from HWD manages the responsiveness of the player. */
@@ -350,9 +350,10 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
         mute: false,
         primary: "flash",
         repeat: false,
-        skin: "<?php echo JURI::base(); ?>plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/<?php echo $params->get('skin', 'six'); ?>.xml",
+        skin: "<?php echo JURI::root(); ?>plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/<?php echo $params->get('skin', 'six'); ?>.xml",
         width: "100%",
-        androidhls: false,
+        androidhls: true,
+        stretching: "<?php echo $params->get('stretching', 'uniform'); ?>",
         // Logo block.
         logo: {
             file: '<?php echo $params->get('logofile'); ?>',
@@ -374,8 +375,8 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
                 ob_end_clean();
                 
                 return $html;      
-        }
-        
+        }    
+
         /**
 	 * Method to render the player for a Youtube video.
          * 
@@ -432,9 +433,10 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
         mute: false,
         primary: "<?php echo $config->get('fallback') == 3 ? 'flash' : 'html5'; ?>",
         repeat: false,
-        skin: "<?php echo JURI::base( true ); ?>/plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/<?php echo $params->get('skin', 'six'); ?>.xml",
+        skin: "<?php echo JURI::root( true ); ?>/plugins/hwdmediashare/player_jwplayer/assets/jwplayer-skins/<?php echo $params->get('skin', 'six'); ?>.xml",
         width: "100%",
         androidhls: false,
+        stretching: "<?php echo $params->get('stretching', 'uniform'); ?>",
         // Logo block.
         logo: {
             file: '<?php echo $params->get('logofile'); ?>',
@@ -456,5 +458,5 @@ class plgHwdmediasharePlayer_JwPlayer extends JObject
                 ob_end_clean();
                 
                 return $html; 
-        }               
+        }      
 }
