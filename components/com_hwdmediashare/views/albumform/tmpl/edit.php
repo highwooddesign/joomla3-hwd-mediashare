@@ -18,7 +18,7 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', '.hwd-form-tags', null, array('placeholder_text_multiple' => 'Tags'));
+JHtml::_('formbehavior.chosen', '.hwd-form-tags', null, array('placeholder_text_multiple' => JText::_('COM_HWDMS_UPLOADS_SELECT_TAGS')));
 JHtml::_('formbehavior.chosen', 'select');
 ?>
 <script type="text/javascript">
@@ -52,6 +52,7 @@ JHtml::_('formbehavior.chosen', 'select');
               <?php echo $this->form->getInput('title'); ?>
             </div>
           </div>          
+          <?php if ($this->params->get('enable_tags')): ?>
           <div class="control-group">
             <div class="control-label hide">
               <?php echo $this->form->getLabel('tags'); ?>
@@ -59,7 +60,8 @@ JHtml::_('formbehavior.chosen', 'select');
             <div class="controls">
               <?php echo $this->form->getInput('tags'); ?>
             </div>
-          </div>            
+          </div>    
+          <?php endif; ?>           
         </div>
         <div class="span4">
           <div class="control-group">
