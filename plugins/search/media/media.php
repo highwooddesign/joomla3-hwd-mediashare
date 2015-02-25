@@ -40,7 +40,7 @@ class plgSearchMedia extends JPlugin
 
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
-                $config = $hwdms->getConfig();
+                $this->config = $hwdms->getConfig();
                 
                 // Merge with plugin parameters.
                 $this->config->merge($this->params);
@@ -207,8 +207,7 @@ class plgSearchMedia extends JPlugin
                         $model->setState('filter.search', $text);
 
                         // Perform search.
-                        $items = $model->getItems();
-                        if (count($items))
+                        if ($items = $model->getItems())
                         {
                                 foreach($items as $key => $item)
                                 {    
