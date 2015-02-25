@@ -11,13 +11,16 @@
 	<description>MOD_MEDIA_AUDIO_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_media_audio">mod_media_audio.php</filename>
+		<folder>css</folder>
+		<folder>slick</folder>
+                <filename>language/en-GB/en-GB.mod_media_audio.sys.ini</filename>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.mod_media_audio.ini</language>
-		<language tag="en-GB">language/en-GB.mod_media_audio.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_audio.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_audio.sys.ini</language>
 	</languages>
 	<config>
 		<fields 
@@ -35,7 +38,7 @@
                                         description="MOD_MEDIA_AUDIO_FIELD_DISPLAY_DESC"
                                         default=""                                       
                                 >
-                                        <option value="">MOD_MEDIA_AUDIO_OPTION_FILTER_ALL_MEDIA</option>
+                                        <option value="0">MOD_MEDIA_AUDIO_OPTION_FILTER_ALL_MEDIA</option>
                                     
                                         <group label="MOD_MEDIA_AUDIO_GROUP_LABEL_STATIC_FILTER">
                                                 <option value="1">MOD_MEDIA_AUDIO_OPTION_FILTER_SELECTED_ALBUM</option>
