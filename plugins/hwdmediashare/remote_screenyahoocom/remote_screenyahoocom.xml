@@ -12,10 +12,11 @@
 	<url>http://screen.yahoo.com</url>
 	<files>
 		<filename plugin="remote_screenyahoocom">remote_screenyahoocom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_screenyahoocom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_screenyahoocom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_screenyahoocom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_screenyahoocom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_screenyahoocom.sys.ini</language>
 	</languages>
 </extension>
