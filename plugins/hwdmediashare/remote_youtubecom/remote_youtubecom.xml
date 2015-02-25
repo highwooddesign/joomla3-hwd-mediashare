@@ -12,11 +12,12 @@
 	<url>http://youtube.com</url>
 	<files>
 		<filename plugin="remote_youtubecom">remote_youtubecom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_youtubecom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_youtubecom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_youtubecom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_youtubecom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_youtubecom.sys.ini</language>
 	</languages>
 	<config>
 		<fields 
@@ -150,6 +151,19 @@
 					<option value="1">JYES</option>
 					<option value="0">JNO</option>
 				</field> 
+				<field 
+                                        name="showinfo" 
+                                        type="radio"
+					label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_SHOWINFO_LABEL"
+					description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_SHOWINFO_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="1"
+                                        validate="integer"
+                                        filter="integer"
+				>
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>                                 
 				<field 
                                         name="rel" 
                                         type="radio"
