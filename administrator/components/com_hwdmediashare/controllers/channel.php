@@ -13,6 +13,14 @@ defined('_JEXEC') or die;
 class hwdMediaShareControllerChannel extends JControllerForm
 {
 	/**
+	 * The prefix to use with controller messages.
+         * 
+         * @access  protected
+	 * @var     string
+	 */
+	protected $text_prefix = 'COM_HWDMS';
+        
+	/**
 	 * The name of the listing view to use with this controller.
          * 
          * @access  protected
@@ -58,10 +66,53 @@ class hwdMediaShareControllerChannel extends JControllerForm
 	public function add()
 	{
 		// Redirect to create Joomla user.
-                $this->setMessage(JText::_('COM_HWDMS_ADD_NEW_CHANNEL_NOTICE'));
-		$this->setRedirect(JRoute::_('index.php?option=com_users&task=user.add', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=channels&layout=add&tmpl=component', false));
 	}
 
+        /**
+	 * Method to create a channel for a user.
+	 *
+	 * @access  public
+         * @return  void
+	 */
+	public function create()
+	{
+		// Check for request forgeries.
+		JSession::checkToken() or die(JText::_('JINVALID_TOKEN'));
+
+		// Get items to remove from the request.
+		$cid = $this->input->get('cid', array(), 'array');
+
+                if (!is_array($cid) || count($cid) < 1)
+		{
+			JLog::add(JText::_($this->text_prefix . '_NO_ITEM_SELECTED'), JLog::WARNING, 'jerror');
+		}
+		else
+		{
+                        // Load HWD utilities.
+                        hwdMediaShareFactory::load('utilities');
+                        $utilities = hwdMediaShareUtilities::getInstance();
+
+			// Make sure the item ids are integers.
+			jimport('joomla.utilities.arrayhelper');
+			JArrayHelper::toInteger($cid);
+
+			// Create the channels.
+                        foreach ($cid as $i => $id)
+                        {
+                                if (!$utilities->autoCreateChannel($id))
+                                {
+                                        $this->setMessage($utilities->getError());
+                                        $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&layout=add&tmpl=component', false));
+                                }
+                        }
+
+		}
+                
+                $this->setMessage(JText::plural($this->text_prefix . '_N_CHANNELS_CREATED', count($cid)));
+                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list . '&layout=add&tmpl=component', false));        
+	}
+        
 	/**
 	 * Method to run batch operations.
 	 *
