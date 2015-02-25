@@ -111,6 +111,9 @@ class hwdMediaShareViewGroupForm extends JViewLegacy
                 {
                         $this->params->set('page_heading', JText::_('COM_HWDMS_GROUP'));
                 } 
+                
+		// Define the page title.                
+                $this->document->setTitle($this->params->get('page_heading'));                  
 	}
 
 	/**
