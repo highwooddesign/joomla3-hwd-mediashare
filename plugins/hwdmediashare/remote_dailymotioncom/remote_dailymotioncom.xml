@@ -12,10 +12,11 @@
 	<url>http://dailymotion.com</url>
 	<files>
 		<filename plugin="remote_dailymotioncom">remote_dailymotioncom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_dailymotioncom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_dailymotioncom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_dailymotioncom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_dailymotioncom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_dailymotioncom.sys.ini</language>
 	</languages>
 </extension>
