@@ -116,7 +116,18 @@ class hwdMediaShareViewChannel extends JViewLegacy
                 $this->channel->numsubscribers = $this->get('numSubscribers');     
                 $this->utilities = hwdMediaShareUtilities::getInstance();
 		$this->pageclass_sfx = htmlspecialchars($this->params->get('pageclass_sfx'));
-                $this->columns = (int) $this->params->get('list_columns', 3) - 1; // This view has columns, so we reduce the number of columns
+                
+                // If we are showing activities in the side column then reduce the number of medai columns
+                if ($this->params->get('item_meta_activities') != '0')
+                {
+                        $this->columns = (int) $this->params->get('list_columns', 3) - 1;
+                }
+                else 
+                {
+                        $this->columns = (int) $this->params->get('list_columns', 3); 
+                }
+                
+                
                 $this->return = base64_encode(JFactory::getURI()->toString());
                 $this->display = $this->state->get('media.display', 'details');
 
@@ -154,28 +165,28 @@ class hwdMediaShareViewChannel extends JViewLegacy
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'channel' && (int) @$menu->query['id'] == $this->channel->id)
 		{
                         $title = $this->params->get('page_title');
-                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_CHANNEL'));
+                        $heading = $this->params->get('page_heading') ? $this->params->get('page_heading') : ($this->channel->title ? $this->channel->title : JText::_('COM_HWDMS_CHANNEL'));
 		}
 		else
 		{
-                        $title = JText::_('COM_HWDMS_CHANNEL');
-                        $heading = JText::_('COM_HWDMS_CHANNEL');
+			if ($this->channel->title) 
+                        {
+				$title = $this->channel->title;
+                                $heading = $this->channel->title;   
+			} 
+                        else
+                        {
+                                $title = JText::_('COM_HWDMS_CHANNEL');
+                                $heading = JText::_('COM_HWDMS_CHANNEL');
+                        }
 		}
 
 		// If the menu item does not concern this view then add a breadcrumb.
 		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'channel' || (int) @$menu->query['id'] != $this->channel->id))
 		{
-			// Reset title and heading if menu item doesn't point 
-                        // directly to this item.
-			if ($this->channel->title) 
-                        {
-				$title = $this->channel->title;
-                                $heading = $this->channel->title;                           
-			}   
-                        
                         // Breadcrumb support.
 			$path = array(array('title' => $this->channel->title, 'link' => ''));
                                                 
