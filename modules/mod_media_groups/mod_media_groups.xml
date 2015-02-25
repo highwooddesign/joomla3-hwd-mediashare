@@ -11,13 +11,14 @@
 	<description>MOD_MEDIA_GROUPS_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_media_groups">mod_media_groups.php</filename>
+                <filename>language/en-GB/en-GB.mod_media_groups.sys.ini</filename>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.mod_media_groups.ini</language>
-		<language tag="en-GB">language/en-GB.mod_media_groups.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_groups.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_groups.sys.ini</language>
 	</languages>
 	<config>
 		<fields 
