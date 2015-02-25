@@ -213,19 +213,20 @@ class plgHwdmediasharePlayer_FlowPlayer extends JObject
                 
                 return $html; 
         }  
-        
+
         /**
-	 * Method to render the player for a video.
+	 * Method to render the player for streams.
          * 
 	 * @access  public
 	 * @param   object     $item     The item being displayed.
 	 * @param   JRegistry  $sources  Media sources for the item.
 	 * @return  void
 	 **/
-	public function getRtmpPlayer($item, $sources)
+	public function getStreamPlayer($item, $sources)
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
 
                 // Load plugin.
 		$plugin = JPluginHelper::getPlugin('hwdmediashare', 'player_flowplayer');
@@ -268,33 +269,44 @@ class plgHwdmediasharePlayer_FlowPlayer extends JObject
       preload="metadata"
       width="100%"
     >
-      <?php if ($item->get('file')) : ?><source src="<?php echo $item->get('file'); ?>" type="video/flash" id="media-rtmp-source-<?php echo $item->id; ?>" /><?php endif; ?>
+      <?php foreach($sources as $i => $source): ?>
+        <?php if ($source->type == 1): 
+          $rtmp = hwdMediaShareStreaming::parseRtmpStream($source->url); ?>
+          <source src="<?php echo $rtmp->stream; ?>" type="video/flash" id="media-rtmp-source-<?php echo $item->id; ?>" />
+        <?php elseif ($source->type == 2): ?>
+          <source src="<?php echo $source->url; ?>" type="application/x-mpegurl" />
+        <?php elseif ($source->type == 3): ?>
+          <source src="<?php echo $source->url; ?>" type="video/mp4" />
+        <?php endif; ?>
+      <?php endforeach; ?>
     </video>
   </div>
-</div>
-<script type="text/javascript">
-(function($) {
-  $(document).ready(function () {
-    // The Joomla SEF plugin will attempt to fix this problem src attribute, so we undo that before loading the player.
-    var newSrc = $('#media-rtmp-source-<?php echo $item->id; ?>').attr('src').replace('<?php echo JURI::root(true) . '/'; ?>', '');
-    $('#media-rtmp-source-<?php echo $item->id; ?>').attr('src', newSrc);
-                
-    $("#media-flow-<?php echo $item->id; ?>").flowplayer({ 
-      swf: '<?php echo JURI::root( true ); ?>/plugins/hwdmediashare/player_flowplayer/assets/flowplayer/commercial/flowplayer.swf'
-      , rtmp: '<?php echo $item->get('streamer'); ?>'
-      , ratio: <?php echo $config->get('video_aspect', '0.56'); ?>
-      , engine: '<?php echo ($config->get('fallback', '3') == '3' ? 'flash' : 'html5'); ?>'
-      , debug: <?php echo ($config->get('debug') == '1' ? 'true' : 'false'); ?>
-      , key: '<?php echo $config->get('licensekey'); ?>'
-      , logo: '<?php echo JURI::root() . $config->get('logofile'); ?>'
-   });
-  });
-})(jQuery);
-</script>         
+</div>    
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
-                
+
+                $doc->addScriptDeclaration("
+jQuery(document).ready(function(){
+  // The Joomla SEF plugin will attempt to fix this problem src attribute, so we undo that before loading the player.
+  var el = jQuery('#media-rtmp-source-" . $item->id . "');
+  if (el.length) {
+    var src = el.attr('src').replace('" . JURI::root(true) . "/', '');
+    jQuery('#media-rtmp-source-" . $item->id . "').attr('src', src);
+  }
+      
+  jQuery('#media-flow-" . $item->id . "').flowplayer({ 
+      swf: '" . JURI::root( true ) . "/plugins/hwdmediashare/player_flowplayer/assets/flowplayer/commercial/flowplayer.swf'
+      , rtmp: '" . (isset($rtmp->application) ? $rtmp->application : '') . "'
+      , ratio: " . $config->get('video_aspect', '0.56') . "
+      , engine: '" . ($config->get('fallback', '3') == '3' ? 'flash' : 'html5') . "'
+      , debug: " . ($config->get('debug') == '1' ? 'true' : 'false') . "
+      , key: '" . $config->get('licensekey') . "'
+      , logo: '" . JURI::root() . $config->get('logofile') . "'
+  });
+});
+                "); 
+                        
                 return $html;            
-        }              
+        }                 
 }
