@@ -19,7 +19,7 @@ $user = JFactory::getUser();
 $canEdit = ($user->authorise('core.edit', 'com_hwdmediashare.playlist.'.$this->playlist->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.playlist.'.$this->playlist->id) && ($this->playlist->created_user_id == $user->id)));
 $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.playlist.'.$this->playlist->id);
 $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.playlist.'.$this->playlist->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.playlist.'.$this->playlist->id) && ($this->playlist->created_user_id == $user->id)));
-$canAddMedia = (($user->authorise('hwdmediashare.upload','com_hwdmediashare') || $user->authorise('hwdmediashare.import','com_hwdmediashare')) && ($this->playlist->created_user_id == $user->id));
+$canAddMedia = (($user->authorise('hwdmediashare.upload', 'com_hwdmediashare') || $user->authorise('hwdmediashare.import', 'com_hwdmediashare')) && ($this->playlist->created_user_id == $user->id));
 $canManageMedia = ($this->playlist->created_user_id == $user->id);
 ?>
 <form action="<?php echo htmlspecialchars(JFactory::getURI()->toString()); ?>" method="post" name="adminForm" id="adminForm">
