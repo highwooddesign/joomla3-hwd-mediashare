@@ -11,10 +11,11 @@
 	<description>PLG_HWDMEDIASHARE_COMMENTS_KOMENTO_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="comments_komento">comments_komento.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_comments_komento.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_comments_komento.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_comments_komento.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_comments_komento.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_comments_komento.sys.ini</language>
 	</languages>
 </extension>
