@@ -20,7 +20,7 @@ $menu = $app->getMenu();
         <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
       </div>
     <?php else: ?>
-      <?php echo JLayoutHelper::render('media_slick', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+      <?php echo JLayoutHelper::render('media_slick_lightbox', $helper, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
     <?php endif; ?>
   </div> 
   <?php if ($params->get('show_more_link') != 'hide') :?><p><a href="<?php echo ((intval($params->get('show_more_link')) > 0) ? JRoute::_($menu->getItem($params->get('show_more_link'))->link.'&Itemid='.$params->get('show_more_link')) : JRoute::_(hwdMediaShareHelperRoute::getMediaRoute())); ?>" class="btn"><?php echo JText::_($params->get('more_link_text', 'MOD_MEDIA_AUDIO_VIEW_MORE')); ?></a></p><?php endif; ?>  

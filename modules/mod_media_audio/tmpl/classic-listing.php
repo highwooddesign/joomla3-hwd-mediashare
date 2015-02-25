@@ -28,7 +28,7 @@ $user = JFactory::getUser();
       $canEditState = $user->authorise('core.edit.state', 'com_hwdmediashare.media.'.$item->id);
       $canDelete = ($user->authorise('core.delete', 'com_hwdmediashare.media.'.$item->id) || ($user->authorise('core.edit.own', 'com_hwdmediashare.media.'.$item->id) && ($item->created_user_id == $user->id)));
         ob_start(); ?>
-        <div class="hasTooltip" title="<?php echo JHtml::tooltipText($item->title, ($helper->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $helper->params->get('list_desc_truncate'), false, false) : '')); ?>">
+        <div class="hasTooltip" title="<?php echo ($helper->params->get('list_tooltip_location') > '1' ? JHtml::tooltipText($item->title, ($helper->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $helper->params->get('list_desc_truncate'), false, false) : '')) : $item->title); ?>">
           <div class="pull-right">
             <?php echo hwdMediaShareMedia::secondsToTime($item->duration); ?>                    
           </div>              
