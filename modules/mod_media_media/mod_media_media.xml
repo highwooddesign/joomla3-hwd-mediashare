@@ -13,13 +13,14 @@
 		<filename module="mod_media_media">mod_media_media.php</filename>
 		<folder>css</folder>
 		<folder>slick</folder>
+                <filename>language/en-GB/en-GB.mod_media_media.sys.ini</filename>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.mod_media_media.ini</language>
-		<language tag="en-GB">language/en-GB.mod_media_media.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_media.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_media_media.sys.ini</language>
 	</languages>
 	<config>
 		<fields 
@@ -37,7 +38,7 @@
                                         description="MOD_MEDIA_MEDIA_FIELD_DISPLAY_DESC"
                                         default=""                                       
                                 >
-                                        <option value="">MOD_MEDIA_MEDIA_OPTION_FILTER_ALL_MEDIA</option>
+                                        <option value="0">MOD_MEDIA_MEDIA_OPTION_FILTER_ALL_MEDIA</option>
                                     
                                         <group label="MOD_MEDIA_MEDIA_GROUP_LABEL_STATIC_FILTER">
                                                 <option value="1">MOD_MEDIA_MEDIA_OPTION_FILTER_SELECTED_ALBUM</option>
