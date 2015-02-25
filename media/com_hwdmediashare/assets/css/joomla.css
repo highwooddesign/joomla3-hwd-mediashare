@@ -1,7 +1,7 @@
 @charset "utf-8";
-/* CSS Document © Copyright 2011, All rights reserved
-   This sheet loads core Joomla styles which HWD attempts to use
-   Both for the component and module views */
+/* CSS Document Copyright (C) 2015 Highwood Design Limited. All rights reserved.
+/* This sheet loads core Joomla styles which HWD attempts to use
+/* Both for the component and module views
 /**********************************************************************************************/
 /*
  * Icons
@@ -73,14 +73,14 @@
 #hwd-container .icon-thumbs-down:before, .hwd-container .icon-thumbs-down:before {
 	content: "\5c";
 }
-#hwd-container .icon-heart:before, .hwd-container .icon-heart:before {
-	content: "\e277";
-}
 #hwd-container .icon-flag:before, .hwd-container .icon-flag:before {
 	content: "\35";
 }
 #hwd-container .icon-search:before, .hwd-container .icon-search:before {
 	content: "\53";
+}
+#hwd-container .icon-checkmark:before, .hwd-container .icon-checkmark:before {
+	content: "\47";
 }
 /* hwd-icomoon */
 #hwd-container .icon-download:before, .hwd-container .icon-download:before {
@@ -107,9 +107,6 @@
 #hwd-container .icon-warning:before, .hwd-container .icon-warning:before {
 	content: "\e615";
 }
-#hwd-container .icon-warning:before, .hwd-container .icon-warning:before {
-	content: "\e615";
-}
 #hwd-container .icon-star:before, .hwd-container .icon-star:before {
 	content: "\e611";
 }
@@ -119,6 +116,16 @@
 #hwd-container .icon-tree:before, .hwd-container .icon-tree:before {
 	content: "\e603";
 }
+#hwd-container .icon-location:before, .hwd-container .icon-location:before {
+	content: "\e61e";
+}
+#hwd-container .icon-calendar:before, .hwd-container .icon-calendar:before {
+	content: "\e61f";
+}
+#hwd-container .icon-heart:before, .hwd-container .icon-heart:before {
+	content: "\e612";
+}
+
 
 
 #hwd-container .icon-image:before, .hwd-container .icon-image:before {
@@ -130,15 +137,16 @@
 #hwd-container .icon-list:before, .hwd-container .icon-list:before {
 	content: "\31";
 }
-#hwd-container .icon-checkmark:before, .hwd-container .icon-checkmark:before {
-	content: "\47";
-}
+
 /*
  * Alignment
  * 
  */
 #hwd-container .pull-right, .hwd-container .pull-right {
 	float:right;
+}
+#hwd-container .pull-left, .hwd-container .pull-left {
+	float:left;
 }
 /*
  * Grid
@@ -268,6 +276,10 @@
 	width: 23.404255317%;
 	*width: 23.351063827638%;
 }
+#hwd-container .row-fluid .span2.fivecolumns, .hwd-container .row-fluid .span2.fivecolumns {
+	width: 18.2978723408%;
+	*width: 18.34042553228936%;
+}
 #hwd-container .row-fluid .span2, .hwd-container .row-fluid .span2 {
 	width: 14.89361702%;
 	*width: 14.840425530638%;
@@ -379,6 +391,31 @@
 #hwd-container [class*="span"].pull-right, .hwd-container [class*="span"].pull-right,
 #hwd-container .row-fluid [class*="span"].pull-right, .hwd-container .row-fluid [class*="span"].pull-right {
 	float: right;
+}
+/*
+ * Tables
+ * 
+ */
+#hwd-container table, .hwd-container table {
+	max-width: 100%;
+}
+#hwd-container .table, .hwd-container .table {
+	width: 100%;
+	margin-bottom: 18px;
+}
+#hwd-container .table th, .hwd-container .table th,
+#hwd-container .table td, .hwd-container .table td {
+	padding: 8px;
+	line-height: 18px;
+	text-align: left;
+	vertical-align: top;
+	border-top: 1px solid #ddd;
+}
+#hwd-container .table th, .hwd-container .table th {
+	font-weight: bold;
+}
+#hwd-container .table thead th, .hwd-container .table thead th {
+	vertical-align: bottom;
 }
 /*
  * Wells
@@ -580,6 +617,17 @@
 	color: #fff;
 	background-color: #08c;
 }
+#hwd-container .tab-content, .hwd-container .tab-content {
+	overflow: auto;
+}
+#hwd-container .tab-content > .tab-pane, .hwd-container .tab-content > .tab-pane,
+#hwd-container .pill-content > .pill-pane, .hwd-container .pill-content > .pill-pane {
+	display: none;
+}
+#hwd-container .tab-content > .active, .hwd-container .tab-content > .active,
+#hwd-container .pill-content > .active, .hwd-container .pill-content > .active {
+	display: block;
+}
 /*
  * Inputs
  * 
@@ -611,12 +659,14 @@
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	vertical-align: middle;
+        box-sizing: content-box; /* Force heights to be consistent */
 }
 #hwd-container select, .hwd-container select,
 #hwd-container input[type="file"], .hwd-container input[type="file"] {
 	height: 28px;
 	*margin-top: 4px;
 	line-height: 28px;
+        box-sizing: border-box; /* Force heights to be consistent */
 }
 #hwd-container select, .hwd-container select {
 	width: 220px;
@@ -1279,7 +1329,8 @@
 		margin-left: 0;
 	}
 	#hwd-container [class*="span"], .hwd-container [class*="span"],
-	#hwd-container .row-fluid [class*="span"], .hwd-container .row-fluid [class*="span"] {
+	#hwd-container .row-fluid [class*="span"], .hwd-container .row-fluid [class*="span"],
+	#hwd-container .row-fluid [class*="span"].fivecolumns, .hwd-container .row-fluid [class*="span"].fivecolumns {
 		float: none;
 		display: block;
 		width: 100%;
@@ -1304,10 +1355,10 @@
  * 
  */
 #hwd-container .btn-group > .dropdown-toggle {
-        margin:0;  /* Chrome fix */
+        margin: 0;  /* Chrome fix */
 }
 #hwd-container .js-stools-container-bar button.btn {
-	margin:0;  /* Chrome fix */
+	margin: 0;  /* Chrome fix */
 }
 #hwd-container .js-stools-container-bar #filter_search {
 	margin-right: 0;  /* Chrome fix */
@@ -1329,9 +1380,9 @@
 #hwd-container textarea {
         height: auto;
 }
-
-
-
-
-
-
+#hwd-container fieldset.radio.btn-group {
+        font-size: 1em;  /* RocketTheme fix */
+}
+#hwd-container .btn-group a.btn, .hwd-container .btn-group a.btn {
+	margin-right: 0px;
+}
