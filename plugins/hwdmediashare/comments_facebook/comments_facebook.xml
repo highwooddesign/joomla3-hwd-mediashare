@@ -11,11 +11,12 @@
 	<description>PLG_HWDMEDIASHARE_COMMENTS_FACEBOOK_XML_DESCRIPTION</description>
 	<files>
 		<filename plugin="comments_facebook">comments_facebook.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_comments_facebook.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_comments_facebook.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_comments_facebook.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_comments_facebook.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_comments_facebook.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
