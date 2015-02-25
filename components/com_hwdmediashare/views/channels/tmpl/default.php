@@ -43,13 +43,13 @@ $user = JFactory::getUser();
       <?php echo JLayoutHelper::render('search_tools', array('view' => $this), JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
       <div class="clear"></div>
     </div>
-    <div class="media-<?php echo $this->display; ?>-view">
+    <div class="media-details-view channel-view">
       <?php if (empty($this->items)) : ?>
         <div class="alert alert-no-items">
           <?php echo JText::_('COM_HWDMS_NOTHING_TO_SHOW'); ?>
         </div>
       <?php else : ?>
-        <?php echo JLayoutHelper::render('channels_' . $this->display, $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
+        <?php echo JLayoutHelper::render('channels_overlay', $this, JPATH_ROOT.'/components/com_hwdmediashare/libraries/layouts'); ?>
       <?php endif; ?>  
     </div>  
     <!-- Pagination -->
