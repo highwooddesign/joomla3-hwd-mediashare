@@ -36,23 +36,21 @@ class hwdMediaShareViewMediaItem extends JViewLegacy
 		$this->params = $this->state->params;
                 $this->activities = $this->get('Activities');
                 
+                // Include JHtml helpers.
+                JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/helpers/html');
+                JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+
                 // Register classes.
-                JLoader::register('JHtmlHwdIcon', JPATH_COMPONENT . '/helpers/icon.php');
-                JLoader::register('JHtmlHwdDropdown', JPATH_COMPONENT . '/helpers/dropdown.php');
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 JLoader::register('hwdMediaShareHelperModule', JPATH_COMPONENT . '/helpers/module.php');  
                 
                 // Import HWD libraries.                
-                hwdMediaShareFactory::load('files');
+                hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
+                hwdMediaShareFactory::load('files');
                 hwdMediaShareFactory::load('media');
-		hwdMediaShareFactory::load('utilities');
-                hwdMediaShareFactory::load('activities'); 
                 hwdMediaShareFactory::load('mobile'); 
-                hwdMediaShareFactory::load('thumbnails'); 
-                
-                // Set JavaScript variables.
-                hwdMediaShareHelperNavigation::setJavascriptVars();
+                hwdMediaShareFactory::load('thumbnails');
+		hwdMediaShareFactory::load('utilities');
                 
                 $this->utilities = hwdMediaShareUtilities::getInstance();
                 $this->mobile = hwdMediaShareMobile::getInstance();
@@ -105,44 +103,33 @@ class hwdMediaShareViewMediaItem extends JViewLegacy
 		$title = null;
 
                 // Add page assets.
-                JHtml::_('bootstrap.framework');
-                $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/hwd.css');
-                if ($this->params->get('load_joomla_css') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/joomla.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addStyleSheet(JURI::base( true ).'/media/com_hwdmediashare/assets/css/aspect.css');
-                if ($this->params->get('list_thumbnail_aspect') != 0) $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/aspect.js');
-
-                // Add JavaScript assets.                
-                $this->document->addScript(JURI::base( true ).'/media/com_hwdmediashare/assets/javascript/hwd.min.js');
-                
-                // Add open graph tags (facebook support).
-                hwdMediaShareFactory::load('opengraph');
-                $HWDopengraph = hwdMediaShareOpenGraph::getInstance();
-                $HWDopengraph->addMediaItemTags($this->item);
+                JHtml::_('hwdhead.core', $this->params);
+                JHtml::_('hwdhead.mediaitem', $this->params, $this->item);
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'mediaitem' && (int) @$menu->query['id'] == $this->item->id)
 		{
                         $title = $this->params->get('page_title');
-                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_MEDIA'));
+                        $heading = $this->params->get('page_heading') ? $this->params->get('page_heading') : ($this->item->title ? $this->item->title : JText::_('COM_HWDMS_MEDIA'));
 		}
 		else
 		{
-                        $title = JText::_('COM_HWDMS_ALBUM');
-                        $heading = JText::_('COM_HWDMS_ALBUM');
+			if ($this->item->title) 
+                        {
+				$title = $this->item->title;
+                                $heading = $this->item->title;   
+			} 
+                        else
+                        {
+                                $title = JText::_('COM_HWDMS_MEDIA');
+                                $heading = JText::_('COM_HWDMS_MEDIA');
+                        }
 		}
                 
 		// If the menu item does not concern this view then add a breadcrumb.
 		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'mediaitem' || (int) @$menu->query['id'] != $this->item->id))
 		{
-			// Reset title and heading if menu item doesn't point 
-                        // directly to this item.
-			if ($this->item->title) 
-                        {
-				$title = $this->item->title;
-                                $heading = $this->item->title;                           
-			}      
-                        
                         // Breadcrumb support.
 			$path = array(array('title' => $this->item->title, 'link' => ''));
 
@@ -210,8 +197,12 @@ class hwdMediaShareViewMediaItem extends JViewLegacy
 		}
                 elseif ($this->item->description)
                 {                        
-			$this->document->setDescription($this->escape(JHtmlString::truncate($this->item->description, 160, true, false)));   
+			$this->document->setDescription($this->escape(JHtml::_('string.truncate', $this->item->description, 160, true, false)));   
                 }                 
+                elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'mediaitem' && (int) @$menu->query['id'] == $this->item->id && $this->params->get('menu-meta_description'))
+                {
+			$this->document->setDescription($this->params->get('menu-meta_description'));
+                } 
                 elseif ($this->params->get('meta_desc'))
                 {
 			$this->document->setDescription($this->params->get('meta_desc'));
@@ -221,7 +212,20 @@ class hwdMediaShareViewMediaItem extends JViewLegacy
 		{
 			$this->document->setMetadata('keywords', $this->item->params->get('meta_keys'));
 		}
-                elseif ($this->params->get('meta_keys'))
+                elseif (count($this->item->tags->itemTags))
+                {
+                        $metaTags = array();
+			foreach($this->item->tags->itemTags as $tag)
+			{
+				$metaTags[] = $tag->title;
+			}   
+			$this->document->setMetadata('keywords', $this->escape(JHtml::_('string.truncate', implode(',', $metaTags), 160, true, false)));   
+                } 
+                elseif ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'mediaitem' && (int) @$menu->query['id'] == $this->item->id && $this->params->get('menu-meta_keywords'))
+                {
+			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+                } 
+		elseif ($this->params->get('meta_keys'))
                 {
 			$this->document->setMetadata('keywords', $this->params->get('meta_keys'));
                 }
