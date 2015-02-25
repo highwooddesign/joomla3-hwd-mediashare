@@ -26,7 +26,7 @@ class hwdMediaShareControllerConfiguration extends JControllerForm
 	 * @access  public
          * @return  void
 	 */
-	function background()
+	public function background()
 	{
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -43,11 +43,11 @@ class hwdMediaShareControllerConfiguration extends JControllerForm
                 // Try to create test file in background.
 		if(substr(PHP_OS, 0, 3) != "WIN") 
                 {
-			exec("env -i ".$config->get('path_php')." $cli test &>/dev/null &");
+			exec("env -i ".$config->get('path_php')." " . $cli . " test > /dev/null 2>&1");
 		} 
                 else 
                 {
-			exec($config->get('path_php')." $cli test NUL");
+                        pclose(popen("start /B ". $config->get('path_php')." " . $cli . " test", "r"));  
 		}
                 
                 // Sleep for 2 seconds.
