@@ -118,28 +118,28 @@ class hwdMediaShareViewGroup extends JViewLegacy
 
 		// Define the page title and headings. 
 		$menu = $menus->getActive();
-		if ($menu)
+		if ($menu && $menu->query['option'] == 'com_hwdmediashare' && $menu->query['view'] == 'group' && (int) @$menu->query['id'] == $this->group->id)
 		{
                         $title = $this->params->get('page_title');
-                        $heading = $this->params->get('page_heading', JText::_('COM_HWDMS_ALBUM'));
+                        $heading = $this->params->get('page_heading') ? $this->params->get('page_heading') : ($this->group->title ? $this->group->title : JText::_('COM_HWDMS_GROUP'));
 		}
 		else
 		{
-                        $title = JText::_('COM_HWDMS_ALBUM');
-                        $heading = JText::_('COM_HWDMS_ALBUM');
+			if ($this->group->title) 
+                        {
+				$title = $this->group->title;
+                                $heading = $this->group->title;   
+			} 
+                        else
+                        {
+                                $title = JText::_('COM_HWDMS_GROUP');
+                                $heading = JText::_('COM_HWDMS_GROUP');
+                        }
 		}
                 
 		// If the menu item does not concern this view then add a breadcrumb.
 		if ($menu && ($menu->query['option'] != 'com_hwdmediashare' || $menu->query['view'] != 'group' || (int) @$menu->query['id'] != $this->group->id))
-		{
-			// Reset title and heading if menu item doesn't point 
-                        // directly to this item.
-			if ($this->group->title) 
-                        {
-				$title = $this->group->title;
-                                $heading = $this->group->title;                           
-			}      
-                        
+		{   
                         // Breadcrumb support.
 			$path = array(array('title' => $this->group->title, 'link' => ''));
                                                 
