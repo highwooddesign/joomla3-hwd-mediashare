@@ -12,11 +12,12 @@
 	<files>
 		<filename plugin="player_jwplayer">player_jwplayer.php</filename>
 		<folder>assets</folder>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_player_jwplayer.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_jwplayer.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_jwplayer.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_player_jwplayer.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_player_jwplayer.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
@@ -129,13 +130,13 @@
 			<fieldset 
                                 name="advertising"
 				label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_ADVERTISING_LABEL"
-                                description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_ADVERTISINGS_DESC"
+                                description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_ADVERTISING_DESC"
 			>      
                                 <field
                                         name="videoadsclient"
                                         type="list"
                                         label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_VIDEOADS_CLIENT_LABEL"
-                                        description="PLG_CONTENT_HWDMEDIASHARE_PLAYER_JWPLAYER_VIDEOADS_CLIENT_DESC"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_VIDEOADS_CLIENT_DESC"
                                         default=""
                                 >
                                         <option value="">JNO</option>
@@ -149,6 +150,23 @@
                                         description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_VIDEOADS_TAG_DESC"
                                         default=""
                                 />
+			</fieldset>                            
+			<fieldset 
+                                name="behaviour"
+				label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELDSET_BEHAVIOUR_LABEL"
+			>    
+                                <field 
+                                        name="stretching" 
+                                        type="list" 
+                                        default="uniform"
+                                        label="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_STRETCHING_LABEL"
+                                        description="PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_FIELD_STRETCHING_DESC"
+                                >
+                                        <option value="none">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_NONE</option>
+                                        <option value="exactfit">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_EXACTFIT</option>
+                                        <option value="uniform">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_UNIFORM</option>
+                                        <option value="fill">PLG_HWDMEDIASHARE_PLAYER_JWPLAYER_OPTION_FILL</option>
+                                </field>                             
 			</fieldset>                                                                                        
 		</fields>
 	</config>
