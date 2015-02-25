@@ -630,7 +630,7 @@ class hwdMediaShareModelGroup extends JModelList
                         }
 
                         $query = $db->getQuery(true)
-                                ->select('COUNT(*)')
+                                ->select('1')
                                 ->from('#__hwdms_group_members')
                                 ->where('group_id = ' . $db->quote($pk))
                                 ->where('member_id = ' . $db->quote($user->id))
@@ -789,7 +789,7 @@ class hwdMediaShareModelGroup extends JModelList
                 $user = JFactory::getUser();
 
                 $query = $db->getQuery(true)
-                        ->select('COUNT(*)')
+                        ->select('1')
                         ->from('#__hwdms_group_members')
                         ->where('group_id = ' . $db->quote($group->id))
                         ->where('member_id = ' . $db->quote($user->id))
