@@ -185,4 +185,26 @@ class hwdMediaShareModelChannels extends JModelList
 		// List state information.
 		parent::populateState('a.created', 'desc');
 	}
+        
+	/**
+	 * Method to get a list of users who do not alerady have channels.
+	 *
+	 * @access  public
+	 * @return  mixed   An array of data items on success, false on failure.
+	 */
+	public function getUsers()
+	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                
+                JModelLegacy::addIncludePath(JPATH_ROOT.'/administrator/components/com_hwdmediashare/models');
+                $this->model = JModelLegacy::getInstance('Users', 'hwdMediaShareModel', array('ignore_request' => true));
+                $this->model->populateState();
+                $this->model->setState('filter.channel', false);
+                $this->model->setState('filter.search', $this->getState('filter.search'));
+                $this->model->setState('list.ordering', 'u.registerDate');
+                $this->model->setState('list.direction', 'ASC');
+                
+                return $this->model->getItems(); 
+	}        
 }
