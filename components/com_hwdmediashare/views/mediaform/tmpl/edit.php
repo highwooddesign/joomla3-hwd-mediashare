@@ -18,8 +18,8 @@ JHtml::_('behavior.keepalive');
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.calendar');
 JHtml::_('behavior.formvalidation');
-JHtml::_('formbehavior.chosen', '.hwd-form-catid', null, array('placeholder_text_multiple' => 'Category'));
-JHtml::_('formbehavior.chosen', '.hwd-form-tags', null, array('placeholder_text_multiple' => 'Tags'));
+JHtml::_('formbehavior.chosen', '.hwd-form-catid', null, array('placeholder_text_multiple' => JText::_('COM_HWDMS_UPLOADS_SELECT_CATEGORY')));
+JHtml::_('formbehavior.chosen', '.hwd-form-tags', null, array('placeholder_text_multiple' => JText::_('COM_HWDMS_UPLOADS_SELECT_TAGS')));
 JHtml::_('formbehavior.chosen', 'select');
 ?>
 <script type="text/javascript">
@@ -61,6 +61,7 @@ JHtml::_('formbehavior.chosen', 'select');
               <?php echo $this->form->getInput('catid'); ?>
             </div>
           </div>              
+          <?php if ($this->params->get('enable_tags')): ?>
           <div class="control-group">
             <div class="control-label hide">
               <?php echo $this->form->getLabel('tags'); ?>
@@ -68,7 +69,8 @@ JHtml::_('formbehavior.chosen', 'select');
             <div class="controls">
               <?php echo $this->form->getInput('tags'); ?>
             </div>
-          </div>            
+          </div>    
+          <?php endif; ?>             
         </div>
         <div class="span4">
           <div class="control-group">
@@ -331,6 +333,7 @@ JHtml::_('formbehavior.chosen', 'select');
       <input type="hidden" name="jform[status]" value="1" />
       <input type="hidden" name="jform[featured]" value="0" />
       <input type="hidden" name="jform[access]" value="1" />
+      <input type="hidden" name="jform[download]" value="1" />
     <?php endif; ?>
     <?php echo JHtml::_('bootstrap.endTab'); ?>          
     <?php echo JHtml::_('bootstrap.endTabSet'); ?>         
