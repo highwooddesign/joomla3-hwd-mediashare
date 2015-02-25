@@ -1,6 +1,5 @@
 @charset "utf-8";
-/* CSS Document © Copyright 2011, All rights reserved
-   This sheet loads FancyUpload2 styles */
+/* CSS Document Copyright (C) 2015 Highwood Design Limited. All rights reserved.
 /**********************************************************************************************/
 @import url("hwd.css");
 /* AJAX loader */
@@ -34,51 +33,51 @@
 }
 /* Media type icons */
 @font-face {
-	font-family: 'IcoMoon';
-	src: url('../../../../media/jui/fonts/IcoMoon.eot');
-	src: url('../../../../media/jui/fonts/IcoMoon.eot?#iefix') format('embedded-opentype'), url('../../../../media/jui/fonts/IcoMoon.woff') format('woff'), url('../../../../media/jui/fonts/IcoMoon.ttf') format('truetype'), url('../../../../media/jui/fonts/IcoMoon.svg#IcoMoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
+	font-family:'IcoMoon';
+	src:url('../../../../media/jui/fonts/IcoMoon.eot');
+	src:url('../../../../media/jui/fonts/IcoMoon.eot?#iefix') format('embedded-opentype'), url('../../../../media/jui/fonts/IcoMoon.woff') format('woff'), url('../../../../media/jui/fonts/IcoMoon.ttf') format('truetype'), url('../../../../media/jui/fonts/IcoMoon.svg#IcoMoon') format('svg');
+	font-weight:normal;
+	font-style:normal;
 }
 @font-face {
-	font-family: 'HwdIcoMoon';
-	src: url('../fonts/icomoon.eot');
-	src: url('../fonts/icomoon.eot?#iefix') format('embedded-opentype'), url('../fonts/icomoon.woff') format('woff'), url('../fonts/icomoon.ttf') format('truetype'), url('../fonts/icomoon.svg#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
+	font-family:'HwdIcoMoon';
+	src:url('../fonts/icomoon.eot');
+	src:url('../fonts/icomoon.eot?#iefix') format('embedded-opentype'), url('../fonts/icomoon.woff') format('woff'), url('../fonts/icomoon.ttf') format('truetype'), url('../fonts/icomoon.svg#icomoon') format('svg');
+	font-weight:normal;
+	font-style:normal;
 }
 #mediaList [class^="icon-"]:before, #mediaList [class*=" icon-"]:before {
-	font-family: 'HwdIcoMoon', 'IcoMoon';
-	font-style: normal;
-	speak: none;
+	font-family:'HwdIcoMoon', 'IcoMoon';
+	font-style:normal;
+	speak:none;
 }
 #mediaList .icon-audio:before {
-	content: "\e60f";
+	content:"\e60f";
 }
 #mediaList .icon-document:before {
-	content: "\e61b";
+	content:"\e61b";
 }
 #mediaList .icon-image:before {
-	content: "\e60e";
+	content:"\e60e";
 }
 #mediaList .icon-video:before {
-	content: "\e619";
+	content:"\e619";
 }
 #mediaList .icon-remote:before {
-	content: "\e61d";
+	content:"\e61d";
 }
 #mediaList .icon-embed:before {
-	content: "\e60b";
+	content:"\e60b";
 }
 #mediaList .icon-rtmp:before {
-	content: "\e61a";
+	content:"\e61a";
 }
 #mediaList .icon-cdn:before,
 #mediaList .icon-platform:before {
-	content: "\e61c";
+	content:"\e61c";
 }
 #mediaList i.media-type {
-	display: inline-block;
+	display:inline-block;
         font-size:24px;
 	width:24px;
 	height:24px;
@@ -94,12 +93,12 @@ div.controls.media-textarea textarea {
         margin-bottom:39px;
         padding-bottom:5px;
         resize:none;
-        -webkit-border-bottom-right-radius: 0;
-            -moz-border-radius-bottomright: 0;
-                border-bottom-right-radius: 0;
-        -webkit-border-bottom-left-radius: 0;
-            -moz-border-radius-bottomleft: 0;
-                border-bottom-left-radius: 0;
+        -webkit-border-bottom-right-radius:0;
+            -moz-border-radius-bottomright:0;
+                border-bottom-right-radius:0;
+        -webkit-border-bottom-left-radius:0;
+            -moz-border-radius-bottomleft:0;
+                border-bottom-left-radius:0;
 
 }
 div.controls.media-textarea button{
@@ -108,12 +107,12 @@ div.controls.media-textarea button{
         right:0;
         width:100%;
         height:40px;
-        -webkit-border-top-right-radius: 0;
-            -moz-border-radius-topright: 0;
-                border-top-right-radius: 0;
-        -webkit-border-top-left-radius: 0;
-            -moz-border-radius-topleft: 0;
-                border-top-left-radius: 0;
+        -webkit-border-top-right-radius:0;
+            -moz-border-radius-topright:0;
+                border-top-right-radius:0;
+        -webkit-border-top-left-radius:0;
+            -moz-border-radius-topleft:0;
+                border-top-left-radius:0;
 }
 div.stream_fields .control-group {
         display:inline-block;
