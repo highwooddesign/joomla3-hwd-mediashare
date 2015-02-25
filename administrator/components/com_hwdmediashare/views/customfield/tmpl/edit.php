@@ -42,16 +42,12 @@ var loadParams = function()
         {
             $('jform_fieldparams').empty().setStyle('visibility', 'hidden');
             $('jform_fieldcode').set('disabled',true);
-            $('jform_required0').set('disabled',true);
-            $('jform_required1').set('disabled',true);
             $('jform_tooltip').set('disabled',true);
         }
         else
         {
             $('jform_fieldparams').addClass('width-40 fltrt').setStyle('visibility', 'visible');
             $('jform_fieldcode').set('disabled',false);
-            $('jform_required0').set('disabled',false);
-            $('jform_required1').set('disabled',false);
             $('jform_tooltip').set('disabled',false);
 
             $('jform_fieldparams').empty().addClass('ajax-loading');
