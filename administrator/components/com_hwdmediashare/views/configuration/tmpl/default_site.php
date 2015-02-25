@@ -35,10 +35,6 @@ $app = JFactory::getApplication();
                                 <div class="controls"><?php echo $this->form->getInput('load_joomla_css'); ?></div>
                         </div>
                         <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('sef_advanced'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('sef_advanced'); ?></div>
-                        </div>
-                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('author'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('author'); ?></div>
                         </div>
@@ -250,79 +246,67 @@ $app = JFactory::getApplication();
                         </div>
                 </fieldset>
                 <fieldset class="form-horizontal">
-                        <legend><?php echo JText::_('COM_HWDMS_PAGE_MANAGEMENT'); ?></legend>
+                        <legend><?php echo JText::_('COM_HWDMS_SEO_SETTINGS'); ?></legend>
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('sef_router'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('sef_router'); ?></div>
+                        </div> 
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('sef_advanced'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('sef_advanced'); ?></div>
+                        </div>                              
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_media'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('menu_bind_media'); ?></div>
                         </div>
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_mediaitem1'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem1'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem1'); ?></div>  
                         </div>
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_mediaitem2'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem2'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem2'); ?></div>  
                         </div>
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_mediaitem3'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem3'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem3'); ?></div>  
                         </div>
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_mediaitem4'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem4'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_categories'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_categories'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_category'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_category'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_albums'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_albums'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_album'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_album'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_groups'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_groups'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_group'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_group'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_playlists'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_playlists'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_playlist'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_playlist'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_channels'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_channels'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_channel'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_channel'); ?></div>
-                        </div>
-                        <div class="control-group">
-                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_upload'); ?></div>
-                                <div class="controls"><?php echo $this->form->getInput('menu_bind_upload'); ?></div>
-                        </div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_mediaitem4'); ?></div>  
+                        </div>                        
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_account'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('menu_bind_account'); ?></div>
-                        </div>
+                        </div>  
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_album'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_album'); ?></div>
+                        </div>                        
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_category'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_category'); ?></div>
+                        </div>  
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_channel'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_channel'); ?></div>
+                        </div>                             
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_group'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_group'); ?></div>
+                        </div>     
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_playlist'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_playlist'); ?></div>
+                        </div>  
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('menu_bind_search'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('menu_bind_search'); ?></div>
-                        </div>
+                        </div>  
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('menu_bind_upload'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('menu_bind_upload'); ?></div>
+                        </div>  
                 </fieldset>
         </div>
 </div>
