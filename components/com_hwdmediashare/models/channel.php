@@ -631,7 +631,7 @@ class hwdMediaShareModelChannel extends JModelList
                 JModelLegacy::addIncludePath(JPATH_ROOT.'/components/com_hwdmediashare/models');
                 $this->_model = JModelLegacy::getInstance('Activities', 'hwdMediaShareModel', array('ignore_request' => true));
                 $this->_model->populateState();
-                $this->_model->setState('user.id', $this->getState('filter.channel_id'));
+                $this->_model->setState('filter.actor', $this->getState('filter.channel_id'));
 		$this->_model->setState('list.ordering', 'a.created');
 		$this->_model->setState('list.direction', 'desc');
                 
