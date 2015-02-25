@@ -22,6 +22,10 @@ class modMediaVideosHelper extends JViewLegacy
 	 */       
 	public function __construct($module, $params)
 	{
+                // Load caching.
+                $cache = JFactory::getCache('mod_media_videos');
+                $cache->setCaching(1);
+                
                 // Load HWD assets.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 JLoader::register('hwdMediaShareHelperRoute', JPATH_ROOT.'/components/com_hwdmediashare/helpers/route.php');
@@ -52,7 +56,14 @@ class modMediaVideosHelper extends JViewLegacy
                 // Get data.
                 $this->module = $module;                
                 $this->params = $config;                
-                $this->items = $this->getItems();
+                if ($config->get('caching'))
+                {
+                        $this->items = $cache->call(array($this, 'getItems'), $params);
+                }
+                else 
+                {
+                        $this->items = $this->getItems();
+                }
                 $this->utilities = hwdMediaShareUtilities::getInstance();
                 $this->columns = $params->get('list_columns', 3);
                 $this->return = base64_encode(JFactory::getURI()->toString());
@@ -83,6 +94,41 @@ class modMediaVideosHelper extends JViewLegacy
                 {
                         $doc->addStyleSheet(JURI::base( true ) . '/modules/mod_media_videos/css/' . $layout . '.css');
                 }
+
+                if ($layout == 'carousel' || $layout == 'carousel-lightbox')
+                {
+                        $doc->addStyleSheet(JURI::root() . 'modules/mod_media_videos/slick/slick.css');
+                        $doc->addScript(JURI::root() . 'modules/mod_media_videos/slick/slick.min.js');
+                        $doc->addScriptDeclaration("
+jQuery(document).ready(function(){
+    jQuery('#media-carousel-view-" . $this->module->id . "').slick({
+      autoplay: " . ($this->params->get('autoplay', 0) ? 'true' : 'false') . ",
+      arrows: " . ($this->params->get('arrows', 1) ? 'true' : 'false') . ",
+      dots: " . ($this->params->get('dots', 1) ? 'true' : 'false') . ",
+      infinite: " . ($this->params->get('infinite', 1) ? 'true' : 'false') . ",
+      speed: " . ($this->params->get('speed', 300) ? 'true' : 'false') . ",
+      slidesToShow: " . $this->params->get('slidesToShow', 4) . ",
+      slidesToScroll: " . (max($this->params->get('slidesToScroll', 1), $this->params->get('slidesToShow', 4))) . ",
+      responsive: [
+        {
+          breakpoint: 768,
+          settings: {
+            arrows: false,
+            slidesToShow: 2
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            arrows: false,
+            slidesToShow: 1
+          }
+        }
+      ]
+    }); 
+});
+                        ");                           
+                }                    
 	}
 
 	/**
@@ -259,13 +305,21 @@ class modMediaVideosHelper extends JViewLegacy
                                 
                         // Filter by linked media of viewed media.
                         case 17:
-                                if (!$media_id = $cache->call(array($this, 'getMedia'))) return;
-                                break; 
+                                $option	= $app->input->get('option', '', 'word');
+                                $view = $app->input->get('view', '', 'word');
+                                $id = $app->input->get('id', '', 'int');
+                                if ($option != 'com_hwdmediashare' || $view != 'mediaitem' || $id == 0) return;
+                                $model->setState('filter.media_id', (int) $id);
+                                break;
                                 
                         // Filter by responses of viewed media.
                         case 18:
-                                if (!$media_id = $cache->call(array($this, 'getMedia'))) return;
-                                break; 
+                                $option	= $app->input->get('option', '', 'word');
+                                $view = $app->input->get('view', '', 'word');
+                                $id = $app->input->get('id', '', 'int');
+                                if ($option != 'com_hwdmediashare' || $view != 'mediaitem' || $id == 0) return;
+                                $model->setState('filter.response_id', (int) $id);
+                                break;
                 }
 
 		// Additional filters.
