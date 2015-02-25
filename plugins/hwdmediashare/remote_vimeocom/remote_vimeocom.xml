@@ -12,10 +12,11 @@
 	<url>http://vimeo.com</url>
 	<files>
 		<filename plugin="remote_vimeocom">remote_vimeocom.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_vimeocom.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vimeocom.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_vimeocom.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vimeocom.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_vimeocom.sys.ini</language>
 	</languages>
 </extension>
