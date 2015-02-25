@@ -668,7 +668,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         $item = JArrayHelper::toObject($properties, 'JObject');
 
                         // Attempt to add the process to the media.
-                        if (!$HWDprocesses->add($item, $processId))
+                        if (!$HWDprocesses->addProcess($item, $processId))
                         {
                                 $this->setError($HWDprocesses->getError());
                                 return false;
