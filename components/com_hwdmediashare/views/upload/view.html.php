@@ -80,7 +80,13 @@ class hwdMediaShareViewUpload extends JViewLegacy
 
                 $this->jformdata = hwdMediaShareUpload::getProcessedUploadData(); 
                 $this->jformreg = new JRegistry($this->jformdata);
-                        
+                   
+		// Check upload method is feasible.
+		if ($this->method != 'remote' && $this->config->get('enable_uploads_file') == 0 && $this->config->get('enable_uploads_remote') == 1) 
+		{
+			$this->method = 'remote';
+		}
+                
 		// Determine template and load assets.
 		if ($this->method == 'remote' && $this->config->get('enable_uploads_remote') == 1) 
 		{
@@ -152,9 +158,6 @@ class hwdMediaShareViewUpload extends JViewLegacy
 		$this->document->addScript(JURI::root() . "media/com_hwdmediashare/assets/javascript/bootstrap-file-input.js");
 		$this->document->addScriptDeclaration("
                     var buttonWord = 'Select File...';
-                    jQuery(document).ready(function(){
-                            jQuery('.hwd-form-filedata').bootstrapFileInput();
-                    });
                 ");  
                 
 		// Define the page title and headings. 
