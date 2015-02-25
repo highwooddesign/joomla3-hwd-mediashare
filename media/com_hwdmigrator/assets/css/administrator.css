@@ -1,4 +1,8 @@
 @charset "utf-8";
-@import url("ajax.css");
-/* CSS Document © Copyright 2011, All rights reserved */
+/* CSS Document Copyright (C) 2015 Highwood Design Limited. All rights reserved.
 /**********************************************************************************************/
+.ajax-loading {
+    background:transparent url(../images/ajax-loader.gif) center center no-repeat;
+    width:16px;
+    height:11px;
+}
