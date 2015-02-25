@@ -161,7 +161,6 @@ class hwdMediaShareHelperNavigation
                                 // Load category.
 				JLoader::register('hwdMediaShareModelCategory', JPATH_ROOT . '/components/com_hwdmediashare/models/category.php');
 				$categoryModel = JModelLegacy::getInstance('category', 'hwdMediaShareModel', array('ignore_request' => true));
-				$categoryModel->getItems(); 
 				$nav->category = $categoryModel->getCategory((int) $category_id); 
                                 if ($nav->category === false && $categoryModel->getError())
                                 {
