@@ -35,13 +35,14 @@ class JFormFieldHwdLimitBox extends JFormFieldLimitbox
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
                 
-                $this->defaultLimits = array(
-                                        (int) $config->get('list_limit', 6)*1,
-                                        (int) $config->get('list_limit', 6)*2,
-                                        (int) $config->get('list_limit', 6)*3,
-                                        (int) $config->get('list_limit', 6)*4,
-                                        (int) $config->get('list_limit', 6)*5
-                                       );
+                $this->defaultLimits = array();
+                
+                // Set limit options (up tp a maximu of 150)
+                if (($config->get('list_limit', 6) * 1) <= 150) $this->defaultLimits[] = (int) $config->get('list_limit', 6) * 1;
+                if (($config->get('list_limit', 6) * 2) <= 150) $this->defaultLimits[] = (int) $config->get('list_limit', 6) * 2;
+                if (($config->get('list_limit', 6) * 3) <= 150) $this->defaultLimits[] = (int) $config->get('list_limit', 6) * 3;
+                if (($config->get('list_limit', 6) * 4) <= 150) $this->defaultLimits[] = (int) $config->get('list_limit', 6) * 4;
+                if (($config->get('list_limit', 6) * 5) <= 150) $this->defaultLimits[] = (int) $config->get('list_limit', 6) * 5;
 
                 return parent::getOptions();
 	}
