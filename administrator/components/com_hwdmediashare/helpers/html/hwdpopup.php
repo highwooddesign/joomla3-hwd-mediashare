@@ -33,18 +33,16 @@ abstract class JHtmlHwdPopup
                 $document->addScript(JURI::root() . "media/com_hwdmediashare/assets/javascript/jquery.magnific-popup.js");
                 
                 $script = "
-(function($){
-  $(document).ready(function() {
-    $('.media-popup-alert').magnificPopup({
-      type: 'iframe',
-      closeOnBgClick: false,
-      mainClass: 'mfp-alert',
-      closeOnContentClick: true,
-      closeMarkup: '<span title=\"%title%\" class=\"mfp-close\">Dismiss</span>',
-      removalDelay: 0
-    });
+jQuery(document).ready(function(){
+  jQuery('.media-popup-alert').magnificPopup({
+    type: 'iframe',
+    closeOnBgClick: false,
+    mainClass: 'mfp-alert',
+    closeOnContentClick: true,
+    closeMarkup: '<span title=\"%title%\" class=\"mfp-close\">Dismiss</span>',
+    removalDelay: 0
   });
-})(jQuery);
+});
 ";
                 
                 // Add the script to the document head.
@@ -78,24 +76,21 @@ abstract class JHtmlHwdPopup
                 $mainClass.= $class ? '-' . $class : '';
                 
                 $script = "
-(function($){
-  $(document).ready(function() {
-    $('." . $element . "').magnificPopup({
-      type: 'iframe',
-      mainClass: '" . $mainClass . "',
-      removalDelay: 0,
-      iframe: {
-        patterns: {
-          youtube: {
-            index: 'youtube.com/',
-            id: null,
-            src: '%id%'
-          }   
-        }
-      }        
-    });
+jQuery(document).ready(function(){
+  jQuery('." . $element . "').magnificPopup({
+    type: 'iframe',
+    mainClass: '" . $mainClass . "',
+    removalDelay: 0,
+    iframe:{
+      patterns:{
+        youtube:{
+          id: null,
+          src: '%id%'
+        }   
+      }
+    }        
   });
-})(jQuery);
+});
 ";
                 
                 // Add the script to the document head.
@@ -129,15 +124,13 @@ abstract class JHtmlHwdPopup
                 $mainClass.= $class ? '-' . $class : '';
 
                 $script = "
-(function($){
-  $(document).ready(function() {
-    $('." . $element . "').magnificPopup({
-      type: 'image',
-      mainClass: '" . $mainClass . "',
-      removalDelay: 0
-    });
+jQuery(document).ready(function(){
+  jQuery('." . $element . "').magnificPopup({
+    type: 'image',
+    mainClass: '" . $mainClass . "',
+    removalDelay: 0
   });
-})(jQuery);
+});
 ";
                 
                 // Add the script to the document head.
@@ -171,19 +164,17 @@ abstract class JHtmlHwdPopup
                 $mainClass.= $class ? '-' . $class : '';
 
                 $script = "
-(function($){
-  $(document).ready(function() {
-    $('." . $element . "').magnificPopup({
-      type: 'ajax',
-      mainClass: '" . $mainClass . "',
-      removalDelay: 0,
-      closeOnBgClick: false,
-      gallery: {
-        enabled: true
-      }      
-    });
+jQuery(document).ready(function(){
+  jQuery('." . $element . "').magnificPopup({
+    type: 'ajax',
+    mainClass: '" . $mainClass . "',
+    removalDelay: 0,
+    closeOnBgClick: false,
+    gallery:{
+      enabled: true
+    }      
   });
-})(jQuery);
+});
 ";
                 
                 // Add the script to the document head.
@@ -253,7 +244,26 @@ abstract class JHtmlHwdPopup
                                                 JHtml::_('HwdPopup.ajax', 'document'); 
                                         break;
                                         case 3: // Image
-                                                if ($image = hwdMediaShareImages::getJpg($item))
+                                                // Check original for a native image format less than 2000.
+                                                $folders = hwdMediaShareFiles::getFolders($item->key);
+                                                $filename = hwdMediaShareFiles::getFilename($item->key, 1);
+                                                $ext = hwdMediaShareFiles::getExtension($item, 1);
+                                                $path = hwdMediaShareFiles::getPath($folders, $filename, $ext);                                                
+                                                if (file_exists($path) && hwdMediaShareImages::isNativeImage($ext))
+                                                {
+                                                        list($width, $height, $type, $attr) = getimagesize($path);
+                                                        $width = (int) $width;
+                                                        $height = (int) $height;
+                
+                                                        if ($width < 2000)
+                                                        {                                                        
+                                                                $url = hwdMediaShareDownloads::url($item, 1); 
+                                                                $class = 'media-popup-image';
+                                                                JHtml::_('HwdPopup.image', 'image'); 
+                                                        }
+                                                }
+                                                
+                                                if (empty($url) && $image = hwdMediaShareImages::getJpg($item))
                                                 {
                                                         $url = $image->url;    
                                                         $class = 'media-popup-image';
