@@ -12,11 +12,12 @@
 	<files>
 		<filename plugin="player_mejs">player_mejs.php</filename>
 		<folder>assets</folder>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_player_mejs.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_mejs.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_player_mejs.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_player_mejs.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_player_mejs.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
