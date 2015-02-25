@@ -70,6 +70,13 @@ class hwdMediaShareModelProcess extends JModelAdmin
 			return false;
 		}
 
+                // Check process exists.
+                if ($item == false)
+                {
+                        $this->setError(JText::_('COM_HWDMS_ERROR_PROCESS_NOT_FOUND'));
+                        return false;
+                }
+                        
                 return $item;
         }
 
