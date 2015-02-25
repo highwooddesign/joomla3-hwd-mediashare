@@ -173,20 +173,20 @@ class hwdMediaShareTableMedia extends JTable
                         // Set default values.
                         if (!isset($this->published)) $this->published = 1;
                         if (!isset($this->featured)) $this->featured = 0;
-                        if (!isset($this->access)) $this->access = 1;
-                        if (!isset($this->download)) $this->download = 1;
+                        if (!isset($this->access)) $this->access = $config->get('default_access', 1);
+                        if (!isset($this->download)) $this->download = $config->get('default_download', 1);
 
                         // Only allow users with permission to edit states.
                         if (!$user->authorise('core.edit.state', 'com_hwdmediashare'))
                         {
                                 $this->published = 1;
                                 $this->featured = 0;
-                                $this->access = 1;
-                                $this->download = 1;
+                                $this->access = $config->get('default_access', 1);
+                                $this->download = $config->get('default_download', 1);
                         } 
 
                         // Set approval status.
-                        $this->status = (!$app->isAdmin() && $config->get('approve_new_playlists') == 1) ? 2 : 1;
+                        $this->status = (!$app->isAdmin() && $config->get('approve_new_media') == 1) ? 2 : 1;
 
                         // The created and created_by fields can be set by the user,
 			// so we don't touch either of these if they are set.
@@ -248,8 +248,8 @@ class hwdMediaShareTableMedia extends JTable
                                 $HWDcategory->save($catid, $this->id);
                         }
 
-                        // Add custom field data.
-                        if (!$isNew)
+                        // Add custom field data (when not running from cli).
+                        if (!$isNew && !defined('_JCLI'))
                         {
                                 hwdMediaShareFactory::load('customfields');                
                                 $HWDcustomfields = hwdMediaShareCustomFields::getInstance();
