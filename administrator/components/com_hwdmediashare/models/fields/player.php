@@ -55,6 +55,12 @@ class JFormFieldPlayer extends JFormFieldList
 
                         if(substr($row->element, 0, 7) == 'player_')
 			{
+                                // Check if Joomla!RuleZ plugin installed.
+                                if ($row->element == 'player_jwadvanced' && !file_exists(JPATH_ROOT . '/plugins/content/plg_jwadvanced/plg_jwadvanced.php'))
+                                {
+                                        continue;
+                                }
+                            
                                 // Load the language file.
                                 $lang = JFactory::getLanguage();
                                 $lang->load('plg_hwdmediashare_' . $row->element, JPATH_ADMINISTRATOR, $lang->getTag());
