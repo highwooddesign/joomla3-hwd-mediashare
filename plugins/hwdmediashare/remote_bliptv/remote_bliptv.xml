@@ -12,10 +12,11 @@
 	<url>http://blip.tv</url>
 	<files>
 		<filename plugin="remote_bliptv">remote_bliptv.php</filename>
+		<filename>language/en-GB/en-GB.plg_hwdmediashare_remote_bliptv.sys.ini</filename>
 		<filename>index.html</filename>
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_bliptv.ini</language>
-		<language tag="en-GB">language/en-GB.plg_hwdmediashare_remote_bliptv.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_bliptv.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_hwdmediashare_remote_bliptv.sys.ini</language>
 	</languages>
 </extension>
