@@ -82,6 +82,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
 
                 // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -113,7 +114,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
                 ?>
 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
   <div id="media-aspect-<?php echo $item->id; ?>" class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
-  <div class="media-content mejs-<?php echo $params->get('skin'); ?>">
+  <div class="media-content mejs-<?php echo $params->get('skin', 'dark'); ?>">
     <video id="media-mejs-<?php echo $item->id; ?>" controls="controls" preload="none" class="" width="100%" height="100%"
       <?php echo $poster ? 'poster="' . $poster . '"' : ''; ?>
       <?php echo $config->get('media_autoplay') ? 'autoplay="autoplay"' : ''; ?>
@@ -124,22 +125,21 @@ class plgHwdmediasharePlayer_MEjs extends JObject
       <?php if ($sources->get('flv')) : ?><source src="<?php echo $sources->get('flv')->url; ?>" type="video/flv" /><?php endif; ?>
     </video>
   </div>
-</div>
-<script type="text/javascript">
-(function($) {
-  $(document).ready(function () {
-    $('#media-mejs-<?php echo $item->id; ?>').mediaelementplayer({
-      videoVolume: 'horizontal',
-      features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
-      pauseOtherPlayers: true
-    });
-  });
-})(jQuery);
-</script>         
+</div>  
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
                 
+                $doc->addScriptDeclaration("
+jQuery(document).ready(function(){
+  jQuery('#media-mejs-" . $item->id . "').mediaelementplayer({
+    videoVolume: 'horizontal',
+    features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
+    pauseOtherPlayers: true
+  }); 
+});
+                "); 
+                        
                 return $html;            
         }   
 
@@ -155,6 +155,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
 
                 // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -179,7 +180,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
                 // Preload assets.
                 $this->preloadAssets($params);
                         
-                switch ($params->get('skin'))
+                switch ($params->get('skin', 'dark'))
                 {
                         case 'classic':
                                 $height = 30;
@@ -199,7 +200,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
                 ob_start();
                 ?>
 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
-  <div class="mejs-<?php echo $params->get('skin'); ?>">
+  <div class="mejs-<?php echo $params->get('skin', 'dark'); ?>">
     <audio id="media-mejs-<?php echo $item->id; ?>" controls="controls" preload="none" class="" width="100%" height="<?php echo $height; ?>"
       <?php echo $config->get('media_autoplay') ? 'autoplay="autoplay"' : ''; ?>
     >
@@ -207,37 +208,37 @@ class plgHwdmediasharePlayer_MEjs extends JObject
       <?php if ($sources->get('ogg')) : ?><source src="<?php echo $sources->get('ogg')->url; ?>" type="audio/ogg" /><?php endif; ?>
     </audio>
   </div>
-</div>
-<script type="text/javascript">
-(function($) {
-  $(document).ready(function () {
-    $('#media-mejs-<?php echo $item->id; ?>').mediaelementplayer({
-      videoVolume: 'horizontal',
-      features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
-      pauseOtherPlayers: true
-    });
-  });
-})(jQuery);
-</script>    
+</div>   
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
+                
+                $doc->addScriptDeclaration("
+jQuery(document).ready(function(){
+  jQuery('#media-mejs-" . $item->id . "').mediaelementplayer({
+    videoVolume: 'horizontal',
+    features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
+    pauseOtherPlayers: true
+  }); 
+});
+                "); 
                 
                 return $html; 
         }  
         
         /**
-	 * Method to render the player for a video.
+	 * Method to render the player for streams.
          * 
 	 * @access  public
 	 * @param   object     $item     The item being displayed.
 	 * @param   JRegistry  $sources  Media sources for the item.
 	 * @return  void
 	 **/
-	public function getRtmpPlayer($item, $sources)
+	public function getStreamPlayer($item, $sources)
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
 
                 // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -269,38 +270,49 @@ class plgHwdmediasharePlayer_MEjs extends JObject
                 ?>
 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
   <div id="media-aspect-<?php echo $item->id; ?>" class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
-  <div class="media-content mejs-<?php echo $params->get('skin'); ?>">
+  <div class="media-content mejs-<?php echo $params->get('skin', 'dark'); ?>">
     <video id="media-mejs-<?php echo $item->id; ?>" controls="controls" preload="none" class="" width="100%" height="100%"
       <?php echo $poster ? 'poster="' . $poster . '"' : ''; ?>
       <?php echo $config->get('media_autoplay') ? 'autoplay="autoplay"' : ''; ?>
     >
-      <?php if ($item->get('file')) : ?><source src="<?php echo $item->get('file'); ?>" type="video/rtmp" id="media-mejs-rtmp-source-<?php echo $item->id; ?>" /><?php endif; ?>
+      <?php foreach($sources as $i => $source): ?>
+        <?php if ($source->type == 1): 
+          $rtmp = hwdMediaShareStreaming::parseRtmpStream($source->url); ?>
+          <source src="<?php echo $rtmp->stream; ?>" type="video/rtmp" id="media-flow-rtmp-source-<?php echo $item->id; ?>" />
+        <?php elseif ($source->type == 2): ?>
+          <source src="<?php echo $source->url; ?>" type="application/x-mpegURL" />
+        <?php elseif ($source->type == 3): ?>
+          <source src="<?php echo $source->url; ?>" type="video/mp4" />
+        <?php endif; ?>
+      <?php endforeach; ?>
     </video>
   </div>
-</div>
-<script type="text/javascript">
-(function($) {
-  $(document).ready(function () {
-    // The Joomla SEF plugin will attempt to fix this problem src attribute, so we undo that before loading the player.
-    var newSrc = $('#media-mejs-rtmp-source-<?php echo $item->id; ?>').attr('src').replace('<?php echo JURI::root(true) . '/'; ?>', '');
-    $('#media-mejs-rtmp-source-<?php echo $item->id; ?>').attr('src', newSrc);
-    
-    $('#media-mejs-<?php echo $item->id; ?>').mediaelementplayer({
-      flashStreamer: "<?php echo $item->get('streamer'); ?>",
-      videoVolume: 'horizontal',
-      features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
-      pauseOtherPlayers: true
-    });
-  });
-})(jQuery);
-</script>         
+</div>  
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
                 
+                $doc->addScriptDeclaration("
+jQuery(document).ready(function(){
+  // The Joomla SEF plugin will attempt to fix this problem src attribute, so we undo that before loading the player.
+  var el = jQuery('#media-rtmp-source-" . $item->id . "');
+  if (el.length){
+    var src = el.attr('src').replace('" . JURI::root(true) . "/', '');
+    jQuery('#media-rtmp-source-" . $item->id . "').attr('src', src);
+  }
+      
+  jQuery('#media-mejs-" . $item->id . "').mediaelementplayer({
+    flashStreamer: '" . (isset($rtmp->application) ? $rtmp->application : '') . "',
+    videoVolume: 'horizontal',
+    features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
+    pauseOtherPlayers: true
+  }); 
+});
+                "); 
+                        
                 return $html;            
-        } 
-        
+        }  
+                
         /**
 	 * Method to render the player for a Youtube video.
          * 
@@ -313,6 +325,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
 	{
 		// Initialise variables.
                 $app = JFactory::getApplication();
+                $doc = JFactory::getDocument();
 
                 // Get HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
@@ -344,7 +357,7 @@ class plgHwdmediasharePlayer_MEjs extends JObject
                 ?>
 <div class="media-respond" style="max-width:<?php echo $config->get('mediaitem_size', '500'); ?>px;">
   <div id="media-aspect-<?php echo $item->id; ?>" class="media-aspect" data-aspect="<?php echo $config->get('video_aspect', '0.75'); ?>"></div>
-  <div class="media-content mejs-<?php echo $params->get('skin'); ?>">
+  <div class="media-content mejs-<?php echo $params->get('skin', 'dark'); ?>">
     <video id="media-mejs-<?php echo $item->id; ?>" controls="controls" preload="none" class="" width="100%" height="100%"
       <?php echo $poster ? 'poster="' . $poster . '"' : ''; ?>
       <?php echo $config->get('media_autoplay') ? 'autoplay="autoplay"' : ''; ?>
@@ -352,22 +365,20 @@ class plgHwdmediasharePlayer_MEjs extends JObject
       <?php if ($id) : ?><source src="http://www.youtube.com/watch?v=<?php echo $id; ?>" type="video/youtube" /><?php endif; ?>
     </video>
   </div>
-</div>
-<script type="text/javascript">
-(function($) {
-  $(document).ready(function () {
-    $('#media-mejs-<?php echo $item->id; ?>').mediaelementplayer({
-      videoVolume: 'horizontal',
-      features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
-      pauseOtherPlayers: true
-    });
-  });
-})(jQuery);
-</script>         
+</div>       
                 <?php
                 $html = ob_get_contents();
                 ob_end_clean();
                 
+                $doc->addScriptDeclaration("
+jQuery(document).ready(function(){
+  jQuery('#media-mejs-" . $item->id . "').mediaelementplayer({
+    videoVolume: 'horizontal',
+    features: ['playpause', 'loop', 'current', 'progress', 'duration', 'tracks', 'volume', 'sourcechooser', 'playlist', 'fullscreen', 'postroll'],
+    pauseOtherPlayers: true
+  }); 
+});
+                "); 
                 return $html;   
-        }               
+        }     
 }
