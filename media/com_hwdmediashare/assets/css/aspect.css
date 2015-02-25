@@ -1,6 +1,5 @@
 @charset "utf-8";
-/* CSS Document © Copyright 2013, All rights reserved
-   This sheet sets the aspect of HWDMediaShare thumbnails */
+/* CSS Document Copyright (C) 2015 Highwood Design Limited. All rights reserved.
 /**********************************************************************************************/
 #hwd-container .media-item,
 .hwd-container .media-item {
@@ -16,8 +15,14 @@
         width:100%;
         z-index:2;
 }
-#hwd-container .media-aspect0, #hwd-container .media-aspect43,
-.hwd-container .media-aspect0, .hwd-container .media-aspect43 {
+#hwd-container .media-aspect0,
+.hwd-container .media-aspect0 {
+        padding-top:0%; /* 4:3 aspect ratio */
+        background:#000;
+        z-index:1;
+}
+#hwd-container .media-aspect43,
+.hwd-container .media-aspect43 {
         padding-top:75%; /* 4:3 aspect ratio */
         background:#000;
         z-index:1;
@@ -50,4 +55,10 @@
 .hwd-container .media-item .media-nav, .hwd-container .media-duration, .hwd-container .media-item-format-1-0, .hwd-container .media-item-format-1-1, .hwd-container .media-item-format-1-2, .hwd-container .media-item-format-1-3, .hwd-container .media-item-format-1-4, .hwd-container .media-item-format-2, .hwd-container .media-item-format-2-2, .hwd-container .media-item-format-3, .hwd-container .media-item-format-4, .hwd-container .media-item-format-5, .hwd-container .media-item-format-6 {
         z-index:3;
 }
+/* Allow original aspect */
+#hwd-container .media-item.originalaspect img.media-thumb,
+.hwd-container .media-item.originalaspect img.media-thumb {
+        position:relative;
+}
+
 
