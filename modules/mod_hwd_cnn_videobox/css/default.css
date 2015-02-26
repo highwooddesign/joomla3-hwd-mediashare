@@ -1,23 +1,18 @@
 @charset "utf-8";
-/* CSS Document © Copyright 2013, All rights reserved
-   This sheet loads the HWD styles */
+/* CSS Document Copyright (C) 2015 Highwood Design Limited. All rights reserved.
 /**********************************************************************************************/
-.hwd-cnn-popup .mfp-iframe-holder .mfp-content {
-  width: 416px;
-  height: 260px;
+.row.hwd-cnn-videobox-default {
+        margin-right:-15px!important;
+        margin-left:-15px!important;
 }
-.row.mod_hwd_cnn_videobox_default {
-  margin-right:-15px!important;
-  margin-left:-15px!important;
-}
-.mod_hwd_cnn_videobox_default {
+.hwd-cnn-videobox-default {
     	position:relative;
 	margin-bottom:20px;
 }
-.mod_hwd_cnn_videobox_default .clear {
+.hwd-cnn-videobox-default .clear {
 	clear:both;
 }
-.mod_hwd_cnn_videobox_default .media-duration {
+.hwd-cnn-videobox-default .media-duration {
 	position:absolute;
 	right:2px;
 	top:2px;
@@ -30,16 +25,14 @@
         z-index:100;
         line-height:120%;        
 }
-/* START - Override to keep duration location correct */
-.mod_hwd_cnn_videobox_default .media-item a {
-        line-height:0px;
+.hwd-cnn-videobox-default .media-item a {
+        line-height:0px; /* Override to keep duration location correct */
 }
-/* END - Override to keep duration location correct */
-.mod_hwd_cnn_videobox_default .media-item {
+.hwd-cnn-videobox-default .media-item {
         overflow:hidden;
 	position:relative;
 }
-.mod_hwd_cnn_videobox_default .media-item img.media-thumb {
+.hwd-cnn-videobox-default .media-item img.media-thumb {
         position:absolute;
         top:0;
         bottom:0;
@@ -50,12 +43,12 @@
 	margin:0;
 	padding:0;        
 }
-.mod_hwd_cnn_videobox_default .media-aspect {
+.hwd-cnn-videobox-default .media-aspect {
         padding-top:56%; /* You can modify the thumbnail aspect ratio here */
         background:#000;
         z-index:1;
 }
-.mod_hwd_cnn_videobox_default .media-link-span {
+.hwd-cnn-videobox-default span.media-link-span {
         background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt 0pt!important;
         cursor:pointer;
         color:#000000;
@@ -72,15 +65,16 @@
         top:50%;
         left:50%;
         z-index:2;
+        margin-left: none; /* Prevent .row-fluid [class*="span"] */  
 }
-.mod_hwd_cnn_videobox_default .media-link-span {
+.hwd-cnn-videobox-default span.media-link-span {
         margin-left:-25px;
         margin-top:-20px;
 }
-.mod_hwd_cnn_videobox_default .media-link-span:hover {
+.hwd-cnn-videobox-default span.media-link-span:hover {
         background:transparent url(../images/overlay-sprite.png) no-repeat scroll 0pt -70px!important;
 }
-.mod_hwd_cnn_videobox_default div.title {
+.hwd-cnn-videobox-default div.title {
         margin-bottom:6px;
         margin-left:0;
         margin-right:0;
@@ -90,6 +84,6 @@
         font-size:15px;
         overflow:hidden;
 }
-.mod_hwd_cnn_videobox_default .cell {
+.hwd-cnn-videobox-default .cell {
         margin-bottom:10px;
 }
