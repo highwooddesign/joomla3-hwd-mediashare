@@ -60,47 +60,43 @@ class modHwdYoutubeVideoBoxHelper extends JObject
                 }
 
                 $doc->addScriptDeclaration("
-jQuery.noConflict();
-(function( $ ) {
-  $(function() {
-    $(document).ready(function() {
-      $('.popup-title-" . $this->module->id . "').magnificPopup({ 
-        type: 'iframe',
-        mainClass: 'hwd-youtube-popup',
-        iframe: {     
-          patterns: {
-            youtube: {
-              id: function(url) {        
-                return url;
-              },
-              src: '%id%'
-            }
-          }
-        },
-        gallery: {
-          enabled: true
+jQuery(document).ready(function() {
+  jQuery('.popup-title-" . $this->module->id . "').magnificPopup({ 
+    type: 'iframe',
+    mainClass: 'hwd-youtube-popup',
+    iframe: {     
+      patterns: {
+        generic: {
+          id: function(url) {        
+            return url;
+          },
+          src: '%id%'
         }
-      }); 
-      $('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
-        type: 'iframe',
-        mainClass: 'hwd-youtube-popup',
-        iframe: {
-          patterns: {
-            youtube: {
-              id: function(url) {        
-                return url;
-              },
-              src: '%id%'
-            }
-          }
-        },
-        gallery: {
-          enabled: true
+      }
+    },
+    gallery: {
+      enabled: true
+    }
+  }); 
+  jQuery('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
+    type: 'iframe',
+    mainClass: 'hwd-youtube-popup',
+    iframe: {
+      patterns: {
+        generic: {
+          id: function(url) {        
+            return url;
+          },
+          src: '%id%'
         }
-      });       
-    });
-  });
-})(jQuery);");                
+      }
+    },
+    gallery: {
+      enabled: true
+    }
+  });       
+});
+");                
 	}
 
         /**
@@ -109,10 +105,11 @@ jQuery.noConflict();
 	 * @access  public
          * @return  object  A list of media items.
 	 */          
-	public function getItems($dummy)
+	public function getItems()
 	{
                 $feed = $this->getFeed();
-
+                $items = array();
+            
                 $yt    = 'http://gdata.youtube.com/schemas/2007';
                 $media = 'http://search.yahoo.com/mrss/';
                 
@@ -190,8 +187,7 @@ jQuery.noConflict();
                         }                        
                         break;
                     case 'keyword_search':
-                        $keywords = explode(" ", $this->get('params')->get('keywords'));                      
-                        return 'http://gdata.youtube.com/feeds/api/videos?q='.implode('+',$keywords).'&v=2';
+                        return 'http://gdata.youtube.com/feeds/api/videos?q='. urlencode($this->get('params')->get('keywords')) .'&v=2';
                         break;
                     case 'playlist_videos':
                         if ($this->get('params')->get('ytplaylist')) return 'http://gdata.youtube.com/feeds/api/playlists/'.$this->get('params')->get('ytplaylist').'?v=2';
@@ -224,7 +220,7 @@ jQuery.noConflict();
                 $divisor_for_seconds = $divisor_for_minutes % 60;
                 $seconds = ceil($divisor_for_seconds);
 
-                // Prepent seconds with zero if necessary.
+                // Prepend seconds with zero if necessary.
                 if ($seconds < 10)
                 {
                         $seconds = '0'.$seconds;
