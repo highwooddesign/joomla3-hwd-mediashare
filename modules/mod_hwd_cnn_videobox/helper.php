@@ -107,6 +107,7 @@ jQuery(document).ready(function() {
 	public function getItems()
 	{
                 $feed = $this->getFeed();
+                $items = array();
                 $counter = 0;
                 
                 $data = new DOMDocument();
