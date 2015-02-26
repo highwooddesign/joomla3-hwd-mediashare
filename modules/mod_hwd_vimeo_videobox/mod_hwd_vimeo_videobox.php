@@ -14,4 +14,6 @@ JLoader::register('modHwdVimeoVideoBoxHelper', dirname(__FILE__).'/helper.php');
 
 $helper = new modHwdVimeoVideoBoxHelper($module, $params);
 
+if (!$helper->items) return;
+
 require JModuleHelper::getLayoutPath('mod_hwd_vimeo_videobox', $params->get('layout', 'default'));
