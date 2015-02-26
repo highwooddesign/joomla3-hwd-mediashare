@@ -14,4 +14,6 @@ JLoader::register('modHwdYoutubeVideoBoxHelper', dirname(__FILE__).'/helper.php'
 
 $helper = new modHwdYoutubeVideoBoxHelper($module, $params);
 
+if (!$helper->items) return;
+
 require JModuleHelper::getLayoutPath('mod_hwd_youtube_videobox', $params->get('layout', 'default'));
