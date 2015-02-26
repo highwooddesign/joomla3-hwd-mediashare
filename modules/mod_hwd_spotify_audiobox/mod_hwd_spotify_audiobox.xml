@@ -11,13 +11,14 @@
 	<description>MOD_HWD_SPOTIFY_AUDIOBOX_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_hwd_spotify_audiobox">mod_hwd_spotify_audiobox.php</filename>
+                <filename>language/en-GB/en-GB.mod_hwd_spotify_audiobox.sys.ini</filename>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.mod_hwd_spotify_audiobox.ini</language>
-		<language tag="en-GB">language/en-GB.mod_hwd_spotify_audiobox.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_spotify_audiobox.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_spotify_audiobox.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
