@@ -19,7 +19,7 @@ $doc->addStyleDeclaration('
    column-count:         '.intval($params->get('columns', 5)).';
 }');
 ?>
-<div class="mod_hwd_vimeo_videobox_grid">
+<div class="hwd-vimeo-videobox-grid">
 <section id="photos">
 <?php foreach ($helper->items as $id => $item) : ?>
 <div class="block_grid"> 
