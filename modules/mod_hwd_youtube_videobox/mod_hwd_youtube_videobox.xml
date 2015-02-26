@@ -14,13 +14,14 @@
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
+                <filename>language/en-GB/en-GB.mod_hwd_youtube_videobox.sys.ini</filename>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.mod_hwd_youtube_videobox.ini</language>
-		<language tag="en-GB">language/en-GB.mod_hwd_youtube_videobox.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_youtube_videobox.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_youtube_videobox.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
