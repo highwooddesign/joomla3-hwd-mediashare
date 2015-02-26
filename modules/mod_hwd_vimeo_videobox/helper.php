@@ -60,47 +60,43 @@ class modHwdVimeoVideoBoxHelper extends JObject
                 }
 
                 $doc->addScriptDeclaration("
-jQuery.noConflict();
-(function( $ ) {
-  $(function() {
-    $(document).ready(function() {
-      $('.popup-title-" . $this->module->id . "').magnificPopup({ 
-        type: 'iframe',
-        mainClass: 'hwd-vimeo-popup',
-        iframe: {     
-          patterns: {
-            youtube: {
-              id: function(url) {        
-                return url;
-              },
-              src: '%id%'
-            }
-          }
-        },
-        gallery: {
-          enabled: true
+jQuery(document).ready(function() {
+  jQuery('.popup-title-" . $this->module->id . "').magnificPopup({ 
+    type: 'iframe',
+    mainClass: 'hwd-vimeo-popup',
+    iframe: {     
+      patterns: {
+        youtube: {
+          id: function(url) {        
+            return url;
+          },
+          src: '%id%'
         }
-      }); 
-      $('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
-        type: 'iframe',
-        mainClass: 'hwd-vimeo-popup',
-        iframe: {
-          patterns: {
-            youtube: {
-              id: function(url) {        
-                return url;
-              },
-              src: '%id%'
-            }
-          }
-        },
-        gallery: {
-          enabled: true
+      }
+    },
+    gallery: {
+      enabled: true
+    }
+  }); 
+  jQuery('.popup-thumbnail-" . $this->module->id . "').magnificPopup({ 
+    type: 'iframe',
+    mainClass: 'hwd-vimeo-popup',
+    iframe: {
+      patterns: {
+        youtube: {
+          id: function(url) {        
+            return url;
+          },
+          src: '%id%'
         }
-      });       
-    });
-  });
-})(jQuery);");                
+      }
+    },
+    gallery: {
+      enabled: true
+    }
+  });       
+});
+");                 
 	}
 
         /**
@@ -111,12 +107,12 @@ jQuery.noConflict();
 	 */         
 	public function getItems()
 	{
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
                 $feed = $this->getFeed();
+                $items = array();
+                $counter = 0;
 
                 $media = 'http://search.yahoo.com/mrss/';
                 
-                $counter = 0;
                 $data = new DOMDocument();
                 if ($data->load($feed))
                 {       
@@ -126,14 +122,7 @@ jQuery.noConflict();
 
                                 $obj->title             = ($video->getElementsByTagName('title')->item(0) ? $video->getElementsByTagName('title')->item(0)->nodeValue : '');
                                 $obj->id                = ($video->getElementsByTagName('id')->item(0) ? $video->getElementsByTagName('id')->item(0)->nodeValue : '');
-                                if ($this->get('params')->get('thumbnail_width') <= '200')
-                                {
-                                    $obj->thumbnail     = ($video->getElementsByTagName('thumbnail_medium')->item(0) ? $video->getElementsByTagName('thumbnail_medium')->item(0)->nodeValue : '');
-                                }                                
-                                else if ($this->get('params')->get('thumbnail_width') > '200')
-                                {
-                                    $obj->thumbnail     = ($video->getElementsByTagName('thumbnail_large')->item(0) ? $video->getElementsByTagName('thumbnail_large')->item(0)->nodeValue : '');
-                                }                                                                
+                                $obj->thumbnail         = ($video->getElementsByTagName('thumbnail_large')->item(0) ? $video->getElementsByTagName('thumbnail_large')->item(0)->nodeValue : '');                                                              
                                 $obj->description	= ($video->getElementsByTagName('description')->item(0) ? JHtml::_('string.truncate', $video->getElementsByTagName('description')->item(0)->nodeValue, 300, true, false) : '');
                                 $obj->category          = ($video->getElementsByTagNameNS($media, 'category')->item(0) ? $video->getElementsByTagNameNS($media, 'category')->item(0)->nodeValue : '');
                                 $obj->uploadDate        = ($video->getElementsByTagName('upload_date')->item(0) ? $video->getElementsByTagName('upload_date')->item(0)->nodeValue : '');
@@ -145,8 +134,8 @@ jQuery.noConflict();
                                 $obj->likes             = ($video->getElementsByTagName('stats_number_of_likes')->item(0) ? $video->getElementsByTagName('stats_number_of_likes')->item(0)->nodeValue : '');
                                 
                                 $items[] = $obj;
+                                
                                 $counter++;
-
                                 if ($counter >= $this->get('params')->get('count'))
                                 {
                                     break;
@@ -172,11 +161,11 @@ jQuery.noConflict();
                     case 'staff_picks':
                         $feed = 'http://vimeo.com/api/v2/channel/staffpicks/videos.xml';
                         break;
-                    case 'channel':
-                        $feed = 'http://vimeo.com/api/v2/channel/'.$this->get('params')->get('channel').'/videos.xml';
-                        break;
                     case 'user':
                         $feed = 'http://vimeo.com/api/v2/'.$this->get('params')->get('user').'/videos.xml';
+                        break;                    
+                    case 'channel':
+                        $feed = 'http://vimeo.com/api/v2/channel/'.$this->get('params')->get('channel').'/videos.xml';
                         break;
                     case 'group':
                         $feed = 'http://vimeo.com/api/v2/group/'.$this->get('params')->get('group').'/videos.xml';
@@ -206,7 +195,7 @@ jQuery.noConflict();
                 $divisor_for_seconds = $divisor_for_minutes % 60;
                 $seconds = ceil($divisor_for_seconds);
 
-                // Prepent seconds with zero if necessary.
+                // Prepend seconds with zero if necessary.
                 if ($seconds < 10)
                 {
                         $seconds = '0'.$seconds;
