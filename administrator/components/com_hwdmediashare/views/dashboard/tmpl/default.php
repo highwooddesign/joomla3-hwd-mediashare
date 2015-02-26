@@ -13,19 +13,20 @@ defined('_JEXEC') or die;
 JHtml::_('behavior.modal');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_hwdmediashare'); ?>" method="post" name="adminForm" id="adminForm">
-<div class="row-fluid">
 <?php if (!empty($this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
-                <div class="well well-small">
+                <div class="hwd-sidebar-dashboard">
                         <h4><?php echo JText::_('COM_HWDMS_WELCOME_STATEMENT');?></h4>
                         <p>If you require support or help, just head on to the <a href="http://hwdmediashare.co.uk/forum/" target="_blank">forums</a> and browse through the <a href="http://hwdmediashare.co.uk/docs/" target="_blank">documentation</a>.</p>
-                </div>                    
-                <?php echo $this->sidebar; ?>
+                </div>                
+		<?php echo $this->sidebar; ?>
 	</div>
-	<div id="j-main-container" class="span6">
+	<div id="j-main-container" class="span10">
 <?php else : ?>
-	<div id="j-main-container" class="span8">
-<?php endif;?> 
+	<div id="j-main-container">
+<?php endif;?>
+        <div class="row-fluid">   
+        <div class="span8">   
                 <div class="well well-small">
                         <div class="module-title nav-header"><?php echo JText::_('COM_HWDMS_RECENT_ACTIVITY'); ?></div>
                         <div class="row-striped">
