@@ -14,4 +14,6 @@ JLoader::register('modHwdCnnVideoBoxHelper', dirname(__FILE__).'/helper.php');
 
 $helper = new modHwdCnnVideoBoxHelper($module, $params);
 
+if (!$helper->items) return;
+
 require JModuleHelper::getLayoutPath('mod_hwd_cnn_videobox', $params->get('layout', 'default'));
