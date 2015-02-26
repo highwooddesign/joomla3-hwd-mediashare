@@ -83,7 +83,7 @@ jQuery(document).ready(function() {
     mainClass: 'hwd-cnn-popup',
     iframe: {
       patterns: {
-        cnn: {
+        generic: {
           id: function(url) {        
             return url;
           },
