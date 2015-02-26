@@ -66,7 +66,7 @@ jQuery(document).ready(function() {
     mainClass: 'hwd-youtube-popup',
     iframe: {     
       patterns: {
-        generic: {
+        youtube: {
           id: function(url) {        
             return url;
           },
@@ -83,7 +83,7 @@ jQuery(document).ready(function() {
     mainClass: 'hwd-youtube-popup',
     iframe: {
       patterns: {
-        generic: {
+        youtube: {
           id: function(url) {        
             return url;
           },
