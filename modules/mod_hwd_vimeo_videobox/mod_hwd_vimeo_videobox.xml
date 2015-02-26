@@ -14,13 +14,14 @@
 		<folder>css</folder>
 		<folder>images</folder>
 		<folder>js</folder>
+                <filename>language/en-GB/en-GB.mod_hwd_vimeo_videobox.sys.ini</filename>
 		<folder>tmpl</folder>
 		<filename>helper.php</filename>
 		<filename>index.html</filename>		
 	</files>
 	<languages>
-		<language tag="en-GB">language/en-GB.mod_hwd_vimeo_videobox.ini</language>
-		<language tag="en-GB">language/en-GB.mod_hwd_vimeo_videobox.sys.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_vimeo_videobox.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_vimeo_videobox.sys.ini</language>
 	</languages>
 	<config>
 		<fields name="params">
@@ -33,31 +34,31 @@
 					description="MOD_HWD_VIMEO_VIDEOBOX_FIELD_SOURCE_DESC"
 				>
 					<option value="staff_picks">MOD_HWD_VIMEO_VIDEOBOX_OPTION_STAFFPICKS</option>
-					<option value="group">MOD_HWD_VIMEO_VIDEOBOX_OPTION_GROUPVIDEOS</option>
 					<option value="user">MOD_HWD_VIMEO_VIDEOBOX_OPTION_USERVIDEOS</option>
                                         <option value="channel">MOD_HWD_VIMEO_VIDEOBOX_OPTION_CHANNELVIDEOS</option>
-				</field>                            
-				<field 
-                                        name="group" 
-                                        type="text" 
-                                        default=""
-					label="MOD_HWD_VIMEO_VIDEOBOX_FIELD_GROUPURL_LABEL"
-					description="MOD_HWD_VIMEO_VIDEOBOX_FIELD_GROUPURL_DESC"
-				/>
+					<option value="group">MOD_HWD_VIMEO_VIDEOBOX_OPTION_GROUPVIDEOS</option>
+				</field> 
 				<field 
                                         name="user" 
                                         type="text" 
                                         default=""
 					label="MOD_HWD_VIMEO_VIDEOBOX_FIELD_USERURL_LABEL"
 					description="MOD_HWD_VIMEO_VIDEOBOX_FIELD_USERURL_DESC"
-				/>	
+				/>                                 
                                 <field 
                                         name="channel" 
                                         type="text" 
                                         default=""
 					label="MOD_HWD_VIMEO_VIDEOBOX_FIELD_CHANNELURL_LABEL"
 					description="MOD_HWD_VIMEO_VIDEOBOX_FIELD_CHANNELURL_DESC"
-				/>				                    
+				/>                                                     
+				<field 
+                                        name="group" 
+                                        type="text" 
+                                        default=""
+					label="MOD_HWD_VIMEO_VIDEOBOX_FIELD_GROUPURL_LABEL"
+					description="MOD_HWD_VIMEO_VIDEOBOX_FIELD_GROUPURL_DESC"
+				/>                
 				<field 
                                         name="layout" 
                                         type="modulelayout"
