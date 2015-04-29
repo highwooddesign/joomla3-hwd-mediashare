@@ -38,7 +38,8 @@ class hwdMediaShareViewMaintenance extends JViewLegacy
 		// Display the template.
 		parent::display($tpl);
                 
-		$this->document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");  
+		JHtml::_('jquery.framework');
+                $this->document->addStyleSheet(JURI::root() . "media/com_hwdmediashare/assets/css/administrator.css");  
                 $this->document->addScript(JURI::root() . "/administrator/components/com_hwdmediashare/views/maintenance/submitbutton.js");
 	}
 
