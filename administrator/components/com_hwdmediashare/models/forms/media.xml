@@ -141,10 +141,12 @@
                         type="accesslevel" 
                         label="COM_HWDMS_DOWNLOAD_ACCESS_LABEL"
 			description="COM_HWDMS_DOWNLOAD_ACCESS_DESC" 
-			default="1"
+			default=""       
                         validate="integer"
                         filter="integer"
-                />          
+		>
+                        <option value="">JGLOBAL_USE_GLOBAL</option>
+		</field>     
                 <field
 			name="private"
                         type="list" 
