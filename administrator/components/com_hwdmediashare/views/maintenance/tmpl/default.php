@@ -47,6 +47,12 @@ JHtml::_('behavior.framework', true);
                                         <?php echo JText::_('COM_HWDMS_UNINSTALL_OLD_EXTENSIONS'); ?>
                                 </td>
                         </tr>
+                        <tr>
+                                <td>
+                                        <div id="ajax-container-databaseindexoptimisation" class="pull-right"></div>
+                                        <?php echo JText::_('COM_HWDMS_DATABASE_INDEX_OPTIMISATION'); ?>
+                                </td>
+                        </tr>
                 </tbody>
         </table>
         <input type="hidden" name="task" value="" />
