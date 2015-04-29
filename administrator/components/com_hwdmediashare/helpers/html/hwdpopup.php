@@ -230,6 +230,7 @@ jQuery(document).ready(function(){
                 {
                         case 1: // Local
                         case 4: // RTMP
+                        case 5: // CDN
                         case 7: // Linked file
                                 switch ($item->media_type) 
                                 {
@@ -317,7 +318,7 @@ jQuery(document).ready(function(){
                                                         $type = $HWDremote->getDirectDisplayType($item);
                                                 }  
                                         }                          
-                                }
+                                }                               
                                 switch ($type) 
                                 {
                                         case 1: // Audio
@@ -328,9 +329,11 @@ jQuery(document).ready(function(){
                                                 $class = 'media-popup-iframe-document-' . $remotePluginHost;
                                                 JHtml::_('HwdPopup.iframe', 'document', $remotePluginHost);
                                         break; 
-                                        case 3: // Image
-                                                $class = 'media-popup-iframe-image-' . $remotePluginHost;
-                                                JHtml::_('HwdPopup.image', 'image', $remotePluginHost);
+                                        case 3: // Image                                            
+                                                // $class = 'media-popup-iframe-image-' . $remotePluginHost;
+                                                // JHtml::_('HwdPopup.image', 'image', $remotePluginHost);
+                                                $class = 'media-popup-image';
+                                                JHtml::_('HwdPopup.image', 'image'); 
                                         break; 
                                         case 4: // Video
                                                 $class = 'media-popup-iframe-video-' . $remotePluginHost;
