@@ -24,7 +24,6 @@ class hwdMediaShareViewDashboard extends JViewLegacy
                 // Get data from the model.
                 $this->media = $this->get('Media');
                 $this->activity = $this->get('Activity');
-                $this->version = $this->get('Version');
                 $this->nummedia = $this->get('MediaCount');
                 $this->numcategories = $this->get('CategoryCount');
                 $this->numalbums = $this->get('AlbumCount');
