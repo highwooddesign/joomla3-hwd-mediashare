@@ -1610,6 +1610,19 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
+			name="list_meta_dislikes"
+			type="radio"
+			label="COM_HWDMS_SHOW_DISLIKES_LABEL"
+			description="COM_HWDMS_SHOW_DISLIKES_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                
+                <field
 			name="list_meta_hits"
 			type="radio"
 			label="COM_HWDMS_SHOW_VIEWS_LABEL"
@@ -2044,6 +2057,19 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
+			name="item_meta_dislikes"
+			type="radio"
+			label="COM_HWDMS_SHOW_DISLIKES_LABEL"
+			description="COM_HWDMS_SHOW_DISLIKES_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                
+                <field
 			name="item_meta_activities"
 			type="radio"
 			label="COM_HWDMS_SHOW_ACTIVITIES_LABEL"
@@ -2238,6 +2264,32 @@
                         <option value="1">JSHOW</option>
                         <option value="0">JHIDE</option>
                 </field>
+                <field
+			name="mediaitem_metadata_button"
+			type="radio"
+			label="COM_HWDMS_SHOW_MEDIAITEM_METADATA_BUTTON_LABEL"
+			description="COM_HWDMS_SHOW_MEDIAITEM_METADATA_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>    
+                <field
+			name="mediaitem_allsizes_button"
+			type="radio"
+			label="COM_HWDMS_SHOW_MEDIAITEM_ALLSIZES_BUTTON_LABEL"
+			description="COM_HWDMS_SHOW_MEDIAITEM_ALLSIZES_BUTTON_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                              
                 <field
 			name="mediaitem_meta_hits"
 			type="radio"
