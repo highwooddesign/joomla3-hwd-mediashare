@@ -182,7 +182,7 @@ JHtml::_('behavior.modal');
                                 </div>
                                 <div class="row-fluid">
                                         <div class="span12">
-                                                <a href="http://hwdmediashare.co.uk/about-hwdmediashare?version=<?php echo $this->version; ?>" target="_blank"><i class="icon-info"></i> <span><?php echo JText::_('COM_HWDMS_ABOUT'); ?></span></a>
+                                                <a href="index.php?option=com_installer&view=manage&filter_type=package&filter_search=hwd"><i class="icon-info"></i> <span><?php echo JText::_('COM_HWDMS_VERSION_INFO'); ?></span></a>
                                         </div>
                                 </div>
                                 <div class="row-fluid">
