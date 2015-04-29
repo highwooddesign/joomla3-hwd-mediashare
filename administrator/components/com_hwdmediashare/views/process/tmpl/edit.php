@@ -26,7 +26,9 @@ $input = $app->input;
 
         <h1><?php echo JText::_('COM_HWDMS_MEDIA_PROCESSOR_LOG'); ?></h1>
         <p><?php echo JText::sprintf( 'COM_HWDMS_GENERATE_X_FOR_MEDIA_X', '<strong>'.$this->getProcessType($this->item).'</strong>', '<a href="">'.$this->item->title.'</a>'); ?></p>
-        
+        <br />
+        <p class="alert alert-info"><?php echo JText::_('COM_HWDMS_PROCESS_LOG_ALERT_DESC'); ?></p>
+        <br />
         <?php if (count($this->items) == 0) : ?>
         
                 <p><?php echo JText::_('COM_HWDMS_THE_LOG_IS_EMPTY'); ?></p>
@@ -36,7 +38,7 @@ $input = $app->input;
                 <?php echo JHtml::_('bootstrap.startAccordion', 'slide-log', array('active' => 'log-0')); ?>
   
                 <?php foreach($this->items as $i => $item): ?>
-                        <?php echo JHtml::_('bootstrap.addSlide', 'slide-log', JText::sprintf('%s (%s)', hwdMediaShareProcesses::getStatus($item), JHtml::_('date.relative', $item->created)), 'log-'.$i); ?>
+                        <?php echo JHtml::_('bootstrap.addSlide', 'slide-log', JText::sprintf('%s <span class="pull-right">%s</span>', hwdMediaShareProcesses::getStatus($item), JHtml::_('date.relative', $item->created)), 'log-'.$i); ?>
                         <div class="row-fluid form-horizontal-desktop">
                                 <div class="control-group">
                                         <div class="control-label">
@@ -44,7 +46,7 @@ $input = $app->input;
                                                     
                                         </div>
                                         <div class="controls">
-                                                <textarea style="width:90%;height:100px;"><?php echo $item->input; ?></textarea>
+                                                <textarea class="log-entry"><?php echo $item->input; ?></textarea>
                                         </div>
                                 </div> 
                                 <div class="control-group">
@@ -53,7 +55,7 @@ $input = $app->input;
                                                     
                                         </div>
                                         <div class="controls">
-                                                <textarea style="width:90%;height:200px;"><?php echo $item->output; ?></textarea>
+                                                <textarea class="log-entry"><?php echo $item->output; ?></textarea>
                                         </div>
                                 </div> 
                         </div> 
