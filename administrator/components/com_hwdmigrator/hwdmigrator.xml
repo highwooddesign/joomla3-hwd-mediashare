@@ -9,6 +9,8 @@
 	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
 	<version>@@VERSION@@</version>  
 	<description>COM_HWDMIGRATOR_DESCRIPTION</description>
+        <!-- Installation script -->
+	<scriptfile>script.php</scriptfile>
         <!-- SQL files -->
 	<install> 
 		<sql>
