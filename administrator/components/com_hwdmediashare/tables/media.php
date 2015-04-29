@@ -269,11 +269,14 @@ class hwdMediaShareTableMedia extends JTable
                                 hwdMediaShareFactory::load('events');
                                 $events = hwdMediaShareEvents::getInstance();
                                 $events->triggerEvent('onAfterMediaAdd', $media); 
-                                
-                                // Process associations.
-                                hwdMediaShareUpload::assignAssociations($media);
                         }    
 
+                        // If new then process associations.
+                        if ($isNew)
+                        {                                                          
+                                hwdMediaShareUpload::assignAssociations($media);
+                        }   
+                        
                         // Send system notifications.
                         if ($isNew && $config->get('notify_new_media') == 1) 
                         {
