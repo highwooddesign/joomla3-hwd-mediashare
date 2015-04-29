@@ -238,12 +238,6 @@ class hwdMediaShareModelChannel extends JModelAdmin
 		// Loop through keys and generate queries to execute.
 		foreach ($pks as $i => $pk)
 		{
-                        // Delete records from activities
-                        $queries[] = $db->getQuery(true)
-                                        ->delete('#__hwdms_activities')
-                                        ->where('element_type = ' . $db->quote(5))
-                                        ->where('element_id = ' . $db->quote($pk));
-
                         // Delete records from field values
                         $queries[] = $db->getQuery(true)
                                         ->delete('#__hwdms_fields_values')
