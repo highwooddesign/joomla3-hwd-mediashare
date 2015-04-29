@@ -214,27 +214,4 @@ class hwdMediaShareModelDashboard extends JModelLegacy
                 }
                 return $count;
 	}  
-        
-        /**
-	 * Method to get the version number of HWD.
-         * 
-         * @access  public
-	 * @return  string  The version number of HWD from the manifest cache.
-	 */
-	public function getVersion()
-	{
-                jimport('joomla.application.component.helper');
-                $params = JComponentHelper::getComponent('com_hwdmediashare');
-                JTable::addIncludePath(JPATH_LIBRARIES.'/joomla/database/table');
-                $table = JTable::getInstance('Extension');
-                $table->load($params->id);
-                $cache = new JRegistry($table->manifest_cache);
-                return $cache->get('version');
-                
-                // Get the SVN revision (this XML parser is now deprecated, but isn't used anyway)
-                $xml = JFactory::getXMLParser('Simple');
-                $xmlfile= JPATH_SITE.'/administrator/components/com_hwdmediashare/com_hwdmediashare.xml';
-                $xml->loadFile($xmlfile);               
-                return $xml->document->getElementByPath('svn')->data();
-	}
 }
