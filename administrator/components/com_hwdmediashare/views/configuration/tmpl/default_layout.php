@@ -60,6 +60,10 @@ defined('_JEXEC') or die;
                                 <div class="control-label"><?php echo $this->form->getLabel('list_meta_likes'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('list_meta_likes'); ?></div>
                         </div>
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('list_meta_dislikes'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('list_meta_dislikes'); ?></div>
+                        </div>                        
                         <div class="control-group"> 
                                 <div class="control-label"><?php echo $this->form->getLabel('list_meta_hits'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('list_meta_hits'); ?></div> 
@@ -222,6 +226,10 @@ defined('_JEXEC') or die;
                                 <div class="controls"><?php echo $this->form->getInput('item_meta_likes'); ?></div>
                         </div>
                         <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('item_meta_dislikes'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('item_meta_dislikes'); ?></div>
+                        </div>                        
+                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('item_meta_activities'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('item_meta_activities'); ?></div>
                         </div>                        
@@ -285,6 +293,14 @@ defined('_JEXEC') or die;
                                 <div class="control-label"><?php echo $this->form->getLabel('mediaitem_quality_button'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('mediaitem_quality_button'); ?></div>
                         </div>   
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('mediaitem_metadata_button'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('mediaitem_metadata_button'); ?></div>
+                        </div>      
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('mediaitem_allsizes_button'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('mediaitem_allsizes_button'); ?></div>
+                        </div>  
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('mediaitem_meta_hits'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('mediaitem_meta_hits'); ?></div>
