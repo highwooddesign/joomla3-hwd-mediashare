@@ -51,7 +51,7 @@ JHtml::_('behavior.framework', true);
 </form>
 <?php
 $cidsPost   = (count($this->cid) > 0 ? '&cid[]='.implode('&cid[]=', $this->cid) : '');
-$textPorcessing = JText::_('COM_HWDMS_PROCESSING_PROCESSING');
+$textProcessing = JText::_('COM_HWDMS_PROCESSING_PROCESSING');
 $textError = JText::_('COM_HWDMS_PROCESSING_ERROR');
 $textResult = JText::_('COM_HWDMS_PROCESSING_RESULT');
 $textSuccess = JText::_('COM_HWDMS_PROCESSING_SUCCESS');
@@ -72,7 +72,7 @@ window.addEvent( 'domready', function() {
                 {
                         $('ajax-process-error').set('html', '');        
                         $('ajax-process-result').empty().addClass('ajax-loading');
-                        $('ajax-process-job').set('html', '$textPorcessing');        
+                        $('ajax-process-job').set('html', '$textProcessing');        
                 },
                 onComplete: function( response )
                 {
