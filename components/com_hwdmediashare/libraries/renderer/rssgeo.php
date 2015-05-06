@@ -1,69 +1,56 @@
 <?php
 /**
- * @version    SVN $Id: rssgeo.php 425 2012-06-28 07:48:57Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2012 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      26-Jan-2012 11:03:39
- */
-
-// No direct access to this file
-defined('_JEXEC') or die('Restricted access');
-
-/**
- * JDocumentRendererRSSGEO is a feed that implements WGS84 Geo Positioning
+ * @package     Joomla.site
+ * @subpackage  Component.hwdmediashare
  *
- * @since       0.1
+ * @copyright   Copyright (C) 2013 Highwood Design Limited. All rights reserved.
+ * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
+ * @author      Dave Horsfall
  */
+
+defined('_JEXEC') or die;
+
 class JDocumentRendererRSSGEO extends JDocumentRenderer
 {
 	/**
-	 * Renderer mime type
+	 * Renderer mime type.
 	 *
-	 * @var    string
-	 * @since  11.1
+         * @access  portected
+	 * @var     string
 	 */
 	protected $_mime = "application/rss+xml";
 
 	/**
-	 * Render the feed
+	 * Render the RSSGEO feed, that implements WGS84 Geo Positioning
 	 *
-	 * @return  string
-	 *
-	 * @since   11.1
+         * @access  public
+	 * @param   string  $name     The name of the element to render
+	 * @param   array   $params   Array of values
+	 * @param   string  $content  Override the output of the renderer
+	 * @return  string  The output.
 	 */
-	public function render()
+	public function render($name = 'rssgeo', $params = null, $content = null)
 	{
-		$app	= JFactory::getApplication();
-
+                // Initialise variables.
+		$app = JFactory::getApplication();
+                $data = $this->_doc;
+                
 		// Gets and sets timezone offset from site configuration
-		$tz	= new DateTimeZone($app->getCfg('offset'));
-		$now	= JFactory::getDate();
-		$now->setTimeZone($tz);
+		$tz = new DateTimeZone($app->getCfg('offset'));
+		$now = JFactory::getDate();
 
-		$data	= &$this->_doc;
-
+                // Define the feed URL.
 		$uri = JFactory::getURI();
 		$url = $uri->toString(array('scheme', 'user', 'pass', 'host', 'port'));
 		$syndicationURL = JRoute::_('&format=feed&type=rssgeo');
 
-		if ($app->getCfg('sitename_pagetitles', 0) == 1) {
-			$title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $data->title);
-		}
-		elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
-			$title = JText::sprintf('JPAGETITLE', $data->title, $app->getCfg('sitename'));
-		}
-		else {
-			$title = $data->title;
-		}
-
-		$feed_title = htmlspecialchars($title, ENT_COMPAT, 'UTF-8');
+                // Define the title.
+		$feed_title = htmlspecialchars($data->title, ENT_COMPAT, 'UTF-8');
 
 		$feed = "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\"\n";
 		$feed.= "                     xmlns:geo=\"http://www.w3.org/2003/01/geo/wgs84_pos#\"\n";
-		$feed.= "                     xmlns:georss=\"http://www.georss.org/georss\">\n";
-
+		$feed.= "                     xmlns:georss=\"http://www.georss.org/georss\"\n";
+		$feed.= "                     xmlns:media=\"http://search.yahoo.com/mrss\">\n";
 		$feed.= "	<channel>\n";
 		$feed.= "		<title>".$feed_title."</title>\n";
 		$feed.= "		<description>".$data->description."</description>\n";
@@ -178,29 +165,36 @@ class JDocumentRendererRSSGEO extends JDocumentRenderer
 				$itemDate->setTimeZone($tz);
 				$feed.= "			<pubDate>".htmlspecialchars($itemDate->toRFC822(true), ENT_COMPAT, 'UTF-8')."</pubDate>\n";
 			}
-			if ($data->items[$i]->enclosure != NULL)
+
+                        if (count($data->items[$i]->mediafiles))
 			{
-					$feed.= "			<enclosure url=\"";
-					$feed.= $data->items[$i]->enclosure->url;
-					$feed.= "\" length=\"";
-					$feed.= $data->items[$i]->enclosure->length;
-					$feed.= "\" type=\"";
-					$feed.= $data->items[$i]->enclosure->type;
-					$feed.= "\"/>\n";
-			}                       
-                        
-                        $geocode=file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.urlencode($data->items[$i]->location).'&sensor=false');
-                        $output= json_decode($geocode);
+                                hwdMediaShareFactory::load('files');
+
+                                foreach ($data->items[$i]->mediafiles as $file)
+                                {
+                                        if ($file = hwdMediaShareFiles::getFileData($data->items[$i]->_media, $file->file_type))
+                                        {
+                                                $feed.= '			<media:content ';
+                                                $feed.= 'url = "' . $file->url . '" ';
+                                                $feed.= 'type = "' . $file->type . '" ';
+                                                $feed.= 'medium = "image" ';
+                                                $feed.= 'duration = "10">';
+                                                $feed.= "</media:content>\n";  
+                                        }        
+                                }
+			}
+
+                        $geocode = file_get_contents('http://maps.google.com/maps/api/geocode/json?address='.urlencode($data->items[$i]->location).'&sensor=false');
+                        $output = json_decode($geocode);
                         $lat = (isset($output->results[0]->geometry->location->lat) ? $output->results[0]->geometry->location->lat : null);
                         $long = (isset($output->results[0]->geometry->location->lng) ? $output->results[0]->geometry->location->lng : null);
-
                         if ($lat && $long) 
                         {
-                                $feed.= "                        <georss:point>$lat $long</georss:point>\n";
-                                $feed.= "                        <geo:lat>$lat</geo:lat>\n";
-                                $feed.= "                        <geo:long>$long</geo:long>\n";
+                                $feed.= "			<georss:point>$lat $long</georss:point>\n";
+                                $feed.= "			<geo:lat>$lat</geo:lat>\n";
+                                $feed.= "			<geo:long>$long</geo:long>\n";
                         }
-
+                        
 			$feed.= "		</item>\n";
 		}
 		$feed.= "	</channel>\n";
@@ -211,11 +205,9 @@ class JDocumentRendererRSSGEO extends JDocumentRenderer
 	/**
 	 * Convert links in a text from relative to absolute
 	 *
-	 * @param   string  $text  The text processed
-	 *
-	 * @return  string   Text with converted links
-	 *
-	 * @since   11.1
+         * @access  public
+	 * @param   string  $text  The text to be processed.
+	 * @return  string  Text with converted links.
 	 */
 	public function _relToAbs($text)
 	{
