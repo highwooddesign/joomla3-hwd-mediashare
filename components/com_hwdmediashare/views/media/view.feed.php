@@ -32,9 +32,6 @@ class hwdMediaShareViewMedia extends JViewLegacy
 		$this->state = $this->get('State');
 		$this->params = $this->state->params;
 
-                // Register classes.
-                JLoader::register('JHtmlString', JPATH_LIBRARIES.'/joomla/html/html/string.php');
-
                 // Import HWD libraries.                
                 hwdMediaShareFactory::load('activities');
                 hwdMediaShareFactory::load('downloads');
@@ -70,13 +67,21 @@ class hwdMediaShareViewMedia extends JViewLegacy
                         // Define standard feed attributes.
 			$feed->title		= $title;
 			$feed->link		= JRoute::_(hwdMediaShareHelperRoute::getMediaItemRoute($item->slug));
-			$feed->description	= JHtmlString::truncate($item->description, $this->params->get('list_desc_truncate'), false, false);
+			$feed->description	= JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false);
 			$feed->date		= date('r', strtotime($item->created));
 			$feed->author		= $item->author;
 			$feed->image		= JRoute::_(hwdMediaShareThumbnails::thumbnail($item));
-                            
-                        // Define specific feed attributes.
-
+			
+                        /**
+                         * If you want to add the thumbnail image into the feed description then uncomment the following line.
+                         * This isn't recommended. Remember RSS should be display agnostic. The RSS reader will parse the data
+                         * in your feed, and display the data appropriately. Image, and other media files can be placed in 
+                         * the <enclosure> tags (http://www.rssboard.org/rss-specification#ltenclosuregtSubelementOfLtitemgt).
+                         * The mRSS specification (http://www.rssboard.org/media-rss) allows for more robust media syndication by
+                         * extending enclosures to handle other media types, as well as providing additional metadata with the media.
+                         */
+                        // $feed->description = '<img src="' . $feed->image . '" align="right" />' . $feed->description;
+                        
                         // RSS.
                         switch ($item->type) 
                         {
@@ -94,7 +99,7 @@ class hwdMediaShareViewMedia extends JViewLegacy
                         }
                         
                         // GEO-RSS.                        
-			$feed->location		= $item->location;
+			$feed->location	= $item->location;
 
                         // MRSS.
                         hwdMediaShareFactory::load('files');
