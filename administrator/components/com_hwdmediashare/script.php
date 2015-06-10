@@ -75,7 +75,7 @@ class com_hwdMediaShareInstallerScript
                 $version = new JVersion();
 
                 // Check Joomla compatibility.
-                if ($version->RELEASE < 3.0)
+                if ($version->RELEASE < 3 || $version->RELEASE >= 4)
                 {
 			$app->enqueueMessage(JText::_('COM_HWDMEDIASHARE_MESSAGE_NOT_COMPATIBLE'));
 			$app->redirect('index.php?option=com_installer');
@@ -123,7 +123,7 @@ class com_hwdMediaShareInstallerScript
                 $db = JFactory::getDbo();
                 
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('id')
                         ->from('#__menu_types')
                         ->where('menutype = ' . $db->quote('hwdmediashare'));
                 try
@@ -339,7 +339,7 @@ class com_hwdMediaShareInstallerScript
                 // Check for duplicates.
                 $db = JFactory::getDBO();
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('id')
                         ->from('#__menu')
                         ->where($db->quoteName('alias') . '=' . $db->quote($alias));
                 try
@@ -372,6 +372,9 @@ class com_hwdMediaShareInstallerScript
 	 */
 	public function removeLegacyFiles()
 	{
+        	// Initialise variables.
+                $app = JFactory::getApplication();
+                
                 $files = array();
                 $folders = array();
                 
@@ -617,6 +620,7 @@ class com_hwdMediaShareInstallerScript
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/javascript/MooTooltips.js';        
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/javascript/PeriodicalExecuter.js';        
                 $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/javascript/ToolTip.js';        
+                $files[]   = JPATH_SITE.'/media/com_hwdmediashare/assets/swf/skin.swf';        
   
                 // Modules
                 $files[]   = JPATH_SITE.'/modules/mod_media_images/css/slideshow.css';
