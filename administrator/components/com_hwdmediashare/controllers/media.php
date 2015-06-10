@@ -7,9 +7,7 @@
  * @license     GNU General Public License http://www.gnu.org/copyleft/gpl.html
  * @author      Dave Horsfall
  */
-/**
- * UNFINISHED
- */ 
+
 defined('_JEXEC') or die;
 
 class hwdMediaShareControllerMedia extends JControllerAdmin
@@ -17,17 +15,18 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	/**
 	 * The prefix to use with controller messages.
          * 
-         * @access      protected
-	 * @var         string
+         * @access  protected
+	 * @var     string
 	 */
 	protected $text_prefix = 'COM_HWDMS';
         
 	/**
 	 * Class constructor.
 	 *
-	 * @access	public
-         * @return      void
-	 */
+	 * @access  public
+	 * @param   array   $config  An optional associative array of configuration settings.
+         * @return  void
+	 */    
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -40,8 +39,11 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
         /**
 	 * Proxy for getModel.
 	 *
-	 * @access	public
-         * @return      object      The model.
+	 * @access  public
+	 * @param   string  $name    The model name. Optional.
+	 * @param   string  $prefix  The class prefix. Optional.
+	 * @param   array   $config  Configuration array for model. Optional.          
+         * @return  object  The model.
 	 */
 	public function getModel($name = 'EditMedia', $prefix = 'hwdMediaShareModel', $config = array())
 	{
@@ -52,8 +54,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	/**
 	 * Method to toggle the status setting of a list of media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function approve()
 	{
@@ -98,8 +100,8 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 	/**
 	 * Method to toggle the featured setting of a list of media.
 	 *
-	 * @access	public
-         * @return      void
+	 * @access  public
+         * @return  void
 	 */
 	public function feature()
 	{
@@ -139,73 +141,5 @@ class hwdMediaShareControllerMedia extends JControllerAdmin
 		}
                 
 		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
-	}
-
-       /**
-	 * Method to syncronise data from the local gallery to a remote CDN.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function syncToCdn()
-	{
-		$this->task = 'apply';
-                if (parent::save())
-                {                      
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                        $table->load(JRequest::getVar('id'));
-                        $properties = $table->getProperties(1);
-                        $item = JArrayHelper::toObject($properties, 'JObject');
-
-                        if ($item->type == 6)
-                        {
-                                $pluginClass = 'plgHwdmediashare'.$item->storage;
-                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$item->storage.'/'.$item->storage.'.php';
-
-                                // Import hwdMediaShare plugins
-                                if (file_exists($pluginPath))
-                                {
-                                        JLoader::register($pluginClass, $pluginPath);
-                                        $platform = call_user_func(array($pluginClass, 'getInstance'));
-                                        $platform->syncToCdn();
-                                }
-                        }
-			return true;
-		}
-	}
-        
-        /**
-	 * Method to syncronise data from a remote CDN to the local gallery.
-	 *
-	 * @access	public
-         * @return      void
-	 */
-	public function syncFromCdn()
-	{
-		$this->task = 'apply';
-                if (parent::save())
-                {                      
-                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                        $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                        $table->load(JRequest::getVar('id'));
-                        $properties = $table->getProperties(1);
-                        $item = JArrayHelper::toObject($properties, 'JObject');
-
-                        if ($item->type == 6)
-                        {
-                                $pluginClass = 'plgHwdmediashare'.$item->storage;
-                                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$item->storage.'/'.$item->storage.'.php';
-
-                                // Import hwdMediaShare plugins
-                                if (file_exists($pluginPath))
-                                {
-                                        JLoader::register($pluginClass, $pluginPath);
-                                        $platform = call_user_func(array($pluginClass, 'getInstance'));
-                                        $platform->syncFromCdn();
-                                }
-                        }
-			return true;
-		}
 	}
 }
