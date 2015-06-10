@@ -10,49 +10,45 @@
 
 defined('_JEXEC') or die;
 
-class hwdMigratorModelMigrate extends JModelAdmin
+class hwdMigratorModelMigrate extends JModelLegacy
 {
-	/**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		Data for the form.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	mixed	A JForm object on success, false on failure
-	 * @since	0.1
-	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		parent::getForm($data, $loadData);
-	}
-
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate video items.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function videoItems()
 	{
+                // Initialise variables.            
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
                 $app = JFactory::getApplication();
 
-                // Require hwdMediaShare factory
+                // Require HWD factory.
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
                 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdvidsvideos')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdvidsvideos')."
-                                ";
-                                $db->setQuery($query);
-                                $items = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdvidsvideos');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $items = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -62,28 +58,42 @@ class hwdMigratorModelMigrate extends JModelAdmin
                 }
                 else
                 {
-                        //First check if jpg is allowed for later
-                        $db = JFactory::getDBO();
+                        // First check if jpg is allowed for later.
                         $query = $db->getQuery(true);
                         $query->select('id');
                         $query->from('#__hwdms_ext');
                         $query->where($db->quoteName('ext').' = '.$db->quote('jpg'));
-                        $db->setQuery($query);
-                        $jpg_ext_id = $db->loadResult();
-                    
+                        try
+                        {
+                                $db->setQuery($query);
+                                $jpg_ext_id = $db->loadResult();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;                            
+                        }                        
+
 			foreach ($items as $item)
                         {
                                 $import = false;
 
-				$query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdms_migrator')."
-                                    WHERE ".$db->quoteName('element_type')." = ".$db->quote('1')."
-                                    AND ".$db->quoteName('element_id')." = ".$db->quote($item->id)."
-                                ";
-                                $db->setQuery($query);
-                                $record = $db->loadObject();
-
+                                $query = $db->getQuery(true);
+                                $query->select('*');
+                                $query->from('#__hwdms_migrator');
+                                $query->where($db->quoteName('element_type').' = '.$db->quote('1'));
+                                $query->where($db->quoteName('element_id').' = '.$db->quote($item->id));
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $record = $db->loadObject();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }  								
+                                                                
                                 if (!isset($record->status))
                                 {
                                         $query = "INSERT INTO ".$db->quoteName('#__hwdms_migrator')." (".$db->quoteName('element_type').",".$db->quoteName('element_id').")
@@ -102,7 +112,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                 }
                                 else
                                 {
-                                        //echo "already imported $item->id<br>";
+                                        // Already imported.
                                 }
 
                                 $data = array();
@@ -153,7 +163,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $item->video_id = preg_replace("/[^a-zA-Z0-9]/", "", $vId[0]);
                                         $url = 'http://blip.tv/file/'.$item->video_id;
 
-                                        // This URL is out of date, so follow redirects to get the new URL
+                                        // This URL is out of date, so follow redirects to get the new URL.
                                         // Thanks: http://codeaid.net/php/get-the-last-effective-url-from-a-series-of-redirects-for-the-given-url
                                         $curl = curl_init($url);
                                         curl_setopt_array($curl, array(
@@ -161,16 +171,16 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                             CURLOPT_FOLLOWLOCATION  => true,
                                         ));
 
-                                        // Execute the request
+                                        // Execute the request.
                                         $result = curl_exec($curl);
 
-                                        // Fail if the request was not successful
+                                        // Fail if the request was not successful.
                                         if ($result === false) {
                                             curl_close($curl);
                                             return null;
                                         }
 
-                                        // Extract the target url
+                                        // Extract the target url.
                                         $redirectUrl = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
                                         curl_close($curl);
 
@@ -208,6 +218,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                                 $pos = strpos($vId[0], "http://");
                                                 if ($pos === false)
                                                 {
+                                                        $import = false;
                                                         continue;
                                                 }
                                                 else
@@ -220,6 +231,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                                 $pos = strpos($vId[1], "http://");
                                                 if ($pos === false)
                                                 {
+                                                        $import = false;
                                                         continue;
                                                 }
                                                 else
@@ -233,7 +245,8 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $data['media_type'] = '';
                                         $data['type'] = '1';
                                         $data['source'] = '';
-                                        // Get source path
+                                        
+                                        // Get source path.
                                         if (file_exists(JPATH_SITE.'/hwdvideos/uploads/'.$item->video_id.'.mp4'))
                                         {
                                                 $source = JPATH_SITE.'/hwdvideos/uploads/'.$item->video_id.'.mp4';
@@ -246,21 +259,32 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         }
                                         else
                                         {
-                                                // Skip file if source doesn't exist
+                                                // Skip file if source does not exist.
+                                                $import = false;
                                                 continue;
                                         }
-                                        //First check for allowed extension
-                                        $db = JFactory::getDBO();
+                                        
+                                        // Check for allowed extension.
                                         $query = $db->getQuery(true);
                                         $query->select('id');
                                         $query->from('#__hwdms_ext');
                                         $query->where($db->quoteName('ext').' = '.$db->quote($ext));
-                                        $db->setQuery($query);
-                                        $ext_id = $db->loadResult();
-                                        if ( $ext_id == 0 )
+                                        try
                                         {
+                                                $db->setQuery($query);
+                                                $ext_id = $db->loadResult();
+                                        }
+                                        catch (RuntimeException $e)
+                                        {
+                                                $this->setError($e->getMessage());
+                                                return false;                            
+                                        }
+                                        if ($ext_id == 0)
+                                        {
+                                                $import = false;
                                                 continue;
                                        	}
+                                        
                                         // Get duration
                                         $duration = (int) $this->time2seconds($item->video_length);                                       
                                         break;
@@ -269,7 +293,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $data['type'] = '';
                                         $data['source'] = '';
 
-                                    	// Get seyret information
+                                    	// Get seyret information.
                                         $vId = explode(",", $item->video_id);
 
                                         if ($vId[0] == 'youtube.com')
@@ -295,18 +319,21 @@ class hwdMigratorModelMigrate extends JModelAdmin
 
                                 if ($import)
                                 {
-                                        // Require hwdMediaShare factory
-                                        JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
-                                        
                                         hwdMediaShareFactory::load('utilities');
                                         $utilities = hwdMediaShareUtilities::getInstance();
                                         
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_media = JTable::getInstance('Media', 'hwdMediaShareTable');
 
+                                        if (!$key = $utilities->generateKey(1))
+                                        {
+                                                $this->setError($utilities->getError());
+                                                return false;
+                                        }  
+                        
                                         $data['id'] = $item->id;                                        
                                         //$data['id'] = 0;
-                                        $data['key'] = $utilities->generateKey();
+                                        $data['key'] = $key;
                                         $data['asset_id'] = '';
                                         $data['ext_id'] = $ext_id;
                                         $data['title'] = $item->title;
@@ -330,7 +357,7 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $data['access'] = '1';
                                         $data['download'] = '1';
                                         $data['params'] = '';
-                                        $data['ordering'] = (int) $item->ordering;
+                                        $data['ordering'] = 0;
                                         $data['created_user_id'] = (int) $item->user_id;
                                         $data['created_user_id_alias'] = '';
                                         $data['created'] = $item->date_uploaded;
@@ -341,32 +368,32 @@ class hwdMigratorModelMigrate extends JModelAdmin
                                         $data['hits'] = (int) $item->number_of_views;
                                         $data['language'] = '*';
                                         
-// Replace the above bind and store methods with the following to force the same ID during migration
-// Create and populate an object
-$profile = JArrayHelper::toObject($data);
-if ($profile->id == 0)
-{
-	continue;
-}
-else
-{
-	if ($hwdms_media->load($profile->id))
-	{
-		continue;
-	}
-}
+                                        // Force the same ID during migration.
+                                        $profile = JArrayHelper::toObject($data);
+                                        if ($profile->id == 0)
+                                        {
+                                                continue;
+                                        }
+                                        else
+                                        {
+                                                if ($hwdms_media->load($profile->id))
+                                                {
+                                                        continue;
+                                                }
+                                        }
 
-// Insert the object into the user profile table.
-$result = JFactory::getDbo()->insertObject('#__hwdms_media', $profile);
-if (!$result)
-{
-	continue;
-}
-if (!$hwdms_media->load($profile->id))
-{
-	continue;
-}
+                                        // Insert the object into the media table.
+                                        $result = JFactory::getDbo()->insertObject('#__hwdms_media', $profile);
+                                        if (!$result)
+                                        {
+                                                continue;
+                                        }
+                                        if (!$hwdms_media->load($profile->id))
+                                        {
+                                                continue;
+                                        }
 
+                                        // Now process files after database save.
                                         if ($item->video_type == "local" || $item->video_type == "mp4")
                                         {
                                                 if (empty($hwdms_media->ext_id) || $hwdms_media->ext_id == 0)
@@ -376,33 +403,32 @@ if (!$hwdms_media->load($profile->id))
                                                         continue;  
                                                 }
                                             
-                                                // Get destination path
+                                                // Import file libraries and setup folders.
+                                                jimport('joomla.filesystem.file');
                                                 hwdMediaShareFactory::load('files');
                                                 hwdMediaShareFiles::getLocalStoragePath();
-
-                                                //Import filesystem libraries. Perhaps not necessary, but does not hurt
-                                                jimport('joomla.filesystem.file');
-
                                                 $folders = hwdMediaShareFiles::getFolders($hwdms_media->key);
                                                 hwdMediaShareFiles::setupFolders($folders);
-
-                                                //Clean up filename to get rid of strange characters like spaces etc
+                                                
+                                                // Get destination path for 'original'.
                                                 $filename = hwdMediaShareFiles::getFilename($hwdms_media->key, '1');
-
                                                 $dest = hwdMediaShareFiles::getPath($folders, $filename, $ext);
+                                                
+                                                // Attempt to copy source to destination.
                                                 if (JFile::copy($source, $dest))
                                                 {
                                                         if (file_exists($dest))
                                                         {
-                                                                    hwdMediaShareFactory::load('files');
-                                                                    hwdMediaShareFiles::add($hwdms_media, 1);
+                                                                hwdMediaShareFactory::load('files');
+                                                                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                                                $HWDfiles->addFile($hwdms_media, '1');
                                                         }
                                                         else
                                                         {
-                                                                    // Couldn't copy the file so we need to skip this item, not logging it
-                                                                    // in the migrator and removing the listing from HWDMediaShare.
-                                                                    $hwdms_media->delete($hwdms_media->id);
-                                                                    continue;
+                                                                // Couldn't copy the file so we need to skip this item, not logging it
+                                                                // in the migrator and removing the listing from HWDMediaShare.
+                                                                $hwdms_media->delete($hwdms_media->id);
+                                                                continue;
                                                         }
                                                 }
                                                 else
@@ -412,7 +438,8 @@ if (!$hwdms_media->load($profile->id))
                                                         $hwdms_media->delete($hwdms_media->id);
                                                         continue;
                                                 }
-                                                // Get smaller thumbnail
+                                                
+                                                // Check for smaller thumbnail.
                                                 if (file_exists(JPATH_SITE.'/hwdvideos/thumbs/'.$item->video_id.'.jpg'))
                                                 {
                                                         $ext = 'jpg';
@@ -422,10 +449,12 @@ if (!$hwdms_media->load($profile->id))
                                                         if (JFile::copy($source, $dest))
                                                         {
                                                                 hwdMediaShareFactory::load('files');
-                                                                hwdMediaShareFiles::add($hwdms_media,'3');
+                                                                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                                                $HWDfiles->addFile($hwdms_media, '3');
                                                         }
                                                 }
-                                                // Get larger thumbnail
+                                                
+                                                // Check for larger thumbnail.
                                                 if (file_exists(JPATH_SITE.'/hwdvideos/thumbs/l_'.$item->video_id.'.jpg'))
                                                 {
                                                         $ext = 'jpg';
@@ -435,23 +464,21 @@ if (!$hwdms_media->load($profile->id))
                                                         if (JFile::copy($source, $dest))
                                                         {
                                                                 hwdMediaShareFactory::load('files');
-                                                                hwdMediaShareFiles::add($hwdms_media,'5');
+                                                                $HWDfiles = hwdMediaShareFiles::getInstance();
+                                                                $HWDfiles->addFile($hwdms_media, '5');
                                                         }
                                                 }
                                         }
                                         else
                                         {
-                                                // Get destination path
+                                                // Import file libraries and setup folders.
+                                                jimport('joomla.filesystem.file');
                                                 hwdMediaShareFactory::load('files');
                                                 hwdMediaShareFiles::getLocalStoragePath();
-
-                                                //Import filesystem libraries. Perhaps not necessary, but does not hurt
-                                                jimport('joomla.filesystem.file');
-
                                                 $folders = hwdMediaShareFiles::getFolders($hwdms_media->key);
                                                 hwdMediaShareFiles::setupFolders($folders);
-
-                                                // Get custom thumbnail
+                                                
+                                                // Get custom thumbnail.
                                                 $source = '';
                                                 $dest = '';
                                                 if (file_exists(JPATH_SITE.'/hwdvideos/thumbs/l_tp-'.$item->id.'.jpg') && $jpg_ext_id > 0)
@@ -473,7 +500,7 @@ if (!$hwdms_media->load($profile->id))
                                                 
                                                 if (!empty($dest) && file_exists($dest) && $jpg_ext_id > 0 && $hwdms_media->id > 0)
                                                 {
-                                                        // Define new custom thumbnail data
+                                                        // Define new custom thumbnail data.
                                                         $data = array();
                                                         $data['id'] = $hwdms_media->id;
                                                         $data['thumbnail_ext_id'] = $jpg_ext_id;
@@ -486,9 +513,10 @@ if (!$hwdms_media->load($profile->id))
                                                         if (!$hwdms_media->store()) {
                                                                 $this->setError($hwdms_media->getError());
                                                                 return false;
-                                                        }                                                    
+                                                        }  
                                                         hwdMediaShareFactory::load('files');
-                                                        hwdMediaShareFiles::add($hwdms_media,'10');
+                                                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                                                        $HWDfiles->addFile($hwdms_media, '10');
                                                 }                                                        
                                         }
                                         
@@ -525,32 +553,42 @@ if (!$hwdms_media->load($profile->id))
                                 }
                         }
                 }
+                
                 return true;
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate video categories.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function videoCategories()
 	{
+                // Initialise variables.            
                 $db = JFactory::getDBO();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdvidscategories')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdvidscategories')."
-                                ";
-                                $db->setQuery($query);
-                                $categories = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdvidscategories');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $categories = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -661,30 +699,39 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate video groups.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function videoGroups()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdvidsgroups')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdvidsgroups')."
-                                ";
-                                $db->setQuery($query);
-                                $items = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdvidsgroups');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $items = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -740,11 +787,17 @@ if (!$hwdms_media->load($profile->id))
                                         
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Group', 'hwdMediaShareTable');
-
+                                        
+                                        if (!$key = $utilities->generateKey(3))
+                                        {
+                                                $this->setError($utilities->getError());
+                                                return false;
+                                        } 
+                                        
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = $utilities->generateKey();
+                                        $data['key'] = $key;
                                         $data['title'] = $item->group_name;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->group_name), 'hwdms_groups', 'media-');
                                         $data['description'] = $item->group_description;
@@ -758,7 +811,7 @@ if (!$hwdms_media->load($profile->id))
                                         //$data['checked_out_time']
                                         $data['access'] = 1;
                                         //$data['params']
-                                        $data['ordering'] = (int) $item->ordering;
+                                        $data['ordering'] = 0;
                                         $data['created_user_id'] = (int) $item->adminid;
                                         //$data['created_user_id_alias']
                                         $data['created'] = $item->date;
@@ -807,30 +860,39 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate video playlists.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function videoPlaylists()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdvidsplaylists')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdvidsplaylists')."
-                                ";
-                                $db->setQuery($query);
-                                $items = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdvidsplaylists');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $items = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -886,11 +948,17 @@ if (!$hwdms_media->load($profile->id))
                                         
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Playlist', 'hwdMediaShareTable');
-
+                                        
+                                        if (!$key = $utilities->generateKey(4))
+                                        {
+                                                $this->setError($utilities->getError());
+                                                return false;
+                                        } 
+                                        
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = $utilities->generateKey();
+                                        $data['key'] = $key;
                                         $data['title'] = $item->playlist_name;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->playlist_name), 'hwdms_playlists', 'media-');
                                         $data['description'] = $item->playlist_description;
@@ -953,30 +1021,39 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate photo items.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function photoItems()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdpsphotos')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdpsphotos')."
-                                ";
-                                $db->setQuery($query);
-                                $items = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdpsphotos');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $items = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -1040,9 +1117,14 @@ if (!$hwdms_media->load($profile->id))
                                         
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_media = JTable::getInstance('Media', 'hwdMediaShareTable');
-
+                                        
+                                        if (!$key = $utilities->generateKey(1))
+                                        {
+                                                $this->setError($utilities->getError());
+                                                return false;
+                                        } 
+                                        
                                         //First check for allowed extension
-                                        $db = JFactory::getDBO();
                                         $query = $db->getQuery(true);
                                         $query->select('id');
                                         $query->from('#__hwdms_ext');
@@ -1056,7 +1138,7 @@ if (!$hwdms_media->load($profile->id))
                                                 $data['asset_id'] = '';
                                                 $data['ext_id'] = (int) $ext_id;
                                                 $data['media_type'] = '';
-                                                $data['key'] = $utilities->generateKey();
+                                                $data['key'] = $key;
                                                 $data['title'] = (empty($item->title) ? 'Image' : $item->title);
                                                 $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->title), 'hwdms_media', 'media');
                                                 $data['description'] = $item->caption;
@@ -1081,7 +1163,7 @@ if (!$hwdms_media->load($profile->id))
                                                 $data['access'] = '1';
                                                 $data['download'] = '1';
                                                 $data['params'] = '';
-                                                $data['ordering'] = (int) $item->ordering;
+                                                $data['ordering'] = 0;
                                                 $data['created_user_id'] = (int) $item->user_id;
                                                 $data['created_user_id_alias'] = '';
                                                 $data['created'] = $item->date_uploaded;
@@ -1120,7 +1202,8 @@ if (!$hwdms_media->load($profile->id))
                                                 if (JFile::copy($source, $dest))
                                                 {
                                                         hwdMediaShareFactory::load('files');
-                                                        hwdMediaShareFiles::add($hwdms_media,'1');
+                                                        $HWDfiles = hwdMediaShareFiles::getInstance();
+                                                        $HWDfiles->addFile($hwdms_media, '1');
                                                 }
                                                 else
                                                 {
@@ -1159,28 +1242,37 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate photo categories.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function photoCategories()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdpscategories')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdpscategories')."
-                                ";
-                                $db->setQuery($query);
-                                $categories = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdpscategories');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $categories = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -1301,30 +1393,39 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate photo groups.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function photoGroups()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdpsgroups')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdpsgroups')."
-                                ";
-                                $db->setQuery($query);
-                                $items = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdpsgroups');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $items = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -1380,11 +1481,17 @@ if (!$hwdms_media->load($profile->id))
                                         
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Group', 'hwdMediaShareTable');
-
+                                        
+                                        if (!$key = $utilities->generateKey(3))
+                                        {
+                                                $this->setError($utilities->getError());
+                                                return false;
+                                        } 
+                                        
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = $utilities->generateKey();
+                                        $data['key'] = $key;
                                         $data['title'] = $item->group_name;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->group_name), 'hwdms_groups', 'media-');
                                         $data['description'] = $item->group_description;
@@ -1398,7 +1505,7 @@ if (!$hwdms_media->load($profile->id))
                                         //$data['checked_out_time']
                                         $data['access'] = 1;
                                         //$data['params']
-                                        $data['ordering'] = (int) $item->ordering;
+                                        $data['ordering'] = 0;
                                         $data['created_user_id'] = (int) $item->adminid;
                                         //$data['created_user_id_alias']
                                         $data['created'] = $item->date;
@@ -1447,30 +1554,39 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to migrate photo albums.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function photoAlbums()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
                 {
                         if ($table == $app->getCfg( 'dbprefix' ).'hwdpsalbums')
                         {
-                                $query = "
-                                    SELECT *
-                                    FROM ".$db->quoteName('#__hwdpsalbums')."
-                                ";
-                                $db->setQuery($query);
-                                $items = $db->loadObjectList();
+                                $query = $db->getQuery(true)
+                                        ->select('*')
+                                        ->from('#__hwdpsalbums');
+                                try
+                                {
+                                        $db->setQuery($query);
+                                        $items = $db->loadObjectList();
+                                }
+                                catch (RuntimeException $e)
+                                {
+                                        $this->setError($e->getMessage());
+                                        return false;                            
+                                }
                         }
                 }
 
@@ -1526,11 +1642,17 @@ if (!$hwdms_media->load($profile->id))
                                         
                                         JTable::addIncludePath(JPATH_SITE.'/administrator/components/com_hwdmediashare/tables');
                                         $hwdms_item = JTable::getInstance('Album', 'hwdMediaShareTable');
-
+                                        
+                                        if (!$key = $utilities->generateKey(2))
+                                        {
+                                                $this->setError($utilities->getError());
+                                                return false;
+                                        } 
+                                        
                                         $data['id'] = 0;
                                         //$data['asset_id']
                                         //$data['thumbnail_ext_id']
-                                        $data['key'] = $utilities->generateKey();
+                                        $data['key'] = $key;
                                         $data['title'] = $item->title;
                                         $data['alias'] = $this->getAlias(JFilterOutput::stringURLSafe($item->title), 'hwdms_albums', 'media-');
                                         $data['description'] = $item->description;
@@ -1544,7 +1666,7 @@ if (!$hwdms_media->load($profile->id))
                                         //$data['checked_out_time']
                                         $data['access'] = 1;
                                         //$data['params']
-                                        $data['ordering'] = (int) $item->ordering;
+                                        $data['ordering'] = 0;
                                         $data['created_user_id'] = (int) $item->user_id;
                                         //$data['created_user_id_alias']
                                         $data['created'] = $item->date_created;
@@ -1593,12 +1715,14 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match video categories.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchVideoCategories()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -1607,6 +1731,9 @@ if (!$hwdms_media->load($profile->id))
                 // Require hwdMediaShare factory
                 JLoader::register('hwdMediaShareFactory', JPATH_ROOT.'/components/com_hwdmediashare/libraries/factory.php');
 
+                $db->setQuery('SHOW TABLES');
+                $tables = $db->loadColumn();
+                
                 $query = "
                     SELECT *
                     FROM ".$db->quoteName('#__hwdms_migrator')."
@@ -1635,17 +1762,21 @@ if (!$hwdms_media->load($profile->id))
                                 $db->setQuery($query);
                                 $categoryId[] = $db->loadResult();
 
-                                $query = "
-                                    SELECT categoryid
-                                    FROM ".$db->quoteName('#__hwdvidsvideo_category')."
-                                    WHERE ".$db->quoteName('videoid')." = ".$db->quote($item->element_id)."
-                                ";
-                                $db->setQuery($query);
-                                $multipleCategories = $db->loadObjectList();
-
-                                foreach ($multipleCategories as $multipleCategory)
+                                // Check the 'hwdvidsvideo_category' table exists.
+                                if (in_array($app->getCfg( 'dbprefix' ).'hwdvidsvideo_category', $tables)) 
                                 {
-                                	$categoryId[] = $multipleCategory->categoryid;
+                                        $query = "
+                                            SELECT categoryid
+                                            FROM ".$db->quoteName('#__hwdvidsvideo_category')."
+                                            WHERE ".$db->quoteName('videoid')." = ".$db->quote($item->element_id)."
+                                        ";
+                                        $db->setQuery($query);
+                                        $multipleCategories = $db->loadObjectList();
+
+                                        foreach ($multipleCategories as $multipleCategory)
+                                        {
+                                                $categoryId[] = $multipleCategory->categoryid;
+                                        }
                                 }
 
                                 foreach ($categoryId as $cId)
@@ -1663,13 +1794,10 @@ if (!$hwdms_media->load($profile->id))
 
                                                 if ($migratedCategoryId > 0)
                                                 {
-                                                        $params = new StdClass;
-                                                        $params->elementId = $item->migration_id;
-                                                        $params->elementType = 1;
-                                                        $params->categoryId = $migratedCategoryId;
-
+                                                        // Load HWD category library.
                                                         hwdMediaShareFactory::load('category');
-                                                        hwdMediaShareCategory::saveIndividual($params);
+                                                        $HWDcategory = hwdMediaShareCategory::getInstance();
+                                                        $HWDcategory->saveIndividual($migratedCategoryId, $item->migration_id);
                                                 }
                                         }
                                 }
@@ -1679,12 +1807,16 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match video tags.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchVideoTags()
 	{
+                return true;
+                
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -1738,12 +1870,14 @@ if (!$hwdms_media->load($profile->id))
         }
         
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match video groups.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchVideoGroups()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -1828,12 +1962,14 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match video playlists.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchVideoPlaylists()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -1864,12 +2000,14 @@ if (!$hwdms_media->load($profile->id))
         }
         
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match photo categories.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchPhotoCategories()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -1917,13 +2055,10 @@ if (!$hwdms_media->load($profile->id))
 
                                         if ($migratedCategoryId > 0)
                                         {
-                                                $params = new StdClass;
-                                                $params->elementId = $item->migration_id;
-                                                $params->elementType = 1;
-                                                $params->categoryId = $migratedCategoryId;
-
+                                                // Load HWD category library.
                                                 hwdMediaShareFactory::load('category');
-                                                hwdMediaShareCategory::saveIndividual($params);
+                                                $HWDcategory = hwdMediaShareCategory::getInstance();
+                                                $HWDcategory->saveIndividual($migratedCategoryId, $item->migration_id);
                                         }
                                 }
                         }
@@ -1932,12 +2067,16 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match photo tags.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchPhotoTags()
 	{
+                return true;
+                
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -1991,12 +2130,14 @@ if (!$hwdms_media->load($profile->id))
         }
                 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match photo groups.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchPhotoGroups()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -2081,12 +2222,14 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to match photo albums.
+         * 
+         * @access  public
+	 * @return  boolean  True on success, false on fail.
 	 */
 	public function matchPhotoAlbums()
 	{
+                // Initialise variables.     
                 $db = JFactory::getDBO();
                 $date = JFactory::getDate();
                 $user = JFactory::getUser();
@@ -2172,18 +2315,23 @@ if (!$hwdms_media->load($profile->id))
         }
         
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to get a parent category ID.
+         * 
+         * @access  public
+         * @param   object   $category  The category object.
+         * @param   integer  $etype     The element type.
+	 * @return  mixed    The ID on success, false on fail.
 	 */
-	public function getParentId($category, $etype=2)
+	public function getParentId($category, $etype = 2)
 	{
+                // Initialise variables.     
+                $db = JFactory::getDBO();
+                
                 if ($category->parent == "0")
                 {
                         return "1";
                 }
 
-                $db = JFactory::getDBO();
                 $query = "
                     SELECT *
                     FROM ".$db->quoteName('#__hwdms_migrator')."
@@ -2209,11 +2357,14 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to process an embed code import
-         *
-	 * @since   0.1
+	 * Method to get a category level in hwdVideoShare.
+         * 
+         * @access  public
+         * @param   object  $category  The category object.
+         * @param   string  $ctable    The name of the cateogry table.
+	 * @return  mixed   The ID on success, false on fail.
 	 */
-	public function getLevel($category, $ctable='hwdvidscategories')
+	public function getLevel($category, $ctable = 'hwdvidscategories')
 	{
                 $level = 1;
                 if ($category->parent == "0")
@@ -2224,7 +2375,7 @@ if (!$hwdms_media->load($profile->id))
                 $db = JFactory::getDBO();
                 $app = JFactory::getApplication();
 
-                $db->setQuery( 'SHOW TABLES' );
+                $db->setQuery('SHOW TABLES');
                 $tables = $db->loadColumn();
 
                 foreach ($tables as $table)
@@ -2270,11 +2421,15 @@ if (!$hwdms_media->load($profile->id))
         }
 
         /**
-	 * Method to check for valid aliases (no duplicates)
-	 *
-	 * @return boolean
+	 * Method to check for valid aliases (no duplicates).
+         * 
+         * @access  public
+         * @param   string  $alias  The alias to check.
+         * @param   string  $table  The name of the table where the alias is being used.
+         * @param   string  $prep   A prepend string for duplicates.
+	 * @return  string  The alias.
 	 */
-        function getAlias($alias, $table, $prep='media')
+        public function getAlias($alias, $table, $prep = 'media')
         {
                 $prep = $prep.rand(1,9);
                 
@@ -2304,13 +2459,15 @@ if (!$hwdms_media->load($profile->id))
         }
         
         /**
-	 * Method to check for valid aliases (no duplicates)
-	 *
-	 * @return boolean
+	 * Method to convert a timestamp to number of seconds.
+         * 
+         * @access  public
+         * @param   string   $time  The timestamp to process.
+	 * @return  integer  The number of seconds.
 	 */
 	function time2seconds($time='00:00:00')
         {
-            list($hours, $mins, $secs) = explode(':', $time);
-            return ($hours * 3600 ) + ($mins * 60 ) + $secs;
+                list($hours, $mins, $secs) = explode(':', $time);
+                return ($hours * 3600 ) + ($mins * 60 ) + $secs;
         }
 }
