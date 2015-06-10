@@ -47,7 +47,7 @@ class hwdMediaShareModelReported extends JModelList
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('*')
                         ->from('#__hwdms_reports')
                         ->where('element_type = ' . $db->quote(1))
                         ->group('element_id');
@@ -75,7 +75,7 @@ class hwdMediaShareModelReported extends JModelList
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('*')
                         ->from('#__hwdms_reports')
                         ->where('element_type = ' . $db->quote(2))
                         ->group('element_id');
@@ -103,7 +103,7 @@ class hwdMediaShareModelReported extends JModelList
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('*')
                         ->from('#__hwdms_reports')
                         ->where('element_type = ' . $db->quote(3))
                         ->group('element_id');
@@ -131,7 +131,7 @@ class hwdMediaShareModelReported extends JModelList
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('*')
                         ->from('#__hwdms_reports')
                         ->where('element_type = ' . $db->quote(5))
                         ->group('element_id');
@@ -159,7 +159,7 @@ class hwdMediaShareModelReported extends JModelList
 	{
                 $db = JFactory::getDbo();
                 $query = $db->getQuery(true)
-                        ->select('1')
+                        ->select('*')
                         ->from('#__hwdms_reports')
                         ->where('element_type = ' . $db->quote(4))
                         ->group('element_id');
