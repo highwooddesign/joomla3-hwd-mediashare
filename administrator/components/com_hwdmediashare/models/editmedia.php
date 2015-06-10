@@ -852,12 +852,7 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 	 * @note    $pks is passed by reference only because JModelAdmin parent method does, and we need to keep this declaration compatible.
 	 */
 	public function delete(&$pks)
-	{
-                if (!parent::delete($pks))
-                {
-			return false;
-		}
-                
+	{                
 		$db = JFactory::getDBO();
                 $pks = (array) $pks;
                 
@@ -867,12 +862,6 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
 		// Loop through keys and generate queries to execute.
 		foreach ($pks as $i => $pk)
 		{
-                        // Delete records from activities.
-                        $queries[] = $db->getQuery(true)
-                                        ->delete('#__hwdms_activities')
-                                        ->where('element_type = ' . $db->quote(1))
-                                        ->where('element_id = ' . $db->quote($pk));
-
                         // Delete records from album map.
                         $queries[] = $db->getQuery(true)
                                         ->delete('#__hwdms_album_map')
@@ -996,6 +985,12 @@ class hwdMediaShareModelEditMedia extends JModelAdmin
                         }
                 }
 
+                // The parent delete is run after the above processes as the database row is required for some of the deletion tasks.
+                if (!parent::delete($pks))
+                {
+			return false;
+		}
+                
 		// Clear the component's cache.
 		$this->cleanCache();
 
