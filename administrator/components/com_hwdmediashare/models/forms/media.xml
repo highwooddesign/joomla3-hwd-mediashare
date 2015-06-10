@@ -352,6 +352,7 @@
                                 <option value="1">JYES</option>
                                 <option value="0">JNO</option>
                         </field>
+                        <field type="spacer" hr="true" />
                         <field
                                 name="password_protect"
                                 type="radio"
@@ -372,6 +373,7 @@
                                 description="COM_HWDMS_PASSWORD_DESC"
                                 autocomplete="off"
                         />
+                        <field type="spacer" hr="true" />                        
                         <field
                                 name="age_restriction"
                                 type="radio"
@@ -412,6 +414,7 @@
                                 <option value="20">20</option>
                                 <option value="21">21</option>
                         </field>
+                        <field type="spacer" hr="true" />                        
                         <field
                                 name="allow_comments"
                                 type="radio"
