@@ -103,5 +103,95 @@ class hwdMediaShareControllerEditMedia extends JControllerForm
 		$this->setRedirect(JRoute::_('index.php?option=com_hwdmediashare&view=' . $this->view_list . $this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
-	}     
+	}    
+
+        /**
+	 * Method to syncronise data from the local gallery to a platform. 
+	 *
+	 * @access  public
+         * @return  void
+	 */
+	public function syncToPlatform()
+	{
+		$this->task = 'apply';
+                if (parent::save())
+                {                      
+                        // Get a table instance.
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+
+                        // Attempt to load the table row.
+                        $return = $table->load($this->input->getInt('id'));
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+
+                        $properties = $table->getProperties(1);
+                        $item = JArrayHelper::toObject($properties, 'JObject');
+
+                        if ($item->type == 6 && $item->storage)
+                        {
+                                $pluginClass = 'plgHwdmediashare' . $item->storage;
+                                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $item->storage . '/' . $item->storage . '.php';
+                                if (file_exists($pluginPath))
+                                {
+                                        JLoader::register($pluginClass, $pluginPath);
+                                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+                                        if (!$result = $HWDplatform->syncToPlatform($item))
+                                        {
+                                                JFactory::getApplication()->enqueueMessage($HWDplatform->getError());
+                                        }
+                                }
+                        }
+		}
+	}
+        
+        /**
+	 * Method to syncronise data from a platform to the local gallery. 
+	 *
+	 * @access  public
+         * @return  void
+	 */
+	public function syncFromPlatform()
+	{
+		$this->task = 'apply';
+                if (parent::save())
+                {
+                        // Get a table instance.
+                        JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                        $table = JTable::getInstance('media', 'hwdMediaShareTable');
+                        
+                        // Attempt to load the table row.
+                        $return = $table->load($this->input->getInt('id'));
+
+                        // Check for a table object error.
+                        if ($return === false && $table->getError())
+                        {
+                                $this->setError($table->getError());
+                                return false;
+                        }
+                
+                        $properties = $table->getProperties(1);
+                        $item = JArrayHelper::toObject($properties, 'JObject');
+
+                        if ($item->type == 6 && $item->storage)
+                        {
+                                $pluginClass = 'plgHwdmediashare' . $item->storage;
+                                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $item->storage . '/' . $item->storage . '.php';
+                                if (file_exists($pluginPath))
+                                {
+                                        JLoader::register($pluginClass, $pluginPath);
+                                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+                                        if (!$result = $HWDplatform->syncFromPlatform($item))
+                                        {
+                                                JFactory::getApplication()->enqueueMessage($HWDplatform->getError());
+                                        }
+                                }
+                        }
+		}
+	}        
 }
