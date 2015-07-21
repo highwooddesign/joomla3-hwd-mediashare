@@ -40,7 +40,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                                 $return = array(
                                         'status' => 'fail',
                                         'data' => array(
-                                                'task' => 'addUpload'
+                                                'task' => 'addmedia'
                                         ),
                                         'message' => $HWDplatform->getError()
                                 );
@@ -51,7 +51,7 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                                 $return = array(
                                         'status' => 'success',
                                         'data' => array(
-                                                'task' => 'addUpload',
+                                                'task' => 'addmedia',
                                                 'name' => $HWDplatform->_item->title,
                                                 'id' => $HWDplatform->_item->id                                            
                                         ),
