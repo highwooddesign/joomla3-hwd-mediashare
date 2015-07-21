@@ -22,7 +22,7 @@ defined('_JEXEC') or die;
       <!-- Buttons -->
       <div class="btn-group pull-right">  
         <?php if ($this->params->get('list_tree_button') != '0') : ?>
-          <a title="<?php echo JText::_('COM_HWDMS_TREE'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoriesRoute(array('display' => 'tree'))); ?>" class="btn"><i class="icon-tree-2"></i></a>
+          <a title="<?php echo JText::_('COM_HWDMS_TREE'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoriesRoute(array('display' => 'tree'))); ?>" class="btn"><i class="icon-tree"></i></a>
         <?php endif; ?>
         <?php if ($this->params->get('list_details_button') != '0') : ?>
           <a title="<?php echo JText::_('COM_HWDMS_DETAILS'); ?>" href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoriesRoute(array('display' => 'details'))); ?>" class="btn"><i class="icon-image"></i></a>
