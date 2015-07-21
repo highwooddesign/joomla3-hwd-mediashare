@@ -141,7 +141,7 @@ JHtml::_('formbehavior.chosen', 'select');
         <?php endforeach; ?>
         </fieldset>
       <?php echo JHtml::_('bootstrap.endTab'); ?>
-    <?php endforeach; ?> 
+    <?php endforeach; ?>
     <!-- Moderation -->
     <?php if ($this->item->attributes->get('access-change')): ?>
     <?php echo JHtml::_('bootstrap.addTab', 'pane', 'moderation', JText::_('COM_HWDMS_MODERATION', true)); ?>
