@@ -125,7 +125,7 @@ JHtml::_('formbehavior.chosen', 'select');
     <!-- Custom Fields -->
     <?php foreach($this->item->customfields->fields as $group => $fields) : ?>
       <?php echo JHtml::_('bootstrap.addTab', 'pane', $group, JText::_($group, true)); ?>
-        <fieldset>
+      <fieldset>
         <?php foreach($fields as $field) : ?>
           <div class="control-group">
             <div class="control-label">
@@ -136,9 +136,9 @@ JHtml::_('formbehavior.chosen', 'select');
             </div>
           </div>
         <?php endforeach; ?>
-        </fieldset>
+      </fieldset>
       <?php echo JHtml::_('bootstrap.endTab'); ?>
-    <?php endforeach; ?> 
+    <?php endforeach; ?>
     <!-- Moderation -->
     <?php if ($this->item->attributes->get('access-change')): ?>
     <?php echo JHtml::_('bootstrap.addTab', 'pane', 'moderation', JText::_('COM_HWDMS_MODERATION', true)); ?>
