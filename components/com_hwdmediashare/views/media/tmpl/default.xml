@@ -13,14 +13,14 @@
                         label="COM_HWDMS_FILTERING_PARAMETERS"
                 >                                
                         <field
-                                name="list_default_media_type"
+                                name="list_media_type"
                                 type="list"
                                 label="COM_HWDMS_MEDIA_TYPE_LABEL"
                                 description="COM_HWDMS_MEDIA_TYPE_DESC"
                                 class="inputbox"
                                 default=""
                         >
-                                <option value="">COM_HWDMS_ANY</option>
+                                <option value="0">COM_HWDMS_ANY</option>
                                 <option value="1">COM_HWDMS_AUDIO</option>
                                 <option value="2">COM_HWDMS_DOCUMENTS</option>
                                 <option value="3">COM_HWDMS_IMAGES</option>
@@ -55,10 +55,9 @@
                                 name="catid" 
                                 type="category" 
                                 extension="com_hwdmediashare"
-                                multiple="true" 
-                                size="5"
                                 label="JCATEGORY"
                                 description="COM_HWDMS_CATEGORY_DESC"
+                                multiple="true" 
                         >
                                 <option value="">JOPTION_ALL_CATEGORIES</option>
                         </field>
@@ -87,39 +86,12 @@
                         name="layout"
                         label="COM_HWDMS_LAYOUT_PARAMETERS"
                 >
-                        <field 
-                                name="list_item_heading" 
-                                type="list" 
-                                label="COM_HWDMS_HEADING_LEVEL_LABEL"
-                                description="COM_HWDMS_HEADING_LEVEL_DESC"
-                                default=""
-                        >
-                                <option value="">JGLOBAL_USE_GLOBAL</option>
-                                <option value="1">JH1</option>
-                                <option value="2">JH2</option>
-                                <option value="3">JH3</option>
-                                <option value="4">JH4</option>
-                                <option value="5">JH5</option>
-                                <option value="6">JH6</option>
-                        </field>
-                        <field
-                                name="list_default_display"
-                                type="list"
-                                label="COM_HWDMS_DISPLAY_STYLE_LABEL"
-                                description="COM_HWDMS_DISPLAY_STYLE_DESC"
-                                default=""
-                        >
-                                <option value="">JGLOBAL_USE_GLOBAL</option>
-                                <option value="details">COM_HWDMS_DETAILS</option>
-                                <option value="gallery">COM_HWDMS_GALLERY</option>
-                                <option value="list">COM_HWDMS_LIST</option>
-                        </field>
                         <field
                                 name="list_columns"
                                 type="list"
-                                default=""
                                 label="COM_HWDMS_LIST_COLUMNS_LABEL"
                                 description="COM_HWDMS_LIST_COLUMNS_DESC"
+                                default=""
                         >
                                 <option value="">JGLOBAL_USE_GLOBAL</option>
                                 <option value="1">1</option>
@@ -154,51 +126,14 @@
                                 <option value="50">J50</option>
                                 <option value="100">J100</option>
                         </field>
-                        <field 
-                                name="list_link_titles" 
-                                type="radio" 
-                                label="COM_HWDMS_LINKED_TITLES_LABEL"
-                                description="COM_HWDMS_LINKED_TITLES_LABEL"
-                                class="btn-group btn-group-yesno"
-                                default=""
-                        >
-                                <option value="1">JSHOW</option>
-                                <option value="0">JHIDE</option>
-                                <option value="">JGLOBAL_USE_GLOBAL</option>
-                        </field>
-                        <field 
-                                name="list_link_thumbnails" 
-                                type="radio" 
-                                label="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
-                                description="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
-                                class="btn-group btn-group-yesno"
-                                default=""
-                        >
-                                <option value="1">JSHOW</option>
-                                <option value="0">JHIDE</option>
-                                <option value="">JGLOBAL_USE_GLOBAL</option>
-                        </field>
-                        <field
-                                name="list_title_truncate"
-                                type="text"
-                                label="COM_HWDMS_TRUNCATE_TITLE_LABEL"
-                                description="COM_HWDMS_TRUNCATE_TITLE_DESC"
-                                default=""
-                        />
-                        <field
-                                name="list_desc_truncate"
-                                type="text"
-                                label="COM_HWDMS_TRUNCATE_DESC_LABEL"
-                                description="COM_HWDMS_TRUNCATE_DESC_DESC"
-                                default=""
-                        />
+                        <field type="spacer" hr="true" />                        
                         <field
                                 name="list_meta_title"
                                 type="radio"
                                 label="COM_HWDMS_SHOW_TITLE_LABEL"
                                 description="COM_HWDMS_SHOW_TITLE_DESC"
                                 class="btn-group btn-group-yesno"
-                                default=""
+                                default="" 
                         >
                                 <option value="1">JSHOW</option>
                                 <option value="0">JHIDE</option>
@@ -210,7 +145,7 @@
                                 label="COM_HWDMS_SHOW_THUMBNAIL_LABEL"
                                 description="COM_HWDMS_SHOW_THUMBNAIL_DESC"
                                 class="btn-group btn-group-yesno"
-                                default=""
+                                default="" 
                         >
                                 <option value="1">JSHOW</option>
                                 <option value="0">JHIDE</option>
@@ -289,6 +224,18 @@
                                 <option value="">JGLOBAL_USE_GLOBAL</option>
                         </field>
                         <field
+                                name="list_meta_dislikes"
+                                type="radio"
+                                label="COM_HWDMS_SHOW_DISLIKES_LABEL"
+                                description="COM_HWDMS_SHOW_DISLIKES_DESC"
+                                class="btn-group btn-group-yesno"
+                                default=""
+                        >
+                                <option value="1">JSHOW</option>
+                                <option value="0">JHIDE</option>
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                        </field>                      
+                        <field
                                 name="list_meta_hits"
                                 type="radio"
                                 label="COM_HWDMS_SHOW_VIEWS_LABEL"
@@ -312,6 +259,98 @@
                                 <option value="0">JHIDE</option>
                                 <option value="">JGLOBAL_USE_GLOBAL</option>
                         </field>
+                        <field
+                                name="list_meta_featured_status"
+                                type="radio"
+                                label="COM_HWDMS_SHOW_FEATURED_STATUS_LABEL"
+                                description="COM_HWDMS_SHOW_FEATURED_STATUS_DESC"
+                                class="btn-group btn-group-yesno"
+                                default=""
+                        >
+                                <option value="1">JSHOW</option>
+                                <option value="0">JHIDE</option>
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                        </field>  
+                        <field type="spacer" hr="true" />   
+                        <field
+                                name="list_default_display"
+                                type="list"
+                                label="COM_HWDMS_DISPLAY_STYLE_LABEL"
+                                description="COM_HWDMS_DISPLAY_STYLE_DESC"
+                                default=""
+                        >
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                                <option value="details">COM_HWDMS_DETAILS</option>
+                                <option value="gallery">COM_HWDMS_GALLERY</option>
+                                <option value="list">COM_HWDMS_LIST</option>
+                        </field> 
+                        <field
+                                name="list_item_heading"
+                                type="list"
+                                label="COM_HWDMS_HEADING_LEVEL_LABEL"
+                                description="COM_HWDMS_HEADING_LEVEL_DESC"
+                                default=""
+                        >
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                                <option value="1">JH1</option>
+                                <option value="2">JH2</option>
+                                <option value="3">JH3</option>
+                                <option value="4">JH4</option>
+                                <option value="5">JH5</option>
+                                <option value="6">JH6</option>
+                        </field> 
+                        <field
+                                name="list_thumbnail_aspect"
+                                type="list"
+                                label="COM_HWDMS_THUMBNAIL_ASPECT_LABEL"
+                                description="COM_HWDMS_THUMBNAIL_ASPECT_DESC"
+                                default=""
+                        >
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                                <option value="0">COM_HWDMS_OPTION_MAINTAIN_ORIGINAL</option>
+                                <option value="43">COM_HWDMS_OPTION_43</option>
+                                <option value="169">COM_HWDMS_OPTION_169</option>
+                                <option value="11">COM_HWDMS_OPTION_11</option>
+                                <option value="1115">COM_HWDMS_OPTION_1115</option>
+                        </field> 
+                        <field 
+                                name="list_link_titles" 
+                                type="radio" 
+                                label="COM_HWDMS_LINKED_TITLES_LABEL"
+                                description="COM_HWDMS_LINKED_TITLES_LABEL"
+                                class="btn-group btn-group-yesno"
+                                default=""  
+                        >
+                                <option value="1">JYES</option>
+                                <option value="0">JNO</option>
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                        </field>
+                        <field 
+                                name="list_link_thumbnails" 
+                                type="radio" 
+                                label="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
+                                description="COM_HWDMS_LINKED_THUMBNAILS_LABEL"
+                                class="btn-group btn-group-yesno"
+                                default=""  
+                        >
+                                <option value="1">JYES</option>
+                                <option value="0">JNO</option>
+                                <option value="">JGLOBAL_USE_GLOBAL</option>
+                        </field>
+                        <field 
+                                name="list_title_truncate" 
+                                type="text" 
+                                label="COM_HWDMS_TRUNCATE_TITLE_LABEL"
+                                description="COM_HWDMS_TRUNCATE_TITLE_DESC"
+                                default=""  
+                        />
+                        <field 
+                                name="list_desc_truncate" 
+                                type="text" 
+                                label="COM_HWDMS_TRUNCATE_DESC_LABEL"
+                                description="COM_HWDMS_TRUNCATE_DESC_DESC"
+                                default=""  
+                        />
                 </fieldset>
         </fields>
 </metadata>
