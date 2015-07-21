@@ -8,6 +8,7 @@ Joomla.submitbutton = function(task)
         post("purgeoldprocesses")
         post("uninstalloldextensions")
         post("databaseindexoptimisation")
+        post("migratelegacytags")
     }
     else
     {

@@ -53,6 +53,12 @@ JHtml::_('behavior.framework', true);
                                         <?php echo JText::_('COM_HWDMS_DATABASE_INDEX_OPTIMISATION'); ?>
                                 </td>
                         </tr>
+                        <tr>
+                                <td>
+                                        <div id="ajax-container-migratelegacytags" class="pull-right"></div>
+                                        <?php echo JText::_('COM_HWDMS_MIGRATE_LEGACY_TAGS'); ?>
+                                </td>
+                        </tr>
                 </tbody>
         </table>
         <input type="hidden" name="task" value="" />
