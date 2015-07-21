@@ -72,7 +72,7 @@ class hwdMediaShareHelperRoute
                 if (!$config->get('enable_categories')    && (in_array($app->input->get('view', '', 'word'), array('categories', 'category', 'categoryform')))) $enabled = false;
                 if (!$config->get('enable_albums')        && (in_array($app->input->get('view', '', 'word'), array('albums', 'album', 'albumform')))) $enabled = false;
                 if (!$config->get('enable_groups')        && (in_array($app->input->get('view', '', 'word'), array('groups', 'group', 'groupform')))) $enabled = false;
-                if (!$config->get('enable_channels')      && (in_array($app->input->get('view', '', 'word'), array('users', 'user', 'userform')))) $enabled = false;
+                if (!$config->get('enable_channels')      && (in_array($app->input->get('view', '', 'word'), array('channels', 'channel', 'channelform')))) $enabled = false;
                 if (!$config->get('enable_playlists')     && (in_array($app->input->get('view', '', 'word'), array('playlists', 'playlist', 'playlistform')))) $enabled = false;
                 
                 if (!$enabled)
@@ -148,6 +148,7 @@ class hwdMediaShareHelperRoute
 	{
                 // Reverse category lookup.
                 $categoryLookup = JCategories::getInstance('hwdMediaShare')->get($id);
+                $categoryArray = array();
                 while ($categoryLookup)
                 {
                         $categoryArray[] = $categoryLookup->id;
@@ -241,6 +242,7 @@ class hwdMediaShareHelperRoute
                 // Get data from the request.
                 $roption = $app->input->get('option');
                 $rview = $app->input->get('view');
+                $rtask = $app->input->get('task');
                 $rid = $app->input->get('id', 0, 'int');
                 $rcategory_id = $app->input->get('category_id', 0, 'int');
                 $rplaylist_id = $app->input->get('playlist_id', 0, 'int');
@@ -248,7 +250,7 @@ class hwdMediaShareHelperRoute
                 $rgroup_id = $app->input->get('group_id', 0, 'int');
                 
                 // Associate, in priority: category/playlist/album/group
-                if ($associate && $roption == 'com_hwdmediashare' && $rview == 'category' && $rid)
+                if ($associate && $roption == 'com_hwdmediashare' && $rview == 'category' && $rid && empty($rtask))
                 {
                         $append = '&category_id='.$rid;
                         $category_id = $rid;                        
@@ -309,6 +311,7 @@ class hwdMediaShareHelperRoute
                 {
                         // Reverse category lookup.
                         $categoryLookup = JCategories::getInstance('hwdMediaShare')->get($category_id);
+                        $categoryArray = array();
                         while ($categoryLookup)
                         {
                                 $categoryArray[] = $categoryLookup->id;
@@ -439,12 +442,14 @@ class hwdMediaShareHelperRoute
                 }
                 elseif ($config->get('community_link') == 'jomsocial' && file_exists(JPATH_ROOT.'/components/com_community'))
                 {
-                        include_once(JPATH_ROOT.'/components/com_community/libraries/core.php');
+                        include_once(JPATH_ROOT . '/components/com_community/libraries/core.php');
                         return CRoute::_('index.php?option=com_community&view=profile&userid='.$id);
                 }
                 elseif ($config->get('community_link') == 'easysocial' && file_exists(JPATH_ROOT.'/components/com_easysocial'))
                 {
-                        return JRoute::_('index.php?option=com_easysocial&view=profile&id='.$id);
+                        require_once(JPATH_ADMINISTRATOR . '/components/com_easysocial/includes/foundry.php');
+                        $user = Foundry::user($id);
+			return $user->getPermalink();
                 }                
                 elseif ($config->get('community_link') == 'jomwall' && file_exists(JPATH_ROOT.'/components/com_awdwall'))
                 {
@@ -550,6 +555,30 @@ class hwdMediaShareHelperRoute
                 return self::_buildUrl('index.php?option=com_hwdmediashare&view=search', $params, $needles);
 	}
 
+	/**
+	 * Method to get the url of the current URI, and append query parameters.
+         * 
+         * @access  public
+         * @static
+         * @param   array   $params  An array of additional url parameters.
+         * @return  string  The url to the content.
+	 */
+	public static function getCurrentRoute($params = array())
+	{
+                $url = JUri::getInstance();
+                $url->reset();
+                
+                if (is_array($params) && count($params))
+                {
+                        foreach($params as $key => $param)
+                        {
+                                $url->setVar($key, $param);                            
+                        }
+                }
+
+                return $url->toString();
+	}
+        
 	/**
 	 * Method to build an url based on parmaeters.
          * 
