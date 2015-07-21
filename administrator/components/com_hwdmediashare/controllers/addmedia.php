@@ -301,6 +301,44 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 }
         }
         
+        /**
+	 * Method to process a platform upload.
+	 *
+	 * @access  public
+         * @return  void
+	 */
+        public function platform()
+        {
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
+
+                $pluginClass = 'plgHwdmediashare' . $config->get('platform');
+                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $config->get('platform') . '/' . $config->get('platform') . '.php';
+                if (file_exists($pluginPath))
+                {
+                        JLoader::register($pluginClass, $pluginPath);
+                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+
+                        // Process the platform upload.
+                        if ($HWDplatform->addUpload())
+                        {
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $HWDplatform->_item->title));
+                                $this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&task=editmedia.edit&id=' . $HWDplatform->_item->id, false));                                              
+                        }
+                        else
+                        {
+                                $this->setMessage($HWDplatform->getError());
+                                $this->setRedirect($this->getReturnPage());
+                        }                     
+                }
+                else
+                {
+                        $this->setMessage(JText::_('COM_HWDMS_ERROR_UNABLE_TO_LOCATE_PLATFORM_PLUGIN'));
+                        $this->setRedirect($this->getReturnPage());
+                }                
+        }
+        
 	/**
 	 * Method to display the directory scan tree view.
 	 *
