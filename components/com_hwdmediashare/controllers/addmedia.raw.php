@@ -75,13 +75,16 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
         }
         
         /**
-	 * Method to process a file upload using FancyUpload2.
+	 * Method to process a platform upload.
 	 *
 	 * @access  public
          * @return  void
 	 */
-        public function addCdnUpload()
+        public function platform()
         {
+		// Initialise variables.
+                $document = JFactory::getDocument();
+                            
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
@@ -91,8 +94,40 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $player = call_user_func(array($pluginClass, 'getInstance'));
-                        return $player->addCdnUpload();
+                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+
+                        if (!$HWDplatform->addUpload())
+                        {
+                                // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                                $return = array(
+                                        'status' => 'fail',
+                                        'data' => array(
+                                                'task' => 'addmedia'
+                                        ),
+                                        'message' => $HWDplatform->getError()
+                                );
+                        }
+                        else
+                        {
+                                // Set JSON output in JSEND spec http://labs.omniti.com/labs/jsend
+                                $return = array(
+                                        'status' => 'success',
+                                        'data' => array(
+                                                'task' => 'addmedia',
+                                                'name' => $HWDplatform->_item->title,
+                                                'id' => $HWDplatform->_item->id                                            
+                                        ),
+                                        'message' => null
+                                );
+                        } 
+
+                        // Set the MIME type for JSON output.
+                        $document->setMimeEncoding( 'application/json' );
+
+                        // Output the JSON data.      
+                        echo json_encode($return);
+
+                        JFactory::getApplication()->close();                       
                 }
         }
 }
