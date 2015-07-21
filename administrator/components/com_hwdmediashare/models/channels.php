@@ -93,7 +93,7 @@ class hwdMediaShareModelChannels extends JModelList
                 // Join over the users.
 		$query->select('u.name, u.username, u.block, u.activation');
 		$query->join('LEFT', '#__users AS u ON u.id=a.id');
-                $query->where('u.id IS NOT NULL');
+                $query->where('u.id IS NOT NULL'); // Prevent returning channels for users who have been deleted.
                 
                 // Join over the users for the title (if empty), with value based on configuration.
                 $config->get('author') == 0 ? $query->select('CASE WHEN a.title > ' . $db->quote(' ') . ' THEN a.title ELSE ua.name END AS title') : $query->select('CASE WHEN a.title > ' . $db->quote(' ') . ' THEN a.title ELSE ua.username END AS title');
