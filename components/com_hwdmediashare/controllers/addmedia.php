@@ -114,33 +114,42 @@ class hwdMediaShareControllerAddMedia extends JControllerForm
                 }  
         }
 
-	/**
-	 * Method to process file upload using FancyUpload2
-	 * @since	0.1
+        /**
+	 * Method to process a platform upload.
+	 *
+	 * @access  public
+         * @return  void
 	 */
-        function addCdnUpload()
+        public function platform()
         {
-                // Load hwdMediaShare config
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
-                $pluginClass = 'plgHwdmediashare'.$config->get('platform');
-                $pluginPath = JPATH_ROOT.'/plugins/hwdmediashare/'.$config->get('platform').'/'.$config->get('platform').'.php';
+                $pluginClass = 'plgHwdmediashare' . $config->get('platform');
+                $pluginPath = JPATH_ROOT . '/plugins/hwdmediashare/' . $config->get('platform') . '/' . $config->get('platform') . '.php';
                 if (file_exists($pluginPath))
                 {
                         JLoader::register($pluginClass, $pluginPath);
-                        $platform = call_user_func(array($pluginClass, 'getInstance'));
-                        if (!$platform->addCdnUpload())
+                        $HWDplatform = call_user_func(array($pluginClass, 'getInstance'));
+
+                        // Process the platform upload.
+                        if ($HWDplatform->addUpload())
                         {
-                                JError::raiseWarning(500, $model->getError());
-                                $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                                $this->setMessage(JText::sprintf('COM_HWDMS_SUCCESSFULLY_UPLOADED_X', $HWDplatform->_item->title));
+                                $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($HWDplatform->_item->id));                                           
                         }
                         else
                         {
-                                JFactory::getApplication()->enqueueMessage(JText::_('COM_HWDMS_SUCCESSFULLY_UPLOADED'));
-                                $this->setRedirect(hwdMediaShareHelperRoute::getMediaItemRoute($model->_item->id));
-                        }                        
+                                $this->setMessage($HWDplatform->getError());
+                                $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                        }                     
                 }
+                else
+                {
+                        $this->setMessage(JText::_('COM_HWDMS_ERROR_UNABLE_TO_LOCATE_PLATFORM_PLUGIN'));
+                        $this->setRedirect(hwdMediaShareHelperRoute::getUploadRoute());
+                } 
         }
         
         /**
