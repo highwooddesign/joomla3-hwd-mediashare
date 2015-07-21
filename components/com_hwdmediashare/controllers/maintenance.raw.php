@@ -73,7 +73,14 @@ class HwdMediaShareControllerMaintenance extends JControllerLegacy
                 {
                         JLoader::register($pluginClass, $pluginPath);
                         $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
-                        return $HWDcdn->maintenance();
+                        if ($HWDcdn->maintenance())
+                        {
+                                echo JText::_('COM_HWDMS_NOTICE_MAINTENANCE_CDN_COMPLETE');
+                        }
+                        else
+                        {
+                                echo JText::_('COM_HWDMS_NOTICE_MAINTENANCE_CDN_ERROR_CHECK_LOG');
+                        }
                 }
         }
 }
