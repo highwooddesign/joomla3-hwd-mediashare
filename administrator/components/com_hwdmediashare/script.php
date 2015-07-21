@@ -1029,8 +1029,11 @@ class com_hwdMediaShareInstallerScript
                 $db = JFactory::getDbo();
                 $tables = $db->getTableList();
 
+                // Array holding all queries
+                $queries = array();
+                        
                 //
-                // Check activity table has been created.
+                // Check #__hwdms_activity table has been created.
                 //
 $query = <<<SQL
 CREATE TABLE IF NOT EXISTS `#__hwdms_activity` (
@@ -1063,14 +1066,11 @@ SQL;
                 }
 
                 //
-                // Check config table.
+                // Check #__hwdms_config table.
                 //
                 if (in_array($app->getCfg('dbprefix') . 'hwdms_config', $tables))
                 {
                         $columns = $db->getTableColumns('#__hwdms_config'); 
-
-                        // Array holding all queries
-                        $queries = array();
 
                         // Alter params column.
                         $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' CHANGE ' . $db->quoteName('params') . ' ' . $db->quoteName('params') . ' text;';
@@ -1080,49 +1080,42 @@ SQL;
 
                         // Add asset_id column.
                         if (!isset($columns['asset_id'])) $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_config') . ' ADD COLUMN ' . $db->quoteName('asset_id') . ' int(11) unsigned NOT NULL DEFAULT ' . $db->quote('0') . ' AFTER ' . $db->quoteName('id') . ';';
-
-                        // Execute the generated queries.
-                        foreach ($queries as $query)
-                        {
-                                try
-                                {
-                                        $db->setQuery($query);
-                                        $db->execute();
-                                }
-                                catch (RuntimeException $e)
-                                {
-                                        $app->enqueueMessage($e->getMessage());
-                                        return false;                             
-                                }
-                        }
                 }
                 
                 //
-                // Check users table.
+                // Check #__hwdms_users table.
                 //
                 if (in_array($app->getCfg('dbprefix') . 'hwdms_users', $tables))
                 {
                         $columns = $db->getTableColumns('#__hwdms_users'); 
 
-                        // Array holding all queries
-                        $queries = array();
-
                         // Add title column.
                         if (!isset($columns['title']))    $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_users') . ' ADD COLUMN ' . $db->quoteName('title') . ' varchar(255) NOT NULL DEFAULT ' . $db->quote('') . ' AFTER ' . $db->quoteName('key') . ';';
+                }
+                
+                //
+                // Check #__hwdms_category_map table.
+                //
+                if (in_array($app->getCfg('dbprefix') . 'hwdms_category_map', $tables))
+                {
+                        $columns = $db->getTableColumns('#__hwdms_category_map'); 
 
-                        // Execute the generated queries.
-                        foreach ($queries as $query)
+                        // Add title column.
+                        if (!isset($columns['language']))    $queries[] = 'ALTER TABLE ' . $db->quoteName('#__hwdms_category_map') . ' ADD COLUMN ' . $db->quoteName('language') . ' char(7) NOT NULL DEFAULT ' . $db->quote('*') . ' AFTER ' . $db->quoteName('created') . ';';
+                }  
+                
+                // Execute the generated queries.
+                foreach ($queries as $query)
+                {
+                        try
                         {
-                                try
-                                {
-                                        $db->setQuery($query);
-                                        $db->execute();
-                                }
-                                catch (RuntimeException $e)
-                                {
-                                        $app->enqueueMessage($e->getMessage());
-                                        return false;                             
-                                }
+                                $db->setQuery($query);
+                                $db->execute();
+                        }
+                        catch (RuntimeException $e)
+                        {
+                                $app->enqueueMessage($e->getMessage());
+                                return false;                             
                         }
                 }
         }                                
