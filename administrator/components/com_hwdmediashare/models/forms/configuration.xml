@@ -1649,6 +1649,19 @@
                         <option value="0">JHIDE</option>
                 </field>
                 <field
+			name="list_meta_featured_status"
+			type="radio"
+			label="COM_HWDMS_SHOW_FEATURED_STATUS_LABEL"
+			description="COM_HWDMS_SHOW_FEATURED_STATUS_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>
+                <field
 			name="list_meta_media_count"
 			type="radio"
 			label="COM_HWDMS_SHOW_MEDIA_COUNT_LABEL"
@@ -1661,6 +1674,32 @@
                         <option value="1">JSHOW</option>
                         <option value="0">JHIDE</option>
                 </field>
+                <field
+			name="list_meta_upload_count"
+			type="radio"
+			label="COM_HWDMS_SHOW_UPLOAD_COUNT_LABEL"
+			description="COM_HWDMS_SHOW_UPLOAD_COUNT_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                 
+                <field
+			name="list_meta_subscriber_count"
+			type="radio"
+			label="COM_HWDMS_SHOW_SUBSCRIBER_COUNT_LABEL"
+			description="COM_HWDMS_SHOW_SUBSCRIBER_COUNT_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                
                 <field 
                         name="list_item_heading" 
                         type="list" 
@@ -2068,7 +2107,20 @@
                 >
                         <option value="1">JSHOW</option>
                         <option value="0">JHIDE</option>
-                </field>                
+                </field>    
+                <field
+			name="item_meta_featured_status"
+			type="radio"
+			label="COM_HWDMS_SHOW_FEATURED_STATUS_LABEL"
+			description="COM_HWDMS_SHOW_FEATURED_STATUS_DESC"
+			class="btn-group btn-group-yesno"
+			default="1"
+			validate="integer"
+                        filter="integer"
+                >
+                        <option value="1">JSHOW</option>
+                        <option value="0">JHIDE</option>
+                </field>                             
                 <field
 			name="item_meta_activities"
 			type="radio"
