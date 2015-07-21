@@ -73,8 +73,20 @@ defined('_JEXEC') or die;
                                 <div class="controls"><?php echo $this->form->getInput('list_meta_created'); ?></div>
                         </div>
                         <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('list_meta_featured_status'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('list_meta_featured_status'); ?></div>
+                        </div>
+                        <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('list_meta_media_count'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('list_meta_media_count'); ?></div>
+                        </div> 
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('list_meta_upload_count'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('list_meta_upload_count'); ?></div>
+                        </div>  
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('list_meta_subscriber_count'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('list_meta_subscriber_count'); ?></div>
                         </div>  
                         <div class="control-group">                            
                                 <div class="control-label"><?php echo $this->form->getLabel('list_item_heading'); ?></div>
@@ -229,6 +241,10 @@ defined('_JEXEC') or die;
                                 <div class="control-label"><?php echo $this->form->getLabel('item_meta_dislikes'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('item_meta_dislikes'); ?></div>
                         </div>                        
+                        <div class="control-group">
+                                <div class="control-label"><?php echo $this->form->getLabel('item_meta_featured_status'); ?></div>
+                                <div class="controls"><?php echo $this->form->getInput('item_meta_featured_status'); ?></div>
+                        </div>  
                         <div class="control-group">
                                 <div class="control-label"><?php echo $this->form->getLabel('item_meta_activities'); ?></div>
                                 <div class="controls"><?php echo $this->form->getInput('item_meta_activities'); ?></div>
