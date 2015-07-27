@@ -1,495 +1,235 @@
-/**
- * @version    $Id: hwd.js 1718 2013-10-17 15:12:33Z dhorsfall $
- * @package    hwdMediaShare
- * @copyright  Copyright (C) 2013 Highwood Design Limited. All rights reserved.
- * @license    GNU General Public License http://www.gnu.org/copyleft/gpl.html
- * @author     Dave Horsfall
- * @since      ${date} ${time}
- */
+jQuery(document).ready(function(){
+    var HWD = function () {
+        var errorMsg = "An error has occured";
 
-/**
- * Set jQuery to noConflict mode
- */
-if (typeof jQuery != 'undefined') {
-     jQuery.noConflict();
- }
-/**
- * Define slideshow key if missing
- */
-if (!key) {
-    var key = 0;
-}
-/**
- * hwdms.mapreload
- *
- * Function to reload map on tab selection
- */
-window.addEvent('domready', function () {
-    if (document.getElementById('paneMap')) {
-        document.getElementById('paneMap').addEvent('click', function()
-        {
-            setTimeout("onLoadmap()",100);
-        });
-    }
-});
-/**
- * hwdms.carousel
- *
- * Function to setup the slideshow 
- */
-window.addEvent('domready', function () {
+        function post(event) {
+            event.preventDefault();
+            jQuery(event.data.selector).attr("disabled", true);
 
-        var duration = 300,
+            var task = jQuery(event.data.selector).attr("data-media-task");  
+            var id = jQuery(event.data.selector).attr("data-media-id");  
+            var token = jQuery(event.data.selector).attr("data-media-token");  
+            var url = hwdms_live_site;
 
-        div = document.getElement('div.media-slideshow-container')
+            var data = {};
+            data["option"] = "com_hwdmediashare";
+            data["task"] = "get." + task;
+            data["id"] = id;
+            data["format"] = "json";
+            data[token] = "1";
 
-        if (div) {
-            links = div.getElements('a'),
+            // Send the data using post.
+            var posting = jQuery.post(url, data);
 
-            carousel = new Carousel.Extra({
-                activeClass: 'selected',
-                autostart: true,
-                container: 'slide',
-                scroll: 5, // @TODO: Need to test this, and maybe keep the value low
-                circular: true,
-                current: key,
-                previous: links.shift(),
-                next: links.pop(),
-                tabs: links,
-                distance: 1,
-                /* mode: 'horizontal', */
-                fx: {
-
-                    duration: duration
-                }
-            }), removed = 0;
-
-            function change() {
-
-                var panel = this.retrieve('panel');
-
-                if (this.checked) {
-
-                    if (!panel) {
-
-                        if (carousel.running) {
-
-                            carousel.addEvent('complete:once', change.bind(this));
-                            return
+            posting.done(function(data) {
+                try {
+                    var results = jQuery.parseJSON(data);
+                    if (results.status == "success") {
+                        switch (task) {
+                            case "favourite":
+                                jQuery(event.data.selector).attr("disabled", false);
+                                jQuery(event.data.selector).attr("data-media-task", "unfavourite");
+                                jQuery(event.data.selector).addClass("active");
+                                jQuery(event.data.selector + " i:first-child").addClass("red"); 
+                                break;
+                            case "unfavourite":
+                                jQuery(event.data.selector).attr("disabled", false);
+                                jQuery(event.data.selector).attr("data-media-task", "favourite");
+                                jQuery(event.data.selector).removeClass("active");
+                                jQuery(event.data.selector + " i:first-child").removeClass("red"); 
+                                break;
+                            case "subscribe":
+                                jQuery(event.data.selector).attr("disabled", false);
+                                jQuery(event.data.selector).attr("data-media-task", "unsubscribe");
+                                jQuery(event.data.selector).addClass("active");
+                                jQuery(event.data.selector).html('<i class="icon-checkmark"></i> ' + hwdms_text_subscribed);
+                                break;
+                            case "unsubscribe":
+                                jQuery(event.data.selector).attr("disabled", false);
+                                jQuery(event.data.selector).attr("data-media-task", "subscribe");
+                                jQuery(event.data.selector).removeClass("active");
+                                jQuery(event.data.selector).html('<i class="icon-user"></i> ' + hwdms_text_subscribe);
+                                break;                                         
+                            case "like":
+                                jQuery(event.data.selector).addClass("active");
+                                var likes = parseInt(jQuery("#media-likes").html()) + 1;
+                                var dislikes = parseInt(jQuery("#media-dislikes").html());
+                                var percent = parseInt((likes * 100) / (likes + dislikes));
+                                jQuery("#media-likes").html(likes);
+                                jQuery("#percentbar-active").css({"width": percent + "%"});
+                                break;
+                            case "dislike":
+                                jQuery(event.data.selector).addClass("active");
+                                var likes = parseInt(jQuery("#media-likes").html());
+                                var dislikes = parseInt(jQuery("#media-dislikes").html()) + 1;
+                                var percent = parseInt((likes * 100) / (likes + dislikes));
+                                jQuery("#media-dislikes").html(dislikes);
+                                jQuery("#percentbar-active").css({"width": percent + "%"});
+                                break;                                    
                         }
-
-                        panel = carousel.remove(Math.max(0, this.value - removed));
-
-                        if (panel) {
-
-                            this.store('panel', panel);
-                            removed++;
-                        }
-
-                        this.checked = !! panel
-                    }
-
-                } else {
-
-                    if (panel) {
-
-                        this.eliminate('panel');
-                        removed--;
-                        carousel.add(panel.panel, panel.tab.inject(div.getFirst(), 'after'), this.value)
-                    }
+                    } else {
+                        HWD.popup(results.message);
+                        jQuery(event.data.selector).attr("disabled", false);
+                    }                
                 }
-            }
+                catch(err) {
+                    HWD.popup(hwdms_text_error_occured);
+                    jQuery(event.data.selector).attr("disabled", false);
+                }
+            });
 
-            $$('input.remove').addEvents({
-                click: change,
-                change: change
-            })
+            posting.fail(function(data) {
+                HWD.popup(hwdms_text_error_occured);
+                jQuery(event.data.selector).attr("disabled", false);
+            });
         }
 
-    var mediaSlideshowContainer = document.getElementById('media-slideshow-container');
-    var mediaSlideshowTab = document.getElementById('slideshow-tab');
-    if (mediaSlideshowContainer && mediaSlideshowTab) {
-        var status = {
-            'true': 'Hide',
-            'false': 'Show'
+        function popup(msg) {
+            jQuery.magnificPopup.open({
+                items: {
+                    src: jQuery('<div>' + msg + '</div>') // Dynamically created element.
+                },
+                type: 'inline',
+                preloader: false,
+                closeOnBgClick: true,
+                mainClass: 'mfp-alert',
+                closeOnContentClick: true,
+                removalDelay: 0
+            });
+
+        }
+
+        // Reveal public pointers to private functions and properties.
+        return {
+            popup: popup,
+            post: post
         };
+    };
 
-        // -- vertical
-        var myVerticalSlide = new Fx.Slide('media-slideshow-container');
+    var HWD = new HWD();
 
-        document.getElementById('slideshow-tab').addEvent('click', function (event) {
-            event.stop();
-            myVerticalSlide.toggle();
-            setHeight();
+    // Bind handlers to button click events.
+    jQuery("#media-favourite-btn").click({selector: "#media-favourite-btn"}, HWD.post);
+    jQuery("#media-subscribe-btn").click({selector: "#media-subscribe-btn"}, HWD.post);
+    jQuery("#media-like-btn").click({selector: "#media-like-btn"}, HWD.post);
+    jQuery("#media-dislike-btn").click({selector: "#media-dislike-btn"}, HWD.post);
+
+    // Look for file selector inputs.
+    if (jQuery('.hwd-form-filedata').length) { jQuery('.hwd-form-filedata').bootstrapFileInput(); }
+    
+    // Convert radio inputs into working buttons.
+    if (jQuery('#hwd-container .radio.btn-group').length) { 
+        jQuery('#hwd-container .radio.btn-group label').addClass('btn');
+        jQuery("#hwd-container .btn-group label:not(.active)").click(function()
+        {
+                var label = jQuery(this);
+                var input = jQuery('#' + label.attr('for'));
+
+                if (!input.prop('checked')) {
+                        label.closest('.btn-group').find("label").removeClass('active btn-success btn-danger btn-primary');
+                        if (input.val() == '') {
+                                label.addClass('active btn-primary');
+                        } else if (input.val() == 0) {
+                                label.addClass('active btn-danger');
+                        } else {
+                                label.addClass('active btn-success');
+                        }
+                        input.prop('checked', true);
+                }
         });
-
-        // When Vertical Slide ends its transition, we check for its status
-        // note that complete will not affect 'hide' and 'show' methods
-        myVerticalSlide.addEvent('complete', function () {
-            document.getElementById('slideshow-status').set('text', status[myVerticalSlide.open]);
+        jQuery("#hwd-container .btn-group input[checked=checked]").each(function()
+        {
+                if (jQuery(this).val() == '') {
+                        jQuery("label[for=" + jQuery(this).attr('id') + "]").addClass('active btn-primary');
+                } else if (jQuery(this).val() == 0) {
+                        jQuery("label[for=" + jQuery(this).attr('id') + "]").addClass('active btn-danger');
+                } else {
+                        jQuery("label[for=" + jQuery(this).attr('id') + "]").addClass('active btn-success');
+                }
         });
-
-        loadMedia(key);
-        setHeight();
     }
-})
-/**
- * hwdms.load.slideshow.media
- *
- * Function to load media into slideshow during load
- */
-function loadMedia(id) {
-    if (document.getElementById('image-slideshow-' + id)) {
-        var rel = document.getElementById('image-slideshow-' + id).getAttribute("rel");
-        var mediaObject = JSON.decode(rel);
-        var position = mediaObject.position;
-
-        document.getElementById('media-item').empty().addClass('ajax-loading-slideshow');
-        document.getElementById('slide').getElements(".highlighted").removeClass("highlighted");
-        document.getElementById('image-slideshow-' + id).addClass('highlighted');
-        document.getElementById('current-position').set('html', position);
-        document.getElementById('current-title').set('html', mediaObject['title']);
-
-        var a = new Request({
-            url: 'index.php?option=com_hwdmediashare&task=get.html&format=raw&id=' + mediaObject['id'],
-            method: 'get',
-            onComplete: function (response) {
-                document.getElementById('media-item').removeClass('ajax-loading-slideshow').set('html', response);
+    
+    // Keyboard navigation for media.
+    jQuery(document).on("keydown", function(e) {
+        jQuery("#hwd-container div.media-item-navigation a.prev").on("click", function() {
+            window.location =  jQuery("#hwd-container div.media-item-navigation a.prev").attr("href");
+        }); 
+        jQuery("#hwd-container div.media-item-navigation a.next").on("click", function() {
+            window.location =  jQuery("#hwd-container div.media-item-navigation a.next").attr("href");
+        });   
+        if (jQuery(e.target.nodeName).is('body')) {
+            switch(e.which) {
+                case 37: // left
+                    jQuery("#hwd-container div.media-item-navigation a.prev").trigger("click");
+                break;
+                case 39: // right
+                    jQuery("#hwd-container div.media-item-navigation a.next").trigger("click");
+                break;
+                default: return; // exit this handler for other keys
             }
-        }).send();
 
-        setHeight();
-    }
-}
-/**
- * hwdms.set.height
- *
- * Function to set height for slideshow media
- */
-function setHeight() {
-    var mediaSlideshowToggle = document.getElementById('media-slideshow-toggle');
-    if (mediaSlideshowToggle) {
-        var parentHeight = document.body.getSize().y;
-        var toggleHeight = document.getElementById('media-slideshow-toggle').getSize().y;
-        var mediaHeight = parentHeight - toggleHeight - 30;
-        var height = mediaHeight + 'px';
-        document.getElementById('media-item').setStyle('height', height);
-    }
-}
-/**
- * hwdms.audio.playlist
- *
- * Function to load audio and video tracks
- */
-window.addEvent('domready', function () {
-        $$('a.media-audio-playlist-play').each(function(el){
-                el.addEvent('click',function(e){
-                        e.stop();
-                        var rel = document.getElementById(this.get('id')).get('rel');
-                        var object = JSON.decode(rel);
-                        var playerId = object.playerId;
-                        var playerContainer = object.playerContainer;
-$$('div.mejs-pause').fireEvent('click');
-
-                        $(this.get('id')).addClass('active');
-
-                        var targetUrl = hwdms_live_site;
-
-                        var a = new Request.HTML({
-                            url: targetUrl,
-                            method: 'post',
-                            evalResponse: true,
-                            data: 'option=com_hwdmediashare&task=get.html&id=' + object.id + '&format=raw&autoplay=1',
-                            update: object.playerContainer,
-                            onComplete: function (response) {
-                            },
-                            onSuccess: function (responseTree, responseElements, responseHTML, responseJavaScript) {
-                            }
-                        }).send();
-                });
-        });
-        $$('a.media-video-playlist-play').each(function(el){
-                el.addEvent('click',function(e){
-                        e.stop();
-                        var rel = document.getElementById(this.get('id')).get('rel');
-                        var object = JSON.decode(rel);
-                        var playerId = object.playerId;
-                        var playerContainer = object.playerContainer;
-
-                        $(this.get('id')).addClass('active');
-
-                        var targetUrl = hwdms_live_site;
-
-                        var a = new Request.HTML({
-                            url: targetUrl,
-                            method: 'post',
-                            evalResponse: true,
-                            data: 'option=com_hwdmediashare&task=get.html&id=' + object.id + '&format=raw&autoplay=1&mediaitem_size=' + object.width,
-                            update: object.playerContainer,
-                            onComplete: function (response) {
-                            },
-                            onSuccess: function (responseTree, responseElements, responseHTML, responseJavaScript) {
-                            }
-                        }).send();
-                });
-        });
+            e.preventDefault(); // prevent the default action (scroll / move caret)
+        }
+    });
 });
-/*
- * hwdms.ajax.functions
- *
- * If passed as a function, it is treated as callback function
- * that gets executed by 'success' event.
- * If passed as an object, it is treated as ajax settings.
- */
-window.addEvent('domready', function () {
-if (document.getElementById('media-subscribe')) {
-    document.getElementById('media-subscribe').addEvent('click', function (event) {
-            event.preventDefault();
-            document.getElementById('media-subscribe').empty().addClass('ajax-loading-button');
+                    
+//http://www.sanwebe.com/2013/03/addremove-input-fields-dynamically-with-jquery
+jQuery(document).ready(function() {
+    var max_fields      = 10; //maximum input boxes allowed
+    var wrapper         = jQuery('.stream_fields'); //Fields wrapper
+    var add_button      = jQuery('.add_field_button'); //Add button ID
 
-            var targetUrl = hwdms_live_site;
-            var href = document.getElementById('media-subscribe-form').get('action');
-            var query = href.parseQueryString();
+    var x = 1; //initlal text box count
+    jQuery(add_button).click(function(e){ //on add input button click
+        e.preventDefault();
+        if(x < max_fields){ //max input box allowed
+            x++; //text box increment
             
-            var a = new Request({
-                url: targetUrl,
-                method: 'post',
-                data: 'option=com_hwdmediashare&task=get.subscribe&id='+query.id+'&format=raw',
-                onComplete: function (response) {
-                    var error = false;
-                    try {
-                        var object = JSON.decode(response);
+    var fields_html      = '<div>' +
+'<div class="control-group">' +
+    '<div class="control-label">' +
+            '<label id="jform_source_type_' + x + '-lbl" for="jform_source_type_' + x + '">Source Type</label>' +
+    '</div>' +
+    '<div class="controls">' +
+            '<select id="jform_source_type_' + x + '" name="jform[source_type][' + x + ']">' +
+                    '<option value="1">RTMP Stream</option>' +
+                    '<option value="2">HLS Stream</option>' +
+                    '<option value="3">MP4 Fallback</option>' +                                         
+            '</select>' +                          
+    '</div>' +
+'</div>' +
+'<div class="control-group">' +
+    '<div class="control-label">' +
+            '<label id="jform_source_quality_' + x + '-lbl" for="jform_source_quality_' + x + '">Quality</label>' +
+    '</div>' +
+    '<div class="controls">' +
+            '<select id="jform_source_quality_' + x + '" name="jform[source_quality][' + x + ']">' +
+                    '<option value="240">240p</option>' +
+                    '<option value="360">360p</option>' +
+                    '<option value="480">480p</option>' +
+                    '<option value="720">720p</option>' +
+                    '<option value="1080">1080p</option>' +
+            '</select>' +
+    '</div>' +
+'</div>' +
+'<div class="control-group">' +
+    '<div class="control-label">' +
+            '<label id="jform_source_url_' + x + '-lbl" for="jform_source_url_' + x + '" class="required">Source File</label>' +
+    '</div>' +
+    '<div class="controls">' +
+            '<input type="text" name="jform[source_url][' + x + ']" id="jform_source_url_' + x + '" value="" size="40" />' +
+    '</div>' +
+'</div>' +
+'<a href="#" class="remove_field btn btn-info">Remove</a>' +
+'<hr />' +
+'</div>';
 
-                        if (typeof object.errors === 'undefined' || object.errors > 0) {
-                            var error = true;
-                        }
-
-                        if (error) {
-                            document.getElementById('media-subscribe').removeClass('ajax-loading-button').addClass('ajax-error').set('value', object.data.error_msg);
-                        } else {
-                            document.getElementById('media-subscribe').removeClass('ajax-loading-button');
-                            document.getElementById('media-subscribe').set('styles', {display: 'none'});
-                            document.getElementById('media-unsubscribe').set('styles', {display: 'inline'});
-                        }
-                    } catch(error) {
-                        document.getElementById('media-subscribe').removeClass('ajax-loading-button').addClass('ajax-error').set('value', 'error');
-                    }
-                }
-            }).send();
-        })
-}
-if (document.getElementById('media-unsubscribe')) {
-        document.getElementById('media-unsubscribe').addEvent('click', function (event) {
-            event.preventDefault();
-            document.getElementById('media-unsubscribe').empty().addClass('ajax-loading-button');
-
-            var targetUrl = hwdms_live_site;
-            var href = document.getElementById('media-subscribe-form').get('action');
-            var query = href.parseQueryString();
-            
-            var a = new Request({
-                url: targetUrl,
-                method: 'post',
-                data: 'option=com_hwdmediashare&task=get.unsubscribe&id='+query.id+'&format=raw',
-                onComplete: function (response) {
-                    var error = false;
-                    try {
-                        var object = JSON.decode(response);
-
-                        if (typeof object.errors === 'undefined' || object.errors > 0) {
-                            var error = true;
-                        }
-
-                        if (error) {
-                            document.getElementById('media-unsubscribe').removeClass('ajax-loading-button').addClass('ajax-error').set('value', object.data.error_msg);
-                        } else {
-                            document.getElementById('media-unsubscribe').removeClass('ajax-loading-button');
-                            document.getElementById('media-unsubscribe').set('styles', {display: 'none'});
-                            document.getElementById('media-subscribe').set('styles', {display: 'inline'});
-                        }
-                    } catch(error) {
-                        document.getElementById('media-unsubscribe').removeClass('ajax-loading-button').addClass('ajax-error').set('value', 'error');
-                    }
-                }
-            }).send();
-        })
-}
-if (document.getElementById('media-like')) {
-        document.getElementById('media-like').addEvent('click', function (event) {
-            event.preventDefault();
-            document.getElementById('media-like-link').set('html', '');
-            document.getElementById('media-like-link').addClass('ajax-loading');
-
-            var targetUrl = hwdms_live_site;
-            var href = document.getElementById('media-like-link').get('href');
-
-            // Split link so first variable can be parsed
-            var hrefSplit = href.split('?');
-            if (!hrefSplit[1]) { // No query
-            event.stop();
-            }
-            var href = hrefSplit[1];
-            var query = href.parseQueryString();
-
-            var a = new Request({
-                url: targetUrl,
-                method: 'post',
-                data: 'option=com_hwdmediashare&task=get.like&id='+query.id+'&format=raw',
-                onComplete: function (response) {
-                    var error = false;
-                    try {
-                        var object = JSON.decode(response);
-
-                        if (typeof object.errors === 'undefined' || object.errors > 0) {
-                            var error = true;
-                        }
-
-                        if (error) {
-                            document.getElementById('media-like-link').removeClass('ajax-loading').addClass('ajax-error').set('text', object.data.error_msg);
-                        } else {
-                            document.getElementById('media-like-link').removeClass('ajax-loading').addClass('ajax-success').set('text', object.data.success_msg);
-                            if (object.data.likes) {
-                                document.getElementById('media-likes').set('text', object.data.likes);
-                            }
-                        }
-                    } catch(error) {
-                        document.getElementById('media-like-link').removeClass('ajax-loading').addClass('ajax-error').set('text', 'error');
-                    }
-                }
-            }).send();
-        })
-}
-if (document.getElementById('media-dislike')) {
-        document.getElementById('media-dislike').addEvent('click', function (event) {
-            event.preventDefault();
-            document.getElementById('media-dislike-link').set('html', '');
-            document.getElementById('media-dislike-link').addClass('ajax-loading');
-
-            var targetUrl = hwdms_live_site;
-            var href = document.getElementById('media-like-link').get('href');
-            
-            // Split link so first variable can be parsed
-            var hrefSplit = href.split('?');
-            if (!hrefSplit[1]) { // No query
-            event.stop();
-            }
-            var href = hrefSplit[1];
-            var query = href.parseQueryString();
-
-            var a = new Request({
-                url: targetUrl,
-                method: 'post',
-                data: 'option=com_hwdmediashare&task=get.dislike&id='+query.id+'&format=raw',
-                onComplete: function (response) {
-                    var error = false;
-                    try {
-                        var object = JSON.decode(response);
-
-                        if (typeof object.errors === 'undefined' || object.errors > 0) {
-                            var error = true;
-                        }
-
-                        if (error) {
-                            document.getElementById('media-dislike-link').removeClass('ajax-loading').addClass('ajax-error').set('text', object.data.error_msg);
-                        } else {
-                            document.getElementById('media-dislike-link').removeClass('ajax-loading').addClass('ajax-success').set('text', object.data.success_msg);
-                            if (object.data.dislikes) {
-                                document.getElementById('media-dislikes').set('text', object.data.dislikes);
-                            }
-                        }
-                    } catch(error) {
-                        document.getElementById('media-dislike-link').removeClass('ajax-loading').addClass('ajax-error').set('text', 'error');
-                    }
-                }
-            }).send();
-        })
-}
-if (document.getElementById('media-fav')) {
-        document.getElementById('media-fav').addEvent('click', function (event) {
-            event.preventDefault();
-            document.getElementById('media-fav-link').empty().removeProperty('class').addClass('ajax-loading');
-
-            var targetUrl = hwdms_live_site;
-            var href = document.getElementById('media-fav-link').get('href');
-            var hrefURI = new URI(href);
-            var rawQuery = hrefURI.get('query');
-            var query = rawQuery.parseQueryString();
-            var compound = query.task.split('.');
-
-            var a = new Request({
-                url: targetUrl,
-                method: 'post',
-                data: 'option=com_hwdmediashare&task=get.'+compound[1]+'&id='+query.id+'&format=raw',
-                onComplete: function (response) {
-                    var error = false;
-                    try {
-                        var object = JSON.decode(response);
-
-                        if (typeof object.errors === 'undefined' || object.errors > 0) {
-                            var error = true;
-                        }
-
-                        if (error) {
-                            document.getElementById('media-fav-link').removeClass('ajax-loading').addClass('ajax-error').set('text', object.data.error_msg);
-                        } else {
-                            if (compound[1] == 'unfavour')
-                            {
-                                document.getElementById('media-fav-link').removeClass('ajax-loading').removeClass('media-favadd-link').addClass('ajax-success media-fav-link').set('text', object.data.success_msg).set('href', hwdms_live_site + 'index.php?option=com_hwdmediashare&task=mediaitem.favour&id='+query.id+'&return='+query['return']+'&tmpl='+query.tmpl+'&Itemid='+query.Itemid);
-                            }
-                            else
-                            {
-                                document.getElementById('media-fav-link').removeClass('ajax-loading').removeClass('media-fav-link').addClass('ajax-success media-favadd-link').set('text', object.data.success_msg).set('href', hwdms_live_site + 'index.php?option=com_hwdmediashare&task=mediaitem.unfavour&id='+query.id+'&return='+query['return']+'&tmpl='+query.tmpl+'&Itemid='+query.Itemid);
-                            }
-                        }
-                    } catch(error) {
-                        document.getElementById('media-fav-link').removeClass('ajax-loading').addClass('ajax-error').set('text', 'error');
-                    }
-                }
-            }).send();
-        })
-}
-if (document.getElementById('media-favadd')) {
-        document.getElementById('media-favadd').addEvent('click', function (event) {
-            event.preventDefault();
-            document.getElementById('media-favadd-link').empty().removeProperty('class').addClass('ajax-loading');
-
-            var targetUrl = hwdms_live_site;
-            var href = document.getElementById('media-favadd-link').get('href');
-            var hrefURI = new URI(href);
-            var rawQuery = hrefURI.get('query');
-            var query = rawQuery.parseQueryString();
-            var compound = query.task.split('.');
-            
-            var a = new Request({
-                url: targetUrl,
-                method: 'post',
-                data: 'option=com_hwdmediashare&task=get.'+compound[1]+'&id='+query.id+'&format=raw',
-                onComplete: function (response) {
-                    var error = false;
-                    try {
-                        var object = JSON.decode(response);
-
-                        if (typeof object.errors === 'undefined' || object.errors > 0) {
-                            var error = true;
-                        }
-
-                        if (error) {
-                            document.getElementById('media-favadd-link').removeClass('ajax-loading').addClass('ajax-error').set('text', object.data.error_msg);
-                        } else {
-                            if (compound[1] == 'unfavour')
-                            {
-                                document.getElementById('media-favadd-link').removeClass('ajax-loading').removeClass('media-favadd-link').addClass('ajax-success media-fav-link').set('text', object.data.success_msg).set('href', hwdms_live_site + 'index.php?option=com_hwdmediashare&task=mediaitem.favour&id='+query.id+'&return='+query['return']+'&tmpl='+query.tmpl+'&Itemid='+query.Itemid);
-                            }
-                            else
-                            {
-                                document.getElementById('media-favadd-link').removeClass('ajax-loading').removeClass('media-fav-link').addClass('ajax-success media-favadd-link').set('text', object.data.success_msg).set('href', hwdms_live_site + 'index.php?option=com_hwdmediashare&task=mediaitem.unfavour&id='+query.id+'&return='+query['return']+'&tmpl='+query.tmpl+'&Itemid='+query.Itemid);
-                            }
-                        }
-                    } catch(error) {
-                        document.getElementById('media-favadd-link').removeClass('ajax-loading').addClass('ajax-error').set('text', 'error');
-                    }
-                }
-            }).send();
-        })
-}
+            jQuery(wrapper).append(fields_html); //add input box
+            jQuery('.stream_fields select').chosen();
+        }
+    });
+   
+    jQuery(wrapper).on('click','.remove_field', function(e){ //user click on remove text
+        e.preventDefault(); jQuery(this).parent('div').remove(); x--;
+    })
 });
