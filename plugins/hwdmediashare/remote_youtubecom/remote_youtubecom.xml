@@ -25,6 +25,20 @@
                         addrulepath="/administrator/components/com_hwdmediashare/models/rules" 
                 >
 			<fieldset name="basic">
+                                <field 
+                                        name="play_local" 
+                                        type="radio" 
+                                        label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_PLAYLOCAL_LABEL"
+                                        description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_PLAYLOCAL_DESC"
+                                        class="btn-group btn-group-yesno"
+                                        default="0"
+                                        validate="integer"
+                                        filter="integer"
+                                >
+                                        <option value="1">JYES</option>
+                                        <option value="0">JNO</option>
+                                </field>
+				<field name="spacer" type="spacer" hr="true" />   
 				<field 
                                         name="autohide" 
                                         type="list"
@@ -200,22 +214,7 @@
                                         <option value="1">JYES</option>
                                         <option value="0">JNO</option>
 				</field>  
-			</fieldset>
-			<fieldset name="advanced">
-                                <field 
-                                        name="play_local" 
-                                        type="radio" 
-                                        label="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_PLAYLOCAL_LABEL"
-                                        description="PLG_HWDMEDIASHARE_REMOTE_YOUTUBECOM_FIELD_PLAYLOCAL_DESC"
-                                        class="btn-group btn-group-yesno"
-                                        default="0"
-                                        validate="integer"
-                                        filter="integer"
-                                >
-                                        <option value="1">JYES</option>
-                                        <option value="0">JNO</option>
-                                </field>
-			</fieldset>                        
+			</fieldset>                      
 		</fields>
 	</config>
 </extension>
