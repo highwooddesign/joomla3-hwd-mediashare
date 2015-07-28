@@ -11,7 +11,7 @@
 defined('_JEXEC') or die;
 
 // Import hwdMediaShare remote library.
-hwdMediaShareFactory::load('remote');
+JLoader::register('hwdMediaShareRemote', JPATH_ROOT.'/components/com_hwdmediashare/libraries/remote.php');
 
 // Load the main Youtube.com plugin.
 JLoader::register('plgHwdmediashareRemote_youtubecom', JPATH_PLUGINS.'/hwdmediashare/remote_youtubecom/remote_youtubecom.php');
