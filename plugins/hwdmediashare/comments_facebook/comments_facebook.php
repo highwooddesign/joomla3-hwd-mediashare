@@ -80,20 +80,31 @@ class plgHwdmediashareComments_facebook extends JObject
                 // Set Facebook AppID value to allow moderation of comments
                 $doc->setMetaData("fb:app_id", $config->get('facebook_appid'));
                 
+                // Setup return variable.
+                $html = '';
+                if ($params->get('loadsdk', 1))
+                {
+                        ob_start();
+                        ?>
+                        <div id="fb-root"></div>
+                        <script>(function(d, s, id) {
+                          var js, fjs = d.getElementsByTagName(s)[0];
+                          if (d.getElementById(id)) return;
+                          js = d.createElement(s); js.id = id;
+                          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=<?php echo $config->get('facebook_appid'); ?>";
+                          fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+                        <?php
+                        $html.= ob_get_contents();
+                        ob_end_clean();
+                }
+
                 ob_start();
                 ?>
-                <div id="fb-root"></div>
-                <script>(function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
-                js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=<?php echo $config->get('facebook_appid'); ?>";
-                fjs.parentNode.insertBefore(js, fjs);
-                }(document, 'script', 'facebook-jssdk'));</script>
-                <div class="fb-comments" data-href="<?php echo JURI::getInstance()->toString(); ?>" data-num-posts="2" data-width="<?php echo $params->get('width', 470); ?>" data-colorscheme="<?php echo $params->get('color', 'light'); ?>"></div>
+                <div class="fb-comments" data-href="<?php echo JURI::getInstance()->toString(); ?>" data-numposts="<?php echo $params->get('num_posts', 5); ?>" data-width="100%" data-colorscheme="<?php echo $params->get('colorscheme', 'light'); ?>" data-order-by="<?php echo $params->get('order_by', 'social'); ?>"></div>
                 <?php
-                $html = ob_get_contents();
+                $html.= ob_get_contents();
                 ob_end_clean();
                 return $html;            
-        }   
+        }
 }
