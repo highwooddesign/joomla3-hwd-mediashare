@@ -136,7 +136,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                         $app = JFactory::getApplication();
 
                         // Request the required API buffer.
-                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyAyxMefjQ8yajKyvBTMD9KJq-M6n80CGsw', true);
 
                         // Check request was successful.
                         if ($this->_v3snippet)
@@ -180,7 +180,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 if(!$this->_description)
 		{            
                         // Request the required API buffer.
-                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyAyxMefjQ8yajKyvBTMD9KJq-M6n80CGsw', true);
 
                         // Check request was successful.                        
                         if ($this->_v3snippet)
@@ -216,7 +216,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 if(!$this->_duration)
 		{            
                         // Request the required API buffer.
-                        if (!$this->_v3content) $this->_v3content = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+                        if (!$this->_v3content) $this->_v3content = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=' . $this->parse($this->_url, '') . '&key=AIzaSyAyxMefjQ8yajKyvBTMD9KJq-M6n80CGsw', true);
 
                         // Check request was successful.                                                
                         if ($this->_v3content)
@@ -273,7 +273,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                         $utilities = hwdMediaShareUtilities::getInstance();
 
                         // Request the required API buffer.
-                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyB2oL3uUZWDuMLiiSXc_El9Mcgg4nAaNFU', true);
+                        if (!$this->_v3snippet) $this->_v3snippet = parent::getBuffer('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $this->parse($this->_url, '') . '&key=AIzaSyAyxMefjQ8yajKyvBTMD9KJq-M6n80CGsw', true);
 
                         // Check request was successful.                                                
                         if ($this->_v3snippet)
@@ -483,7 +483,7 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
 
                 $this->autoplay = $app->input->get('media_autoplay', $config->get('media_autoplay'), 'integer') == 1 ? '1' : '0';
 
-                return JURI::getInstance()->getScheme() .'://www.youtube.com/v/' . $embedLookup . '?wmode=opaque&amp;autoplay=' . $this->autoplay . '&amp;autohide=' . $params->get('autohide',2) . '&amp;border=' . $params->get('border',0) . '&amp;cc_load_policy=' . $params->get('cc_load_policy',1) . '&amp;cc_lang_pref=' . $params->get('cc_lang_pref','en') . '&amp;hl=' . $params->get('hl','en') . '&amp;color=' . $params->get('color','red') . '&amp;color1=' . $params->get('color1') . '&amp;color2=' . $params->get('color2') . '&amp;controls=' . $params->get('controls',1) . '&amp;fs=' . $params->get('fs',1) . '&amp;hd=' . $params->get('hd',0) . '&amp;iv_load_policy=' . $params->get('iv_load_policy',1) . '&amp;modestbranding=' . $params->get('modestbranding',1) . '&amp;rel=' . $params->get('rel',1) . '&amp;theme=' . $params->get('theme','dark');
+                return JURI::getInstance()->getScheme() .'://www.youtube.com/embed/' . $embedLookup . '?wmode=opaque&amp;autoplay=' . $this->autoplay . '&amp;autohide=' . $params->get('autohide',2) . '&amp;border=' . $params->get('border',0) . '&amp;cc_load_policy=' . $params->get('cc_load_policy',1) . '&amp;cc_lang_pref=' . $params->get('cc_lang_pref','en') . '&amp;hl=' . $params->get('hl','en') . '&amp;color=' . $params->get('color','red') . '&amp;color1=' . $params->get('color1') . '&amp;color2=' . $params->get('color2') . '&amp;controls=' . $params->get('controls',1) . '&amp;fs=' . $params->get('fs',1) . '&amp;hd=' . $params->get('hd',0) . '&amp;iv_load_policy=' . $params->get('iv_load_policy',1) . '&amp;showinfo=' . $params->get('showinfo',1) . '&amp;modestbranding=' . $params->get('modestbranding',1) . '&amp;rel=' . $params->get('rel',1) . '&amp;theme=' . $params->get('theme','dark');
         }
         
         /**
@@ -519,7 +519,8 @@ class plgHwdmediashareRemote_youtubecom extends hwdMediaShareRemote
                 }
                 // Url is http://www.youtube.com/embed/xxxx
                 else if(strpos($urls['path'],'embed') == 1){
-                    $id = end(explode('/',$urls['path']));
+                    $segments = explode('/',$urls['path']);                   
+                    $id = end($segments);
                 }
                 // Url is xxxx only
                 else if(strpos($url,'/')===false){
