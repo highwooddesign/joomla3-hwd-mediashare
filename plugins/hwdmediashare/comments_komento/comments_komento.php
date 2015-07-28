@@ -99,6 +99,15 @@ class plgHwdmediashareComments_komento extends JObject
                 //$options['page']	= $page;
 
                 // Ready to Commentify!
-                return Komento::commentify($extension, $item, $options);
+                $result = Komento::commentify($extension, $item, $options);
+                
+                if ($result)
+                {
+                        return $result;
+                }
+                else
+                {
+                        return ' '; // Dummy content to prevent alert when no comment content exists.
+                }
         }
 }
