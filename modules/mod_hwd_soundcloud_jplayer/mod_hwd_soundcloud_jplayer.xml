@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.0" client="site" method="upgrade">
+	<name>mod_hwd_soundcloud_jplayer</name>
+	<author>HWD</author>
+	<creationDate>@@CREATIONDATE@@</creationDate>
+	<copyright>(C) 2014 Highwood Design Limited</copyright>
+	<license>GNU/GPL http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>info@hwdmediashare.co.uk</authorEmail>
+	<authorUrl>http://hwdmediashare.co.uk</authorUrl>
+	<version>@@VERSION@@</version>  
+	<description>MOD_HWD_SOUNDCLOUD_JPLAYER_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_hwd_soundcloud_jplayer">mod_hwd_soundcloud_jplayer.php</filename>
+		<folder>css</folder>
+		<folder>images</folder>
+		<folder>js</folder>
+		<filename>language/en-GB/en-GB.mod_hwd_soundcloud_jplayer.sys.ini</filename>
+		<folder>tmpl</folder>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_soundcloud_jplayer.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.mod_hwd_soundcloud_jplayer.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field 
+                                        name="url" 
+                                        type="text" 
+					label="MOD_HWD_SOUNDCLOUD_JPLAYER_FIELD_URL_LABEL"
+					description="MOD_HWD_SOUNDCLOUD_JPLAYER_FIELD_URL_DESC"
+                                        default=""
+				>
+				</field>	
+                                <field 
+                                        name="theme" 
+                                        type="list" 
+					label="MOD_HWD_SOUNDCLOUD_JPLAYER_FIELD_THEME_LABEL"
+					description="MOD_HWD_SOUNDCLOUD_JPLAYER_FIELD_THEME_DESC"
+                                        default="dark"
+				>
+					<option value="light">MOD_HWD_SOUNDCLOUD_JPLAYER_OPTION_LIGHT</option>
+					<option value="dark">MOD_HWD_SOUNDCLOUD_JPLAYER_OPTION_DARK</option>
+				</field>   
+				<field 
+                                        name="layout" 
+                                        type="modulelayout"
+					label="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_LAYOUT_LABEL" 
+                                        description="MOD_HWD_YOUTUBE_VIDEOBOX_FIELD_LAYOUT_DESC" 
+                                        default="_:default"
+                                />                                                                                           
+			</fieldset>
+		</fields>
+	</config>
+</extension>

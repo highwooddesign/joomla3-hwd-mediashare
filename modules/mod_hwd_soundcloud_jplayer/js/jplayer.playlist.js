@@ -251,26 +251,13 @@
 			// Wrap the <li> contents in a <div>
 			var listItem = "<li><div>";
 
-			// Create remove control
-			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
-
 			// Create links to free media
 			if(media.free) {
-				var first = true;
-				listItem += "<span class='" + this.options.playlistOptions.freeGroupClass + "'>(";
-				$.each(media, function(property,value) {
-					if($.jPlayer.prototype.format[property]) { // Check property is a media format.
-						if(first) {
-							first = false;
-						} else {
-							listItem += " | ";
-						}
-						listItem += "<a class='" + self.options.playlistOptions.freeItemClass + "' href='" + value + "' tabindex='-1'>" + property + "</a>";
-					}
-				});
-				listItem += ")</span>";
+				listItem += "<span class='" + this.options.playlistOptions.freeGroupClass + "'>";
+                                listItem += "<a class='" + self.options.playlistOptions.freeItemClass + "' href='" + media.url + "' target='_blank'></a>";
+				listItem += "</span>";
 			}
-
+                        
 			// The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
 			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='0'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";
 			listItem += "</div></li>";
@@ -293,9 +280,9 @@
 
 			// Create live handlers that disable free media links to force access via right click
 			$(this.cssSelector.playlist).off("click", "a." + this.options.playlistOptions.freeItemClass).on("click", "a." + this.options.playlistOptions.freeItemClass, function(e) {
-				e.preventDefault();
-				$(this).parent().parent().find("." + self.options.playlistOptions.itemClass).click();
-				self.blur(this);
+				//e.preventDefault();
+				//$(this).parent().parent().find("." + self.options.playlistOptions.itemClass).click();
+				//self.blur(this);
 			});
 
 			// Create live handlers for the remove controls
