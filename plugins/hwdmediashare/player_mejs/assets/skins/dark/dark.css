@@ -101,8 +101,8 @@
   position:absolute;
   top:0;
   left:0;
-  background-size:contain;
-  background-position:0 0;
+  background-size:100% auto;
+  background-position:center center;
   background-repeat:no-repeat;
 }
 
@@ -590,3 +590,177 @@
 {
   background-position:-84px 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.mejs-chapters {
+position:absolute;
+top:0;
+left:0;
+-xborder-right:solid 1px #fff;
+width:10000px;
+z-index:1;
+}
+
+.mejs-chapters .mejs-chapter {
+position:absolute;
+float:left;
+background:linear-gradient(rgba(50,50,50,0.7),rgba(0,0,0,0.7));
+filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,startColorstr=#323232,endColorstr=#000000);
+overflow:hidden;
+border:0;
+}
+
+.mejs-chapters .mejs-chapter .mejs-chapter-block {
+font-size:11px;
+color:#fff;
+display:block;
+border-right:solid 1px #333;
+border-bottom:solid 1px #333;
+cursor:pointer;
+padding:5px;
+}
+
+.mejs-chapters .mejs-chapter .mejs-chapter-block-last {
+border-right:none;
+}
+
+.mejs-chapters .mejs-chapter .mejs-chapter-block:hover {
+background:linear-gradient(rgba(102,102,102,0.7),rgba(50,50,50,0.6));
+filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,startColorstr=#666666,endColorstr=#323232);
+}
+
+.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-title {
+font-size:12px;
+font-weight:700;
+display:block;
+white-space:nowrap;
+text-overflow:ellipsis;
+line-height:12px;
+margin:0 0 3px;
+}
+
+.mejs-chapters .mejs-chapter .mejs-chapter-block .ch-timespan {
+font-size:12px;
+line-height:12px;
+display:block;
+white-space:nowrap;
+text-overflow:ellipsis;
+margin:3px 0 4px;
+}
+
+.mejs-captions-layer {
+position:absolute;
+bottom:0;
+left:0;
+text-align:center;
+line-height:20px;
+font-size:16px;
+color:#fff;
+}
+
+.mejs-captions-layer a {
+color:#fff;
+text-decoration:underline;
+}
+
+.mejs-captions-layer[lang=ar] {
+font-size:20px;
+font-weight:400;
+}
+
+.mejs-captions-position {
+position:absolute;
+width:100%;
+bottom:48px;
+left:0;
+}
+
+.mejs-captions-position-hover {
+bottom:35px;
+}
+
+.mejs-captions-text {
+background:rgba(20,20,20,0.5);
+white-space:pre-wrap;
+padding:3px 5px;
+}
+
+
+
+
+
+
+.mejs-controls .mejs-captions-button {
+position:relative;
+}
+
+.mejs-controls .mejs-captions-button button {
+background-position:-59px 0;
+}
+
+.mejs-controls .mejs-captions-button .mejs-captions-selector {
+visibility:hidden;
+position:absolute;
+bottom:26px;
+right:-51px;
+width:85px;
+height:100px;
+background:rgba(50,50,50,0.7);
+border:solid 1px transparent;
+overflow:hidden;
+-webkit-border-radius:0;
+-moz-border-radius:0;
+border-radius:0;
+padding:10px 10px 0;
+}
+
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul li label {
+width:55px;
+float:left;
+line-height:15px;
+font-family:helvetica,arial;
+font-size:10px;
+padding:4px 0 0;
+}
+
+.mejs-controls .mejs-captions-button .mejs-captions-translations {
+font-size:10px;
+margin:0 0 5px;
+}
+
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul,.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul,.mejs-controls .mejs-speed-button .mejs-speed-selector ul {
+display:block;
+list-style-type:none!important;
+overflow:hidden;
+margin:0;
+padding:0;
+}
+
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul li,.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li {
+list-style-type:none!important;
+display:block;
+color:#fff;
+overflow:hidden;
+margin:0 0 6px;
+padding:0;
+}
+
+.mejs-controls .mejs-captions-button .mejs-captions-selector ul li input,.mejs-controls .mejs-sourcechooser-button .mejs-sourcechooser-selector ul li input {
+clear:both;
+float:left;
+margin:3px 3px 0 5px;
+}
+
