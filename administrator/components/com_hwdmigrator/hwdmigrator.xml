@@ -54,6 +54,10 @@
 	<media destination="com_hwdmigrator" folder="media">
 		<filename>index.html</filename>
 		<folder>assets</folder>
-	</media>        
+	</media>  
+        <!-- Update server -->
+        <updateservers>
+                <server type="collection" name="HWD Updates">https://bitbucket.org/hwdmediashare/updateserver/raw/master/update.xml</server>
+        </updateservers>               
 </extension>
 
