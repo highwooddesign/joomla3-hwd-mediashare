@@ -32,7 +32,7 @@ $subcatcols = min($this->columns, 3);
           <a href="<?php echo JRoute::_(hwdMediaShareHelperRoute::getCategoryRoute($item->slug)); ?>" class="row-fluid">
             <?php if ($this->params->get('list_meta_thumbnail') != '0') :?>
             <div class="span4">
-              <div class="media-item">
+              <div class="media-item<?php echo ($this->params->get('list_thumbnail_aspect') == 0 ? ' originalaspect' : ''); ?>">
                 <div class="media-aspect<?php echo $this->params->get('list_thumbnail_aspect'); ?>"></div>        
                   <img src="<?php echo JRoute::_(hwdMediaShareThumbnails::thumbnail($item, 6)); ?>" border="0" alt="<?php echo $this->escape($item->title); ?>" class="media-thumb<?php echo ($this->params->get('list_tooltip_location') > '2' ? ' hasTooltip' : ''); ?>" title="<?php echo JHtml::tooltipText($item->title, ($this->params->get('list_tooltip_contents') != '0' ? JHtml::_('string.truncate', $item->description, $this->params->get('list_desc_truncate'), false, false) : '')); ?>" />
               </div>    
