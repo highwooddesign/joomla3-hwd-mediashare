@@ -16,8 +16,7 @@ class hwdMediaShareVideos extends JObject
 	 * Class constructor.
 	 *
 	 * @access  public
-	 * @param   mixed  $properties  Either and associative array or another
-	 *                              object to set the initial properties of the object.
+	 * @param   mixed   $properties  Associative array to set the initial properties of the object.
          * @return  void
 	 */
 	public function __construct($properties = null)
@@ -78,7 +77,6 @@ class hwdMediaShareVideos extends JObject
                 $webm = hwdMediaShareVideos::getWebm($item);
                 $ogg = hwdMediaShareVideos::getOgg($item);
                 $flv = hwdMediaShareVideos::getFlv($item);
-		$jpg = hwdMediaShareThumbnails::getVideoPreview($item);
              
                 if ($mp4 || $webm || $ogg || $flv)
                 {
@@ -89,22 +87,21 @@ class hwdMediaShareVideos extends JObject
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDplayer = call_user_func(array($pluginClass, 'getInstance'));
                                 
-                                // Setup parameters for player.
-                                $params = new JRegistry(array(
+                                // Setup sources for player.
+                                $sources = new JRegistry(array(
                                     'mp4' => $mp4,
                                     'webm' => $webm,
                                     'ogg' => $ogg,
                                     'flv' => $flv,
-                                    'jpg' => $jpg
                                 ));
 
-                                if ($player = $HWDplayer->getVideoPlayer($item, $params))
+                                if ($player = $HWDplayer->getVideoPlayer($item, $sources))
                                 {
                                         return $player;
                                 }
                                 else
                                 {
-                                        return $utilities->printNotice($HWDplayer->getError());
+                                        return $utilities->printNotice($HWDplayer->getError(), '', 'info', true);
                                 }
                         }
                 }
@@ -152,7 +149,7 @@ class hwdMediaShareVideos extends JObject
                         break;
                 }
  
-                // If CDN, let the CDN framework return the data.
+                // Check CDN framework.
                 if ($item->type == 5 && $item->storage)
 		{
                         $pluginClass = 'plgHwdmediashare'.$item->storage;
@@ -161,7 +158,10 @@ class hwdMediaShareVideos extends JObject
                         {
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
-                                return $HWDcdn->publicUrl($item, $fileType);
+                                if (method_exists($HWDcdn, 'getFile'))
+                                {
+                                        return $HWDcdn->getFile($item, $fileTypes);
+                                }
                         }
                 } 
                 
@@ -255,7 +255,7 @@ class hwdMediaShareVideos extends JObject
                         break;
                 }
  
-                // If CDN, let the CDN framework return the data.
+                // Check CDN framework.
                 if ($item->type == 5 && $item->storage)
 		{
                         $pluginClass = 'plgHwdmediashare'.$item->storage;
@@ -264,7 +264,10 @@ class hwdMediaShareVideos extends JObject
                         {
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
-                                return $HWDcdn->publicUrl($item, $fileType);
+                                if (method_exists($HWDcdn, 'getFile'))
+                                {
+                                        return $HWDcdn->getFile($item, $fileTypes);
+                                }
                         }
                 } 
                 
@@ -358,7 +361,7 @@ class hwdMediaShareVideos extends JObject
                         break;
                 }
  
-                // If CDN, let the CDN framework return the data.
+                // Check CDN framework.
                 if ($item->type == 5 && $item->storage)
 		{
                         $pluginClass = 'plgHwdmediashare'.$item->storage;
@@ -367,7 +370,10 @@ class hwdMediaShareVideos extends JObject
                         {
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
-                                return $HWDcdn->publicUrl($item, $fileType);
+                                if (method_exists($HWDcdn, 'getFile'))
+                                {
+                                        return $HWDcdn->getFile($item, $fileTypes);
+                                }
                         }
                 } 
                 
@@ -461,7 +467,7 @@ class hwdMediaShareVideos extends JObject
                         break;
                 }
  
-                // If CDN, let the CDN framework return the data.
+                // Check CDN framework.
                 if ($item->type == 5 && $item->storage)
 		{
                         $pluginClass = 'plgHwdmediashare'.$item->storage;
@@ -470,7 +476,10 @@ class hwdMediaShareVideos extends JObject
                         {
                                 JLoader::register($pluginClass, $pluginPath);
                                 $HWDcdn = call_user_func(array($pluginClass, 'getInstance'));
-                                return $HWDcdn->publicUrl($item, $fileType);
+                                if (method_exists($HWDcdn, 'getFile'))
+                                {
+                                        return $HWDcdn->getFile($item, $fileTypes);
+                                }
                         }
                 } 
                 
@@ -577,96 +586,15 @@ class hwdMediaShareVideos extends JObject
                         return $log;  
                 }
 
-                // Get information on original video.
-                try
+                if (!$original = $this->processOriginal($process, $pathSource))
                 {
-                        // Check we can use the exec function.
-                        if (TRUE !== is_callable('exec'))
-                        {
-                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
-                        }
-
-                        // Check we can use the exec function.
-                        if (TRUE !== function_exists('exec'))
-                        {
-                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
-                        } 
-                        
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
-                                exec($log->input, $log->output);
-                        }
-                        else
-                        {
-                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
-                                exec($log->input, $log->output);
-                        }
-
-                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
-                        if (empty($output))
-                        {
-                                // Log fail (empty ffmpeg output).
-                                $HWDprocesses->addLog($log);
-                                return $log;
-                        }
-                        else
-                        {
-                                $err1 = strpos($output, "No such file or directory");
-                                $err2 = strpos($output, "not found");
-                                $err3 = strpos($output, "Permission denied");
-                                if ($err1 !== false || $err2 !== false || $err3 !== false)
-                                {
-                                        // Log fail (ffmpeg not accessible).
-                                        $HWDprocesses->addLog($log);
-                                        return $log;
-                                }
-                        }
-                }
-                catch(Exception $e)
-                {
-                        // Log fail (caught error).
-                        JFile::delete($pathDest);
-                        $log->output = $e->getMessage();
+                        // Log fail (no source parameters).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
                         $HWDprocesses->addLog($log);
-                        return $log;                             
+                        return $log;                      
                 }
 
-                // Log the process.
-                $log->status = 2; // Assume success.
-                $HWDprocesses->addLog($log);
-                $log = $HWDprocesses->resetLog($process);                        
-                
-                // Initialise variables.
-                $ffmpeg_version = 0;
-                $input_width = 0;
-                $input_height = 0;
-                $input_bitrate = 0;
-                $duration = 0;
-
-                // Get ffmpeg version.
-                if (preg_match('#ffmpeg version(.*?) Copyright#i', $output, $matches))
-                {
-                        $ffmpeg_version = trim($matches[1]);
-                }
-
-                // Get dimensions of original video.
-                if (preg_match('/Stream.*Video:.* (\d+)x(\d+).*/', $output, $matches))
-                {
-                        $input_width  = (int) $matches[1];
-                        $input_height = (int) $matches[2];
-                }
-
-                // Get duration of original video.
-                if (preg_match('/Duration: (.*?),/', $output, $matches))
-                {
-                        $duration_string = $matches[1];
-                        list($h, $m, $s) = explode(':', $duration_string);
-                        $duration = ((int) $h * 3600 ) + ((int) $m * 60 ) + (int) $s;
-                        $duration = (int) $duration;
-                }
-
-                if ($input_width == 0 || $input_height == 0)
+                if ($original->input_width == 0 || $original->input_height == 0)
                 {
                         // Log fail (no input dimensions).
                         $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
@@ -674,7 +602,7 @@ class hwdMediaShareVideos extends JObject
                         return $log;  
                 }
 
-                if ($input_height < $size)
+                if ($original->input_height < $size)
                 {
                         // Log fail (unnecessary).
                         $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
@@ -690,7 +618,7 @@ class hwdMediaShareVideos extends JObject
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
                 // Calculate input aspect.
-                $input_aspect = $input_width / $input_height;
+                $input_aspect = $original->input_width / $original->input_height;
                 $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
 
                 // Calculate output sizes.
@@ -699,7 +627,7 @@ class hwdMediaShareVideos extends JObject
                 $output_height= $size;
 
                 // Calculate padding (for black bar letterboxing/pillarboxing).
-                $input_aspect = $input_width / $input_height;
+                $input_aspect = $original->input_width / $original->input_height;
                 $conv_height = intval ( ($output_width / $input_aspect) );
                 $conv_height % 2 == 1 ? $conv_height -= 1: false;
                 $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
@@ -716,7 +644,7 @@ class hwdMediaShareVideos extends JObject
 
                 if ($conv_pad < 0)
                 {
-                        $input_aspect = $input_width / $input_height;
+                        $input_aspect = $original->input_width / $original->input_height;
                         $conv_width = intval ( ($output_height * $input_aspect) );
                         $conv_width % 2 == 1 ? $conv_width -= 1: false;
                         $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
@@ -733,7 +661,7 @@ class hwdMediaShareVideos extends JObject
                         $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
                 }
 
-                if (version_compare($ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
+                if (version_compare($original->ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
                 {
                         $pad = '';
                 }
@@ -741,9 +669,9 @@ class hwdMediaShareVideos extends JObject
                 // Take the screenshot at 4 seconds into the movie unless the duration can be obtained, 
                 // in which case take the screenshot half way through
                 $offset = 4;
-                if ($duration)
+                if ($original->duration)
                 {
-                        $offset = $duration/2;
+                        $offset = $original->duration/2;
                         $offset = (int) $offset;
                 }
 
@@ -866,111 +794,15 @@ class hwdMediaShareVideos extends JObject
                         return $log;  
                 }
 
-                // Get information on original video.
-                try
+                if (!$original = $this->processOriginal($process, $pathSource))
                 {
-                        // Check we can use the exec function.
-                        if (TRUE !== is_callable('exec'))
-                        {
-                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
-                        }
-
-                        // Check we can use the exec function.
-                        if (TRUE !== function_exists('exec'))
-                        {
-                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
-                        } 
-                        
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
-                                exec($log->input, $log->output);
-                        }
-                        else
-                        {
-                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
-                                exec($log->input, $log->output);
-                        }
-
-                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
-                        if (empty($output))
-                        {
-                                // Log fail (empty ffmpeg output).
-                                $HWDprocesses->addLog($log);
-                                return $log;
-                        }
-                        else
-                        {
-                                $err1 = strpos($output, "No such file or directory");
-                                $err2 = strpos($output, "not found");
-                                $err3 = strpos($output, "Permission denied");
-                                if ($err1 !== false || $err2 !== false || $err3 !== false)
-                                {
-                                        // Log fail (ffmpeg not accessible).
-                                        $HWDprocesses->addLog($log);
-                                        return $log;
-                                }
-                        }
-                }
-                catch(Exception $e)
-                {
-                        // Log fail (caught error).
-                        JFile::delete($pathDest);
-                        $log->output = $e->getMessage();
+                        // Log fail (no source parameters).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
                         $HWDprocesses->addLog($log);
-                        return $log;                             
+                        return $log;                      
                 }
-
-                // Log the process.
-                $log->status = 2; // Assume success.
-                $HWDprocesses->addLog($log);
-                $log = $HWDprocesses->resetLog($process);                        
-                
-                // Initialise variables.
-                $ffmpeg_version = 0;
-                $input_width = 0;
-                $input_height = 0;
-                $input_bitrate = 0;
-                $duration = 0;
-
-                // Get ffmpeg version.
-                if (preg_match('#ffmpeg version(.*?) Copyright#i', $output, $matches))
-                {
-                        $ffmpeg_version = trim($matches[1]);
-                }
-
-                // Get dimensions of original video.
-                if (preg_match('/Stream.*Video:.* (\d+)x(\d+).*/', $output, $matches))
-                {
-                        $input_width  = (int) $matches[1];
-                        $input_height = (int) $matches[2];
-                }
-
-                // Get duration of original video.
-                if (preg_match('/Duration: (.*?),/', $output, $matches))
-                {
-                        $duration_string = $matches[1];
-                        list($h, $m, $s) = explode(':', $duration_string);
-                        $duration = ((int) $h * 3600 ) + ((int) $m * 60 ) + (int) $s;
-                        $duration = (int) $duration;
-                }
-
-                // Get bitrate of original video.
-                //
-                // Outdated pcre (perl-compatible regular expressions) libraries case error:
-                // Compilation failed: unrecognized character
-                // 
-                // Surpress error and offer alternative.
-                if (@preg_match('/bitrate:\s(?<bitrate>\d+)\skb\/s/', $output, $matches))
-                {
-                        $input_bitrate = (float) $matches[1];
-                }
-                elseif (preg_match('/bitrate:\s(.*?)\skb\/s/', $output, $matches))
-                {
-                        $input_bitrate = (float) $matches[1];
-                }
-                        
-                if ($input_width == 0 || $input_height == 0 || $input_bitrate == 0)
+                     
+                if ($original->input_width == 0 || $original->input_height == 0 || $original->input_bitrate == 0)
                 {
                         // Log fail (no input dimensions).
                         $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
@@ -978,7 +810,7 @@ class hwdMediaShareVideos extends JObject
                         return $log;  
                 }
 
-                if ($input_height < $size && $size != '240')
+                if ($original->input_height < $size && $size != '240')
                 {
                         // Log fail (unnecessary).
                         $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
@@ -988,7 +820,7 @@ class hwdMediaShareVideos extends JObject
                 }
                     
                 // Initialise variables.
-                $bitrate = min($input_bitrate, $this->getVideoBitrate($size));
+                $bitrate = min($original->input_bitrate, $this->getVideoBitrate($size));
 
                 $foldersDest = hwdMediaShareFiles::getFolders($media->key);
                 $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
@@ -997,7 +829,7 @@ class hwdMediaShareVideos extends JObject
                 $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
                 // Calculate input aspect.
-                $input_aspect = $input_width / $input_height;
+                $input_aspect = $original->input_width / $original->input_height;
                 $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
 
                 // Calculate output sizes.
@@ -1006,7 +838,7 @@ class hwdMediaShareVideos extends JObject
                 $output_height= $size;
 
                 // Calculate padding (for black bar letterboxing/pillarboxing).
-                $input_aspect = $input_width / $input_height;
+                $input_aspect = $original->input_width / $original->input_height;
                 $conv_height = intval ( ($output_width / $input_aspect) );
                 $conv_height % 2 == 1 ? $conv_height -= 1: false;
                 $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
@@ -1023,7 +855,7 @@ class hwdMediaShareVideos extends JObject
 
                 if ($conv_pad < 0)
                 {
-                        $input_aspect = $input_width / $input_height;
+                        $input_aspect = $original->input_width / $original->input_height;
                         $conv_width = intval ( ($output_height * $input_aspect) );
                         $conv_width % 2 == 1 ? $conv_width -= 1: false;
                         $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
@@ -1040,7 +872,7 @@ class hwdMediaShareVideos extends JObject
                         $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
                 }
 
-                if (version_compare($ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
+                if (version_compare($original->ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
                 {
                         $pad = '';
                 }
@@ -1105,6 +937,8 @@ class hwdMediaShareVideos extends JObject
                         $HWDfiles->addFile($media, $fileType);
                         // Add watermark.
                         $this->processWatermark($process, $fileType);
+                        // Inject metadata.
+                        $this->injectMetaData($process, $fileType);
                         return $log;  
                 }
 
@@ -1125,378 +959,381 @@ class hwdMediaShareVideos extends JObject
 	 */
 	public function processMp4($process, $fileType, $size)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
                 hwdMediaShareFactory::load('files');
-
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
+                $properties = $table->getProperties(1);
+                $media = JArrayHelper::toObject($properties, 'JObject');
+                
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        // Get information on original
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
-                        else
-                        {
-                                $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
+                        // Log fail (no source file).
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
 
-                        $flatoutput = is_array($output) ? implode("\n",$output) : $output;
-                        if (empty($flatoutput))
-                        {
-                                $log->status = 3;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
+                if (!$original = $this->processOriginal($process, $pathSource))
+                {
+                        // Log fail (no source parameters).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;                      
+                }
+                  
+                if ($original->input_width == 0 || $original->input_height == 0 || $original->input_bitrate == 0)
+                {
+                        // Log fail (no input dimensions).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                
+                if ($original->input_height < $size && $size != '360')
+                {
+                        // Log fail (unnecessary).
+                        $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
+                        $log->status = 4;
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                    
+                // Initialise variables.
+                $bitrate = min($original->input_bitrate, $this->getVideoBitrate($size));
+                
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
 
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-                        else
-                        {
-                                $pos = strpos($flatoutput, "No such file or directory");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
+                // Calculate input aspect
+                $input_aspect = $original->input_width / $original->input_height;
+                $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
 
-                                $pos = strpos($flatoutput, "not found");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                             
-                                $pos = strpos($flatoutput, "Permission denied");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                                
-                                // Assume successful
-                                $log->status = 2;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
+                // Calculate output sizes
+                $output_width = intval($size*$output_aspect);
+                $output_width % 2 == 1 ? $output_width += 1: false;
+                $output_height= $size;
 
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                
-                                // Reset status
-                                $log->status = 3;
-                        }
-                        
-                        $ffmpeg_version  = 0;
-                        $input_width  = 0;
-                        $input_height = 0;
-                        $input_bitrate  = 0;
+                // Calculate padding (for black bar letterboxing/pillarboxing)
+                $input_aspect = $original->input_width / $original->input_height;
+                $conv_height = intval ( ($output_width / $input_aspect) );
+                $conv_height % 2 == 1 ? $conv_height -= 1: false;
+                $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
+                $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
 
-                        // Get ffmpeg version
-                        if ( preg_match( '#FFmpeg version(.*?), Copyright#', implode("\n",$output), $matches ) )
-                        {
-                                $ffmpeg_version = trim($matches[1]);
-                        }
-                        elseif ( preg_match( '#ffmpeg version(.*?) Copyright#i', implode("\n",$output), $matches ) )
-                        {
-                                $ffmpeg_version = trim($matches[1]);
-                        }
-                        
-                        // Get original size
-                        if ( preg_match( '/Stream.*Video:.* (\d+)x(\d+).* (\d+\.\d+|\d+) tbr/', implode("\n",$output), $matches ) )
-                        {
-                                $input_width = $matches[1];
-                                $input_height= $matches[2];
-                        }
-                        elseif ( preg_match( '/Stream.*Video:.* (\d+)x(\d+).* (\d+\.\d+|\d+) tb/', implode("\n",$output), $matches ) )
-                        {
-                                $input_width = $matches[1];
-                                $input_height= $matches[2];
-                        }
-                        
-                        // Get original bitrate
-                        // Outdated pcre (perl-compatible regular expressions) libraries case error:
-                        // Compilation failed: unrecognized character
-                        // Therefore, surpress error and offer alternative
-                        if ( @preg_match('/bitrate:\s(?<bitrate>\d+)\skb\/s/', implode("\n",$output), $matches) )
-                        {
-                                $input_bitrate = $matches[1];
-                        }
-                        elseif ( preg_match('/bitrate:\s(.*?)\skb\/s/', implode("\n",$output), $matches ) )
-                        {
-                                $input_bitrate = $matches[1];
-                        }
-                        
-                        if ($input_width == 0 || $input_height == 0 || $input_bitrate == 0)
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_PARAMETERS');
-                                $log->status = 3;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-
-                        $bitrate = min($input_bitrate, hwdMediaShareVideos::getVideoBitrate($size));
-
-                        if (($input_height >= $size) || $size == '360')
-                        {
-                                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
-
-                                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
-
-                                // Calculate input aspect
-                                $input_aspect = $input_width / $input_height;
-                                $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
-
-                                // Calculate output sizes
-                                $output_width = intval($size*$output_aspect);
-                                $output_width % 2 == 1 ? $output_width += 1: false;
-                                $output_height= $size;
-
-                                // Calculate padding (for black bar letterboxing/pillarboxing)
-                                $input_aspect = $input_width / $input_height;
-                                $conv_height = intval ( ($output_width / $input_aspect) );
-                                $conv_height % 2 == 1 ? $conv_height -= 1: false;
-                                $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
-                                $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
-
-                                if($input_aspect < 1.33333333333333)
-                                {
-                                        $aspect_mode = 'pillarboxing';
-                                }
-                                else
-                                {
-                                        $aspect_mode = 'letterboxing';
-                                }
-
-                                if ($conv_pad < 0)
-                                {
-                                        $input_aspect = $input_width / $input_height;
-                                        $conv_width = intval ( ($output_height * $input_aspect) );
-                                        $conv_width % 2 == 1 ? $conv_width -= 1: false;
-                                        $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
-                                        $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
-
-                                        $conv_pad = abs($conv_pad);
-                                        $pad = " -vf pad=$output_width:$output_height:$conv_pad:0 ";
-
-                                        $wxh = $conv_width .'x'. $output_height;
-                                }
-                                else
-                                {
-                                        $wxh = $output_width .'x'. $conv_height;
-                                        $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
-                                }
-
-                                if (version_compare($ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
-                                {
-                                        $pad = '';
-                                }
-                                
-                                // First attempt (@alduccino commands - CRF with PRESET)
-                                try
-                                {
-                                        // Set parameter values
-                                        switch ($size)
-                                        {
-                                                case '1080':
-                                                case '720':
-                                                        $vbit = 2000;
-                                                        $min  = 1550;
-                                                        $max  = 2000;
-                                                        $buff = 1550;
-                                                        $crf  = 18;
-                                                break;
-                                                case '480':
-                                                case '360': 
-                                                default:                                                
-                                                        $vbit = 1000;
-                                                        $min  = 800;
-                                                        $max  = 1000;
-                                                        $buff = 800;
-                                                        $crf  = 18;
-                                                break;
-                                        }
-                                        if(substr(PHP_OS, 0, 3) == "WIN")
-                                        {
-                                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 192k -s $wxh -aspect 16:9 -r 24000/1001 -vcodec libx264 -b:v ".$vbit."k -minrate ".$min."k -maxrate ".$max."k -bufsize ".$buff."K -crf $crf -preset fast -f mp4 -threads 0 $pathDest 2>&1";
-                                                exec($log->input, $log->output);
-                                        }
-                                        else
-                                        {
-                                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 192k -s $wxh -aspect 16:9 -r 24000/1001 -vcodec libx264 -b:v ".$vbit."k -minrate ".$min."k -maxrate ".$max."k -bufsize ".$buff."K -crf $crf -preset fast -f mp4 -threads 0 $pathDest 2>&1";
-                                                exec($log->input, $log->output);
-                                        }
-
-                                        if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                        {
-                                                $log->status = 2;
-                                        }
-                                        elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                        {
-                                                jimport( 'joomla.filesystem.file' );
-                                                JFile::delete($pathDest);
-                                        }
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);                                        
-                                }
-                                catch(Exception $e)
-                                {
-                                        $output = $e->getMessage();
-                                }
-        
-                                // Second attempt
-                                if (!file_exists($pathDest))
-                                {
-                                        try
-                                        {
-                                                if(substr(PHP_OS, 0, 3) == "WIN")
-                                                {
-                                                        $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 -vpre ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
-                                                        exec($log->input, $log->output);
-                                                }
-                                                else
-                                                {
-                                                        $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 -vpre ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
-                                                        exec($log->input, $log->output);
-                                                }
-
-                                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                                {
-                                                        $log->status = 2;
-                                                }
-                                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                                {
-                                                        jimport( 'joomla.filesystem.file' );
-                                                        JFile::delete($pathDest);
-                                                }
-                                        }
-                                        catch(Exception $e)
-                                        {
-                                                $output = $e->getMessage();
-                                        }
-                                        
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                }                                
-
-
-                                // Third attempt
-                                if (!file_exists($pathDest))
-                                {
-                                        try
-                                        {
-                                                $ffpreset_libx264_slow = " -coder 1 -flags +loop -cmp +chroma -partitions +parti8x8+parti4x4+partp8x8+partb8x8 -me_method umh -subq 8 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -b_strategy 2 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -refs 5 -directpred 3 -trellis 1 -flags2 +bpyramid+mixed_refs+wpred+dct8x8+fastpskip -wpredp 2 -rc_lookahead 50 ";
-                                                $ffpreset_libx264_ipod640 = " -coder 0 -bf 0 -refs 1 -flags2 -wpred-dct8x8 -level 30 -maxrate 10000000 -bufsize 10000000 -wpredp 0 ";
-                                                if(substr(PHP_OS, 0, 3) == "WIN")
-                                                {
-                                                        $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 $ffpreset_libx264_slow $ffpreset_libx264_ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
-                                                        exec($log->input, $log->output);
-                                                }
-                                                else
-                                                {
-                                                        $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 $ffpreset_libx264_slow $ffpreset_libx264_ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
-                                                        exec($log->input, $log->output);
-                                                }
-
-                                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                                {
-                                                        $log->status = 2;
-                                                }
-                                                elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                                {
-                                                        jimport( 'joomla.filesystem.file' );
-                                                        JFile::delete($pathDest);
-                                                }
-                                        }
-                                        catch(Exception $e)
-                                        {
-                                                $output = $e->getMessage();
-                                        }
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                }
-
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        // Add watermark
-                                        hwdMediaShareVideos::processWatermark($process, $fileType);
-
-                                        // Add file to database
-                                        hwdMediaShareFactory::load('files');
-                                        $HWDfiles = hwdMediaShareFiles::getInstance();
-                                        $HWDfiles->addFile($item, $fileType);
-                                        return $log;
-                                }
-
-                                $log->output = JText::_('COM_HWDMS_ERROR_DESTINATION_MEDIA_NOT_EXIST');
-                        }
-                        else
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
-                                $log->status = 4;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
+                if($input_aspect < 1.33333333333333)
+                {
+                        $aspect_mode = 'pillarboxing';
                 }
                 else
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $aspect_mode = 'letterboxing';
                 }
 
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                if ($conv_pad < 0)
+                {
+                        $input_aspect = $original->input_width / $original->input_height;
+                        $conv_width = intval ( ($output_height * $input_aspect) );
+                        $conv_width % 2 == 1 ? $conv_width -= 1: false;
+                        $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
+                        $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
+
+                        $conv_pad = abs($conv_pad);
+                        $pad = " -vf pad=$output_width:$output_height:$conv_pad:0 ";
+
+                        $wxh = $conv_width .'x'. $output_height;
+                }
+                else
+                {
+                        $wxh = $output_width .'x'. $conv_height;
+                        $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
+                }
+
+                if (version_compare($original->ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
+                {
+                        $pad = '';
+                }
+
+                // Define aspect option.
+                switch (round($output_aspect, 2))
+                {
+                        case '1.78':
+                                $aspect_option = " -aspect 16:9 ";
+                        break;
+                        case '1.44':
+                                $aspect_option = " -aspect 4:3 ";
+                        break;
+                        default:                                                
+                                $aspect_option = " ";
+                        break;
+                }
+
+                /**
+                 * FIRST CONVERSION ATTEMPT
+                 * 
+                 * CRF with PRESET
+                 */
+                try
+                {
+                        // Initialise variables.
+                        switch ($size)
+                        {
+                                case '1080':
+                                case '720':
+                                        $vbit = 2000;
+                                        $min  = 1550;
+                                        $max  = 2000;
+                                        $buff = 1550;
+                                        $crf  = 18;
+                                break;
+                                case '480':
+                                case '360': 
+                                default:                                                
+                                        $vbit = 1000;
+                                        $min  = 800;
+                                        $max  = 1000;
+                                        $buff = 800;
+                                        $crf  = 18;
+                                break;
+                        }
+                        
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 192k -s $wxh $aspect_option -r 24000/1001 -vcodec libx264 -b:v ".$vbit."k -minrate ".$min."k -maxrate ".$max."k -bufsize ".$buff."K -crf $crf -preset fast -f mp4 -threads 0 $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 192k -s $wxh $aspect_option -r 24000/1001 -vcodec libx264 -b:v ".$vbit."k -minrate ".$min."k -maxrate ".$max."k -bufsize ".$buff."K -crf $crf -preset fast -f mp4 -threads 0 $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process);                        
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        $log = $HWDprocesses->resetLog($process);                        
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process);                        
+                        }                                      
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process); 
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {                    
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        // Check moov atom.
+                        $this->checkMoovAtom($process, $fileType);                        
+                        return $log;  
+                }
+
+                /**
+                 * SECOND CONVERSION ATTEMPT
+                 * 
+                 * CRF with PRESET
+                 */
+                try
+                {
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 -vpre ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 -vpre ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        $log = $HWDprocesses->resetLog($process); 
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }                                      
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process); 
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        // Check moov atom.
+                        $this->checkMoovAtom($process, $fileType);                        
+                        return $log;  
+                }
+                           
+                /**
+                 * THIRD CONVERSION ATTEMPT
+                 * 
+                 * CRF with PRESET
+                 */
+                try
+                {
+                        $ffpreset_libx264_slow = " -coder 1 -flags +loop -cmp +chroma -partitions +parti8x8+parti4x4+partp8x8+partb8x8 -me_method umh -subq 8 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -b_strategy 2 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -refs 5 -directpred 3 -trellis 1 -flags2 +bpyramid+mixed_refs+wpred+dct8x8+fastpskip -wpredp 2 -rc_lookahead 50 ";
+                        $ffpreset_libx264_ipod640 = " -coder 0 -bf 0 -refs 1 -flags2 -wpred-dct8x8 -level 30 -maxrate 10000000 -bufsize 10000000 -wpredp 0 ";
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 $ffpreset_libx264_slow $ffpreset_libx264_ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -strict experimental -acodec aac -ac 2 -ab 160k -s $wxh $pad -vcodec libx264 $ffpreset_libx264_slow $ffpreset_libx264_ipod640 -b ".$bitrate."k -f mp4 -threads 0 $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        $log = $HWDprocesses->resetLog($process); 
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }                                      
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process); 
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        // Check moov atom.
+                        $this->checkMoovAtom($process, $fileType);                        
+                        return $log;   
+                }
+
+                // Log fail (unknown).
+                $HWDprocesses->addLog($log);
+                return $log; 
 	}
 
         /**
@@ -1511,306 +1348,220 @@ class hwdMediaShareVideos extends JObject
 	 */
 	public function processWebm($process, $fileType, $size)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
                 hwdMediaShareFactory::load('files');
-
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
+                $properties = $table->getProperties(1);
+                $media = JArrayHelper::toObject($properties, 'JObject');
+                
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        // Get information on original
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
-                        else
-                        {
-                                $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
-                        
-                        $flatoutput = is_array($output) ? implode("\n",$output) : $output;
-                        if (empty($flatoutput))
-                        {
-                                $log->status = 3;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
+                        // Log fail (no source file).
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
 
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-                        else
-                        {
-                                $pos = strpos($flatoutput, "No such file or directory");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
+                if (!$original = $this->processOriginal($process, $pathSource))
+                {
+                        // Log fail (no source parameters).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;                      
+                }
+                  
+                if ($original->input_width == 0 || $original->input_height == 0 || $original->input_bitrate == 0)
+                {
+                        // Log fail (no input dimensions).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                
+                if ($original->input_height < $size && $size != '360')
+                {
+                        // Log fail (unnecessary).
+                        $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
+                        $log->status = 4;
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                    
+                // Initialise variables.
+                $bitrate = min($original->input_bitrate, $this->getVideoBitrate($size));
+                
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
 
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
-                                $pos = strpos($flatoutput, "not found");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                             
-                                $pos = strpos($flatoutput, "Permission denied");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                                
-                                // Assume successful
-                                $log->status = 2;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
+                // Calculate input aspect.
+                $input_aspect = $original->input_width / $original->input_height;
+                $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
 
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log); 
-                                
-                                // Reset status
-                                $log->status = 3;                                
-                        }
-                        
-                        $ffmpeg_version  = 0;
-                        $input_width  = 0;
-                        $input_height = 0;
-                        $input_bitrate  = 0;
+                // Calculate output sizes.
+                $output_width = intval($size*$output_aspect);
+                $output_width % 2 == 1 ? $output_width += 1: false;
+                $output_height= $size;
 
-                        // Get ffmpeg version
-                        if ( preg_match( '#FFmpeg version(.*?), Copyright#', implode("\n",$output), $matches ) )
-                        {
-                                $ffmpeg_version = trim($matches[1]);
-                        }
-                        elseif ( preg_match( '#ffmpeg version(.*?) Copyright#i', implode("\n",$output), $matches ) )
-                        {
-                                $ffmpeg_version = trim($matches[1]);
-                        }
-                        
-                        // Get original size
-                        if ( preg_match( '/Stream.*Video:.* (\d+)x(\d+).* (\d+\.\d+|\d+) tbr/', implode("\n",$output), $matches ) )
-                        {
-                                $input_width = $matches[1];
-                                $input_height= $matches[2];
-                        }
-                        elseif ( preg_match( '/Stream.*Video:.* (\d+)x(\d+).* (\d+\.\d+|\d+) tb/', implode("\n",$output), $matches ) )
-                        {
-                                $input_width = $matches[1];
-                                $input_height= $matches[2];
-                        }
-                        
-                        // Get original bitrate
-                        // Outdated pcre (perl-compatible regular expressions) libraries case error:
-                        // Compilation failed: unrecognized character
-                        // Therefore, surpress error and offer alternative
-                        if ( @preg_match('/bitrate:\s(?<bitrate>\d+)\skb\/s/', implode("\n",$output), $matches) )
-                        {
-                                $input_bitrate = $matches[1];
-                        }
-                        elseif ( preg_match('/bitrate:\s(.*?)\skb\/s/', implode("\n",$output), $matches ) )
-                        {
-                                $input_bitrate = $matches[1];
-                        }
+                // Calculate padding (for black bar letterboxing/pillarboxing).
+                $input_aspect = $original->input_width / $original->input_height;
+                $conv_height = intval ( ($output_width / $input_aspect) );
+                $conv_height % 2 == 1 ? $conv_height -= 1: false;
+                $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
+                $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
 
-                        if ($input_width == 0 || $input_height == 0 || $input_bitrate == 0)
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_PARAMETERS');
-                                $log->status = 3;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-
-                        $bitrate = min($input_bitrate, hwdMediaShareVideos::getVideoBitrate($size));
-
-                        if (($input_height >= $size) || $size == '360')
-                        {
-                                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
-
-                                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
-
-                                // Calculate input aspect
-                                $input_aspect = $input_width / $input_height;
-                                $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
-
-                                // Calculate output sizes
-                                $output_width = intval($size*$output_aspect);
-                                $output_width % 2 == 1 ? $output_width += 1: false;
-                                $output_height= $size;
-
-                                // Calculate padding (for black bar letterboxing/pillarboxing)
-                                $input_aspect = $input_width / $input_height;
-                                $conv_height = intval ( ($output_width / $input_aspect) );
-                                $conv_height % 2 == 1 ? $conv_height -= 1: false;
-                                $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
-                                $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
-
-                                if($input_aspect < 1.33333333333333)
-                                {
-                                        $aspect_mode = 'pillarboxing';
-                                }
-                                else
-                                {
-                                        $aspect_mode = 'letterboxing';
-                                }
-
-                                if ($conv_pad < 0)
-                                {
-                                        $input_aspect = $input_width / $input_height;
-                                        $conv_width = intval ( ($output_height * $input_aspect) );
-                                        $conv_width % 2 == 1 ? $conv_width -= 1: false;
-                                        $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
-                                        $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
-
-                                        $conv_pad = abs($conv_pad);
-                                        $pad = " -vf pad=$output_width:$output_height:$conv_pad:0 ";
-
-                                        $wxh = $conv_width .'x'. $output_height;
-                                }
-                                else
-                                {
-                                        $wxh = $output_width .'x'. $conv_height;
-                                        $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
-                                }
-                                
-                                $opt_quality = '-quality good';
-                                $opt_speed = '-quality good';
-                                $opt_slices = '-slices 4';
-                                $opt_arnr = '-arnr_max_frames 7 -arnr_strength 5 -arnr_type 3';
-                                if (version_compare($ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
-                                {
-                                        $pad = '';
-                                        $opt_quality = '';
-                                        $opt_speed = '';
-                                        $opt_slices = '';
-                                        $opt_arnr = '';
-                                }
-                                if (version_compare($ffmpeg_version, '0.7.0', '<'))
-                                {
-                                        $opt_quality = '';
-                                        $opt_speed = '';
-                                        $opt_slices = '';
-                                        $opt_arnr = '';
-                                }
-                                 
-                                try
-                                {
-                                        $ffpreset_libvpx_720p_pass1 = " -vcodec libvpx -g 120 -rc_lookahead 16 $opt_quality $opt_speed -profile 0 -qmax 51 -qmin 11 $opt_slices -vb 2M ";
-                                        $ffpreset_libvpx_720p_pass2 = " -vcodec libvpx -g 120 -rc_lookahead 16 $opt_quality $opt_speed -profile 0 -qmax 51 -qmin 11 $opt_slices -vb 2M -maxrate 24M -minrate 100k $opt_arnr ";
-                                        if(substr(PHP_OS, 0, 3) == "WIN")
-                                        {
-                                                $input1 = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass1 -b ".$bitrate."k -pass 1 -an -f webm $pathDest 2>&1";
-                                                exec($input1, $output1);
-                                                $input2 = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass2 -b ".$bitrate."k -pass 2 -acodec libvorbis -ab 90k -f webm $pathDest 2>&1";
-                                                exec($input2, $output2);
-                                        }
-                                        else
-                                        {
-                                                $input1 = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass1 -b ".$bitrate."k -pass 1 -an -f webm $pathDest 2>&1";
-                                                exec($input1, $output1);
-                                                $input2 = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass2 -b ".$bitrate."k -pass 2 -acodec libvorbis -ab 90k -f webm $pathDest 2>&1";
-                                                exec($input2, $output2);
-                                        }
-
-                                        $log->input = "$input1\n\n$input2";
-                                        $log->output = array_merge($output1, $output2);
-
-                                        if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                        {
-                                                $log->status = 2;
-                                        }
-                                        elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                        {
-                                                jimport( 'joomla.filesystem.file' );
-                                                JFile::delete($pathDest);
-                                        }
-                                }
-                                catch(Exception $e)
-                                {
-                                        $log->output = $e->getMessage();
-                                }
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        // Add watermark
-                                        hwdMediaShareVideos::processWatermark($process, $fileType);
-
-                                        // Add file to database
-                                        hwdMediaShareFactory::load('files');
-                                        $HWDfiles = hwdMediaShareFiles::getInstance();
-                                        $HWDfiles->addFile($item, $fileType);
-                                        return $log;
-                                }
-
-                                $log->output = JText::_('COM_HWDMS_ERROR_DESTINATION_MEDIA_NOT_EXIST');
-                        }
-                        else
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
-                                $log->status = 4;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
+                if($input_aspect < 1.33333333333333)
+                {
+                        $aspect_mode = 'pillarboxing';
                 }
                 else
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $aspect_mode = 'letterboxing';
                 }
 
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                if ($conv_pad < 0)
+                {
+                        $input_aspect = $original->input_width / $original->input_height;
+                        $conv_width = intval ( ($output_height * $input_aspect) );
+                        $conv_width % 2 == 1 ? $conv_width -= 1: false;
+                        $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
+                        $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
+
+                        $conv_pad = abs($conv_pad);
+                        $pad = " -vf pad=$output_width:$output_height:$conv_pad:0 ";
+
+                        $wxh = $conv_width .'x'. $output_height;
+                }
+                else
+                {
+                        $wxh = $output_width .'x'. $conv_height;
+                        $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
+                }
+
+                $opt_quality = '-quality good';
+                $opt_speed = '-quality good';
+                $opt_slices = '-slices 4';
+                $opt_arnr = '-arnr_max_frames 7 -arnr_strength 5 -arnr_type 3';
+                if (version_compare($original->ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
+                {
+                        $pad = '';
+                        $opt_quality = '';
+                        $opt_speed = '';
+                        $opt_slices = '';
+                        $opt_arnr = '';
+                }
+                if (version_compare($original->ffmpeg_version, '0.7.0', '<'))
+                {
+                        $opt_quality = '';
+                        $opt_speed = '';
+                        $opt_slices = '';
+                        $opt_arnr = '';
+                }
+
+                try
+                {
+                        $ffpreset_libvpx_720p_pass1 = " -vcodec libvpx -g 120 -rc_lookahead 16 $opt_quality $opt_speed -profile 0 -qmax 51 -qmin 11 $opt_slices -vb 2M ";
+                        $ffpreset_libvpx_720p_pass2 = " -vcodec libvpx -g 120 -rc_lookahead 16 $opt_quality $opt_speed -profile 0 -qmax 51 -qmin 11 $opt_slices -vb 2M -maxrate 24M -minrate 100k $opt_arnr ";
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $input1 = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass1 -b ".$bitrate."k -pass 1 -an -f webm $pathDest 2>&1";
+                                exec($input1, $output1);
+                                $input2 = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass2 -b ".$bitrate."k -pass 2 -acodec libvorbis -ab 90k -f webm $pathDest 2>&1";
+                                exec($input2, $output2);
+                        }
+                        else
+                        {
+                                $input1 = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass1 -b ".$bitrate."k -pass 1 -an -f webm $pathDest 2>&1";
+                                exec($input1, $output1);
+                                $input2 = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -s $wxh $pad $ffpreset_libvpx_720p_pass2 -b ".$bitrate."k -pass 2 -acodec libvorbis -ab 90k -f webm $pathDest 2>&1";
+                                exec($input2, $output2);
+                        }
+
+                        $log->input = "$input1\n\n$input2";
+                        $log->output = array_merge($output1, $output2);
+
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        $log = $HWDprocesses->resetLog($process); 
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }                                      
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process); 
+                }
+                
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        return $log;  
+                }
+
+                // Log fail (unknown).
+                $HWDprocesses->addLog($log);
+                return $log; 
 	}
 
         /**
@@ -1825,325 +1576,264 @@ class hwdMediaShareVideos extends JObject
 	 */
 	public function processOgg($process, $fileType, $size)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
                 hwdMediaShareFactory::load('files');
-
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
+                $properties = $table->getProperties(1);
+                $media = JArrayHelper::toObject($properties, 'JObject');
+                
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        // Get information on original
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
-                        else
-                        {
-                                $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
+                        // Log fail (no source file).
+                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
 
-                        $flatoutput = is_array($output) ? implode("\n",$output) : $output;
-                        if (empty($flatoutput))
-                        {
-                                $log->status = 3;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
+                if (!$original = $this->processOriginal($process, $pathSource))
+                {
+                        // Log fail (no source parameters).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;                      
+                }
+                  
+                if ($original->input_width == 0 || $original->input_height == 0 || $original->input_bitrate == 0)
+                {
+                        // Log fail (no input dimensions).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                
+                if ($original->input_height < $size && $size != '360')
+                {
+                        // Log fail (unnecessary).
+                        $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
+                        $log->status = 4;
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+                    
+                // Initialise variables.
+                $bitrate = min($original->input_bitrate, $this->getVideoBitrate($size));
+                
+                $foldersDest = hwdMediaShareFiles::getFolders($media->key);
+                $filenameDest = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extDest = hwdMediaShareFiles::getExtension($media, $fileType);
 
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-                        else
-                        {
-                                $pos = strpos($flatoutput, "No such file or directory");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
+                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
 
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }                               
-                                
-                                $pos = strpos($flatoutput, "not found");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                             
-                                $pos = strpos($flatoutput, "Permission denied");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
+                // Calculate input aspect.
+                $input_aspect = $original->input_width / $original->input_height;
+                $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
 
-                                // Assume successful
-                                $log->status = 2;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
+                // Calculate output sizes.
+                $output_width = intval($size*$output_aspect);
+                $output_width % 2 == 1 ? $output_width += 1: false;
+                $output_height= $size;
 
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log); 
-                                
-                                // Reset status
-                                $log->status = 3;                                
-                        }
-                        
-                        $ffmpeg_version  = 0;
-                        $input_width  = 0;
-                        $input_height = 0;
-                        $input_bitrate  = 0;
+                // Calculate padding (for black bar letterboxing/pillarboxing).
+                $input_aspect = $original->input_width / $original->input_height;
+                $conv_height = intval ( ($output_width / $input_aspect) );
+                $conv_height % 2 == 1 ? $conv_height -= 1: false;
+                $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
+                $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
 
-                        // Get ffmpeg version
-                        if ( preg_match( '#FFmpeg version(.*?), Copyright#', implode("\n",$output), $matches ) )
-                        {
-                                $ffmpeg_version = trim($matches[1]);
-                        }
-                        elseif ( preg_match( '#ffmpeg version(.*?) Copyright#i', implode("\n",$output), $matches ) )
-                        {
-                                $ffmpeg_version = trim($matches[1]);
-                        }
-                        
-                        // Get original size
-                        if ( preg_match( '/Stream.*Video:.* (\d+)x(\d+).* (\d+\.\d+|\d+) tbr/', implode("\n",$output), $matches ) )
-                        {
-                                $input_width = $matches[1];
-                                $input_height= $matches[2];
-                        }
-                        elseif ( preg_match( '/Stream.*Video:.* (\d+)x(\d+).* (\d+\.\d+|\d+) tb/', implode("\n",$output), $matches ) )
-                        {
-                                $input_width = $matches[1];
-                                $input_height= $matches[2];
-                        }
-                        
-                        // Get original bitrate
-                        // Outdated pcre (perl-compatible regular expressions) libraries case error:
-                        // Compilation failed: unrecognized character
-                        // Therefore, surpress error and offer alternative
-                        if ( @preg_match('/bitrate:\s(?<bitrate>\d+)\skb\/s/', implode("\n",$output), $matches) )
-                        {
-                                $input_bitrate = $matches[1];
-                        }
-                        elseif ( preg_match('/bitrate:\s(.*?)\skb\/s/', implode("\n",$output), $matches ) )
-                        {
-                                $input_bitrate = $matches[1];
-                        }
-                        
-                        if ($input_width == 0 || $input_height == 0 || $input_bitrate == 0)
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_PARAMETERS');
-                                $log->status = 3;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-
-                        $bitrate = min($input_bitrate, hwdMediaShareVideos::getVideoBitrate($size));
-
-                        if (($input_height >= $size) || $size == '360')
-                        {
-                                $foldersDest = hwdMediaShareFiles::getFolders($item->key);
-                                $filenameDest = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                                $extDest = hwdMediaShareFiles::getExtension($item, $fileType);
-
-                                $pathDest = hwdMediaShareFiles::getPath($foldersDest, $filenameDest, $extDest);
-
-                                // Calculate input aspect
-                                $input_aspect = $input_width / $input_height;
-                                $output_aspect = ($input_aspect > 0 ? $input_aspect : 1.333);
-
-                                // Calculate output sizes
-                                $output_width = intval($size*$output_aspect);
-                                $output_width % 2 == 1 ? $output_width += 1: false;
-                                $output_height= $size;
-
-                                // Calculate padding (for black bar letterboxing/pillarboxing)
-                                $input_aspect = $input_width / $input_height;
-                                $conv_height = intval ( ($output_width / $input_aspect) );
-                                $conv_height % 2 == 1 ? $conv_height -= 1: false;
-                                $conv_pad = intval ( ( ($output_height - $conv_height) / 2.0) );
-                                $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
-
-                                if($input_aspect < 1.33333333333333)
-                                {
-                                        $aspect_mode = 'pillarboxing';
-                                }
-                                else
-                                {
-                                        $aspect_mode = 'letterboxing';
-                                }
-
-                                if ($conv_pad < 0)
-                                {
-                                        $input_aspect = $input_width / $input_height;
-                                        $conv_width = intval ( ($output_height * $input_aspect) );
-                                        $conv_width % 2 == 1 ? $conv_width -= 1: false;
-                                        $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
-                                        $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
-
-                                        $conv_pad = abs($conv_pad);
-                                        $pad = " -vf pad=$output_width:$output_height:$conv_pad:0 ";
-
-                                        $wxh = $conv_width .'x'. $output_height;
-                                }
-                                else
-                                {
-                                        $wxh = $output_width .'x'. $conv_height;
-                                        $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
-                                }
-                                
-                                if (version_compare($ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
-                                {
-                                        $pad = '';
-                                }
-                                
-                                try
-                                {
-                                        $ffpreset_libx264_slow = " -coder 1 -flags +loop -cmp +chroma -partitions +parti8x8+parti4x4+partp8x8+partb8x8 -me_method umh -subq 8 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -b_strategy 2 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -refs 5 -directpred 3 -trellis 1 -flags2 +bpyramid+mixed_refs+wpred+dct8x8+fastpskip -wpredp 2 -rc_lookahead 50 ";
-                                        $ffpreset_libx264_ipod640 = " -coder 0 -bf 0 -refs 1 -flags2 -wpred-dct8x8 -level 30 -maxrate 10000000 -bufsize 10000000 -wpredp 0 ";
-                                        if(substr(PHP_OS, 0, 3) == "WIN")
-                                        {
-                                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -s $wxh $pad -vcodec libtheora -b ".$bitrate."k -acodec libvorbis $pathDest 2>&1";
-                                                exec($log->input, $log->output);
-                                        }
-                                        else
-                                        {
-                                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -s $wxh $pad -vcodec libtheora -b ".$bitrate."k -acodec libvorbis $pathDest 2>&1";
-                                                exec($log->input, $log->output);
-                                        }
-
-                                        if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                        {
-                                                $log->status = 2;
-                                        }
-                                        elseif (file_exists($pathDest) && filesize($pathDest) == 0)
-                                        {
-                                                jimport( 'joomla.filesystem.file' );
-                                                JFile::delete($pathDest);
-                                        }
-                                }
-                                catch(Exception $e)
-                                {
-                                        $log->output = $e->getMessage();
-                                }
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                if (file_exists($pathDest) && filesize($pathDest) > 0)
-                                {
-                                        // Add watermark
-                                        hwdMediaShareVideos::processWatermark($process, $fileType);
-
-                                        // Add file to database
-                                        hwdMediaShareFactory::load('files');
-                                        $HWDfiles = hwdMediaShareFiles::getInstance();
-                                        $HWDfiles->addFile($item, $fileType);
-                                        return $log;
-                                }
-
-                                $log->output = JText::_('COM_HWDMS_ERROR_DESTINATION_MEDIA_NOT_EXIST');
-                        }
-                        else
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_ORIGINAL_SMALLER_THAN_DEST');
-                                $log->status = 4;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
+                if($input_aspect < 1.33333333333333)
+                {
+                        $aspect_mode = 'pillarboxing';
                 }
                 else
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $aspect_mode = 'letterboxing';
                 }
 
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
-	}
+                if ($conv_pad < 0)
+                {
+                        $input_aspect = $original->input_width / $original->input_height;
+                        $conv_width = intval ( ($output_height * $input_aspect) );
+                        $conv_width % 2 == 1 ? $conv_width -= 1: false;
+                        $conv_pad = intval ( ( ($output_width - $conv_width) / 2.0) );
+                        $conv_pad % 2 == 1 ? $conv_pad -= 1: false;
 
+                        $conv_pad = abs($conv_pad);
+                        $pad = " -vf pad=$output_width:$output_height:$conv_pad:0 ";
+
+                        $wxh = $conv_width .'x'. $output_height;
+                }
+                else
+                {
+                        $wxh = $output_width .'x'. $conv_height;
+                        $pad = " -vf pad=$output_width:$output_height:0:$conv_pad ";
+                }
+
+                if (version_compare($original->ffmpeg_version, '0.7.0', '<') || $conv_pad == 0)
+                {
+                        $pad = '';
+                }
+
+                try
+                {
+                        $ffpreset_libx264_slow = " -coder 1 -flags +loop -cmp +chroma -partitions +parti8x8+parti4x4+partp8x8+partb8x8 -me_method umh -subq 8 -me_range 16 -g 250 -keyint_min 25 -sc_threshold 40 -i_qfactor 0.71 -b_strategy 2 -qcomp 0.6 -qmin 10 -qmax 51 -qdiff 4 -bf 3 -refs 5 -directpred 3 -trellis 1 -flags2 +bpyramid+mixed_refs+wpred+dct8x8+fastpskip -wpredp 2 -rc_lookahead 50 ";
+                        $ffpreset_libx264_ipod640 = " -coder 0 -bf 0 -refs 1 -flags2 -wpred-dct8x8 -level 30 -maxrate 10000000 -bufsize 10000000 -wpredp 0 ";
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -y -i $pathSource -s $wxh $pad -vcodec libtheora -b ".$bitrate."k -acodec libvorbis $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -y -i $pathSource -s $wxh $pad -vcodec libtheora -b ".$bitrate."k -acodec libvorbis $pathDest 2>&1";
+                                exec($log->input, $log->output);
+                        }
+
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        $log = $HWDprocesses->resetLog($process); 
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                $log = $HWDprocesses->resetLog($process); 
+                        }                                      
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        JFile::delete($pathDest);
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        $log = $HWDprocesses->resetLog($process); 
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Log success.
+                        $log->status = 2;
+                        $HWDprocesses->addLog($log);
+                        // Add file.
+                        $HWDfiles->addFile($media, $fileType);
+                        // Add watermark.
+                        $this->processWatermark($process, $fileType);
+                        return $log;  
+                }
+
+                // Log fail (unknown).
+                $HWDprocesses->addLog($log);
+                return $log; 
+	}
+                                
         /**
-	 * Method to generate an image
-         *
-	 * @since   0.1
-	 **/
+	 * Method to insert metadata into an flv.
+         * 
+         * @access  public
+         * @param   object  $process    The process item.
+         * @param   integer $fileType   The API value for the type of file being generated, used
+         *                              in generation of filename. 
+         * @param   integer $size       The size of the image.
+         * @return  object  The log data.
+	 */
 	public function injectMetaData($process, $fileType)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                
+                // Only inject metadata into flv files.
+                if (!in_array($fileType, array(11,12,13))) return;
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
                 $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
-                hwdMediaShareFactory::load('files');
-
+                $media = JArrayHelper::toObject($properties, 'JObject');
+                
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, $fileType);
-                $extSource = hwdMediaShareFiles::getExtension($item, $fileType);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extSource = hwdMediaShareFiles::getExtension($media, $fileType);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource)) return false;
+
+                try
                 {
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+                        
                         switch ($config->get('metadata_injector'))
                         {
                                 case 1: // Flvmdi
@@ -2179,443 +1869,312 @@ class hwdMediaShareVideos extends JObject
                         }
                         exec($log->input, $log->output);
 
-                        // Check output
-                        if (empty($log->output)) 
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
                         {
-                                $log->status = 2;
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
+                                // Log success (empty output).
+                                $log->status = 3;
+                                $HWDprocesses->addLog($log);
+                                return true;
                         }
                 }
-                else
+                catch(Exception $e)
                 {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        // Log fail (caught error).
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        return false;
                 }
 
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                // Log (assume fail).
+                $HWDprocesses->addLog($log);
+                return false;
 	}
 
         /**
-	 * Method to generate an image
-         *
-	 * @since   0.1
-	 **/
-	public function checkMoovAtoms($process)
+	 * Method to move the moov atom.
+         * 
+         * @access  public
+         * @param   object  $process    The process item.
+         * @param   integer $fileType   The API value for the type of file being generated, used
+         *                              in generation of filename. 
+         * @param   integer $size       The size of the image.
+         * @return  object  The log data.
+	 */
+	public function checkMoovAtom($process, $fileType)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
+                hwdMediaShareFactory::load('files');
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                
+                // Only inject metadata into flv files.
+                if (!in_array($fileType, array(14,15,16,17))) return;
 
                 JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
                 $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
-                hwdMediaShareFactory::load('files');
+                $media = JArrayHelper::toObject($properties, 'JObject');
+                
                 hwdMediaShareFiles::getLocalStoragePath();
-                $hwdmsFiles = hwdMediaShareFiles::getInstance();
-                $files = $hwdmsFiles->getMediaFiles($item);
-            
-                if (count($files) == 0)
-                {
-                        // No source files exist
-                        $log->output = JText::_('COM_HWDMS_ERROR_NO_SOURCE_MEDIA_EXISTS');
 
-                        // Add process log
-                        hwdMediaShareProcesses::addLog($log);
-                        return $log;
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, $fileType);
+                $extSource = hwdMediaShareFiles::getExtension($media, $fileType);
+
+                $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
+
+                if (!file_exists($pathSource)) return false;
+
+                try
+                {
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+                        
+                        $pathDest = $pathSource.'.tmp';
+
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $log->input = "\"".$config->get('path_qt_faststart', '/usr/bin/qt-faststart')."\" $pathSource $pathDest 2>&1";
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_qt_faststart', '/usr/bin/qt-faststart')." $pathSource $pathDest 2>&1";
+                        }
+                        exec($log->input, $log->output);
+                        
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Check temporary file is removed.
+                                if (file_exists($pathDest)) JFile::delete($pathDest);
+                
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                return false;
+                        }
+                        else
+                        {
+                                $pos = strpos($output, "last atom in file was not a moov atom");
+                                if ($pos !== false)
+                                {
+                                        // Check temporary file is removed.
+                                        if (file_exists($pathDest)) JFile::delete($pathDest);
+
+                                        // Log (unnecessary).                    
+                                        $log->status = 4;
+                                        $HWDprocesses->addLog($log);
+                                        return true;
+                                }
+                                        
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Check temporary file is removed.
+                                        if (file_exists($pathDest)) JFile::delete($pathDest);
+
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        return false;
+                                }
+                        }
+
+                        if (file_exists($pathDest) && filesize($pathDest) == 0)
+                        {
+                                // Log fail (empty output file).
+                                JFile::delete($pathDest);
+                                $HWDprocesses->addLog($log);
+                                return false;
+                        }  
+                }
+                catch(Exception $e)
+                {
+                        // Log fail (caught error).
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        return false;
+                }
+
+                // SUCCESS!
+                if (file_exists($pathDest) && filesize($pathDest) > 0)
+                {
+                        // Copy the watermarked image to replace the original.
+                        if (JFile::copy($pathDest, $pathSource))
+                        {
+                                // Log success.
+                                JFile::delete($pathDest);
+                                $log->status = 2;
+                                $HWDprocesses->addLog($log);
+                                return $log;  
+                        } 
                 }
                 
-                foreach($files as $file)
-                {
-                        if (in_array($file->file_type, array(14,15,16,17)))
-                        {
-                                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                                $filenameSource = hwdMediaShareFiles::getFilename($item->key, $file->file_type);
-                                $extSource = hwdMediaShareFiles::getExtension($item, $file->file_type);
+                // Check temporary file is removed.
+                if (file_exists($pathDest)) JFile::delete($pathDest);
 
-                                $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
-                                $pathDest = $pathSource.'.tmp';
-
-                                if (file_exists($pathSource))
-                                {
-                                        if(substr(PHP_OS, 0, 3) == "WIN")
-                                        {
-                                                $log->input = "\"".$config->get('path_qt_faststart', '/usr/bin/qt-faststart')."\" $pathSource $pathDest 2>&1";
-                                        }
-                                        else
-                                        {
-                                                $log->input = $config->get('path_qt_faststart', '/usr/bin/qt-faststart')." $pathSource $pathDest 2>&1";
-                                        }
-                                        exec($log->input, $log->output);
-                                }
-                                else
-                                {
-                                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
-                                }
-
-                                // Check output
-                                $stringOutput = is_array($log->output) ? implode("\n",$log->output) : $item->output;
-                                if (!empty($stringOutput)) 
-                                {
-                                        $pos = strpos($stringOutput, "last atom in file was not a moov atom");
-                                        if ($pos !== false)
-                                        {
-                                                $log->status = 4;
-                                                // Add process log
-                                                hwdMediaShareProcesses::addLog($log);
-                                                return $log;
-                                        }
-                                        
-                                        $pos = strpos($stringOutput, "Permission denied");
-                                        if ($pos !== false)
-                                        {
-                                                $log->status = 3;
-                                                // Add process log
-                                                hwdMediaShareProcesses::addLog($log);
-                                                return $log;
-                                        }
-                                }
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-
-                                // @TODO: error reporting
-                                if (file_exists($pathDest))
-                                {
-                                        jimport( 'joomla.filesystem.file' );
-                                        
-                                        // Remove original MP4 file
-                                        JFile::delete($pathSource);
-                                        
-                                        // Copy temp file
-                                        if (JFile::copy($pathDest, $pathSource))
-                                        {
-                                                $log->status = 2;
-                                        }
-
-                                        // Remove temp file
-                                        JFile::delete($pathDest);
-                                }
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                        }
-                }
-
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                // Log (assume fail).
+                $HWDprocesses->addLog($log);
+                return false;
         }
 
         /**
-	 * Method to generate an image
-         *
-	 * @since   0.1
-	 **/
+	 * Method to get the duration of a video.
+         * 
+         * @access  public
+         * @param   object  $process  The process item.
+         * @return  object  The log data.
+	 */
 	public function getDuration($process)
 	{
-                // Create a new query object.
+                // Initialise variables. 
                 $db = JFactory::getDBO();
-
+                
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
                 hwdMediaShareFactory::load('files');
-
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                
+                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
+                $table = JTable::getInstance('Media', 'hwdMediaShareTable');
+                $table->load($process->media_id);
+                
+                $properties = $table->getProperties(1);
+                $media = JArrayHelper::toObject($properties, 'JObject');
+                
                 hwdMediaShareFiles::getLocalStoragePath();
 
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
+                $foldersSource = hwdMediaShareFiles::getFolders($media->key);
+                $filenameSource = hwdMediaShareFiles::getFilename($media->key, 1);
+                $extSource = hwdMediaShareFiles::getExtension($media, 1);
 
                 $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
 
-                if (file_exists($pathSource))
+                if (!file_exists($pathSource))
                 {
-                        // Get information on original
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
-                        else
-                        {
-                                $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
-                                exec($command, $output);
-                        }
-
-                        $flatoutput = is_array($output) ? implode("\n",$output) : $output;
-                        if (empty($flatoutput))
-                        {
-                                $log->status = 3;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-                        else
-                        {
-                                $pos = strpos($flatoutput, "No such file or directory");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                                
-                                $pos = strpos($flatoutput, "not found");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-                             
-                                $pos = strpos($flatoutput, "Permission denied");
-                                if ($pos !== false)
-                                {
-                                        $log->status = 3;
-                                        $log->input = $command;
-                                        $log->output = $flatoutput;
-                                
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-
-                                // Assume successful
-                                $log->status = 2;
-                                $log->input = $command;
-                                $log->output = $flatoutput;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log); 
-                                
-                                // Reset status
-                                $log->status = 3;                                
-                        }
-                        
-                        preg_match('/Duration: (.*?),/', implode("\n",$output), $matches);
-                        $duration_string = $matches[1];
-
-                        list($hr,$m,$s) = explode(':', $duration_string);
-                        $duration = ( (int)$hr*3600 ) + ( (int)$m*60 ) + (int)$s;
-                        $duration = (int) $duration;
-
-                        if ($duration > 0)
-                        {
-                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                $row =& JTable::getInstance('Media', 'hwdMediaShareTable');
-
-                                // Create an object to bind to the database
-                                $data = array();
-                                $data['id'] = $item->id;
-                                $data['duration'] = $duration;
-                                $data['access'] = (int) $item->access;
-
-                                if (!$row->bind($data))
-                                {
-                                        $log->output = $row->getError();
-                                        $log->status = 4;
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-
-                                if (!$row->store())
-                                {
-                                        $log->output = $row->getError();
-                                        $log->status = 4;
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-
-                                $log->status = 2;
-                        }
-                        else
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_FIND_DURATION');
-                                $log->status = 4;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-                }
-                else
-                {
+                        // Log fail (no source file).
                         $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
                 }
 
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                if (!$original = $this->processOriginal($process, $pathSource))
+                {
+                        // Log fail (no source parameters).
+                        $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DIMENSIONS');
+                        $HWDprocesses->addLog($log);
+                        return $log;                      
+                }
+
+                // SUCCESS!
+                if ($original->duration > 0)
+                {
+                        // Update record.
+                        $object = new stdClass();
+                        $object->id = $media->id;
+                        $object->duration = intval($original->duration);
+
+                        try
+                        {                
+                                $result = $db->updateObject('#__hwdms_media', $object, 'id');
+                        }
+                        catch (Exception $e)
+                        {
+                                $this->setError($e->getMessage());
+                                return false;
+                        }
+
+                        // Log success.
+                        $log->status = 2;
+                        $log->output = JText::_('COM_HWDMS_SUCCESS_RETRIEVED_SOURCE_DURATION');
+                        $HWDprocesses->addLog($log);
+                        return $log;  
+                }
+
+                // Log fail (unknown).
+                $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_RETRIEVE_SOURCE_DURATION');
+                $HWDprocesses->addLog($log);
+                return $log; 
         }
 
         /**
-	 * Method to get title of video using Ffmpeg
-         *
-	 * @since   0.1
-	 **/
+	 * Method to get title of video using ffmpeg.
+         * 
+         * @deprecated
+         * @access  public
+         * @param   object  $process    The process item.
+         * @return  object  The log data.
+	 */
 	public function getTitle($process)
 	{
-                // Create a new query object.
-                $db = JFactory::getDBO();
-
+                // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
-
-                // Setup log
-                $log = new StdClass;
-                $log->process_id = $process->id;
-                $log->input = '';
-                $log->output = '';
-                $log->status = 3;
-
-                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                $table =& JTable::getInstance('Media', 'hwdMediaShareTable');
-                $table->load( $process->media_id );
-
-                $properties = $table->getProperties(1);
-                $item = JArrayHelper::toObject($properties, 'JObject');
-
+                
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Load HWD files library.
                 hwdMediaShareFactory::load('files');
-
-                hwdMediaShareFiles::getLocalStoragePath();
-
-                $foldersSource = hwdMediaShareFiles::getFolders($item->key);
-                $filenameSource = hwdMediaShareFiles::getFilename($item->key, 1);
-                $extSource = hwdMediaShareFiles::getExtension($item, 1);
-
-                $pathSource = hwdMediaShareFiles::getPath($foldersSource, $filenameSource, $extSource);
-
-                if (file_exists($pathSource))
-                {
-                        // Get information on original
-                        if(substr(PHP_OS, 0, 3) == "WIN")
-                        {
-                                $command = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
-                                exec($command, $output);
-                        }
-                        else
-                        {
-                                $command = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource -f ffmetadata ".JPATH_CACHE."/metadata".$item->id.".ini 2>&1";
-                                exec($command, $output);
-                        }
-
-                        // Load data
-                        jimport( 'joomla.filesystem.file');
-                        $ini	= JPATH_CACHE.'/metadata'.$item->id.'.ini';
-                        if (!file_exists($ini)) return $log;
-                        $data	= JFile::read($ini);
-
-                        $registry = new JRegistry;
-			$registry->loadString($data);
-			$meta = $registry->toArray();
-
-                        $_POST['title'] = $meta['title'];
-                        $title = JRequest::getVar($title);
-
-                        if (!empty($title))
-                        {
-                                JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_hwdmediashare/tables');
-                                $row =& JTable::getInstance('Media', 'hwdMediaShareTable');
-
-                                // Create an object to bind to the database
-                                $data = array();
-                                $data['id'] = $item->id;
-                                $data['title'] = $title;
-
-                                if (!$row->bind($data))
-                                {
-                                        $log->output = $row->getError();
-                                        $log->status = 4;
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-
-                                if (!$row->store())
-                                {
-                                        $log->output = $row->getError();
-                                        $log->status = 4;
-
-                                        // Add process log
-                                        hwdMediaShareProcesses::addLog($log);
-                                        return $log;
-                                }
-
-                                $log->status = 2;
-                        }
-                        else
-                        {
-                                $log->output = JText::_('COM_HWDMS_ERROR_COULD_NOT_FIND_TITLE');
-                                $log->status = 4;
-
-                                // Add process log
-                                hwdMediaShareProcesses::addLog($log);
-                                return $log;
-                        }
-                }
-                else
-                {
-                        $log->output = JText::_('COM_HWDMS_ERROR_SOURCE_MEDIA_NOT_EXIST');
-                }
-
-                // Add process log
-                hwdMediaShareProcesses::addLog($log);
-		return $log;
+                $HWDfiles = hwdMediaShareFiles::getInstance();
+            
+                // Import Joomla libraries.
+                jimport('joomla.filesystem.file');
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                $HWDprocesses->addLog($log);
+                return $log;
         }
 
         /**
-	 * Method to render an image
-         *
-	 * @since   0.1
-	 **/
-	public function getMeta($item)
+	 * Method to get metadata of video using ffmpeg.
+         * 
+         * @static
+         * @access  public
+         * @param   object  $item  The media item.
+         * @return  array   The metadata.
+	 */
+	public static function getMeta($item)
 	{
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
@@ -2652,12 +2211,15 @@ class hwdMediaShareVideos extends JObject
 
                         // Load data
                         jimport( 'joomla.filesystem.file');
-                        $ini	= JPATH_CACHE.'/metadata'.$item->id.'.ini';
-                        $data	= JFile::read($ini);
-
-                        $registry = new JRegistry;
-			$registry->loadString($data);
-			return $registry->toArray();
+                        $ini = JPATH_CACHE.'/metadata'.$item->id.'.ini';
+                        if (JFile::exists($ini))
+                        {
+                                $data = JFile::read($ini);
+                                
+                                $registry = new JRegistry;
+                                $registry->loadString($data);
+                                return $registry->toArray();                                
+                        }
                 }
 
                 return false;
@@ -2896,38 +2458,202 @@ class hwdMediaShareVideos extends JObject
 	 */
 	public static function getQuality()
 	{
+                // Initialise variables.
+                $app = JFactory::getApplication();
+                
                 // Load HWD config.
                 $hwdms = hwdMediaShareFactory::getInstance();
                 $config = $hwdms->getConfig();
 
                 // Get and set the quality.
-                $app = JFactory::getApplication();
-                $quality = $app->getUserStateFromRequest('media.quality', 'quality', $config->get('video_quality', '360' ), 'var', false);
-                if (!in_array(strtolower($quality), array(260, 360, 480, 720, 1080))) $quality = '360';                
-                return  $quality;
+                $quality = $app->getUserStateFromRequest('media.quality', 'quality', 0, 'integer');
                 
-                
-                // Load the mobile framework
-                hwdMediaShareFactory::load('mobile'); 
-                $HWDmobile = hwdMediaShareMobile::getInstance();
-                    
-                
-                // Get quality.
-                $quality = hwdMediaShareVideos::getQuality();
+                // Fallback to configuration value.
+                if (!in_array(strtolower($quality), array(260, 360, 480, 720, 1080)))
+                {
+                        $quality = $config->get('video_quality', '360');
+                }
 
+                // Set state.
+                $app->setUserState('media.quality', $quality);
+
+                return $quality;              
+        }
+        
+        
+	/**
+	 * Method to display a video.
+         * 
+         * @access  public
+         * @static
+         * @param   object  $item   The media item.
+         * @return  string  The html to display the document.
+	 */
+	public static function getResolutionFromFileType($fileType)
+	{
+                switch ($fileType)
+                {
+                        case 11:
+                                return 240;
+                        break;
+                        case 12:
+                        case 14:
+                        case 18:
+                        case 22:
+                                return 360;
+                        break;
+                        case 13:
+                        case 15:
+                        case 19:
+                        case 23:
+                                return 480;
+                        break;
+                        case 16:
+                        case 20:
+                        case 24:
+                                return 720;
+                        break;   
+                        case 17:
+                        case 21:
+                        case 25:
+                                return 1080;
+                        break; 
+                        default:
+                                return 0;
+                        break;                    
+                }
+        }        
+
+        /**
+	 * Method to process a media to generate an mp4.
+         * 
+         * @access  public
+         * @param   object  $process    The process item.
+         * @param   integer $fileType   The API value for the type of file being generated, used
+         *                              in generation of filename. 
+         * @param   integer $size       The size of the image.
+         * @return  object  The log data.
+	 */
+	public function processOriginal($process, $pathSource)
+	{        
+                // Load HWD config.
+                $hwdms = hwdMediaShareFactory::getInstance();
+                $config = $hwdms->getConfig();
                 
-                $quality = $config->get('video_quality');
-                if (JRequest::getInt('quality'))
+                // Load HWD processes library.
+                hwdMediaShareFactory::load('processes');
+                $HWDprocesses = hwdMediaShareProcesses::getInstance();
+                
+                // Setup log.
+                $log = $HWDprocesses->resetLog($process);
+                            
+                // Get information on original video.
+                try
                 {
-                        $quality = JRequest::getInt('quality');
+                        // Check we can use the exec function.
+                        if (TRUE !== is_callable('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_CALLABLE'));
+                        }
+
+                        // Check we can use the exec function.
+                        if (TRUE !== function_exists('exec'))
+                        {
+                                throw new Exception(JText::_('COM_HWDMS_ERROR_EXEC_FUNCTION_NOT_EXISTS'));
+                        } 
+                        
+                        if(substr(PHP_OS, 0, 3) == "WIN")
+                        {
+                                $log->input = "\"".$config->get('path_ffmpeg', '/usr/bin/ffmpeg')."\" -i $pathSource 2>&1";
+                                exec($log->input, $log->output);
+                        }
+                        else
+                        {
+                                $log->input = $config->get('path_ffmpeg', '/usr/bin/ffmpeg')." -i $pathSource 2>&1";
+                                exec($log->input, $log->output);
+                        }
+
+                        $output = is_array($log->output) ? implode("\n", $log->output) : $log->output;
+                        if (empty($output))
+                        {
+                                // Log fail (empty ffmpeg output).
+                                $HWDprocesses->addLog($log);
+                                return $log;
+                        }
+                        else
+                        {
+                                $err1 = strpos($output, "No such file or directory");
+                                $err2 = strpos($output, "not found");
+                                $err3 = strpos($output, "Permission denied");
+                                if ($err1 !== false || $err2 !== false || $err3 !== false)
+                                {
+                                        // Log fail (ffmpeg not accessible).
+                                        $HWDprocesses->addLog($log);
+                                        return false;
+                                }
+                        }
                 }
-                if ($override)
+                catch(Exception $e)
                 {
-                        $quality = $override;
+                        // Log fail (caught error).
+                        $log->output = $e->getMessage();
+                        $HWDprocesses->addLog($log);
+                        return false;
                 }
-                if ($HWDmobile->isMobile())
+
+                // Log the process.
+                $log->status = 2; // Assume success.
+                $HWDprocesses->addLog($log);
+                
+                // Initialise variables.
+                $return = new stdClass();
+                $return->ffmpeg_version = 0;
+                $return->input_width = 0;
+                $return->input_height = 0;
+                $return->input_bitrate = 0;
+                $return->duration = 0;
+
+                // Get ffmpeg version.
+                if (preg_match( '#ffmpeg version(.*?), Copyright#i', $output, $matches ))
                 {
-                        $quality = 360;
+                        $return->ffmpeg_version = trim($matches[1]);
                 }                
+                elseif (preg_match('#ffmpeg version(.*?) Copyright#i', $output, $matches))
+                {
+                        $return->ffmpeg_version = trim($matches[1]);
+                }
+
+                // Get dimensions of original video.
+                if (preg_match('/Stream.*Video:.* (\d+)x(\d+).*/', $output, $matches))
+                {
+                        $return->input_width  = (int) $matches[1];
+                        $return->input_height = (int) $matches[2];
+                }
+
+                // Get duration of original video.
+                if (preg_match('/Duration: (.*?),/', $output, $matches))
+                {
+                        $duration_string = $matches[1];
+                        list($h, $m, $s) = explode(':', $duration_string);
+                        $duration = ((int) $h * 3600 ) + ((int) $m * 60 ) + (int) $s;
+                        $return->duration = (int) $duration;
+                }
+                
+                // Get bitrate of original video.
+                //
+                // Outdated pcre (perl-compatible regular expressions) libraries case error:
+                // Compilation failed: unrecognized character
+                // 
+                // Surpress error and offer alternative.
+                if (@preg_match('/bitrate:\s(?<bitrate>\d+)\skb\/s/', $output, $matches))
+                {
+                        $return->input_bitrate = (float) $matches[1];
+                }
+                elseif (preg_match('/bitrate:\s(.*?)\skb\/s/', $output, $matches))
+                {
+                        $return->input_bitrate = (float) $matches[1];
+                }
+                
+                return $return;                
         }
 }
